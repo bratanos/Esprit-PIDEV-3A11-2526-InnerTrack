@@ -1,6 +1,7 @@
 package com.innertrack.controller.settings;
 
 import com.innertrack.service.SettingsService;
+import com.innertrack.util.ViewManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToggleButton;
@@ -50,5 +51,7 @@ public class SettingsAppearanceController {
     private void handleLanguageChange() {
         String selected = languageComboBox.getValue();
         settingsService.updateLanguage("Français".equals(selected) ? "FR" : "EN");
+        // Reload the settings view so all tab labels and text re-render with the new bundle
+        ViewManager.loadView("settings/settings");
     }
 }

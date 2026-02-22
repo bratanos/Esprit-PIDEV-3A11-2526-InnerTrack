@@ -4,6 +4,7 @@ import com.innertrack.dao.UserSettingsDao;
 import com.innertrack.model.UserSettings;
 import com.innertrack.app.MainApp;
 import javafx.application.Platform;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.util.Locale;
@@ -16,8 +17,8 @@ public class SettingsService {
     private ResourceBundle bundle;
 
     private SettingsService() {
-        // Default to English if not set
-        bundle = ResourceBundle.getBundle("messages", Locale.ENGLISH);
+        // Default to French — the app's primary language
+        bundle = ResourceBundle.getBundle("messages", Locale.FRENCH);
     }
 
     public static synchronized SettingsService getInstance() {
@@ -34,7 +35,7 @@ public class SettingsService {
     public void loadSettings(int userId) {
         currentSettings = settingsDao.findByUserId(userId);
         if (currentSettings == null) {
-            // Create default settings
+            // Default: light theme, normal font, French language
             currentSettings = new UserSettings(userId, "LIGHT", "NORMAL", "FR");
             settingsDao.create(currentSettings);
         }
@@ -42,6 +43,10 @@ public class SettingsService {
     }
 
     public UserSettings getCurrentSettings() {
+        if (currentSettings == null) {
+            // Fallback so the settings page never NPEs before login
+            currentSettings = new UserSettings(0, "LIGHT", "NORMAL", "FR");
+        }
         return currentSettings;
     }
 
@@ -69,42 +74,76 @@ public class SettingsService {
         applyLanguage();
     }
 
+    // Called by ViewManager after every view load so each new node
+    // gets the currently active theme instead of the FXML-hardcoded one.
+    public void applyThemeToNode(Parent node) {
+        if (node == null || currentSettings == null) return;
+        String lightCss = getResourcePath("/styles/themes/theme-light.css");
+        String darkCss  = getResourcePath("/styles/themes/theme-dark.css");
+        if (lightCss == null || darkCss == null) return;
+
+        node.getStylesheets().remove(lightCss);
+        node.getStylesheets().remove(darkCss);
+        node.getStylesheets().add("DARK".equals(currentSettings.getTheme()) ? darkCss : lightCss);
+
+        // Sync the CSS class on the node root as well
+        node.getStyleClass().removeAll("light-theme", "dark-theme");
+        node.getStyleClass().add("DARK".equals(currentSettings.getTheme()) ? "dark-theme" : "light-theme");
+    }
+
     private void applyTheme() {
         Platform.runLater(() -> {
             Stage stage = MainApp.getPrimaryStage();
-            if (stage != null && stage.getScene() != null) {
-                Scene scene = stage.getScene();
-                javafx.scene.Parent root = scene.getRoot();
+            if (stage == null || stage.getScene() == null) return;
+            Scene scene = stage.getScene();
 
-                // Ensure themes.css is added if not present
-                String themeCss = getClass().getResource("/style/themes.css").toExternalForm();
-                if (!scene.getStylesheets().contains(themeCss)) {
-                    scene.getStylesheets().add(themeCss);
-                }
+            String lightCss = getResourcePath("/styles/themes/theme-light.css");
+            String darkCss  = getResourcePath("/styles/themes/theme-dark.css");
+            if (lightCss == null || darkCss == null) return;
 
-                root.getStyleClass().removeAll("light-theme", "dark-theme");
-                root.getStyleClass().add("DARK".equals(currentSettings.getTheme()) ? "dark-theme" : "light-theme");
+            // Swap theme on scene stylesheet list
+            scene.getStylesheets().remove(lightCss);
+            scene.getStylesheets().remove(darkCss);
+            scene.getStylesheets().add("DARK".equals(currentSettings.getTheme()) ? darkCss : lightCss);
 
-                // Force CSS pass
-                root.applyCss();
-                root.layout();
-            }
+            // Mark the root node so descendant rules like .dark-theme .label work
+            Parent root = scene.getRoot();
+            root.getStyleClass().removeAll("light-theme", "dark-theme");
+            root.getStyleClass().add("DARK".equals(currentSettings.getTheme()) ? "dark-theme" : "light-theme");
+
+            // Stamp all currently loaded child nodes too
+            applyThemeClassToChildren(root);
+
+            root.applyCss();
+            root.layout();
         });
+    }
+
+    // Recursively stamps .dark-theme / .light-theme on every Parent in the tree
+    // so rules like ".dark-theme .dashboard-card" always have a matching ancestor.
+    private void applyThemeClassToChildren(Parent parent) {
+        String themeClass = "DARK".equals(currentSettings.getTheme()) ? "dark-theme" : "light-theme";
+        parent.getStyleClass().removeAll("light-theme", "dark-theme");
+        parent.getStyleClass().add(themeClass);
+        for (javafx.scene.Node child : parent.getChildrenUnmodifiable()) {
+            if (child instanceof Parent) {
+                applyThemeClassToChildren((Parent) child);
+            }
+        }
     }
 
     private void applyFontSize() {
         Platform.runLater(() -> {
             Stage stage = MainApp.getPrimaryStage();
-            if (stage != null && stage.getScene() != null) {
-                javafx.scene.Parent root = stage.getScene().getRoot();
-                root.getStyleClass().removeAll("font-small", "font-normal", "font-large");
-                String fontSizeClass = "font-" + currentSettings.getFontSize().toLowerCase();
-                root.getStyleClass().add(fontSizeClass);
+            if (stage == null || stage.getScene() == null) return;
+            Parent root = stage.getScene().getRoot();
 
-                // Force CSS pass
-                root.applyCss();
-                root.layout();
-            }
+            root.getStyleClass().removeAll("font-small", "font-normal", "font-large");
+            String fontClass = "font-" + currentSettings.getFontSize().toLowerCase();
+            root.getStyleClass().add(fontClass);
+
+            root.applyCss();
+            root.layout();
         });
     }
 
@@ -112,10 +151,22 @@ public class SettingsService {
         Locale locale = "FR".equals(currentSettings.getLanguage()) ? Locale.FRENCH : Locale.ENGLISH;
         Locale.setDefault(locale);
         bundle = ResourceBundle.getBundle("messages", locale);
-        // Inform views that language has changed if needed, or reload views
     }
 
     public String getString(String key) {
-        return bundle.getString(key);
+        try {
+            return bundle.getString(key);
+        } catch (Exception e) {
+            return key; // Graceful fallback: show the key if missing
+        }
+    }
+
+    private String getResourcePath(String path) {
+        try {
+            return getClass().getResource(path).toExternalForm();
+        } catch (Exception e) {
+            System.err.println("SettingsService: could not find resource: " + path);
+            return null;
+        }
     }
 }

@@ -1,0 +1,21 @@
+/* tokens.css - Single Source of Truth for Design Variables */
+.root {
+    /* Colors */
+    -it-bg: #f4f7f6;
+    -it-card: #ffffff;
+    -it-text: #2c3e50;
+    -it-text-muted: #7f8c8d;
+
+    -it-primary: #1d7bed;
+    -it-primary-hover: #0056b3;
+    -it-primary-active: #1ac1ea;
+
+    -it-secondary: #0a2a4c;
+    -it-secondary-hover: #1a436b;
+    -it-secondary-active: #00132d;
+
+    -it-success: #16a085;
+    -it-error: #e74c3c;
+    -it-border: #bdc3c7;
+
+}

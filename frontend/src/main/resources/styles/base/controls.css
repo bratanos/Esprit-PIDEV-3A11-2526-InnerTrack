@@ -1,0 +1,153 @@
+/* controls.css - Reusable Global Components */
+
+/* Buttons */
+.button,
+.btn {
+    -fx-font-size: 14;
+    -fx-text-fill: #2c3e50;
+    -fx-cursor: hand;
+    -fx-background-radius: 5;
+}
+
+.btn-primary,
+.button1,
+.button2 {
+    -fx-background-color: #1d7bed;
+    -fx-text-fill: white;
+}
+
+.btn-primary:hover,
+.button1:hover,
+.button2:hover {
+    -fx-background-color: #0056b3;
+}
+
+.btn-primary:pressed,
+.button1:pressed,
+.button2:pressed {
+    -fx-background-color: #1ac1ea;
+}
+
+.btn-secondary,
+.button3 {
+    -fx-background-color: #0a2a4c;
+    -fx-text-fill: white;
+}
+
+.btn-secondary:hover,
+.button3:hover {
+    -fx-background-color: #1a436b;
+}
+
+.btn-secondary:pressed,
+.button3:pressed {
+    -fx-background-color: #00132d;
+}
+
+.button4 {
+    -fx-background-color: linear-gradient(to top left, #0056b3, #1ac1ea);
+    -fx-background-radius: 30;
+    -fx-text-fill: white;
+}
+
+.button4:hover {
+    -fx-background-color: linear-gradient(to top left, #1ac1ea, #0056b3);
+}
+
+/* Cards */
+.dashboard-card,
+.card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+}
+
+/* Inputs */
+.text-field,
+.password-field {
+    -fx-background-color: #f4f7f6;
+    -fx-text-fill: #2c3e50;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15 8 15;
+}
+
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: #1d7bed;
+    -fx-background-color: #ffffff;
+}
+
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #2c3e50;
+    -fx-background-color: #ffffff;
+}
+
+.combo-box:hover {
+    -fx-border-color: #1d7bed;
+}
+
+.date-picker {
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.date-picker:hover {
+    -fx-border-color: #1d7bed;
+}
+
+/* Tables */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #1d7bed;
+    -fx-border-width: 2px;
+    -fx-table-cell-border-color: transparent;
+    -fx-table-header-border-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+}
+
+.table-view .show-hide-columns-button {
+    -fx-border-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: #0a2a4c;
+    -fx-text-fill: white;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #f4f7f6;
+    -fx-text-fill: #2c3e50;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #1d7bed;
+    -fx-text-fill: white;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: #2c3e50;
+}
+
+/* ScrollPane */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane>.viewport {
+    -fx-background-color: transparent;
+}

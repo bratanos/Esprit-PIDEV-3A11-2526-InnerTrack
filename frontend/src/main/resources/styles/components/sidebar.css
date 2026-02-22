@@ -1,36 +1,31 @@
-/* Dashboard Styles for InnerTrack */
-
-.dashboard-container {
-    -fx-background-color: #f4f7f6;
-}
-
+/* sidebar.css */
 .sidebar {
     -fx-background-color: #00132d;
     -fx-padding: 20;
     -fx-spacing: 15;
 }
 
-.sidebar-logo {
+.sidebar .sidebar-logo {
     -fx-padding: 0 0 20 0;
     -fx-alignment: center;
 }
 
-.logo-circle {
+.sidebar .logo-circle {
     -fx-stroke: rgba(255, 255, 255, 0.2);
     -fx-stroke-width: 2;
 }
 
-.profile-section {
+.sidebar .profile-section {
     -fx-padding: 10 0 20 0;
     -fx-alignment: center;
 }
 
-.profile-pic {
+.sidebar .profile-pic {
     -fx-stroke: white;
     -fx-stroke-width: 2;
 }
 
-.profile-name {
+.sidebar .profile-name {
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
@@ -40,7 +35,6 @@
 .sidebar-button {
     -fx-background-color: transparent;
     -fx-text-fill: white;
-    -fx-icon-color: white;
     -fx-font-size: 16px;
     -fx-alignment: center-left;
     -fx-padding: 12 20;
@@ -53,38 +47,8 @@
     -fx-fill: white !important;
 }
 
-.sidebar-button:hover {
-    -fx-background-color: #1d7bed;
-    -fx-text-fill: white;
-}
-
+.sidebar-button:hover,
 .sidebar-button-active {
-    -fx-background-color: #1d7bed;
+    -fx-background-color: -it-primary;
     -fx-text-fill: white;
-}
-
-.dashboard-card {
-    -fx-background-color: white;
-    -fx-background-radius: 15;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
-}
-
-.stat-card {
-    -fx-padding: 20;
-    -fx-spacing: 10;
-}
-
-.stat-value {
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1d7bed;
-}
-
-.stat-label {
-    -fx-font-size: 14px;
-    -fx-text-fill: #7f8c8d;
-}
-
-.content-header {
-    -fx-padding: 0 0 20 0;
 }

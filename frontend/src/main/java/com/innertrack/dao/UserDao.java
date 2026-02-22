@@ -89,14 +89,22 @@ public class UserDao implements ICrudService<User> {
         user.setLastName(rs.getString("last_name"));
         user.setProfilePicture(rs.getString("profile_picture"));
 
-        Timestamp createdAt = rs.getTimestamp("created_at");
-        if (createdAt != null) {
-            user.setCreatedAt(createdAt.toLocalDateTime());
+        try {
+            Timestamp createdAt = rs.getTimestamp("created_at");
+            if (createdAt != null) {
+                user.setCreatedAt(createdAt.toLocalDateTime());
+            }
+        } catch (SQLException e) {
+            // Column might not exist in the current database schema
         }
 
-        Timestamp lastLogin = rs.getTimestamp("last_login");
-        if (lastLogin != null) {
-            user.setLastLogin(lastLogin.toLocalDateTime());
+        try {
+            Timestamp lastLogin = rs.getTimestamp("last_login");
+            if (lastLogin != null) {
+                user.setLastLogin(lastLogin.toLocalDateTime());
+            }
+        } catch (SQLException e) {
+            // Column might not exist in the current database schema
         }
 
         String rolesJson = rs.getString("roles");

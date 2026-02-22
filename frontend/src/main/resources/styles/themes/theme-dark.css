@@ -1,0 +1,345 @@
+/* theme-dark.css - Full dark theme override */
+@import "../base/tokens.css";
+
+/* ─── Root & Scene Background ─────────────────────────────────────────────── */
+.root.dark-theme,
+.dark-theme {
+    -it-bg:               #0f1117;
+    -it-card:             #1c1f26;
+    -it-text:             #e2e8f0;
+    -it-text-muted:       #94a3b8;
+    -it-primary:          #4f8ef7;
+    -it-primary-hover:    #3b7de8;
+    -it-primary-active:   #60a5fa;
+    -it-secondary:        #1e3a5f;
+    -it-secondary-hover:  #2a4f7a;
+    -it-secondary-active: #152c47;
+    -it-success:          #22c98a;
+    -it-error:            #f87171;
+    -it-border:           #2d3748;
+
+    -fx-background-color: #0f1117;
+    -fx-base:             #1c1f26;
+    -fx-control-inner-background: #1a1d24;
+    -fx-text-fill:        #e2e8f0;
+}
+
+/* ─── Scene & Pane Backgrounds ────────────────────────────────────────────── */
+.dark-theme .scroll-pane,
+.dark-theme .scroll-pane > .viewport,
+.dark-theme .vbox,
+.dark-theme .hbox,
+.dark-theme .border-pane,
+.dark-theme .stack-pane,
+.dark-theme .grid-pane,
+.dark-theme .anchor-pane {
+    -fx-background-color: transparent;
+}
+
+.dark-theme .dashboard-container {
+    -fx-background-color: #0f1117;
+}
+
+/* ─── Cards ───────────────────────────────────────────────────────────────── */
+.dark-theme .dashboard-card,
+.dark-theme .card {
+    -fx-background-color: #1c1f26;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 12, 0, 0, 6);
+}
+
+/* ─── Labels & Text ───────────────────────────────────────────────────────── */
+.dark-theme .label {
+    -fx-text-fill: #e2e8f0;
+}
+
+.dark-theme .title {
+    -fx-text-fill: #f1f5f9;
+}
+
+.dark-theme .subtitle,
+.dark-theme .text-muted {
+    -fx-text-fill: #94a3b8;
+}
+
+.dark-theme .text-danger {
+    -fx-text-fill: #f87171;
+}
+
+.dark-theme .text-success {
+    -fx-text-fill: #22c98a;
+}
+
+/* ─── Inputs ──────────────────────────────────────────────────────────────── */
+.dark-theme .text-field,
+.dark-theme .password-field,
+.dark-theme .text-area {
+    -fx-background-color: #1a1d24;
+    -fx-text-fill: #e2e8f0;
+    -fx-prompt-text-fill: #4a5568;
+    -fx-border-color: #2d3748;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.dark-theme .text-field:focused,
+.dark-theme .password-field:focused,
+.dark-theme .text-area:focused {
+    -fx-border-color: #4f8ef7;
+    -fx-background-color: #21252f;
+}
+
+/* ─── ComboBox ────────────────────────────────────────────────────────────── */
+.dark-theme .combo-box,
+.dark-theme .combo-box-base {
+    -fx-background-color: #1a1d24;
+    -fx-border-color: #2d3748;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.dark-theme .combo-box .list-cell,
+.dark-theme .combo-box-base .list-cell {
+    -fx-text-fill: #e2e8f0;
+    -fx-background-color: #1a1d24;
+}
+
+.dark-theme .combo-box:hover,
+.dark-theme .combo-box-base:hover {
+    -fx-border-color: #4f8ef7;
+}
+
+.dark-theme .combo-box-popup .list-view {
+    -fx-background-color: #21252f;
+    -fx-border-color: #2d3748;
+}
+
+.dark-theme .combo-box-popup .list-cell:hover {
+    -fx-background-color: #2d3748;
+}
+
+.dark-theme .combo-box-popup .list-cell:selected {
+    -fx-background-color: #4f8ef7;
+    -fx-text-fill: white;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────────────────────── */
+.dark-theme .button,
+.dark-theme .btn {
+    -fx-text-fill: #e2e8f0;
+    -fx-background-color: #252932;
+}
+
+.dark-theme .btn-primary,
+.dark-theme .button.btn-primary {
+    -fx-background-color: #4f8ef7;
+    -fx-text-fill: white;
+}
+
+.dark-theme .btn-primary:hover {
+    -fx-background-color: #3b7de8;
+}
+
+.dark-theme .btn-secondary {
+    -fx-background-color: #1e3a5f;
+    -fx-text-fill: white;
+}
+
+.dark-theme .btn-secondary:hover {
+    -fx-background-color: #2a4f7a;
+}
+
+/* ─── Toggle Buttons ──────────────────────────────────────────────────────── */
+.dark-theme .toggle-button {
+    -fx-background-color: #252932;
+    -fx-text-fill: #94a3b8;
+    -fx-border-color: #2d3748;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.dark-theme .toggle-button:selected {
+    -fx-background-color: #4f8ef7;
+    -fx-text-fill: white;
+    -fx-border-color: #4f8ef7;
+}
+
+.dark-theme .toggle-button:hover {
+    -fx-background-color: #2d3748;
+}
+
+/* ─── Radio & CheckBox ────────────────────────────────────────────────────── */
+.dark-theme .radio-button,
+.dark-theme .check-box {
+    -fx-text-fill: #e2e8f0;
+}
+
+.dark-theme .radio-button .radio,
+.dark-theme .check-box .box {
+    -fx-background-color: #1a1d24;
+    -fx-border-color: #4a5568;
+}
+
+.dark-theme .radio-button:selected .dot,
+.dark-theme .check-box:selected .mark {
+    -fx-background-color: #4f8ef7;
+}
+
+/* ─── Separator ───────────────────────────────────────────────────────────── */
+.dark-theme .separator .line {
+    -fx-border-color: #2d3748;
+    -fx-background-color: #2d3748;
+}
+
+/* ─── Navbar ──────────────────────────────────────────────────────────────── */
+.dark-theme .navbar {
+    -fx-background-color: #13161d;
+}
+
+.dark-theme .navbar-brand {
+    -fx-text-fill: #f1f5f9;
+}
+
+.dark-theme .navbar-link {
+    -fx-text-fill: #94a3b8;
+}
+
+/* ─── Footer ──────────────────────────────────────────────────────────────── */
+.dark-theme .footer {
+    -fx-background-color: #13161d;
+}
+
+/* ─── Sidebar (already dark, just tune accent) ────────────────────────────── */
+.dark-theme .sidebar {
+    -fx-background-color: #0a0d14;
+}
+
+.dark-theme .sidebar-button:hover,
+.dark-theme .sidebar-button-active {
+    -fx-background-color: #4f8ef7;
+}
+
+/* ─── Tab Pane ────────────────────────────────────────────────────────────── */
+.dark-theme .tab-pane {
+    -fx-background-color: #1c1f26;
+    -fx-tab-min-height: 40px;
+}
+
+.dark-theme .tab-pane .tab-header-area {
+    -fx-background-color: #13161d;
+}
+
+.dark-theme .tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #13161d;
+}
+
+.dark-theme .tab-pane .tab {
+    -fx-background-color: #1c1f26;
+}
+
+.dark-theme .tab-pane .tab .tab-label {
+    -fx-text-fill: #94a3b8;
+}
+
+.dark-theme .tab-pane .tab:selected {
+    -fx-background-color: #252932;
+}
+
+.dark-theme .tab-pane .tab:selected .tab-label {
+    -fx-text-fill: #4f8ef7;
+}
+
+.dark-theme .tab-pane .tab:hover .tab-label {
+    -fx-text-fill: #e2e8f0;
+}
+
+/* ─── Table View ──────────────────────────────────────────────────────────── */
+.dark-theme .table-view {
+    -fx-background-color: #1c1f26;
+    -fx-border-color: #2d3748;
+}
+
+.dark-theme .table-view .column-header {
+    -fx-background-color: #13161d;
+}
+
+.dark-theme .table-view .column-header .label {
+    -fx-text-fill: #94a3b8;
+}
+
+.dark-theme .table-view .table-row-cell {
+    -fx-background-color: #1c1f26;
+    -fx-text-fill: #e2e8f0;
+}
+
+.dark-theme .table-view .table-row-cell:odd {
+    -fx-background-color: #21252f;
+}
+
+.dark-theme .table-view .table-row-cell:selected {
+    -fx-background-color: #1e3a5f;
+}
+
+.dark-theme .table-view .table-cell {
+    -fx-text-fill: #e2e8f0;
+    -fx-border-color: transparent;
+}
+
+/* ─── Hyperlinks ──────────────────────────────────────────────────────────── */
+.dark-theme .hyperlink {
+    -fx-text-fill: #60a5fa;
+}
+
+.dark-theme .hyperlink:hover {
+    -fx-text-fill: #93c5fd;
+}
+
+/* ─── Scroll Bar ──────────────────────────────────────────────────────────── */
+.dark-theme .scroll-bar {
+    -fx-background-color: #1c1f26;
+}
+
+.dark-theme .scroll-bar .thumb {
+    -fx-background-color: #2d3748;
+    -fx-background-radius: 4;
+}
+
+.dark-theme .scroll-bar .thumb:hover {
+    -fx-background-color: #4a5568;
+}
+
+/* ─── Auth View ───────────────────────────────────────────────────────────── */
+.dark-theme .auth-view {
+    -fx-background-color: #13161d;
+}
+
+/* ─── Stat Cards (dashboard) ──────────────────────────────────────────────── */
+.dark-theme .stat-value {
+    -fx-text-fill: #4f8ef7;
+}
+
+.dark-theme .stat-label {
+    -fx-text-fill: #94a3b8;
+}
+
+/* ─── Profile Circle ──────────────────────────────────────────────────────── */
+.dark-theme .profile-pic {
+    -fx-stroke: #4f8ef7;
+    -fx-stroke-width: 2;
+}
+
+/* ─── Alert / Dialog ──────────────────────────────────────────────────────── */
+.dark-theme .dialog-pane {
+    -fx-background-color: #1c1f26;
+}
+
+.dark-theme .dialog-pane .content.label {
+    -fx-text-fill: #e2e8f0;
+}
+
+.dark-theme .dialog-pane .header-panel {
+    -fx-background-color: #13161d;
+}
+
+.dark-theme .dialog-pane .header-panel .label {
+    -fx-text-fill: #f1f5f9;
+}

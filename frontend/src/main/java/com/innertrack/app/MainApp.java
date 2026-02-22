@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+
 public class MainApp extends Application {
     private static Stage primaryStage;
 
@@ -21,6 +22,8 @@ public class MainApp extends Application {
         // Set the AtlantaFX theme
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
 
+
+
         // Load the main layout
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainLayout.fxml"));
         Parent root = loader.load();
@@ -29,6 +32,9 @@ public class MainApp extends Application {
         primaryStage.setTitle("InnerTrack - Gestion de Santé Mentale");
         primaryStage.setScene(scene);
         primaryStage.show();
+        scene.getStylesheets().add(
+                getClass().getResource("/styles/base/typography.css").toExternalForm()
+        );
 
         // Load the initial view (login or main)
         ViewManager.loadView("login");

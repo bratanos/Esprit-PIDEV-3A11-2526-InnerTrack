@@ -1,0 +1,103 @@
+/* typography.css - Global Text Styles */
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.subtitle {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 14px;
+}
+
+.text-muted {
+    -fx-text-fill: #7f8c8d;
+}
+
+.text-danger {
+    -fx-text-fill: #e74c3c;
+}
+
+.text-success {
+    -fx-text-fill: #16a085;
+}
+
+.label {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 14px;
+}
+
+.text {
+    -fx-font-family: "Poppins Black", system;
+}
+
+/* ─── Font Size Accessibility Classes ───────────────────────────────────────
+   These classes are applied to the scene root by SettingsService.applyFontSize()
+   so they cascade down to every node in the scene.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* SMALL */
+.font-small .label,
+.font-small .button,
+.font-small .toggle-button,
+.font-small .text-field,
+.font-small .password-field,
+.font-small .combo-box,
+.font-small .check-box,
+.font-small .radio-button,
+.font-small .hyperlink,
+.font-small .tab-label {
+    -fx-font-size: 11px;
+}
+
+.font-small .title {
+    -fx-font-size: 18px;
+}
+
+.font-small .subtitle {
+    -fx-font-size: 11px;
+}
+
+/* NORMAL (default — restores baseline) */
+.font-normal .label,
+.font-normal .button,
+.font-normal .toggle-button,
+.font-normal .text-field,
+.font-normal .password-field,
+.font-normal .combo-box,
+.font-normal .check-box,
+.font-normal .radio-button,
+.font-normal .hyperlink,
+.font-normal .tab-label {
+    -fx-font-size: 14px;
+}
+
+.font-normal .title {
+    -fx-font-size: 24px;
+}
+
+.font-normal .subtitle {
+    -fx-font-size: 14px;
+}
+
+/* LARGE */
+.font-large .label,
+.font-large .button,
+.font-large .toggle-button,
+.font-large .text-field,
+.font-large .password-field,
+.font-large .combo-box,
+.font-large .check-box,
+.font-large .radio-button,
+.font-large .hyperlink,
+.font-large .tab-label {
+    -fx-font-size: 18px;
+}
+
+.font-large .title {
+    -fx-font-size: 30px;
+}
+
+.font-large .subtitle {
+    -fx-font-size: 18px;
+}

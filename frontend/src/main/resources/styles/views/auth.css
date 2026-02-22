@@ -1,0 +1,9 @@
+/* auth.css */
+.auth-view {
+    /* Namespace for authentication views */
+}
+
+.auth-view .container {
+    -fx-alignment: center;
+    -fx-padding: 40;
+}

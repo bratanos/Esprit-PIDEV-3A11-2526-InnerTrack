@@ -11,7 +11,8 @@
 <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" 
             xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.innertrack.controller.profile.ProfileController"
-            stylesheets="@../../style/dashboards.css">
+            stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css, @../../styles/base/typography.css, @../../styles/base/controls.css, @../../styles/themes/theme-light.css, @../../styles/views/settings.css"
+            styleClass="settings-view">
     
     <VBox spacing="30" styleClass="dashboard-container">
         <padding>

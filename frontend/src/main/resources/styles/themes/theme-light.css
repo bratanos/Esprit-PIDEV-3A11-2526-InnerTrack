@@ -1,0 +1,10 @@
+/* theme-light.css */
+@import "../base/tokens.css";
+
+.root {
+    -fx-background-color: linear-gradient(to bottom, #D9A9FF, #00132d);
+}
+
+.dashboard-container {
+    -fx-background-color: #f4f7f6;
+}

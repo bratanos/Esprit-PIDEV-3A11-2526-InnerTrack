@@ -3,9 +3,9 @@ package com.innertrack.util;
 import com.innertrack.service.SettingsService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import java.io.IOException;
-import java.util.ResourceBundle;
 
 public class ViewManager {
 
@@ -30,35 +30,38 @@ public class ViewManager {
             String path = null;
             FXMLLoader loader = null;
 
-            // Prioritize auth/ folder for specific auth views if fxmlName doesn't contain a
-            // path
+            // Prioritize auth/ folder for specific auth views
             if (!fxmlName.contains("/")) {
-                java.util.List<String> authViews = java.util.Arrays.asList("login", "register", "verify_otp",
-                        "forgot_password", "reset_password");
+                java.util.List<String> authViews = java.util.Arrays.asList(
+                        "login", "register", "verify_otp", "forgot_password", "reset_password");
                 if (authViews.contains(fxmlName)) {
                     path = "/fxml/auth/" + fxmlName + ".fxml";
                     loader = new FXMLLoader(ViewManager.class.getResource(path));
                 }
             }
 
-
-            // If not loaded from auth/ or if fxmlName already contains a path, try the
-            // direct path
+            // Fallback to direct path
             if (loader == null || loader.getLocation() == null) {
                 path = "/fxml/" + fxmlName + ".fxml";
                 loader = new FXMLLoader(ViewManager.class.getResource(path));
             }
 
-            // Check if resource was found
             if (loader.getLocation() == null) {
                 System.err.println("Error: FXML resource not found for path: " + path);
                 return null;
             }
 
-            // Add resource bundle for localization
+            // Set resource bundle for i18n
             loader.setResources(SettingsService.getInstance().getBundle());
 
             Node view = loader.load();
+
+            // Apply the currently active theme to the newly loaded node so
+            // it overrides the hardcoded theme-light.css each FXML declares.
+            if (view instanceof Parent) {
+                SettingsService.getInstance().applyThemeToNode((Parent) view);
+            }
+
             container.getChildren().add(view);
             return loader.getController();
 

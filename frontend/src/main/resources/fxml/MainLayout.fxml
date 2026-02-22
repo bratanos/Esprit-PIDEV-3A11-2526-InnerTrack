@@ -13,9 +13,7 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.innertrack.controller.MainLayoutController">
 
-    <stylesheets>
-        <URL value="@style.css" />
-    </stylesheets>
+    <!-- Styles are handled by ThemeManager -->
 
     <!-- Navbar -->
     <top>
