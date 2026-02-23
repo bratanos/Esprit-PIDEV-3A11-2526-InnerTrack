@@ -1,5 +1,7 @@
 package com.innertrack.controller.profile;
 
+import com.innertrack.controller.auth.MainLayoutController;
+import com.innertrack.controller.auth.VerifyOtpController;
 import com.innertrack.dao.ClientProfileDao;
 import com.innertrack.dao.TherapistProfileDao;
 import com.innertrack.dao.UserDao;
@@ -29,35 +31,52 @@ import java.util.Optional;
 public class ProfileController {
 
     // ── Basic identity (read/write on user table) ─────────────
-    @FXML private Circle    profileCircle;
-    @FXML private Label     nameLabel;
-    @FXML private Label     roleLabel;
-    @FXML private TextField firstNameField;
-    @FXML private TextField lastNameField;
-    @FXML private TextField emailField;
+    @FXML
+    private Circle profileCircle;
+    @FXML
+    private Label nameLabel;
+    @FXML
+    private Label roleLabel;
+    @FXML
+    private TextField firstNameField;
+    @FXML
+    private TextField lastNameField;
+    @FXML
+    private TextField emailField;
 
     // ── Extended profile fields ───────────────────────────────
-    @FXML private TextArea  bioField;          // both roles
-    @FXML private TextField specializationField; // therapist only (hidden for clients)
-    @FXML private TextField licenseField;        // therapist only (hidden for clients)
+    @FXML
+    private TextArea bioField; // both roles
+    @FXML
+    private TextField specializationField; // therapist only (hidden for clients)
+    @FXML
+    private TextField licenseField; // therapist only (hidden for clients)
 
     // ── Settings ──────────────────────────────────────────────
-    @FXML private ToggleButton lightThemeBtn;
-    @FXML private ToggleButton darkThemeBtn;
-    @FXML private ComboBox<String> languageComboBox;
-    @FXML private RadioButton fontSmallBtn;
-    @FXML private RadioButton fontNormalBtn;
-    @FXML private RadioButton fontLargeBtn;
-    @FXML private Label creationDateLabel;
-    @FXML private Label lastLoginLabel;
+    @FXML
+    private ToggleButton lightThemeBtn;
+    @FXML
+    private ToggleButton darkThemeBtn;
+    @FXML
+    private ComboBox<String> languageComboBox;
+    @FXML
+    private RadioButton fontSmallBtn;
+    @FXML
+    private RadioButton fontNormalBtn;
+    @FXML
+    private RadioButton fontLargeBtn;
+    @FXML
+    private Label creationDateLabel;
+    @FXML
+    private Label lastLoginLabel;
 
-    private final UserDao             userDao             = new UserDao();
-    private final ClientProfileDao    clientProfileDao    = new ClientProfileDao();
+    private final UserDao userDao = new UserDao();
+    private final ClientProfileDao clientProfileDao = new ClientProfileDao();
     private final TherapistProfileDao therapistProfileDao = new TherapistProfileDao();
-    private final SettingsService     settingsService     = SettingsService.getInstance();
+    private final SettingsService settingsService = SettingsService.getInstance();
 
-    private User             currentUser;
-    private ClientProfile    clientProfile;
+    private User currentUser;
+    private ClientProfile clientProfile;
     private TherapistProfile therapistProfile;
 
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -88,7 +107,8 @@ public class ProfileController {
 
     private void loadExtendedProfile() {
         String role = currentUser.getRoles() != null && !currentUser.getRoles().isEmpty()
-                ? currentUser.getRoles().get(0) : "";
+                ? currentUser.getRoles().get(0)
+                : "";
 
         if (role.contains("PSYCHOLOGUE")) {
             therapistProfile = therapistProfileDao.findByUserId(currentUser.getId());
@@ -101,10 +121,12 @@ public class ProfileController {
                 bioField.setText(therapistProfile.getBio() != null ? therapistProfile.getBio() : "");
             if (specializationField != null)
                 specializationField.setText(therapistProfile.getSpecialization() != null
-                        ? therapistProfile.getSpecialization() : "");
+                        ? therapistProfile.getSpecialization()
+                        : "");
             if (licenseField != null)
                 licenseField.setText(therapistProfile.getLicenseNumber() != null
-                        ? therapistProfile.getLicenseNumber() : "");
+                        ? therapistProfile.getLicenseNumber()
+                        : "");
             // Hide client-only fields in FXML if they exist
             setVisible(specializationField, true);
             setVisible(licenseField, true);
@@ -158,7 +180,8 @@ public class ProfileController {
         // 2. Save extended profile fields to the profile table
         String bio = bioField != null ? bioField.getText().trim() : null;
         String role = currentUser.getRoles() != null && !currentUser.getRoles().isEmpty()
-                ? currentUser.getRoles().get(0) : "";
+                ? currentUser.getRoles().get(0)
+                : "";
 
         if (role.contains("PSYCHOLOGUE") && therapistProfile != null) {
             therapistProfile.setBio(bio);
@@ -175,7 +198,7 @@ public class ProfileController {
         try {
             if (userDao.update(currentUser)) {
                 nameLabel.setText(currentUser.getFullName());
-                com.innertrack.controller.MainLayoutController.getInstance().updateUiForSession();
+                MainLayoutController.getInstance().updateUiForSession();
                 showFeedback("Succès", "Profil mis à jour avec succès !");
                 handleBack();
             }
@@ -235,28 +258,55 @@ public class ProfileController {
         fontNormalBtn.setToggleGroup(fontGroup);
         fontLargeBtn.setToggleGroup(fontGroup);
         switch (settingsService.getCurrentSettings().getFontSize()) {
-            case "SMALL": fontSmallBtn.setSelected(true); break;
-            case "LARGE": fontLargeBtn.setSelected(true); break;
-            default:      fontNormalBtn.setSelected(true); break;
+            case "SMALL":
+                fontSmallBtn.setSelected(true);
+                break;
+            case "LARGE":
+                fontLargeBtn.setSelected(true);
+                break;
+            default:
+                fontNormalBtn.setSelected(true);
+                break;
         }
 
         creationDateLabel.setText(currentUser.getCreatedAt() != null
-                ? currentUser.getCreatedAt().format(dateFormatter) : "N/A");
+                ? currentUser.getCreatedAt().format(dateFormatter)
+                : "N/A");
         lastLoginLabel.setText(currentUser.getLastLogin() != null
-                ? currentUser.getLastLogin().format(dateFormatter) : "N/A");
+                ? currentUser.getLastLogin().format(dateFormatter)
+                : "N/A");
     }
 
-    @FXML private void setLightTheme()         { settingsService.updateTheme("LIGHT"); }
-    @FXML private void setDarkTheme()          { settingsService.updateTheme("DARK"); }
-    @FXML private void setFontSmall()          { settingsService.updateFontSize("SMALL"); }
-    @FXML private void setFontNormal()         { settingsService.updateFontSize("NORMAL"); }
-    @FXML private void setFontLarge()          { settingsService.updateFontSize("LARGE"); }
+    @FXML
+    private void setLightTheme() {
+        settingsService.updateTheme("LIGHT");
+    }
+
+    @FXML
+    private void setDarkTheme() {
+        settingsService.updateTheme("DARK");
+    }
+
+    @FXML
+    private void setFontSmall() {
+        settingsService.updateFontSize("SMALL");
+    }
+
+    @FXML
+    private void setFontNormal() {
+        settingsService.updateFontSize("NORMAL");
+    }
+
+    @FXML
+    private void setFontLarge() {
+        settingsService.updateFontSize("LARGE");
+    }
 
     @FXML
     private void handleLanguageChange() {
         String selected = languageComboBox.getValue();
         settingsService.updateLanguage("Français".equals(selected) ? "FR" : "EN");
-        ViewManager.loadView("settings/settings");
+        ViewManager.loadView("profile/settings_main");
     }
 
     @FXML
@@ -289,17 +339,21 @@ public class ProfileController {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             com.innertrack.service.AuthService authService = new com.innertrack.service.AuthService();
             authService.sendNewOtp(currentUser);
-            com.innertrack.controller.VerifyOtpController controller = ViewManager.loadView("verify_otp");
-            if (controller != null) controller.setEmail(currentUser.getEmail());
+            VerifyOtpController controller = ViewManager.loadView("verify_otp");
+            if (controller != null)
+                controller.setEmail(currentUser.getEmail());
         }
     }
 
     @FXML
     private void handleBack() {
         String role = currentUser.getRoles().get(0);
-        if (role.contains("ADMIN"))        ViewManager.loadView("admin/dashboard");
-        else if (role.contains("PSYCHOLOGUE")) ViewManager.loadView("psychologue/dashboard");
-        else                               ViewManager.loadView("user/dashboard");
+        if (role.contains("ADMIN"))
+            ViewManager.loadView("admin/dashboard");
+        else if (role.contains("PSYCHOLOGUE"))
+            ViewManager.loadView("psychologue/dashboard");
+        else
+            ViewManager.loadView("user/dashboard");
     }
 
     // ── Helpers ───────────────────────────────────────────────

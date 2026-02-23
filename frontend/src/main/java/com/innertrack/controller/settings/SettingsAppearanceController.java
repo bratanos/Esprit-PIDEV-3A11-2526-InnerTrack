@@ -51,7 +51,8 @@ public class SettingsAppearanceController {
     private void handleLanguageChange() {
         String selected = languageComboBox.getValue();
         settingsService.updateLanguage("Français".equals(selected) ? "FR" : "EN");
-        // Reload the settings view so all tab labels and text re-render with the new bundle
-        ViewManager.loadView("settings/settings");
+        // Reload the settings view so all tab labels and text re-render with the new
+        // bundle
+        ViewManager.loadView("profile/settings_main");
     }
 }

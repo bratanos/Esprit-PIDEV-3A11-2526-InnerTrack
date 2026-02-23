@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.innertrack.controller.therapist.TherapistLocationController"
+            stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css, @../../styles/base/typography.css, @../../styles/base/controls.css, @../../styles/themes/theme-light.css, @../../styles/views/dashboard.css">
+
+    <!-- Top Bar -->
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 15 25; -fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);">
+            <Button onAction="#handleBack"
+                    style="-fx-background-color: #f1f1f1; -fx-background-radius: 50; -fx-padding: 8; -fx-cursor: hand;">
+                <graphic>
+                    <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#2c3e50"/>
+                </graphic>
+            </Button>
+            <VBox spacing="2">
+                <Label text="Mon emplacement professionnel"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Label text="Cliquez sur la carte pour marquer l'emplacement de votre cabinet."
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <!-- Map -->
+    <center>
+        <WebView fx:id="mapWebView" minHeight="400"/>
+    </center>
+
+    <!-- Bottom Panel -->
+    <bottom>
+        <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 16 25;
+                                   -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, -2, 0);">
+
+            <!-- Address search row -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="addressField"
+                           promptText="Rechercher une adresse (ex: 12 Rue de la Paix, Tunis)"
+                           HBox.hgrow="ALWAYS"
+                           style="-fx-pref-height: 38px;"/>
+                <Button text="Rechercher" onAction="#handleSearchAddress"
+                        style="-fx-background-color: #7f8c8d; -fx-text-fill: white;
+                               -fx-background-radius: 5; -fx-padding: 0 18; -fx-pref-height: 38px;
+                               -fx-cursor: hand;"/>
+            </HBox>
+
+            <!-- Coords + Save row -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label fx:id="coordsLabel" text="Aucun emplacement sélectionné"
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="saveBtn" text="💾  Enregistrer l'emplacement"
+                        onAction="#handleSave"
+                        style="-fx-background-color: #FF69B4; -fx-text-fill: white;
+                               -fx-background-radius: 8; -fx-padding: 10 25;
+                               -fx-font-weight: bold; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </bottom>
+
+</BorderPane>

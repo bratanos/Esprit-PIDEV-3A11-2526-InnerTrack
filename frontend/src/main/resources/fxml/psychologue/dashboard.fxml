@@ -9,7 +9,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.innertrack.controller.psychologue.PsychologueDashboardController"
+            fx:controller="com.innertrack.controller.therapist.TherapistDashboardController"
             stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css, @../../styles/base/typography.css, @../../styles/base/controls.css, @../../styles/themes/theme-light.css, @../../styles/components/sidebar.css, @../../styles/views/dashboard.css"
             styleClass="dashboard-view"
             maxHeight="Infinity" maxWidth="Infinity">
@@ -56,6 +56,11 @@
                 <Button text="Profil &amp; Paramètres" onAction="#handleGoToSettings" styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic>
                         <FontIcon iconLiteral="fas-user-cog" iconSize="18" iconColor="#ffffff" />
+                    </graphic>
+                </Button>
+                <Button text="My location" onAction="#handleGoToLocation" styleClass="sidebar-button" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-map-marker-alt" iconSize="18" iconColor="#ffffff" />
                     </graphic>
                 </Button>
             </VBox>

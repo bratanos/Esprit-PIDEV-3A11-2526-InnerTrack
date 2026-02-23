@@ -53,6 +53,13 @@
                         <FontIcon iconLiteral="fas-user-cog" iconSize="18" iconColor="#ffffff" />
                     </graphic>
                 </Button>
+                <Button text="Find a therapist" onAction="#handleGoToMap" styleClass="sidebar-button" maxWidth="Infinity">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-map-marker-alt" iconSize="18" iconColor="#ffffff" />
+                    </graphic>
+
+                </Button>
+
             </VBox>
 
             <Region VBox.vgrow="ALWAYS" />

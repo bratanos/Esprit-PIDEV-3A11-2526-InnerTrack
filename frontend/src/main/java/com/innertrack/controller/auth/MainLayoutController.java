@@ -1,4 +1,4 @@
-package com.innertrack.controller;
+package com.innertrack.controller.auth;
 
 import com.innertrack.session.SessionManager;
 import com.innertrack.util.ViewManager;

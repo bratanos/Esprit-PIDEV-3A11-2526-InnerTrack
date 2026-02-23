@@ -1,5 +1,6 @@
 package com.innertrack.controller.admin;
 
+import com.innertrack.controller.auth.MainLayoutController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import com.innertrack.session.SessionManager;
@@ -26,8 +27,8 @@ public class AdminDashboardController {
         updateProfileImage(admin.getProfilePicture());
 
         // Hide global navbar as requested
-        com.innertrack.controller.MainLayoutController.getInstance().setNavbarVisible(false);
-        com.innertrack.controller.MainLayoutController.getInstance().setFooterVisible(false);
+        MainLayoutController.getInstance().setNavbarVisible(false);
+        MainLayoutController.getInstance().setFooterVisible(false);
 
         // Dummy stats for demonstration
         totalUsersLabel.setText("128");

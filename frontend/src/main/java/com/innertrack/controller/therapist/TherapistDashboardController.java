@@ -1,10 +1,12 @@
-package com.innertrack.controller.psychologue;
+package com.innertrack.controller.therapist;
 
+import com.innertrack.controller.auth.MainLayoutController;
+import com.innertrack.util.ViewManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import com.innertrack.session.SessionManager;
 
-public class PsychologueDashboardController {
+public class TherapistDashboardController {
     @FXML
     private Label welcomeLabel;
     @FXML
@@ -26,8 +28,8 @@ public class PsychologueDashboardController {
         updateProfileImage(psych.getProfilePicture());
 
         // Hide global navbar as requested
-        com.innertrack.controller.MainLayoutController.getInstance().setNavbarVisible(false);
-        com.innertrack.controller.MainLayoutController.getInstance().setFooterVisible(false);
+        MainLayoutController.getInstance().setNavbarVisible(false);
+        MainLayoutController.getInstance().setFooterVisible(false);
 
         // Dummy stats
         totalPatientsLabel.setText("42");
@@ -48,6 +50,11 @@ public class PsychologueDashboardController {
     @FXML
     private void handleGoToSettings() {
         com.innertrack.util.ViewManager.loadView("profile/settings");
+    }
+
+    @FXML
+    private void handleGoToLocation() {
+        ViewManager.loadView("psychologue/therapist_location");
     }
 
     @FXML

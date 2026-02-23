@@ -18,14 +18,16 @@ module com.innertrack {
     requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.fontawesome5;
+    requires jdk.jsobject;
+    requires javafx.web;
 
     opens com.innertrack.model to com.google.gson, javafx.base;
     opens com.innertrack.dao to java.sql;
     opens com.innertrack.service to java.base;
     opens com.innertrack.security to jjwt.api;
-    opens com.innertrack.controller to javafx.fxml;
+
     opens com.innertrack.controller.admin to javafx.fxml;
-    opens com.innertrack.controller.psychologue to javafx.fxml;
+    opens com.innertrack.controller.therapist to javafx.fxml;
     opens com.innertrack.controller.user to javafx.fxml;
     opens com.innertrack.controller.profile to javafx.fxml;
     opens com.innertrack.controller.settings to javafx.fxml;
@@ -39,12 +41,14 @@ module com.innertrack {
     exports com.innertrack.service;
     exports com.innertrack.security;
     exports com.innertrack.session;
-    exports com.innertrack.controller;
+
     exports com.innertrack.controller.admin;
-    exports com.innertrack.controller.psychologue;
+    exports com.innertrack.controller.therapist;
     exports com.innertrack.controller.user;
     exports com.innertrack.controller.profile;
     exports com.innertrack.util;
 
     opens com.innertrack.app to javafx.fxml;
+    exports com.innertrack.controller.auth;
+    opens com.innertrack.controller.auth to javafx.fxml;
 }

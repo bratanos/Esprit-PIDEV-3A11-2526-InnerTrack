@@ -1,4 +1,4 @@
-package com.innertrack.controller;
+package com.innertrack.controller.auth;
 
 import com.innertrack.service.AuthService;
 import com.innertrack.util.ViewManager;
@@ -34,8 +34,8 @@ public class RegisterController {
 
     @FXML
     public void initialize() {
-        com.innertrack.controller.MainLayoutController.getInstance().setNavbarVisible(false);
-        com.innertrack.controller.MainLayoutController.getInstance().setFooterVisible(false);
+        MainLayoutController.getInstance().setNavbarVisible(false);
+        MainLayoutController.getInstance().setFooterVisible(false);
         roleComboBox.setItems(FXCollections.observableArrayList("Normal User", "Psychologue"));
     }
 

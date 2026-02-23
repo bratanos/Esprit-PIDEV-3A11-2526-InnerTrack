@@ -1,5 +1,7 @@
 package com.innertrack.controller.user;
 
+import com.innertrack.controller.auth.MainLayoutController;
+import com.innertrack.util.ViewManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import com.innertrack.session.SessionManager;
@@ -26,8 +28,8 @@ public class UserDashboardController {
         updateProfileImage(user.getProfilePicture());
 
         // Hide global navbar as requested
-        com.innertrack.controller.MainLayoutController.getInstance().setNavbarVisible(false);
-        com.innertrack.controller.MainLayoutController.getInstance().setFooterVisible(false);
+        MainLayoutController.getInstance().setNavbarVisible(false);
+        MainLayoutController.getInstance().setFooterVisible(false);
 
         // Dummy stats
         streakLabel.setText("7 jours");
@@ -54,6 +56,11 @@ public class UserDashboardController {
     private void handleLogout() {
         SessionManager.getInstance().cleanSession();
         com.innertrack.util.ViewManager.loadView("login");
+    }
+
+    @FXML
+    private void handleGoToMap(){
+        ViewManager.loadView("user/therapist_map");
     }
 
     private void updateProfileImage(String picPath) {

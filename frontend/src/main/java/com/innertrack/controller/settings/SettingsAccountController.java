@@ -1,6 +1,6 @@
 package com.innertrack.controller.settings;
 
-import com.innertrack.controller.VerifyOtpController;
+import com.innertrack.controller.auth.VerifyOtpController;
 import com.innertrack.dao.UserDao;
 import com.innertrack.model.User;
 import com.innertrack.session.SessionManager;

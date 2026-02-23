@@ -1,4 +1,4 @@
-package com.innertrack.controller;
+package com.innertrack.controller.auth;
 
 import com.innertrack.service.AuthService;
 import com.innertrack.util.ViewManager;
@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import java.util.List;
 
 public class LoginController {
 
@@ -41,11 +42,12 @@ public class LoginController {
             System.out.println("Login successful for user: " + email);
             // Success! Determine redirection based on role
             com.innertrack.model.User user = com.innertrack.session.SessionManager.getInstance().getCurrentUser();
+            List<String> roles = user.getRoles();
             String dashboardView;
 
-            if (user instanceof com.innertrack.model.Admin) {
+            if (roles.contains("ROLE_ADMIN")) {
                 dashboardView = "admin/dashboard";
-            } else if (user instanceof com.innertrack.model.Psychologue) {
+            } else if (roles.contains("ROLE_PSYCHOLOGUE")) {
                 dashboardView = "psychologue/dashboard";
             } else {
                 dashboardView = "user/dashboard";

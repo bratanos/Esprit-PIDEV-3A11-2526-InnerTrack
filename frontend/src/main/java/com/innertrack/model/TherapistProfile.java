@@ -2,17 +2,15 @@ package com.innertrack.model;
 
 import java.time.LocalDateTime;
 
-/**
- * Extended profile data for a therapist (ROLE_PSYCHOLOGUE).
- * Basic identity (first_name, last_name, profile_picture) lives on User — not here.
- * This table only holds data that is specific to a therapist.
- */
 public class TherapistProfile {
     private int id;
     private int userId;
     private String specialization;
     private String licenseNumber;
     private String bio;
+    private String address;
+    private Double latitude;
+    private Double longitude;
     private LocalDateTime createdAt;
 
     public TherapistProfile() {}
@@ -44,6 +42,19 @@ public class TherapistProfile {
     public String getBio()                    { return bio; }
     public void setBio(String bio)            { this.bio = bio; }
 
+    public String getAddress()                { return address; }
+    public void setAddress(String address)    { this.address = address; }
+
+    public Double getLatitude()               { return latitude; }
+    public void setLatitude(Double latitude)  { this.latitude = latitude; }
+
+    public Double getLongitude()              { return longitude; }
+    public void setLongitude(Double v)        { this.longitude = v; }
+
     public LocalDateTime getCreatedAt()       { return createdAt; }
     public void setCreatedAt(LocalDateTime v) { this.createdAt = v; }
+
+    public boolean hasLocation() {
+        return latitude != null && longitude != null;
+    }
 }

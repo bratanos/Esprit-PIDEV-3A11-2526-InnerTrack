@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.innertrack.controller.user.TherapistMapController"
+            stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css, @../../styles/base/typography.css, @../../styles/base/controls.css, @../../styles/themes/theme-light.css, @../../styles/views/dashboard.css">
+
+    <!-- Top Bar -->
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT"
+              style="-fx-padding: 15 25; -fx-background-color: white;
+                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);">
+            <Button onAction="#handleBack"
+                    style="-fx-background-color: #f1f1f1; -fx-background-radius: 50;
+                           -fx-padding: 8; -fx-cursor: hand;">
+                <graphic>
+                    <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#2c3e50"/>
+                </graphic>
+            </Button>
+            <VBox spacing="2">
+                <Label text="Trouver un thérapeute"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Label text="Cliquez sur un marqueur rose pour voir les informations du thérapeute."
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <!-- Legend -->
+            <HBox spacing="8" alignment="CENTER"
+                  style="-fx-background-color: #FFF0F5; -fx-padding: 8 14;
+                         -fx-background-radius: 20;">
+                <Label text="●" style="-fx-text-fill: #FF69B4; -fx-font-size: 18px;"/>
+                <Label text="Cabinet de thérapeute"
+                       style="-fx-text-fill: #C2185B; -fx-font-size: 13px;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- Full-screen map -->
+    <center>
+        <WebView fx:id="mapWebView"/>
+    </center>
+
+</BorderPane>
