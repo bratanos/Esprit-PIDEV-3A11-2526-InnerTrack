@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.web.WebView?>
 <?import javafx.geometry.Insets?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import com.sothawo.mapjfx.MapView?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -31,7 +31,7 @@
 
     <!-- Map -->
     <center>
-        <WebView fx:id="mapWebView" minHeight="400"/>
+        <MapView fx:id="mapView" minHeight="400"/>
     </center>
 
     <!-- Bottom Panel -->

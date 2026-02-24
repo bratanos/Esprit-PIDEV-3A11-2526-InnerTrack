@@ -67,7 +67,23 @@ public class MainLayoutController {
 
     @FXML
     private void goToHome() {
-        ViewManager.loadView("main");
+        var currentUser = SessionManager.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            ViewManager.loadView("main");
+            return;
+        }
+
+        var roles = currentUser.getRoles();
+        String dashboardView;
+        if (roles != null && roles.contains("ROLE_ADMIN")) {
+            dashboardView = "admin/dashboard";
+        } else if (roles != null && roles.contains("ROLE_PSYCHOLOGUE")) {
+            dashboardView = "psychologue/dashboard";
+        } else {
+            dashboardView = "user/dashboard";
+        }
+
+        ViewManager.loadView(dashboardView);
     }
 
     @FXML
