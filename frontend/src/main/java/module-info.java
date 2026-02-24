@@ -12,6 +12,7 @@ module com.innertrack {
     requires com.sothawo.mapjfx;
     requires io.redlink.geocoding.osm;
     requires io.redlink.geocoding.api;
+    requires org.slf4j;
 
     // Security & JWT
     requires jbcrypt;
