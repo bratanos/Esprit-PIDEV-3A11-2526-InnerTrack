@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.innertrack.controller.therapist.TherapistNotificationsController"
+            styleClass="dashboard-view" maxHeight="Infinity" maxWidth="Infinity">
+
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT"
+              style="-fx-padding: 15 25; -fx-background-color: white;
+                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);">
+            <Button onAction="#handleBack"
+                    style="-fx-background-color: #f1f1f1; -fx-background-radius: 50;
+                           -fx-padding: 8; -fx-cursor: hand;">
+                <graphic>
+                    <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#2c3e50"/>
+                </graphic>
+            </Button>
+            <VBox spacing="2">
+                <Label text="Demandes de contact"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Label text="Patients souhaitant vous contacter."
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background-color: #f4f7f6; -fx-background: #f4f7f6;">
+            <VBox style="-fx-padding: 30 60;" spacing="16">
+                <Label fx:id="emptyLabel"
+                       text="Aucune demande en attente. 🎉"
+                       style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"
+                       visible="false" managed="false"/>
+                <VBox fx:id="requestsList" spacing="12"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

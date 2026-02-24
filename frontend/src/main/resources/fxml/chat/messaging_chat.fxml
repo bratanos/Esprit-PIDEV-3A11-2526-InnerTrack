@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.innertrack.controller.chat.MessagingChatController"
+            styleClass="dashboard-view" maxHeight="Infinity" maxWidth="Infinity">
+
+    <!-- Top Bar -->
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT"
+              style="-fx-padding: 14 22; -fx-background-color: white;
+                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);">
+            <Button onAction="#handleBack"
+                    style="-fx-background-color: #f1f1f1; -fx-background-radius: 50;
+                           -fx-padding: 8; -fx-cursor: hand;">
+                <graphic>
+                    <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#2c3e50"/>
+                </graphic>
+            </Button>
+            <VBox spacing="1">
+                <Label fx:id="conversationTitleLabel" text="Messagerie"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Label fx:id="conversationSubLabel" text="Sélectionnez une conversation"
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox>
+            <!-- ── Left panel: conversation list ── -->
+            <VBox prefWidth="280" minWidth="240"
+                  style="-fx-background-color: #fafafa;
+                         -fx-border-color: #ebebeb; -fx-border-width: 0 1 0 0;">
+                <Label text="Conversations"
+                       style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;
+                              -fx-padding: 16 16 8 16; -fx-text-transform: uppercase;"/>
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                            style="-fx-background-color: transparent; -fx-background: transparent;">
+                    <VBox fx:id="conversationsList" spacing="2" style="-fx-padding: 0 8;"/>
+                </ScrollPane>
+            </VBox>
+
+            <!-- ── Right panel: message area ── -->
+            <VBox HBox.hgrow="ALWAYS">
+
+                <!-- Messages -->
+                <ScrollPane fx:id="messagesScroll" fitToWidth="true" VBox.vgrow="ALWAYS"
+                            style="-fx-background-color: #f4f7f6; -fx-background: #f4f7f6;">
+                    <VBox fx:id="messagesBox" spacing="4"
+                          style="-fx-padding: 16 0 16 0;"/>
+                </ScrollPane>
+
+                <!-- Input bar -->
+                <HBox spacing="10" alignment="CENTER"
+                      style="-fx-padding: 12 16; -fx-background-color: white;
+                             -fx-border-color: #ebebeb; -fx-border-width: 1 0 0 0;">
+                    <TextArea fx:id="messageInput"
+                              promptText="Sélectionnez une conversation pour écrire…"
+                              prefRowCount="2" wrapText="true"
+                              HBox.hgrow="ALWAYS"
+                              disable="true"
+                              style="-fx-font-size: 14px; -fx-background-radius: 12;
+                                     -fx-border-radius: 12; -fx-border-color: #ddd;"/>
+                    <Button fx:id="sendButton" onAction="#handleSend"
+                            disable="true"
+                            style="-fx-background-color: #FF69B4; -fx-background-radius: 50;
+                                   -fx-padding: 12; -fx-cursor: hand;
+                                   -fx-effect: dropshadow(three-pass-box, rgba(255,105,180,0.4), 8, 0, 0, 2);">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-paper-plane" iconSize="18" iconColor="white"/>
+                        </graphic>
+                    </Button>
+                </HBox>
+            </VBox>
+        </HBox>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.innertrack.controller.therapist.TherapistProfileSetupController"
+            styleClass="dashboard-view"
+            maxHeight="Infinity" maxWidth="Infinity">
+
+    <!-- Top Bar -->
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT"
+              style="-fx-padding: 15 25; -fx-background-color: white;
+                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);">
+            <Button onAction="#handleBack"
+                    style="-fx-background-color: #f1f1f1; -fx-background-radius: 50;
+                           -fx-padding: 8; -fx-cursor: hand;">
+                <graphic>
+                    <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#2c3e50"/>
+                </graphic>
+            </Button>
+            <VBox spacing="2">
+                <Label text="Mon profil professionnel"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Label text="Ces informations seront visibles par vos patients."
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statusLabel" text=""
+                   style="-fx-text-fill: #16a085; -fx-font-size: 13px;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background-color: #f4f7f6; -fx-background: #f4f7f6;">
+            <VBox spacing="24" style="-fx-padding: 40 80;">
+
+                <!-- Personal Info Card -->
+                <VBox spacing="16"
+                      style="-fx-background-color: white; -fx-background-radius: 12;
+                             -fx-padding: 24; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 3);">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <FontIcon iconLiteral="fas-user-md" iconSize="20" iconColor="#FF69B4"/>
+                        <Label text="Informations professionnelles"
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    </HBox>
+                    <Separator/>
+
+                    <HBox spacing="20">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Prénom" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+                            <TextField fx:id="firstNameField" promptText="Votre prénom"/>
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Nom" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+                            <TextField fx:id="lastNameField" promptText="Votre nom de famille"/>
+                        </VBox>
+                    </HBox>
+
+                    <VBox spacing="6">
+                        <Label text="Spécialisation" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+                        <ComboBox fx:id="specializationCombo"
+                                  promptText="Sélectionnez votre spécialisation"
+                                  maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="Numéro de licence professionnelle"
+                               style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+                        <TextField fx:id="licenseField"
+                                   promptText="Ex: TN-PSY-2024-XXXX"/>
+                    </VBox>
+                </VBox>
+
+                <!-- Bio Card -->
+                <VBox spacing="16"
+                      style="-fx-background-color: white; -fx-background-radius: 12;
+                             -fx-padding: 24; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 3);">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <FontIcon iconLiteral="fas-align-left" iconSize="20" iconColor="#FF69B4"/>
+                        <Label text="Présentation / Bio"
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    </HBox>
+                    <Separator/>
+                    <VBox spacing="6">
+                        <Label text="Décrivez votre approche thérapeutique, vos méthodes et votre expérience."
+                               style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;" wrapText="true"/>
+                        <TextArea fx:id="bioArea"
+                                  promptText="Ex: Je suis psychologue clinicien avec 10 ans d'expérience..."
+                                  prefRowCount="6" wrapText="true"
+                                  style="-fx-font-size: 13px;"/>
+                    </VBox>
+                    <HBox alignment="CENTER_RIGHT">
+                        <Label fx:id="bioCharCount" text="0 / 500"
+                               style="-fx-text-fill: #bdc3c7; -fx-font-size: 11px;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Availability Card -->
+                <VBox spacing="16"
+                      style="-fx-background-color: white; -fx-background-radius: 12;
+                             -fx-padding: 24; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 3);">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <FontIcon iconLiteral="fas-clock" iconSize="20" iconColor="#FF69B4"/>
+                        <Label text="Disponibilité et contact"
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    </HBox>
+                    <Separator/>
+
+                    <HBox spacing="20">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Téléphone" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+                            <TextField fx:id="phoneField" promptText="+216 XX XXX XXX"/>
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Tarif par séance (DT)"
+                                   style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+                            <TextField fx:id="rateField" promptText="Ex: 80"/>
+                        </VBox>
+                    </HBox>
+
+                    <VBox spacing="8">
+                        <Label text="Jours de disponibilité"
+                               style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <CheckBox fx:id="monCheck" text="Lun"/>
+                            <CheckBox fx:id="tueCheck" text="Mar"/>
+                            <CheckBox fx:id="wedCheck" text="Mer"/>
+                            <CheckBox fx:id="thuCheck" text="Jeu"/>
+                            <CheckBox fx:id="friCheck" text="Ven"/>
+                            <CheckBox fx:id="satCheck" text="Sam"/>
+                            <CheckBox fx:id="sunCheck" text="Dim"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- Save Button -->
+                <HBox alignment="CENTER_RIGHT" spacing="12">
+                    <Button text="Annuler" onAction="#handleBack"
+                            style="-fx-background-color: #f1f1f1; -fx-text-fill: #2c3e50;
+                                   -fx-background-radius: 8; -fx-padding: 12 30; -fx-cursor: hand;"/>
+                    <Button text="💾  Enregistrer le profil" onAction="#handleSave"
+                            style="-fx-background-color: #FF69B4; -fx-text-fill: white;
+                                   -fx-font-weight: bold; -fx-background-radius: 8;
+                                   -fx-padding: 12 30; -fx-cursor: hand; -fx-font-size: 14px;"/>
+                </HBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

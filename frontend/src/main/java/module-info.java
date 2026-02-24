@@ -35,9 +35,10 @@ module com.innertrack {
     opens com.innertrack.controller.user to javafx.fxml;
     opens com.innertrack.controller.profile to javafx.fxml;
     opens com.innertrack.controller.settings to javafx.fxml;
+    opens com.innertrack.controller.chat to javafx.fxml;       // ← NEW: MessagingChatController
     opens com.innertrack.util to javafx.fxml;
 
-    // Auth resources are now in a subfolder
+    // Auth resources
     opens fxml.auth to javafx.fxml;
 
     exports com.innertrack.app;
@@ -45,7 +46,7 @@ module com.innertrack {
     exports com.innertrack.service;
     exports com.innertrack.security;
     exports com.innertrack.session;
-
+    exports com.innertrack.controller.chat;                    // ← NEW
     exports com.innertrack.controller.admin;
     exports com.innertrack.controller.therapist;
     exports com.innertrack.controller.user;
