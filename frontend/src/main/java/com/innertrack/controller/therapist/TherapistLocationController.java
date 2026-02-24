@@ -5,39 +5,54 @@ import com.innertrack.model.TherapistProfile;
 import com.innertrack.model.User;
 import com.innertrack.session.SessionManager;
 import com.innertrack.util.ViewManager;
+import com.sothawo.mapjfx.Coordinate;
+import com.sothawo.mapjfx.MapType;
+import com.sothawo.mapjfx.MapView;
+import com.sothawo.mapjfx.Marker;
+import com.sothawo.mapjfx.XYZParam;
+import com.sothawo.mapjfx.event.MapViewEvent;
+import com.sothawo.mapjfx.event.MarkerEvent;
+import io.redlink.geocoding.LatLon;
+import io.redlink.geocoding.Place;
+import io.redlink.geocoding.nominatim.NominatimGeocoder;
 import javafx.application.Platform;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-import netscape.javascript.JSObject;
 
-import java.io.File;
+import java.net.URL;
+import java.util.List;
+import java.util.Locale;
 
 public class TherapistLocationController {
 
+    private static final Coordinate TUNISIA_CENTER = new Coordinate(33.8869, 9.5375);
+    private static final double TUNISIA_OVERVIEW_ZOOM = 6;
+    private static final double SEARCH_ZOOM = 15;
+    private static final String OSM_ENGLISH_TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+
     @FXML
-    private WebView mapWebView;
+    private MapView mapView;
+
     @FXML
     private TextField addressField;
+
     @FXML
     private Label coordsLabel;
 
     private final TherapistProfileDao profileDao = new TherapistProfileDao();
     private TherapistProfile profile;
-    private WebEngine engine;
 
-    private File writeTempMapFile(String html) throws Exception {
-        File temp = File.createTempFile("innertrack_map_", ".html");
-        temp.deleteOnExit();
-        try (java.io.FileWriter fw = new java.io.FileWriter(temp, java.nio.charset.StandardCharsets.UTF_8)) {
-            fw.write(html);
-        }
-        return temp;
-    }
+    private Marker clinicMarker;
+    private volatile boolean draggingMarker = false;
+
+    private final NominatimGeocoder geocoder = NominatimGeocoder.builder()
+            .setUserAgent("InnerTrack-JavaFX-App")
+            .setStaticHeader("User-Agent", "InnerTrack-JavaFX-App")
+            .setStaticQueryParam("countrycodes", "tn")
+            .setQueryRateLimit(1)
+            .create();
 
     @FXML
     public void initialize() {
@@ -48,105 +63,119 @@ public class TherapistLocationController {
             profileDao.create(profile);
         }
 
-        if (profile.getAddress() != null)
+        if (profile.getAddress() != null) {
             addressField.setText(profile.getAddress());
+        }
         if (profile.hasLocation()) {
-            coordsLabel.setText(String.format("📍 %.6f, %.6f",
-                    profile.getLatitude(), profile.getLongitude()));
+            coordsLabel.setText(formatCoords(profile.getLatitude(), profile.getLongitude()));
+        } else {
+            coordsLabel.setText("Aucun emplacement sélectionné");
         }
 
-        engine = mapWebView.getEngine();
-        engine.setJavaScriptEnabled(true);
+        configureMap();
+        setupMarker();
+        wireInteractions();
+    }
 
-        // Fix flickering: disable JavaFX node caching on the WebView
-        mapWebView.setCache(false);
-        mapWebView.setCacheHint(javafx.scene.CacheHint.SPEED);
-        mapWebView.setContextMenuEnabled(false);
+    private void configureMap() {
+        XYZParam xyzParam = new XYZParam()
+                .withUrl(OSM_ENGLISH_TILES)
+                .withAttributions("© OpenStreetMap contributors")
+                .withMaxZoom(19);
 
-        engine.getLoadWorker().stateProperty().addListener((obs, old, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                // Register Java bridge so JS can call back into Java
-                JSObject window = (JSObject) engine.executeScript("window");
-                window.setMember("javaBridge", this);
+        mapView.setMapType(MapType.XYZ);
+        mapView.setXYZParam(xyzParam);
 
-                // If profile already has a saved location, restore the marker
-                if (profile.hasLocation()) {
-                    engine.executeScript(String.format(
-                            "restoreMarker(%f, %f);",
-                            profile.getLatitude(), profile.getLongitude()));
-                }
+        mapView.initializedProperty().addListener((obs, oldV, initialized) -> {
+            if (!initialized) {
+                return;
+            }
+
+            if (profile.hasLocation()) {
+                Coordinate c = new Coordinate(profile.getLatitude(), profile.getLongitude());
+                mapView.setCenter(c);
+                mapView.setZoom(SEARCH_ZOOM);
+            } else {
+                mapView.setCenter(TUNISIA_CENTER);
+                mapView.setZoom(TUNISIA_OVERVIEW_ZOOM);
             }
         });
 
-        try {
-            File mapFile = writeTempMapFile(buildMapHtml());
-            engine.load(mapFile.toURI().toString());
-        } catch (Exception e) {
-            System.err.println("Failed to write map temp file: " + e.getMessage());
+        mapView.initialize();
+    }
+
+    private void setupMarker() {
+        URL markerUrl = getClass().getResource("/Images/marker-pink.svg");
+        clinicMarker = new Marker(markerUrl, -15, -45).setVisible(false);
+        mapView.addMarker(clinicMarker);
+
+        if (profile.hasLocation()) {
+            clinicMarker.setPosition(new Coordinate(profile.getLatitude(), profile.getLongitude()));
+            clinicMarker.setVisible(true);
         }
     }
 
-    /**
-     * Called FROM JavaScript when the user clicks the map.
-     * Must be public — JavaFX JSObject bridge requires it.
-     */
-    public void onLocationPicked(double lat, double lng) {
-        Platform.runLater(() -> {
-            profile.setLatitude(lat);
-            profile.setLongitude(lng);
-            coordsLabel.setText(String.format("📍 %.6f, %.6f", lat, lng));
+    private void wireInteractions() {
+        mapView.addEventHandler(MapViewEvent.MAP_CLICKED, e -> {
+            if (draggingMarker) {
+                return;
+            }
+            setClinicLocation(e.getCoordinate(), true);
+            reverseGeocodeToAddress(e.getCoordinate());
+        });
+
+        mapView.addEventHandler(MapViewEvent.MAP_POINTER_MOVED, e -> {
+            if (!draggingMarker || clinicMarker == null || !clinicMarker.getVisible()) {
+                return;
+            }
+            setClinicLocation(e.getCoordinate(), false);
+        });
+
+        mapView.addEventHandler(MarkerEvent.MARKER_MOUSEDOWN, e -> {
+            if (clinicMarker != null && clinicMarker.equals(e.getMarker())) {
+                draggingMarker = true;
+            }
+        });
+
+        mapView.addEventHandler(MarkerEvent.MARKER_MOUSEUP, e -> {
+            if (clinicMarker != null && clinicMarker.equals(e.getMarker())) {
+                draggingMarker = false;
+                if (clinicMarker.getPosition() != null) {
+                    reverseGeocodeToAddress(clinicMarker.getPosition());
+                }
+            }
         });
     }
 
-
-
     @FXML
     private void handleSearchAddress() {
-        String address = addressField.getText().trim();
-        if (address.isEmpty())
+        String query = addressField.getText() == null ? "" : addressField.getText().trim();
+        if (query.isBlank()) {
+            showAlert("Adresse requise", "Veuillez saisir une adresse en Tunisie.");
             return;
+        }
 
-        // Run geocoding on a background thread — Nominatim is HTTP
         new Thread(() -> {
             try {
-                String encoded = java.net.URLEncoder.encode(address, "UTF-8");
-                String url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + encoded;
-
-                java.net.HttpURLConnection conn = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
-                // Nominatim requires a User-Agent header
-                conn.setRequestProperty("User-Agent", "InnerTrack-JavaFX-App");
-                conn.setConnectTimeout(5000);
-                conn.setReadTimeout(5000);
-
-                java.io.BufferedReader reader = new java.io.BufferedReader(
-                        new java.io.InputStreamReader(conn.getInputStream()));
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null)
-                    sb.append(line);
-                reader.close();
-
-                String json = sb.toString();
-                // Parse lat/lon from the JSON manually (no external lib needed)
-                // Response looks like: [{"lat":"36.8065","lon":"10.1815",...}]
-                if (json.startsWith("[{")) {
-                    double lat = parseJsonDouble(json, "lat");
-                    double lon = parseJsonDouble(json, "lon");
-
-                    Platform.runLater(() -> {
-                        profile.setLatitude(lat);
-                        profile.setLongitude(lon);
-                        profile.setAddress(address);
-                        addressField.setText(address);
-                        coordsLabel.setText(String.format("📍 %.6f, %.6f", lat, lon));
-                        engine.executeScript(String.format("panAndMark(%f, %f);", lat, lon));
-                    });
-                } else {
+                List<Place> places = geocoder.geocode(query, Locale.ENGLISH);
+                if (places == null || places.isEmpty()) {
                     Platform.runLater(() -> showAlert("Adresse introuvable", "Essayez une adresse plus précise."));
+                    return;
                 }
-            } catch (Exception e) {
-                Platform.runLater(
-                        () -> showAlert("Erreur réseau", "Impossible de rechercher l'adresse : " + e.getMessage()));
+
+                Place best = places.get(0);
+                LatLon ll = best.getLatLon();
+                Coordinate c = new Coordinate(ll.lat(), ll.lon());
+                String address = best.getAddress();
+
+                Platform.runLater(() -> {
+                    addressField.setText(address);
+                    setClinicLocation(c, true);
+                    mapView.setCenter(c);
+                    mapView.setZoom(SEARCH_ZOOM);
+                });
+            } catch (Exception ex) {
+                Platform.runLater(() -> showAlert("Erreur réseau", "Impossible de rechercher l'adresse : " + ex.getMessage()));
             }
         }, "geocode-thread").start();
     }
@@ -154,15 +183,17 @@ public class TherapistLocationController {
     @FXML
     private void handleSave() {
         if (!profile.hasLocation()) {
-            showAlert("Aucun emplacement",
-                    "Veuillez cliquer sur la carte ou rechercher une adresse.");
+            showAlert("Aucun emplacement", "Veuillez cliquer sur la carte ou rechercher une adresse.");
             return;
         }
-        String addr = addressField.getText().trim();
-        if (!addr.isEmpty())
-            profile.setAddress(addr);
 
-        if (profileDao.update(profile)) {
+        String addr = addressField.getText() == null ? "" : addressField.getText().trim();
+        if (!addr.isBlank()) {
+            profile.setAddress(addr);
+        }
+
+        boolean ok = profileDao.update(profile);
+        if (ok) {
             showAlert("Succès", "Emplacement enregistré !");
         } else {
             showAlert("Erreur", "Impossible d'enregistrer l'emplacement.");
@@ -174,95 +205,40 @@ public class TherapistLocationController {
         ViewManager.loadView("psychologue/dashboard");
     }
 
-    // ── Map HTML ──────────────────────────────────────────────
+    private void setClinicLocation(Coordinate c, boolean ensureVisible) {
+        if (clinicMarker == null) {
+            return;
+        }
 
-    private String buildMapHtml() {
-        double defaultLat = 34.7406;
-        double defaultLng = 10.7603;
+        clinicMarker.setPosition(c);
+        if (ensureVisible) {
+            clinicMarker.setVisible(true);
+        }
 
-        // Get local resource paths
-        String leafletJs  = getClass().getResource("/leaflet/leaflet.js").toExternalForm();
-        String leafletCss = getClass().getResource("/leaflet/leaflet.css").toExternalForm();
-
-        return "<!DOCTYPE html><html><head>" +
-                "<meta charset='utf-8'/>" +
-                "<link rel='stylesheet' href='" + leafletCss + "'/>" +
-                "<script src='" + leafletJs + "'></script>" +
-                "<style>" +
-                "  * { margin:0; padding:0; box-sizing:border-box; }" +
-                "  html, body, #map { width:100%; height:100%; }" +
-                "  #hint {" +
-                "    position:absolute; top:12px; left:50%; transform:translateX(-50%);" +
-                "    background:rgba(255,255,255,0.95); padding:8px 18px;" +
-                "    border-radius:20px; font:13px/1 sans-serif; color:#555;" +
-                "    box-shadow:0 2px 8px rgba(0,0,0,0.18); z-index:1000;" +
-                "    pointer-events:none;" +
-                "  }" +
-                "</style></head><body>" +
-                "<div id='hint'>Cliquez sur la carte pour marquer votre cabinet</div>" +
-                "<div id='map'></div>" +
-                "<script>" +
-                "  var map = L.map('map', {" +
-                "    preferCanvas: true," +         // use canvas renderer — far fewer flicker issues
-                "    zoomAnimation: false," +        // disable zoom animation — main flicker cause
-                "    markerZoomAnimation: false" +
-                "  }).setView([" + defaultLat + "," + defaultLng + "], 13);" +
-
-                "  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {" +
-                "    attribution: '© OpenStreetMap contributors'," +
-                "    maxZoom: 19," +
-                "    updateWhenIdle: false," +       // load tiles during drag, not after
-                "    updateWhenZooming: false," +    // don't reload during zoom
-                "    keepBuffer: 4," +              // keep more tiles in memory
-                "    crossOrigin: true" +
-                "  }).addTo(map);" +
-
-                "  var pinkIcon = L.divIcon({" +
-                "    html: '<div style=\"width:22px;height:22px;background:#FF69B4;" +
-                "           border:3px solid #C2185B;border-radius:50%;" +
-                "           box-shadow:0 2px 6px rgba(0,0,0,0.3);\"></div>'," +
-                "    className:''," +
-                "    iconSize:[22,22]," +
-                "    iconAnchor:[11,11]" +
-                "  });" +
-
-                "  var marker = null;" +
-
-                "  function placeMarker(lat, lng) {" +
-                "    if (marker) map.removeLayer(marker);" +
-                "    marker = L.marker([lat, lng], {icon: pinkIcon, draggable: true}).addTo(map);" +
-                "    marker.on('dragend', function(e) {" +
-                "      var pos = e.target.getLatLng();" +
-                "      if (window.javaBridge) window.javaBridge.onLocationPicked(pos.lat, pos.lng);" +
-                "    });" +
-                "    if (window.javaBridge) window.javaBridge.onLocationPicked(lat, lng);" +
-                "  }" +
-
-                "  function restoreMarker(lat, lng) {" +
-                "    placeMarker(lat, lng);" +
-                "    map.setView([lat, lng], 15);" +
-                "  }" +
-
-                "  function panAndMark(lat, lng) {" +
-                "    map.setView([lat, lng], 16);" +
-                "    placeMarker(lat, lng);" +
-                "  }" +
-
-                "  map.on('click', function(e) {" +
-                "    placeMarker(e.latlng.lat, e.latlng.lng);" +
-                "  });" +
-                "</script>" +
-                "</body></html>";
+        profile.setLatitude(c.getLatitude());
+        profile.setLongitude(c.getLongitude());
+        coordsLabel.setText(formatCoords(c.getLatitude(), c.getLongitude()));
     }
 
-    // ── Helpers ───────────────────────────────────────────────
+    private void reverseGeocodeToAddress(Coordinate c) {
+        new Thread(() -> {
+            try {
+                List<Place> places = geocoder.reverseGeocode(LatLon.create(c.getLatitude(), c.getLongitude()), Locale.ENGLISH);
+                String addr = (places != null && !places.isEmpty()) ? places.get(0).getAddress() : null;
+                if (addr == null || addr.isBlank()) {
+                    return;
+                }
+                Platform.runLater(() -> {
+                    addressField.setText(addr);
+                    profile.setAddress(addr);
+                });
+            } catch (Exception ignored) {
+            }
+        }, "reverse-geocode-thread").start();
+    }
 
-    /** Minimal JSON double parser — avoids needing Gson for a single field. */
-    private double parseJsonDouble(String json, String key) {
-        String search = "\"" + key + "\":\"";
-        int start = json.indexOf(search) + search.length();
-        int end = json.indexOf("\"", start);
-        return Double.parseDouble(json.substring(start, end));
+    private static String formatCoords(double lat, double lng) {
+        return String.format(Locale.US, "📍 %.6f, %.6f", lat, lng);
     }
 
     private void showAlert(String title, String msg) {

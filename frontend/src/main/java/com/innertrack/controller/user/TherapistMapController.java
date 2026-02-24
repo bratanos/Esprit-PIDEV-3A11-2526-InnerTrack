@@ -5,67 +5,60 @@ import com.innertrack.dao.UserDao;
 import com.innertrack.model.TherapistProfile;
 import com.innertrack.model.User;
 import com.innertrack.util.ViewManager;
-import javafx.concurrent.Worker;
+import com.sothawo.mapjfx.Coordinate;
+import com.sothawo.mapjfx.MapType;
+import com.sothawo.mapjfx.MapView;
+import com.sothawo.mapjfx.Marker;
+import com.sothawo.mapjfx.XYZParam;
+import com.sothawo.mapjfx.event.MarkerEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 
-import java.io.File;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TherapistMapController {
 
+    private static final Coordinate TUNISIA_CENTER = new Coordinate(33.8869, 9.5375);
+    private static final double TUNISIA_OVERVIEW_ZOOM = 6;
+    private static final String OSM_ENGLISH_TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+
     @FXML
-    private WebView mapWebView;
+    private MapView mapView;
+
+    @FXML
+    private VBox infoCard;
+
+    @FXML
+    private Label nameLabel;
+
+    @FXML
+    private Label specializationLabel;
+
+    @FXML
+    private Label addressLabel;
+
+    @FXML
+    private Label bioLabel;
+
+    @FXML
+    private Button contactButton;
 
     private final TherapistProfileDao profileDao = new TherapistProfileDao();
     private final UserDao userDao = new UserDao();
 
+    private final Map<String, TherapistProfile> markerIdToProfile = new HashMap<>();
+
     @FXML
     public void initialize() {
-        List<TherapistProfile> therapists = profileDao.findAllWithLocation();
-
-        WebEngine engine = mapWebView.getEngine();
-        engine.setJavaScriptEnabled(true);
-
-        // Fix flickering: disable JavaFX node caching on the WebView
-        mapWebView.setCache(false);
-        mapWebView.setCacheHint(javafx.scene.CacheHint.SPEED);
-        mapWebView.setContextMenuEnabled(false);
-
-        engine.getLoadWorker().stateProperty().addListener((obs, old, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                // Inject each therapist marker after map is ready
-                for (TherapistProfile t : therapists) {
-                    String name = getTherapistName(t.getUserId());
-                    String spec = t.getSpecialization() != null ? t.getSpecialization() : "Psychologue";
-                    String addr = t.getAddress() != null ? t.getAddress() : "";
-                    // Escape single quotes
-                    name = name.replace("'", "\\'").replace("\n", " ");
-                    spec = spec.replace("'", "\\'");
-                    addr = addr.replace("'", "\\'");
-                    engine.executeScript(String.format(
-                            "addTherapist(%f, %f, '%s', '%s', '%s');",
-                            t.getLatitude(), t.getLongitude(), name, spec, addr));
-                }
-            }
-        });
-
-        try {
-            File mapFile = writeTempMapFile(buildMapHtml(therapists));
-            engine.load(mapFile.toURI().toString());
-        } catch (Exception e) {
-            System.err.println("Failed to write map temp file: " + e.getMessage());
-        }
-    }
-
-    private File writeTempMapFile(String html) throws Exception {
-        File temp = File.createTempFile("innertrack_map_", ".html");
-        temp.deleteOnExit();
-        try (java.io.FileWriter fw = new java.io.FileWriter(temp, java.nio.charset.StandardCharsets.UTF_8)) {
-            fw.write(html);
-        }
-        return temp;
+        initInfoCardEmpty();
+        configureMap();
+        wireMarkerClicks();
     }
 
     @FXML
@@ -73,80 +66,119 @@ public class TherapistMapController {
         ViewManager.loadView("user/dashboard");
     }
 
-    private String getTherapistName(int userId) {
-        try {
-            User user = userDao.read(userId);
-            return user != null ? user.getFullName() : "Thérapeute";
-        } catch (Exception e) {
-            return "Thérapeute";
+    @FXML
+    private void handleContact() {
+        contactButton.setText("Bientôt disponible");
+        contactButton.setDisable(true);
+    }
+
+    private void configureMap() {
+        XYZParam xyzParam = new XYZParam()
+                .withUrl(OSM_ENGLISH_TILES)
+                .withAttributions("© OpenStreetMap contributors")
+                .withMaxZoom(19);
+
+        mapView.setMapType(MapType.XYZ);
+        mapView.setXYZParam(xyzParam);
+
+        mapView.initializedProperty().addListener((obs, oldV, initialized) -> {
+            if (!initialized) {
+                return;
+            }
+            mapView.setCenter(TUNISIA_CENTER);
+            mapView.setZoom(TUNISIA_OVERVIEW_ZOOM);
+            loadTherapistsOnMap();
+        });
+
+        mapView.initialize();
+    }
+
+    private void loadTherapistsOnMap() {
+        Thread t = new Thread(() -> {
+            List<TherapistProfile> therapists = profileDao.findAllWithLocation();
+            Platform.runLater(() -> addMarkers(therapists));
+        }, "load-therapists-thread");
+        t.setDaemon(true);
+        t.start();
+    }
+
+    private void addMarkers(List<TherapistProfile> therapists) {
+        URL circleUrl = getClass().getResource("/Images/circle-pink.svg");
+        if (circleUrl == null) {
+            System.err.println("Missing resource: /Images/circle-pink.svg");
+            return;
+        }
+
+        for (TherapistProfile t : therapists) {
+            if (!t.hasLocation()) {
+                continue;
+            }
+            Coordinate c = new Coordinate(t.getLatitude(), t.getLongitude());
+            Marker m = new Marker(circleUrl, -10, -10)
+                    .setPosition(c)
+                    .setVisible(true);
+            mapView.addMarker(m);
+            markerIdToProfile.put(m.getId(), t);
         }
     }
 
-    private String buildMapHtml(List<TherapistProfile> therapists) {
-        double centerLat = 34.7406;
-        double centerLng = 10.7603;
-        if (!therapists.isEmpty()) {
-            centerLat = therapists.get(0).getLatitude();
-            centerLng = therapists.get(0).getLongitude();
-        }
+    private void wireMarkerClicks() {
+        mapView.addEventHandler(MarkerEvent.MARKER_CLICKED, e -> {
+            Marker m = e.getMarker();
+            if (m == null) {
+                return;
+            }
+            TherapistProfile p = markerIdToProfile.get(m.getId());
+            if (p == null) {
+                return;
+            }
+            showTherapist(p);
+        });
+    }
 
-        String leafletJs  = getClass().getResource("/leaflet/leaflet.js").toExternalForm();
-        String leafletCss = getClass().getResource("/leaflet/leaflet.css").toExternalForm();
+    private void initInfoCardEmpty() {
+        nameLabel.setText("Choisissez un thérapeute");
+        specializationLabel.setText("Cliquez sur un marqueur rose pour voir les détails.");
+        addressLabel.setText("");
+        bioLabel.setText("");
+        contactButton.setDisable(true);
+    }
 
-        return "<!DOCTYPE html><html><head>" +
-                "<meta charset='utf-8'/>" +
-                "<link rel='stylesheet' href='" + leafletCss + "'/>" +
-                "<script src='" + leafletJs + "'></script>" +
-                "<style>" +
-                "  * { margin:0; padding:0; box-sizing:border-box; }" +
-                "  html, body, #map { width:100%; height:100%; }" +
-                "  .popup-box { font-family:'Segoe UI',sans-serif; min-width:170px; }" +
-                "  .popup-box h3 { color:#C2185B; font-size:15px; margin-bottom:6px; }" +
-                "  .popup-box .chip {" +
-                "    display:inline-block; background:#FCE4EC; color:#C2185B;" +
-                "    border-radius:12px; padding:2px 10px; font-size:12px;" +
-                "  }" +
-                "  .popup-box .addr { color:#666; font-size:12px; margin-top:6px; }" +
-                "</style></head><body>" +
-                "<div id='map'></div>" +
-                "<script>" +
-                "  var map = L.map('map', {" +
-                "    preferCanvas: true," +
-                "    zoomAnimation: false," +
-                "    markerZoomAnimation: false" +
-                "  }).setView([" + centerLat + "," + centerLng + "], 12);" +
+    private void showTherapist(TherapistProfile profile) {
+        contactButton.setDisable(false);
+        contactButton.setText("Contacter");
 
-                "  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {" +
-                "    attribution: '© OpenStreetMap contributors'," +
-                "    maxZoom: 19," +
-                "    updateWhenIdle: false," +
-                "    updateWhenZooming: false," +
-                "    keepBuffer: 4," +
-                "    crossOrigin: true" +
-                "  }).addTo(map);" +
+        nameLabel.setText("Chargement…");
+        specializationLabel.setText("");
+        addressLabel.setText("");
+        bioLabel.setText("");
 
-                "  var pinkIcon = L.divIcon({" +
-                "    html: '<div style=\"width:22px;height:22px;background:#FF69B4;" +
-                "           border:3px solid #C2185B;border-radius:50%;" +
-                "           box-shadow:0 2px 8px rgba(194,24,91,0.4);\"></div>'," +
-                "    className:''," +
-                "    iconSize:[22,22]," +
-                "    iconAnchor:[11,11]" +
-                "  });" +
+        Thread t = new Thread(() -> {
+            try {
+                User user = userDao.read(profile.getUserId());
+                String fullName = user != null ? user.getFullName() : "Thérapeute";
+                String spec = safe(profile.getSpecialization());
+                String addr = safe(profile.getAddress());
+                String bio = safe(profile.getBio());
 
-                "  var infoWindow = null;" +
+                Platform.runLater(() -> {
+                    nameLabel.setText(fullName);
+                    specializationLabel.setText(spec.isBlank() ? "Spécialisation: —" : "Spécialisation: " + spec);
+                    addressLabel.setText(addr.isBlank() ? "Adresse: —" : "Adresse: " + addr);
+                    bioLabel.setText(bio.isBlank() ? "Bio: —" : bio);
+                });
+            } catch (Exception ex) {
+                Platform.runLater(() -> {
+                    nameLabel.setText("Erreur");
+                    specializationLabel.setText(ex.getMessage());
+                });
+            }
+        }, "load-therapist-thread");
+        t.setDaemon(true);
+        t.start();
+    }
 
-                "  function addTherapist(lat, lng, name, spec, addr) {" +
-                "    var marker = L.marker([lat, lng], {icon: pinkIcon}).addTo(map);" +
-                "    var popup = '<div class=\"popup-box\">' +" +
-                "      '<h3>' + name + '</h3>' +" +
-                "      '<span class=\"chip\">' + spec + '</span>' +" +
-                "      (addr ? '<p class=\"addr\">📍 ' + addr + '</p>' : '') +" +
-                "      '</div>';" +
-                "    marker.bindPopup(popup, {maxWidth: 250});" +
-                "    marker.on('mouseover', function() { this.openPopup(); });" +
-                "  }" +
-                "</script>" +
-                "</body></html>";
+    private static String safe(String s) {
+        return s == null ? "" : s.trim();
     }
 }

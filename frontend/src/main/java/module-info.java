@@ -2,11 +2,16 @@ module com.innertrack {
     requires transitive javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.web;
     requires java.net.http;
     requires java.sql;
     requires com.google.gson;
     requires atlantafx.base;
     requires jakarta.mail;
+
+    requires com.sothawo.mapjfx;
+    requires io.redlink.geocoding.osm;
+    requires io.redlink.geocoding.api;
 
     // Security & JWT
     requires jbcrypt;
@@ -19,13 +24,11 @@ module com.innertrack {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.fontawesome5;
     requires jdk.jsobject;
-    requires javafx.web;
 
     opens com.innertrack.model to com.google.gson, javafx.base;
     opens com.innertrack.dao to java.sql;
     opens com.innertrack.service to java.base;
     opens com.innertrack.security to jjwt.api;
-
     opens com.innertrack.controller.admin to javafx.fxml;
     opens com.innertrack.controller.therapist to javafx.fxml;
     opens com.innertrack.controller.user to javafx.fxml;

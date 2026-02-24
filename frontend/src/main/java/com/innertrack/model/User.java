@@ -1,5 +1,6 @@
 package com.innertrack.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +8,17 @@ public class User {
     private int id;
     private String email;
     private String password;
-    private boolean isVerified;
-    private List<String> roles = new ArrayList<>();
-    private String status;
+
     private String firstName;
     private String lastName;
     private String profilePicture;
-    private java.time.LocalDateTime createdAt;
-    private java.time.LocalDateTime lastLogin;
+
+    private boolean isVerified;
+    private List<String> roles = new ArrayList<>();
+    private String status;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime lastLogin;
 
     public int getId() {
         return id;
@@ -38,30 +42,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean verified) {
-        isVerified = verified;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getFirstName() {
@@ -88,27 +68,53 @@ public class User {
         this.profilePicture = profilePicture;
     }
 
-    public java.time.LocalDateTime getCreatedAt() {
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(java.time.LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public java.time.LocalDateTime getLastLogin() {
+    public LocalDateTime getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(java.time.LocalDateTime lastLogin) {
+    public void setLastLogin(LocalDateTime lastLogin) {
         this.lastLogin = lastLogin;
     }
 
     public String getFullName() {
-        if (firstName == null || lastName == null) {
-            return email;
+        String fn = firstName == null ? "" : firstName.trim();
+        String ln = lastName == null ? "" : lastName.trim();
+        String full = (fn + " " + ln).trim();
+        if (!full.isBlank()) {
+            return full;
         }
-        return firstName + " " + lastName;
-
+        return email != null ? email : "Utilisateur";
     }
 }
