@@ -15,6 +15,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
+import java.io.File;
+
 public class TherapistLocationController {
 
     @FXML
@@ -27,6 +29,15 @@ public class TherapistLocationController {
     private final TherapistProfileDao profileDao = new TherapistProfileDao();
     private TherapistProfile profile;
     private WebEngine engine;
+
+    private File writeTempMapFile(String html) throws Exception {
+        File temp = File.createTempFile("innertrack_map_", ".html");
+        temp.deleteOnExit();
+        try (java.io.FileWriter fw = new java.io.FileWriter(temp, java.nio.charset.StandardCharsets.UTF_8)) {
+            fw.write(html);
+        }
+        return temp;
+    }
 
     @FXML
     public void initialize() {
@@ -67,7 +78,12 @@ public class TherapistLocationController {
             }
         });
 
-        engine.loadContent(buildMapHtml());
+        try {
+            File mapFile = writeTempMapFile(buildMapHtml());
+            engine.load(mapFile.toURI().toString());
+        } catch (Exception e) {
+            System.err.println("Failed to write map temp file: " + e.getMessage());
+        }
     }
 
     /**
@@ -81,6 +97,8 @@ public class TherapistLocationController {
             coordsLabel.setText(String.format("📍 %.6f, %.6f", lat, lng));
         });
     }
+
+
 
     @FXML
     private void handleSearchAddress() {
@@ -159,17 +177,20 @@ public class TherapistLocationController {
     // ── Map HTML ──────────────────────────────────────────────
 
     private String buildMapHtml() {
-        // Default center: Sfax, Tunisia
         double defaultLat = 34.7406;
         double defaultLng = 10.7603;
 
+        // Get local resource paths
+        String leafletJs  = getClass().getResource("/leaflet/leaflet.js").toExternalForm();
+        String leafletCss = getClass().getResource("/leaflet/leaflet.css").toExternalForm();
+
         return "<!DOCTYPE html><html><head>" +
                 "<meta charset='utf-8'/>" +
-                "<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'/>" +
-                "<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>" +
+                "<link rel='stylesheet' href='" + leafletCss + "'/>" +
+                "<script src='" + leafletJs + "'></script>" +
                 "<style>" +
                 "  * { margin:0; padding:0; box-sizing:border-box; }" +
-                "  html, body, #map { width:100%; height:100%; background:#e8e8e8; }" +
+                "  html, body, #map { width:100%; height:100%; }" +
                 "  #hint {" +
                 "    position:absolute; top:12px; left:50%; transform:translateX(-50%);" +
                 "    background:rgba(255,255,255,0.95); padding:8px 18px;" +
@@ -177,24 +198,25 @@ public class TherapistLocationController {
                 "    box-shadow:0 2px 8px rgba(0,0,0,0.18); z-index:1000;" +
                 "    pointer-events:none;" +
                 "  }" +
-                "  .leaflet-tile { image-rendering: auto; }" +
                 "</style></head><body>" +
                 "<div id='hint'>Cliquez sur la carte pour marquer votre cabinet</div>" +
                 "<div id='map'></div>" +
                 "<script>" +
-                "  var map = L.map('map', { preferCanvas: true }).setView([" + defaultLat + "," + defaultLng + "], 13);"
-                +
-                "  L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {" +
+                "  var map = L.map('map', {" +
+                "    preferCanvas: true," +         // use canvas renderer — far fewer flicker issues
+                "    zoomAnimation: false," +        // disable zoom animation — main flicker cause
+                "    markerZoomAnimation: false" +
+                "  }).setView([" + defaultLat + "," + defaultLng + "], 13);" +
+
+                "  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {" +
                 "    attribution: '© OpenStreetMap contributors'," +
                 "    maxZoom: 19," +
-                "    keepBuffer: 8," +
-                "    updateWhenIdle: false," +
-                "    detectRetina: false," +
+                "    updateWhenIdle: false," +       // load tiles during drag, not after
+                "    updateWhenZooming: false," +    // don't reload during zoom
+                "    keepBuffer: 4," +              // keep more tiles in memory
                 "    crossOrigin: true" +
                 "  }).addTo(map);" +
-                "  map.whenReady(function() { setTimeout(function() { map.invalidateSize(true); }, 100); });" +
 
-                // Pink circle marker icon
                 "  var pinkIcon = L.divIcon({" +
                 "    html: '<div style=\"width:22px;height:22px;background:#FF69B4;" +
                 "           border:3px solid #C2185B;border-radius:50%;" +

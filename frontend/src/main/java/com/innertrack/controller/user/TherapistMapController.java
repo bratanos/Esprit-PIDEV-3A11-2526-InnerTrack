@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
+import java.io.File;
 import java.util.List;
 
 public class TherapistMapController {
@@ -50,7 +51,21 @@ public class TherapistMapController {
             }
         });
 
-        engine.loadContent(buildMapHtml(therapists));
+        try {
+            File mapFile = writeTempMapFile(buildMapHtml(therapists));
+            engine.load(mapFile.toURI().toString());
+        } catch (Exception e) {
+            System.err.println("Failed to write map temp file: " + e.getMessage());
+        }
+    }
+
+    private File writeTempMapFile(String html) throws Exception {
+        File temp = File.createTempFile("innertrack_map_", ".html");
+        temp.deleteOnExit();
+        try (java.io.FileWriter fw = new java.io.FileWriter(temp, java.nio.charset.StandardCharsets.UTF_8)) {
+            fw.write(html);
+        }
+        return temp;
     }
 
     @FXML
@@ -68,22 +83,23 @@ public class TherapistMapController {
     }
 
     private String buildMapHtml(List<TherapistProfile> therapists) {
-        // Default center: Sfax, Tunisia
         double centerLat = 34.7406;
         double centerLng = 10.7603;
-
         if (!therapists.isEmpty()) {
             centerLat = therapists.get(0).getLatitude();
             centerLng = therapists.get(0).getLongitude();
         }
 
+        String leafletJs  = getClass().getResource("/leaflet/leaflet.js").toExternalForm();
+        String leafletCss = getClass().getResource("/leaflet/leaflet.css").toExternalForm();
+
         return "<!DOCTYPE html><html><head>" +
                 "<meta charset='utf-8'/>" +
-                "<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'/>" +
-                "<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>" +
+                "<link rel='stylesheet' href='" + leafletCss + "'/>" +
+                "<script src='" + leafletJs + "'></script>" +
                 "<style>" +
                 "  * { margin:0; padding:0; box-sizing:border-box; }" +
-                "  html, body, #map { width:100%; height:100%; background:#e8e8e8; }" +
+                "  html, body, #map { width:100%; height:100%; }" +
                 "  .popup-box { font-family:'Segoe UI',sans-serif; min-width:170px; }" +
                 "  .popup-box h3 { color:#C2185B; font-size:15px; margin-bottom:6px; }" +
                 "  .popup-box .chip {" +
@@ -91,27 +107,24 @@ public class TherapistMapController {
                 "    border-radius:12px; padding:2px 10px; font-size:12px;" +
                 "  }" +
                 "  .popup-box .addr { color:#666; font-size:12px; margin-top:6px; }" +
-                "  .leaflet-tile { image-rendering: auto; }" +
                 "</style></head><body>" +
                 "<div id='map'></div>" +
                 "<script>" +
-                "  var map = L.map('map', { preferCanvas: true }).setView([" + centerLat + "," + centerLng + "], 12);" +
-                // Single tile server (no {s} subdomain), keepBuffer pre-loads surrounding
-                // tiles,
-                // updateWhenIdle:false loads tiles during drag, detectRetina:false avoids 2x
-                // requests
-                "  L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {" +
+                "  var map = L.map('map', {" +
+                "    preferCanvas: true," +
+                "    zoomAnimation: false," +
+                "    markerZoomAnimation: false" +
+                "  }).setView([" + centerLat + "," + centerLng + "], 12);" +
+
+                "  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {" +
                 "    attribution: '© OpenStreetMap contributors'," +
                 "    maxZoom: 19," +
-                "    keepBuffer: 8," +
                 "    updateWhenIdle: false," +
-                "    detectRetina: false," +
+                "    updateWhenZooming: false," +
+                "    keepBuffer: 4," +
                 "    crossOrigin: true" +
                 "  }).addTo(map);" +
-                // Force a size recalculation after the map is ready to prevent blank tiles
-                "  map.whenReady(function() { setTimeout(function() { map.invalidateSize(true); }, 100); });" +
 
-                // Pink circle div icon — same as setter
                 "  var pinkIcon = L.divIcon({" +
                 "    html: '<div style=\"width:22px;height:22px;background:#FF69B4;" +
                 "           border:3px solid #C2185B;border-radius:50%;" +
@@ -120,6 +133,8 @@ public class TherapistMapController {
                 "    iconSize:[22,22]," +
                 "    iconAnchor:[11,11]" +
                 "  });" +
+
+                "  var infoWindow = null;" +
 
                 "  function addTherapist(lat, lng, name, spec, addr) {" +
                 "    var marker = L.marker([lat, lng], {icon: pinkIcon}).addTo(map);" +
