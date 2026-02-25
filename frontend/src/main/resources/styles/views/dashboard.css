@@ -11,12 +11,12 @@
 .dashboard-view .stat-value {
     -fx-font-size: 28;
     -fx-font-weight: bold;
-    -fx-text-fill: #1d7bed;
+    -fx-text-fill: #667eea;
 }
 
 .dashboard-view .stat-label {
     -fx-font-size: 14;
-    -fx-text-fill: #7f8c8d;
+    -fx-text-fill: #718096;
 }
 
 .dashboard-view .content-header {
@@ -25,33 +25,33 @@
 
 /* Styled Bar Chart in Dashboard */
 .dashboard-view .styled-bar-chart {
-    -fx-background-color: #f4f7f6;
-    -fx-border-radius: 10;
+    -fx-background-color: #f7fafc;
+    -fx-border-radius: 12;
     -fx-padding: 10;
 }
 
 .dashboard-view .styled-bar-chart .category-axis,
 .dashboard-view .styled-bar-chart .number-axis {
-    -fx-stroke: #2c3e50;
+    -fx-stroke: #2d3748;
     -fx-tick-mark-visible: false;
-    -fx-tick-label-fill: #2c3e50;
+    -fx-tick-label-fill: #2d3748;
     -fx-font-size: 14;
 }
 
 .dashboard-view .styled-bar-chart .axis-label {
     -fx-font-size: 18;
     -fx-font-weight: bold;
-    -fx-fill: #2c3e50;
+    -fx-fill: #2d3748;
 }
 
 .dashboard-view .styled-bar-chart .chart-title {
     -fx-font-size: 20;
     -fx-font-weight: bold;
-    -fx-fill: #1d7bed;
+    -fx-fill: #667eea;
 }
 
 .dashboard-view .truck-series .chart-bar {
-    -fx-bar-fill: #1d7bed;
+    -fx-bar-fill: #667eea;
 }
 
 .dashboard-view .chart-pie-label {

@@ -1,14 +1,12 @@
 package com.innertrack.controller.profile;
 
 import com.innertrack.controller.auth.MainLayoutController;
-import com.innertrack.controller.auth.VerifyOtpController;
 import com.innertrack.dao.ClientProfileDao;
 import com.innertrack.dao.TherapistProfileDao;
 import com.innertrack.dao.UserDao;
 import com.innertrack.model.ClientProfile;
 import com.innertrack.model.TherapistProfile;
 import com.innertrack.model.User;
-import com.innertrack.service.SettingsService;
 import com.innertrack.session.SessionManager;
 import com.innertrack.util.ViewManager;
 import javafx.fxml.FXML;
@@ -25,8 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 public class ProfileController {
 
@@ -52,34 +48,13 @@ public class ProfileController {
     @FXML
     private TextField licenseField; // therapist only (hidden for clients)
 
-    // ── Settings ──────────────────────────────────────────────
-    @FXML
-    private ToggleButton lightThemeBtn;
-    @FXML
-    private ToggleButton darkThemeBtn;
-    @FXML
-    private ComboBox<String> languageComboBox;
-    @FXML
-    private RadioButton fontSmallBtn;
-    @FXML
-    private RadioButton fontNormalBtn;
-    @FXML
-    private RadioButton fontLargeBtn;
-    @FXML
-    private Label creationDateLabel;
-    @FXML
-    private Label lastLoginLabel;
-
     private final UserDao userDao = new UserDao();
     private final ClientProfileDao clientProfileDao = new ClientProfileDao();
     private final TherapistProfileDao therapistProfileDao = new TherapistProfileDao();
-    private final SettingsService settingsService = SettingsService.getInstance();
 
     private User currentUser;
     private ClientProfile clientProfile;
     private TherapistProfile therapistProfile;
-
-    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     @FXML
     public void initialize() {
@@ -87,7 +62,6 @@ public class ProfileController {
         if (currentUser != null) {
             loadUserData();
             loadExtendedProfile();
-            initSettings();
         }
     }
 
@@ -234,114 +208,6 @@ public class ProfileController {
                 e.printStackTrace();
                 showFeedback("Erreur", "Impossible de mettre à jour la photo.");
             }
-        }
-    }
-
-    // ── Settings ──────────────────────────────────────────────
-
-    private void initSettings() {
-        ToggleGroup themeGroup = new ToggleGroup();
-        lightThemeBtn.setToggleGroup(themeGroup);
-        darkThemeBtn.setToggleGroup(themeGroup);
-        if ("DARK".equals(settingsService.getCurrentSettings().getTheme())) {
-            darkThemeBtn.setSelected(true);
-        } else {
-            lightThemeBtn.setSelected(true);
-        }
-
-        languageComboBox.getItems().addAll("English", "Français");
-        String lang = settingsService.getCurrentSettings().getLanguage();
-        languageComboBox.setValue("FR".equals(lang) ? "Français" : "English");
-
-        ToggleGroup fontGroup = new ToggleGroup();
-        fontSmallBtn.setToggleGroup(fontGroup);
-        fontNormalBtn.setToggleGroup(fontGroup);
-        fontLargeBtn.setToggleGroup(fontGroup);
-        switch (settingsService.getCurrentSettings().getFontSize()) {
-            case "SMALL":
-                fontSmallBtn.setSelected(true);
-                break;
-            case "LARGE":
-                fontLargeBtn.setSelected(true);
-                break;
-            default:
-                fontNormalBtn.setSelected(true);
-                break;
-        }
-
-        creationDateLabel.setText(currentUser.getCreatedAt() != null
-                ? currentUser.getCreatedAt().format(dateFormatter)
-                : "N/A");
-        lastLoginLabel.setText(currentUser.getLastLogin() != null
-                ? currentUser.getLastLogin().format(dateFormatter)
-                : "N/A");
-    }
-
-    @FXML
-    private void setLightTheme() {
-        settingsService.updateTheme("LIGHT");
-    }
-
-    @FXML
-    private void setDarkTheme() {
-        settingsService.updateTheme("DARK");
-    }
-
-    @FXML
-    private void setFontSmall() {
-        settingsService.updateFontSize("SMALL");
-    }
-
-    @FXML
-    private void setFontNormal() {
-        settingsService.updateFontSize("NORMAL");
-    }
-
-    @FXML
-    private void setFontLarge() {
-        settingsService.updateFontSize("LARGE");
-    }
-
-    @FXML
-    private void handleLanguageChange() {
-        String selected = languageComboBox.getValue();
-        settingsService.updateLanguage("Français".equals(selected) ? "FR" : "EN");
-        ViewManager.loadView("profile/settings_main");
-    }
-
-    @FXML
-    private void handleChangePassword() {
-        ViewManager.loadView("profile/change_password");
-    }
-
-    @FXML
-    private void handleDeactivate() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Désactivation du compte");
-        alert.setHeaderText("Êtes-vous sûr de vouloir désactiver votre compte ?");
-        alert.setContentText("Vous devrez à nouveau vérifier votre email lors de votre prochaine connexion.");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            if (userDao.updateStatus(currentUser.getId(), "PENDING", false)) {
-                SessionManager.getInstance().logout();
-                ViewManager.loadView("login");
-            }
-        }
-    }
-
-    @FXML
-    private void handleDelete() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Blocage du compte");
-        alert.setHeaderText("Action irréversible : bloquer votre compte ?");
-        alert.setContentText("Un code de vérification sera envoyé à votre email pour confirmer le blocage définitif.");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            com.innertrack.service.AuthService authService = new com.innertrack.service.AuthService();
-            authService.sendNewOtp(currentUser);
-            VerifyOtpController controller = ViewManager.loadView("verify_otp");
-            if (controller != null)
-                controller.setEmail(currentUser.getEmail());
         }
     }
 

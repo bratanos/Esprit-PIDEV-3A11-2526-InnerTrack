@@ -72,4 +72,9 @@ public class SettingsAccountController {
             }
         }
     }
+
+    @FXML
+    private void handleChangePassword() {
+        ViewManager.loadView("profile/change_password");
+    }
 }

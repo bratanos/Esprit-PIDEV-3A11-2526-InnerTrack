@@ -1,6 +1,7 @@
 package com.innertrack.session;
 
 import com.innertrack.model.User;
+import com.innertrack.service.RememberMeService;
 
 public class SessionManager {
     private static SessionManager instance;
@@ -40,5 +41,7 @@ public class SessionManager {
     public void cleanSession() {
         currentUser = null;
         jwtToken = null;
+
+        RememberMeService.getInstance().clear();
     }
 }

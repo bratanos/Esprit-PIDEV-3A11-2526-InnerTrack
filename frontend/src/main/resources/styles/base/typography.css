@@ -2,28 +2,28 @@
 .title {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2c3e50;
+    -fx-text-fill: #2d3748;
 }
 
 .subtitle {
-    -fx-text-fill: #7f8c8d;
+    -fx-text-fill: #718096;
     -fx-font-size: 14px;
 }
 
 .text-muted {
-    -fx-text-fill: #7f8c8d;
+    -fx-text-fill: #718096;
 }
 
 .text-danger {
-    -fx-text-fill: #e74c3c;
+    -fx-text-fill: #fc8181;
 }
 
 .text-success {
-    -fx-text-fill: #16a085;
+    -fx-text-fill: #48bb78;
 }
 
 .label {
-    -fx-text-fill: #2c3e50;
+    -fx-text-fill: #2d3748;
     -fx-font-size: 14px;
 }
 

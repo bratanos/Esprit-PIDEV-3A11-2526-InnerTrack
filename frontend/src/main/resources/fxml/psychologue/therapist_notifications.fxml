@@ -11,23 +11,50 @@
             styleClass="dashboard-view" maxHeight="Infinity" maxWidth="Infinity">
 
     <top>
-        <HBox spacing="15" alignment="CENTER_LEFT"
-              style="-fx-padding: 15 25; -fx-background-color: white;
+        <VBox style="-fx-background-color: white;
                      -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);">
-            <Button onAction="#handleBack"
-                    style="-fx-background-color: #f1f1f1; -fx-background-radius: 50;
-                           -fx-padding: 8; -fx-cursor: hand;">
-                <graphic>
-                    <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#2c3e50"/>
-                </graphic>
-            </Button>
-            <VBox spacing="2">
-                <Label text="Demandes de contact"
-                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-                <Label text="Patients souhaitant vous contacter."
-                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
-            </VBox>
-        </HBox>
+
+            <!-- Top bar -->
+            <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 15 25;">
+                <Button onAction="#handleBack"
+                        style="-fx-background-color: #f1f1f1; -fx-background-radius: 50;
+                               -fx-padding: 8; -fx-cursor: hand;">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#2c3e50"/>
+                    </graphic>
+                </Button>
+                <VBox spacing="2">
+                    <Label text="%psy.notif.title"
+                           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <Label text="%psy.notif.subtitle"
+                           style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Voir mes messages" onAction="#handleGoToMessages"
+                        style="-fx-background-color: #667eea; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 8;
+                               -fx-padding: 8 18; -fx-cursor: hand;">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-comments" iconSize="14" iconColor="white"/>
+                    </graphic>
+                </Button>
+            </HBox>
+
+            <!-- Unread message badge banner — hidden when no unread -->
+            <HBox fx:id="badgeBox" alignment="CENTER_LEFT" spacing="10"
+                  style="-fx-background-color: #667eea; -fx-padding: 8 25;">
+                <Label fx:id="badgeLabel"
+                       text=""
+                       visible="false" managed="false"
+                       style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+                <Button text="Voir maintenant" onAction="#handleGoToMessages"
+                        visible="false" managed="false"
+                        style="-fx-background-color: white; -fx-text-fill: #667eea;
+                               -fx-font-weight: bold; -fx-background-radius: 6;
+                               -fx-padding: 4 12; -fx-cursor: hand; -fx-font-size: 12px;"/>
+            </HBox>
+
+        </VBox>
     </top>
 
     <center>
@@ -35,7 +62,7 @@
                     style="-fx-background-color: #f4f7f6; -fx-background: #f4f7f6;">
             <VBox style="-fx-padding: 30 60;" spacing="16">
                 <Label fx:id="emptyLabel"
-                       text="Aucune demande en attente. 🎉"
+                       text="%psy.notif.empty"
                        style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"
                        visible="false" managed="false"/>
                 <VBox fx:id="requestsList" spacing="12"/>

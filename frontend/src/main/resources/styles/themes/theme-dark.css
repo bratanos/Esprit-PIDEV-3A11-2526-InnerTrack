@@ -4,29 +4,29 @@
 /* ─── Root & Scene Background ─────────────────────────────────────────────── */
 .root.dark-theme,
 .dark-theme {
-    -it-bg:               #0f1117;
-    -it-card:             #1c1f26;
-    -it-text:             #e2e8f0;
-    -it-text-muted:       #94a3b8;
-    -it-primary:          #4f8ef7;
-    -it-primary-hover:    #3b7de8;
-    -it-primary-active:   #60a5fa;
-    -it-secondary:        #1e3a5f;
-    -it-secondary-hover:  #2a4f7a;
+    -it-bg: #0f1117;
+    -it-card: #1c1f26;
+    -it-text: #e2e8f0;
+    -it-text-muted: #94a3b8;
+    -it-primary: #4f8ef7;
+    -it-primary-hover: #3b7de8;
+    -it-primary-active: #60a5fa;
+    -it-secondary: #1e3a5f;
+    -it-secondary-hover: #2a4f7a;
     -it-secondary-active: #152c47;
-    -it-success:          #22c98a;
-    -it-error:            #f87171;
-    -it-border:           #2d3748;
+    -it-success: #22c98a;
+    -it-error: #f87171;
+    -it-border: #2d3748;
 
-    -fx-background-color: #0f1117;
-    -fx-base:             #1c1f26;
+    -fx-background-color: linear-gradient(to bottom right, #0f1117, #151a24);
+    -fx-base: #1c1f26;
     -fx-control-inner-background: #1a1d24;
-    -fx-text-fill:        #e2e8f0;
+    -fx-text-fill: #ffffff;
 }
 
 /* ─── Scene & Pane Backgrounds ────────────────────────────────────────────── */
 .dark-theme .scroll-pane,
-.dark-theme .scroll-pane > .viewport,
+.dark-theme .scroll-pane>.viewport,
 .dark-theme .vbox,
 .dark-theme .hbox,
 .dark-theme .border-pane,
@@ -37,28 +37,31 @@
 }
 
 .dark-theme .dashboard-container {
-    -fx-background-color: #0f1117;
+    -fx-background-color: transparent;
+}
+
+/* Make sure WebView rendering map gets opaque background */
+.dark-theme .sothawo-mapjfx-mapview,
+.dark-theme .web-view {
+    -fx-background-color: #ffffff;
 }
 
 /* ─── Cards ───────────────────────────────────────────────────────────────── */
 .dark-theme .dashboard-card,
 .dark-theme .card {
     -fx-background-color: #1c1f26;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 12, 0, 0, 6);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 12, 0, 0, 6);
 }
 
 /* ─── Labels & Text ───────────────────────────────────────────────────────── */
-.dark-theme .label {
-    -fx-text-fill: #e2e8f0;
-}
-
+.dark-theme .label,
 .dark-theme .title {
-    -fx-text-fill: #f1f5f9;
+    -fx-text-fill: #ffffff !important;
 }
 
 .dark-theme .subtitle,
 .dark-theme .text-muted {
-    -fx-text-fill: #94a3b8;
+    -fx-text-fill: #e2e8f0 !important;
 }
 
 .dark-theme .text-danger {
@@ -342,4 +345,29 @@
 
 .dark-theme .dialog-pane .header-panel .label {
     -fx-text-fill: #f1f5f9;
+}
+
+/* ─── Admin Chat Dialog ─── */
+.dark-theme .chat-dialog-box {
+    -fx-background-color: #1a1d24;
+}
+
+.dark-theme .chat-message-sender {
+    -fx-font-weight: bold;
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 11px;
+}
+
+.dark-theme .chat-message-content {
+    -fx-background-color: #2d3748;
+    -fx-padding: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 4, 0, 0, 1);
+    -fx-text-fill: #ffffff !important;
+}
+
+.dark-theme .reported-user-message .chat-message-content {
+    -fx-border-color: #f87171;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
 }

@@ -34,16 +34,13 @@ public class TherapistLocationController {
 
     @FXML
     private MapView mapView;
-
     @FXML
     private TextField addressField;
-
     @FXML
     private Label coordsLabel;
 
     private final TherapistProfileDao profileDao = new TherapistProfileDao();
     private TherapistProfile profile;
-
     private Marker clinicMarker;
     private volatile boolean draggingMarker = false;
 
@@ -66,39 +63,50 @@ public class TherapistLocationController {
         if (profile.getAddress() != null) {
             addressField.setText(profile.getAddress());
         }
-        if (profile.hasLocation()) {
-            coordsLabel.setText(formatCoords(profile.getLatitude(), profile.getLongitude()));
-        } else {
-            coordsLabel.setText("Aucun emplacement sélectionné");
-        }
+        coordsLabel.setText(profile.hasLocation()
+                ? formatCoords(profile.getLatitude(), profile.getLongitude())
+                : "Aucun emplacement sélectionné");
 
         configureMap();
-        setupMarker();
-        wireInteractions();
     }
 
     private void configureMap() {
+        // XYZ params must be set BEFORE initialize()
         XYZParam xyzParam = new XYZParam()
                 .withUrl(OSM_ENGLISH_TILES)
                 .withAttributions("© OpenStreetMap contributors")
                 .withMaxZoom(19);
-
-        mapView.setMapType(MapType.XYZ);
         mapView.setXYZParam(xyzParam);
 
+        // ALL map operations go inside this listener — never outside
         mapView.initializedProperty().addListener((obs, oldV, initialized) -> {
-            if (!initialized) {
+            if (!initialized)
                 return;
-            }
 
+            // Step 1: set map type AFTER initialization
+            mapView.setMapType(MapType.XYZ);
+
+            // Step 2: position the viewport
             if (profile.hasLocation()) {
-                Coordinate c = new Coordinate(profile.getLatitude(), profile.getLongitude());
-                mapView.setCenter(c);
+                mapView.setCenter(new Coordinate(profile.getLatitude(), profile.getLongitude()));
                 mapView.setZoom(SEARCH_ZOOM);
             } else {
                 mapView.setCenter(TUNISIA_CENTER);
                 mapView.setZoom(TUNISIA_OVERVIEW_ZOOM);
             }
+
+            // Step 3: create and add marker now that map is ready
+            setupMarker();
+
+            // Step 4: wire click/drag events now that map is ready
+            wireInteractions();
+        });
+
+        // Block context menu
+        mapView.setOnContextMenuRequested(javafx.event.Event::consume);
+        mapView.zoomProperty().addListener((obs, oldZ, newZ) -> {
+            if (newZ != null && newZ.intValue() > 18)
+                mapView.setZoom(18);
         });
 
         mapView.initialize();
@@ -106,28 +114,33 @@ public class TherapistLocationController {
 
     private void setupMarker() {
         URL markerUrl = getClass().getResource("/Images/marker-pink.svg");
-        clinicMarker = new Marker(markerUrl, -15, -45).setVisible(false);
-        mapView.addMarker(clinicMarker);
+        if (markerUrl == null) {
+            System.err.println("TherapistLocationController: missing /Images/marker-pink.svg");
+            return;
+        }
+        clinicMarker = new Marker(markerUrl, -15, -45);
 
         if (profile.hasLocation()) {
             clinicMarker.setPosition(new Coordinate(profile.getLatitude(), profile.getLongitude()));
             clinicMarker.setVisible(true);
+        } else {
+            clinicMarker.setVisible(false);
         }
+
+        mapView.addMarker(clinicMarker);
     }
 
     private void wireInteractions() {
         mapView.addEventHandler(MapViewEvent.MAP_CLICKED, e -> {
-            if (draggingMarker) {
+            if (draggingMarker)
                 return;
-            }
             setClinicLocation(e.getCoordinate(), true);
             reverseGeocodeToAddress(e.getCoordinate());
         });
 
         mapView.addEventHandler(MapViewEvent.MAP_POINTER_MOVED, e -> {
-            if (!draggingMarker || clinicMarker == null || !clinicMarker.getVisible()) {
+            if (!draggingMarker || clinicMarker == null || !clinicMarker.getVisible())
                 return;
-            }
             setClinicLocation(e.getCoordinate(), false);
         });
 
@@ -154,7 +167,6 @@ public class TherapistLocationController {
             showAlert("Adresse requise", "Veuillez saisir une adresse en Tunisie.");
             return;
         }
-
         new Thread(() -> {
             try {
                 List<Place> places = geocoder.geocode(query, Locale.ENGLISH);
@@ -162,12 +174,10 @@ public class TherapistLocationController {
                     Platform.runLater(() -> showAlert("Adresse introuvable", "Essayez une adresse plus précise."));
                     return;
                 }
-
                 Place best = places.get(0);
                 LatLon ll = best.getLatLon();
                 Coordinate c = new Coordinate(ll.lat(), ll.lon());
                 String address = best.getAddress();
-
                 Platform.runLater(() -> {
                     addressField.setText(address);
                     setClinicLocation(c, true);
@@ -175,7 +185,8 @@ public class TherapistLocationController {
                     mapView.setZoom(SEARCH_ZOOM);
                 });
             } catch (Exception ex) {
-                Platform.runLater(() -> showAlert("Erreur réseau", "Impossible de rechercher l'adresse : " + ex.getMessage()));
+                Platform.runLater(
+                        () -> showAlert("Erreur réseau", "Impossible de rechercher l'adresse : " + ex.getMessage()));
             }
         }, "geocode-thread").start();
     }
@@ -186,18 +197,15 @@ public class TherapistLocationController {
             showAlert("Aucun emplacement", "Veuillez cliquer sur la carte ou rechercher une adresse.");
             return;
         }
-
         String addr = addressField.getText() == null ? "" : addressField.getText().trim();
         if (!addr.isBlank()) {
             profile.setAddress(addr);
         }
-
         boolean ok = profileDao.update(profile);
-        if (ok) {
+        if (ok)
             showAlert("Succès", "Emplacement enregistré !");
-        } else {
+        else
             showAlert("Erreur", "Impossible d'enregistrer l'emplacement.");
-        }
     }
 
     @FXML
@@ -206,15 +214,11 @@ public class TherapistLocationController {
     }
 
     private void setClinicLocation(Coordinate c, boolean ensureVisible) {
-        if (clinicMarker == null) {
+        if (clinicMarker == null)
             return;
-        }
-
         clinicMarker.setPosition(c);
-        if (ensureVisible) {
+        if (ensureVisible)
             clinicMarker.setVisible(true);
-        }
-
         profile.setLatitude(c.getLatitude());
         profile.setLongitude(c.getLongitude());
         coordsLabel.setText(formatCoords(c.getLatitude(), c.getLongitude()));
@@ -223,11 +227,11 @@ public class TherapistLocationController {
     private void reverseGeocodeToAddress(Coordinate c) {
         new Thread(() -> {
             try {
-                List<Place> places = geocoder.reverseGeocode(LatLon.create(c.getLatitude(), c.getLongitude()), Locale.ENGLISH);
+                List<Place> places = geocoder.reverseGeocode(
+                        LatLon.create(c.getLatitude(), c.getLongitude()), Locale.ENGLISH);
                 String addr = (places != null && !places.isEmpty()) ? places.get(0).getAddress() : null;
-                if (addr == null || addr.isBlank()) {
+                if (addr == null || addr.isBlank())
                     return;
-                }
                 Platform.runLater(() -> {
                     addressField.setText(addr);
                     profile.setAddress(addr);

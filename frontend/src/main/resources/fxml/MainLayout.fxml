@@ -23,7 +23,7 @@
                     <Image url="@../images/innertracklogo1.png" />
                 </image>
             </ImageView>
-            <Label text="InnerTrack" styleClass="navbar-brand" />
+            <Label text="%main.title" styleClass="navbar-brand" />
             
             <Region HBox.hgrow="ALWAYS" />
             
@@ -35,10 +35,10 @@
                 </Button>
                 
                 <HBox spacing="10" alignment="CENTER_RIGHT" fx:id="authBox">
-                    <Hyperlink text="Accueil" styleClass="navbar-link" onAction="#goToHome" />
-                    <Hyperlink text="Connexion" fx:id="loginLink" styleClass="navbar-link" onAction="#goToLogin" />
-                    <Hyperlink text="S'inscrire" fx:id="registerLink" styleClass="navbar-link" onAction="#goToRegister" />
-                    <Button fx:id="profileBtn" text="Mon Profil" styleClass="btn, btn-secondary" visible="false" />
+                    <Hyperlink text="%main.home" styleClass="navbar-link" onAction="#goToHome" />
+                    <Hyperlink text="%main.login" fx:id="loginLink" styleClass="navbar-link" onAction="#goToLogin" />
+                    <Hyperlink text="%main.register" fx:id="registerLink" styleClass="navbar-link" onAction="#goToRegister" />
+                    <Button fx:id="profileBtn" text="%main.profile" styleClass="btn, btn-secondary" visible="false" />
                 </HBox>
             </HBox>
         </HBox>
@@ -52,7 +52,7 @@
     <!-- Footer -->
     <bottom>
         <VBox fx:id="footer" styleClass="footer">
-            <Label fx:id="footerLabel" text="© 2026 InnerTrack — All rights reserved" styleClass="subtitle" />
+            <Label fx:id="footerLabel" text="%main.footer" styleClass="subtitle" />
         </VBox>
     </bottom>
 

@@ -19,8 +19,8 @@
     </ImageView>
 
     <VBox spacing="8" alignment="CENTER">
-        <Label text="Vérification de l'email" styleClass="title" />
-        <Label fx:id="subtitleLabel" text="Nous avons envoyé un code à votre adresse email" styleClass="subtitle" wrapText="true" textAlignment="CENTER" />
+        <Label text="%auth.verify.title" styleClass="title" />
+        <Label fx:id="subtitleLabel" text="%auth.verify.subtitle" styleClass="subtitle" wrapText="true" textAlignment="CENTER" />
     </VBox>
 
     <VBox spacing="20" alignment="CENTER">
@@ -33,18 +33,18 @@
             <TextField fx:id="otp6" styleClass="otp-box" />
         </HBox>
         
-        <Button text="Vérifier le code" fx:id="verifyButton" onAction="#handleVerify" 
+        <Button text="%auth.verifyButton" fx:id="verifyButton" onAction="#handleVerify" 
                 maxWidth="350" styleClass="btn, btn-primary" />
     </VBox>
 
     <VBox spacing="10" alignment="CENTER">
-        <Label fx:id="timerLabel" text="Vous pourrez renvoyer le code dans 60s" styleClass="subtitle" />
-        <Button text="Renvoyer le code" fx:id="resendButton" onAction="#handleResend" 
+        <Label fx:id="timerLabel" text="%auth.verify.timer" styleClass="subtitle" />
+        <Button text="%auth.resend" fx:id="resendButton" onAction="#handleResend" 
                 styleClass="btn, btn-secondary" disable="true" />
     </VBox>
 
     <Label fx:id="messageLabel" wrapText="true" textAlignment="CENTER" />
 
-    <Hyperlink text="Retour à la connexion" onAction="#goToLogin" styleClass="subtitle" />
+    <Hyperlink text="%auth.backToLogin" onAction="#goToLogin" styleClass="subtitle" />
 
 </VBox>

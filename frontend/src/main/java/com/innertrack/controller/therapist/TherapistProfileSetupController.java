@@ -9,33 +9,63 @@ import com.innertrack.util.ViewManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import javafx.stage.FileChooser;
+import javafx.scene.shape.Circle;
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 
 public class TherapistProfileSetupController {
 
     // ── FXML fields ──────────────────────────────────────────
-    @FXML private TextField   firstNameField;
-    @FXML private TextField   lastNameField;
-    @FXML private ComboBox<String> specializationCombo;
-    @FXML private TextField   licenseField;
-    @FXML private TextArea    bioArea;
-    @FXML private Label       bioCharCount;
-    @FXML private TextField   phoneField;
-    @FXML private TextField   rateField;
-    @FXML private Label       statusLabel;
+    @FXML
+    private Circle profileCircle;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private TextField firstNameField;
+    @FXML
+    private TextField lastNameField;
+    @FXML
+    private ComboBox<String> specializationCombo;
+    @FXML
+    private TextField licenseField;
+    @FXML
+    private TextArea bioArea;
+    @FXML
+    private Label bioCharCount;
+    @FXML
+    private TextField phoneField;
+    @FXML
+    private TextField rateField;
+    @FXML
+    private Label statusLabel;
 
     // Availability checkboxes
-    @FXML private CheckBox monCheck;
-    @FXML private CheckBox tueCheck;
-    @FXML private CheckBox wedCheck;
-    @FXML private CheckBox thuCheck;
-    @FXML private CheckBox friCheck;
-    @FXML private CheckBox satCheck;
-    @FXML private CheckBox sunCheck;
+    @FXML
+    private CheckBox monCheck;
+    @FXML
+    private CheckBox tueCheck;
+    @FXML
+    private CheckBox wedCheck;
+    @FXML
+    private CheckBox thuCheck;
+    @FXML
+    private CheckBox friCheck;
+    @FXML
+    private CheckBox satCheck;
+    @FXML
+    private CheckBox sunCheck;
 
     // ── DAOs ─────────────────────────────────────────────────
     private final TherapistProfileDao profileDao = new TherapistProfileDao();
-    private final UserDao             userDao    = new UserDao();
+    private final UserDao userDao = new UserDao();
 
     private TherapistProfile profile;
     private User currentUser;
@@ -72,6 +102,8 @@ public class TherapistProfileSetupController {
         // Pre-fill from user table
         firstNameField.setText(safe(currentUser.getFirstName()));
         lastNameField.setText(safe(currentUser.getLastName()));
+        emailField.setText(safe(currentUser.getEmail()));
+        updateProfileImage();
 
         // Pre-fill from profile table
         if (profile.getSpecialization() != null)
@@ -80,7 +112,8 @@ public class TherapistProfileSetupController {
         bioArea.setText(safe(profile.getBio()));
         phoneField.setText(safe(profile.getPhone()));
         rateField.setText(profile.getSessionRate() != null
-                ? String.valueOf(profile.getSessionRate()) : "");
+                ? String.valueOf(profile.getSessionRate())
+                : "");
 
         // Load availability days
         String days = safe(profile.getAvailableDays());
@@ -134,13 +167,20 @@ public class TherapistProfileSetupController {
 
         // Build availability string
         StringBuilder days = new StringBuilder();
-        if (monCheck.isSelected()) days.append("MON,");
-        if (tueCheck.isSelected()) days.append("TUE,");
-        if (wedCheck.isSelected()) days.append("WED,");
-        if (thuCheck.isSelected()) days.append("THU,");
-        if (friCheck.isSelected()) days.append("FRI,");
-        if (satCheck.isSelected()) days.append("SAT,");
-        if (sunCheck.isSelected()) days.append("SUN,");
+        if (monCheck.isSelected())
+            days.append("MON,");
+        if (tueCheck.isSelected())
+            days.append("TUE,");
+        if (wedCheck.isSelected())
+            days.append("WED,");
+        if (thuCheck.isSelected())
+            days.append("THU,");
+        if (friCheck.isSelected())
+            days.append("FRI,");
+        if (satCheck.isSelected())
+            days.append("SAT,");
+        if (sunCheck.isSelected())
+            days.append("SUN,");
         String daysStr = days.length() > 0 ? days.substring(0, days.length() - 1) : "";
         profile.setAvailableDays(daysStr);
 
@@ -176,5 +216,52 @@ public class TherapistProfileSetupController {
         a.setHeaderText(null);
         a.setContentText(msg);
         a.showAndWait();
+    }
+
+    @FXML
+    private void handleChangePicture() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner une photo de profil");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"));
+        File selectedFile = fileChooser.showOpenDialog(profileCircle.getScene().getWindow());
+
+        if (selectedFile != null) {
+            try {
+                Path uploadPath = Paths.get("uploads/profiles").toAbsolutePath();
+                Files.createDirectories(uploadPath);
+                String fileName = currentUser.getId() + "_" + System.currentTimeMillis()
+                        + "_" + selectedFile.getName();
+                Path destPath = uploadPath.resolve(fileName);
+                Files.copy(selectedFile.toPath(), destPath, StandardCopyOption.REPLACE_EXISTING);
+
+                currentUser.setProfilePicture(destPath.toString());
+                userDao.update(currentUser);
+                updateProfileImage();
+                showAlert("Succès", "Photo de profil mise à jour avec succès !");
+            } catch (IOException | SQLException e) {
+                e.printStackTrace();
+                showAlert("Erreur", "Impossible de mettre à jour la photo.");
+            }
+        }
+    }
+
+    private void updateProfileImage() {
+        String picPath = currentUser.getProfilePicture();
+        if (picPath != null && !picPath.isEmpty()) {
+            try {
+                File file = new File(picPath);
+                if (file.exists()) {
+                    try (java.io.FileInputStream fis = new java.io.FileInputStream(file)) {
+                        Image image = new Image(fis);
+                        if (!image.isError()) {
+                            profileCircle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Error loading profile image: " + e.getMessage());
+            }
+        }
     }
 }

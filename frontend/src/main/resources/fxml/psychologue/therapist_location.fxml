@@ -21,9 +21,9 @@
                 </graphic>
             </Button>
             <VBox spacing="2">
-                <Label text="Mon emplacement professionnel"
+                <Label text="%psy.location.title"
                        style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-                <Label text="Cliquez sur la carte pour marquer l'emplacement de votre cabinet."
+                <Label text="%psy.location.subtitle"
                        style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
             </VBox>
         </HBox>
@@ -42,10 +42,10 @@
             <!-- Address search row -->
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <TextField fx:id="addressField"
-                           promptText="Rechercher une adresse (ex: 12 Rue de la Paix, Tunis)"
+                           promptText="%psy.location.searchPrompt"
                            HBox.hgrow="ALWAYS"
                            style="-fx-pref-height: 38px;"/>
-                <Button text="Rechercher" onAction="#handleSearchAddress"
+                <Button text="%psy.location.searchBtn" onAction="#handleSearchAddress"
                         style="-fx-background-color: #7f8c8d; -fx-text-fill: white;
                                -fx-background-radius: 5; -fx-padding: 0 18; -fx-pref-height: 38px;
                                -fx-cursor: hand;"/>
@@ -53,9 +53,9 @@
 
             <!-- Coords + Save row -->
             <HBox spacing="15" alignment="CENTER_LEFT">
-                <Label fx:id="coordsLabel" text="Aucun emplacement sélectionné"
+                <Label fx:id="coordsLabel" text="%psy.location.noSelect"
                        style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;" HBox.hgrow="ALWAYS"/>
-                <Button fx:id="saveBtn" text="💾  Enregistrer l'emplacement"
+                <Button fx:id="saveBtn" text="%psy.location.saveBtn"
                         onAction="#handleSave"
                         style="-fx-background-color: #FF69B4; -fx-text-fill: white;
                                -fx-background-radius: 8; -fx-padding: 10 25;

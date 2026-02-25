@@ -1,15 +1,19 @@
 package com.innertrack.app;
 
 import atlantafx.base.theme.PrimerLight;
+import com.innertrack.model.User;
+import com.innertrack.service.RememberMeService;
+import com.innertrack.service.SettingsService;
 import com.innertrack.util.ViewManager;
+import com.innertrack.util.ViewNavigator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
 public class MainApp extends Application {
+
     private static Stage primaryStage;
 
     public static Stage getPrimaryStage() {
@@ -19,25 +23,42 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         primaryStage = stage;
+
         // Set the AtlantaFX theme
-        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-
-
+        Application.setUserAgentStylesheet(
+                new PrimerLight().getUserAgentStylesheet()
+        );
 
         // Load the main layout
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainLayout.fxml"));
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/fxml/MainLayout.fxml")
+        );
+        loader.setResources(SettingsService.getInstance().getBundle());
         Parent root = loader.load();
 
         Scene scene = new Scene(root);
         primaryStage.setTitle("InnerTrack - Gestion de Santé Mentale");
         primaryStage.setScene(scene);
-        primaryStage.show();
+
         scene.getStylesheets().add(
-                getClass().getResource("/styles/base/typography.css").toExternalForm()
+                getClass()
+                        .getResource("/styles/base/typography.css")
+                        .toExternalForm()
         );
 
-        // Load the initial view (login or main)
-        ViewManager.loadView("login");
+        primaryStage.show();
+
+        // ── AUTO-LOGIN CHECK (ADDED) ────────────────────────────
+        User remembered =
+                RememberMeService.getInstance().tryAutoLogin();
+
+        if (remembered != null) {
+            // Valid saved session → go straight to dashboard
+            ViewNavigator.navigateToDashboard();
+        } else {
+            // No saved session → show login
+            ViewManager.loadView("login");
+        }
     }
 
     public static void main(String[] args) {

@@ -34,23 +34,23 @@
             <Separator opacity="0.1"/>
 
             <VBox spacing="5">
-                <Button text="Résumé" styleClass="sidebar-button, sidebar-button-active" maxWidth="Infinity">
+                <Button text="%sidebar.psy.resume" styleClass="sidebar-button, sidebar-button-active" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-home" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
 
-                <Button text="Mon profil pro" onAction="#handleGoToProfile"
+                <Button text="%sidebar.psy.profile" onAction="#handleGoToProfile"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-id-card" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
 
-                <Button text="Mon emplacement" onAction="#handleGoToLocation"
+                <Button text="%sidebar.psy.location" onAction="#handleGoToLocation"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-map-marker-alt" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
 
                 <!-- Notification button with badge -->
                 <StackPane maxWidth="Infinity">
-                    <Button text="Demandes de contact" onAction="#handleGoToNotifications"
+                    <Button text="%sidebar.psy.notifications" onAction="#handleGoToNotifications"
                             styleClass="sidebar-button" maxWidth="Infinity"
                             StackPane.alignment="CENTER_LEFT">
                         <graphic><FontIcon iconLiteral="fas-bell" iconSize="18" iconColor="#ffffff"/></graphic>
@@ -62,24 +62,23 @@
                                   -fx-font-size: 10px; -fx-font-weight: bold;
                                   -fx-background-radius: 50; -fx-padding: 2 6;
                                   -fx-min-width: 18;"
-                           StackPane.alignment="TOP_RIGHT"
-                           StackPane.margin="0 0 0 0"/>
+                           StackPane.alignment="TOP_RIGHT"/>
                 </StackPane>
 
-                <Button text="Messagerie" onAction="#handleGoToMessages"
+                <Button text="%sidebar.messages" onAction="#handleGoToMessages"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-comments" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
 
-                <Button text="Profil &amp; Paramètres" onAction="#handleGoToSettings"
+                <Button text="%sidebar.settings" onAction="#handleGoToSettings"
                         styleClass="sidebar-button" maxWidth="Infinity">
-                    <graphic><FontIcon iconLiteral="fas-user-cog" iconSize="18" iconColor="#ffffff"/></graphic>
+                    <graphic><FontIcon iconLiteral="fas-cog" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
             </VBox>
 
             <Region VBox.vgrow="ALWAYS"/>
 
-            <Button text="Déconnexion" styleClass="sidebar-button"
+            <Button text="%sidebar.logout" styleClass="sidebar-button"
                     maxWidth="Infinity" onAction="#handleLogout">
                 <graphic><FontIcon iconLiteral="fas-sign-out-alt" iconSize="18" iconColor="#ffffff"/></graphic>
             </Button>
@@ -98,8 +97,8 @@
                     <VBox>
                         <Label fx:id="welcomeLabel"
                                style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
-                               text="Bonjour, Dr."/>
-                        <Label text="Vérifiez vos rendez-vous et le suivi de vos patients."
+                               text="%dashboard.psy.welcome"/>
+                        <Label text="%dashboard.psy.title"
                                style="-fx-text-fill: #7f8c8d;"/>
                     </VBox>
                     <Region HBox.hgrow="ALWAYS"/>
@@ -120,25 +119,25 @@
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
                         <FontIcon iconLiteral="fas-users" iconSize="24" iconColor="#1d7bed"/>
                         <Label fx:id="totalPatientsLabel" styleClass="stat-value" text="0"/>
-                        <Label styleClass="stat-label" text="Patients Actifs"/>
+                        <Label styleClass="stat-label" text="%dashboard.psy.patients"/>
                     </VBox>
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
                         <FontIcon iconLiteral="fas-calendar-check" iconSize="24" iconColor="#27ae60"/>
                         <Label fx:id="appointmentsTodayLabel" styleClass="stat-value" text="0"
                                style="-fx-text-fill: #27ae60;"/>
-                        <Label styleClass="stat-label" text="RDV Aujourd'hui"/>
+                        <Label styleClass="stat-label" text="%dashboard.psy.appointments"/>
                     </VBox>
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
                         <FontIcon iconLiteral="fas-envelope-open-text" iconSize="24" iconColor="#FF69B4"/>
                         <Label fx:id="pendingRequestsLabel" styleClass="stat-value" text="0"
                                style="-fx-text-fill: #FF69B4;"/>
-                        <Label styleClass="stat-label" text="Demandes en attente"/>
+                        <Label styleClass="stat-label" text="%dashboard.psy.pending"/>
                     </VBox>
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
                         <FontIcon iconLiteral="fas-comments" iconSize="24" iconColor="#9b59b6"/>
                         <Label fx:id="totalConsultationsLabel" styleClass="stat-value" text="0"
                                style="-fx-text-fill: #9b59b6;"/>
-                        <Label styleClass="stat-label" text="Conversations actives"/>
+                        <Label styleClass="stat-label" text="%dashboard.psy.activeConv"/>
                     </VBox>
                 </HBox>
 
@@ -149,13 +148,13 @@
                     <HBox spacing="15" alignment="CENTER_LEFT">
                         <FontIcon iconLiteral="fas-exclamation-circle" iconSize="22" iconColor="white"/>
                         <VBox spacing="2">
-                            <Label text="Complétez votre profil professionnel"
+                            <Label text="%dashboard.psy.incomplete.title"
                                    style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: white;"/>
-                            <Label text="Les patients ne peuvent pas vous trouver sans bio, spécialisation et emplacement."
+                            <Label text="%dashboard.psy.incomplete.desc"
                                    style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 12px;" wrapText="true"/>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Button text="Compléter mon profil" onAction="#handleGoToProfile"
+                        <Button text="%dashboard.psy.incomplete.btn" onAction="#handleGoToProfile"
                                 style="-fx-background-color: white; -fx-text-fill: #FF69B4;
                                        -fx-font-weight: bold; -fx-background-radius: 8;
                                        -fx-padding: 8 20; -fx-cursor: hand;"/>
@@ -165,10 +164,10 @@
                 <!-- Agenda Preview -->
                 <VBox styleClass="dashboard-card" spacing="15">
                     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-                    <Label text="Prochains Rendez-vous"
+                    <Label text="%dashboard.psy.agenda"
                            style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
                     <Separator/>
-                    <Label text="Aucun rendez-vous prévu pour l'instant."
+                    <Label text="%dashboard.psy.agenda.empty"
                            style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
                 </VBox>
 

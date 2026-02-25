@@ -4,119 +4,125 @@
 .button,
 .btn {
     -fx-font-size: 14;
-    -fx-text-fill: #2c3e50;
+    -fx-text-fill: #2d3748;
     -fx-cursor: hand;
-    -fx-background-radius: 5;
+    -fx-background-radius: 8;
 }
 
 .btn-primary,
 .button1,
 .button2 {
-    -fx-background-color: #1d7bed;
+    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
     -fx-text-fill: white;
 }
 
 .btn-primary:hover,
 .button1:hover,
 .button2:hover {
-    -fx-background-color: #0056b3;
+    -fx-background-color: linear-gradient(to right, #764ba2, #667eea);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
 }
 
 .btn-primary:pressed,
 .button1:pressed,
 .button2:pressed {
-    -fx-background-color: #1ac1ea;
+    -fx-background-color: #5a67d8;
 }
 
 .btn-secondary,
 .button3 {
-    -fx-background-color: #0a2a4c;
-    -fx-text-fill: white;
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #2d3748;
 }
 
 .btn-secondary:hover,
 .button3:hover {
-    -fx-background-color: #1a436b;
+    -fx-background-color: #cbd5e0;
 }
 
 .btn-secondary:pressed,
 .button3:pressed {
-    -fx-background-color: #00132d;
+    -fx-background-color: #a0aec0;
 }
 
 .button4 {
-    -fx-background-color: linear-gradient(to top left, #0056b3, #1ac1ea);
+    -fx-background-color: linear-gradient(to top left, #4299e1, #3182ce);
     -fx-background-radius: 30;
     -fx-text-fill: white;
 }
 
 .button4:hover {
-    -fx-background-color: linear-gradient(to top left, #1ac1ea, #0056b3);
+    -fx-background-color: linear-gradient(to top left, #3182ce, #2b6cb0);
 }
 
 /* Cards */
 .dashboard-card,
 .card {
     -fx-background-color: #ffffff;
-    -fx-background-radius: 15;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 15, 0, 0, 5);
 }
 
 /* Inputs */
 .text-field,
 .password-field {
-    -fx-background-color: #f4f7f6;
-    -fx-text-fill: #2c3e50;
-    -fx-border-color: #bdc3c7;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
+    -fx-background-color: #f7fafc;
+    -fx-text-fill: #2d3748;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
     -fx-padding: 8 15 8 15;
 }
 
 .text-field:focused,
 .password-field:focused {
-    -fx-border-color: #1d7bed;
+    -fx-border-color: #667eea;
     -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.2), 5, 0, 0, 0);
 }
 
 .combo-box {
     -fx-background-color: #ffffff;
-    -fx-border-color: #bdc3c7;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
 }
 
 .combo-box .list-cell {
-    -fx-text-fill: #2c3e50;
+    -fx-text-fill: #2d3748;
     -fx-background-color: #ffffff;
 }
 
 .combo-box:hover {
-    -fx-border-color: #1d7bed;
+    -fx-border-color: #667eea;
 }
 
 .date-picker {
-    -fx-border-color: #bdc3c7;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
 }
 
 .date-picker:hover {
-    -fx-border-color: #1d7bed;
+    -fx-border-color: #667eea;
 }
 
 /* Tables */
 .table-view {
     -fx-background-color: transparent;
-    -fx-border-color: #1d7bed;
-    -fx-border-width: 2px;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
     -fx-table-cell-border-color: transparent;
     -fx-table-header-border-color: transparent;
 }
 
 .table-view .column-header-background {
     -fx-border-width: 0;
-    -fx-background-color: transparent;
+    -fx-background-color: #f5f7fa;
+    -fx-background-radius: 8 8 0 0;
 }
 
 .table-view .show-hide-columns-button {
@@ -124,22 +130,25 @@
 }
 
 .table-view .column-header {
-    -fx-background-color: #0a2a4c;
-    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-text-fill: #718096;
+    -fx-font-weight: bold;
 }
 
 .table-view .table-row-cell {
-    -fx-background-color: #f4f7f6;
-    -fx-text-fill: #2c3e50;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #2d3748;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+    -fx-border-width: 0 0 1 0;
 }
 
 .table-view .table-row-cell:selected {
-    -fx-background-color: #1d7bed;
-    -fx-text-fill: white;
+    -fx-background-color: rgba(102, 126, 234, 0.1);
+    -fx-text-fill: #2d3748;
 }
 
 .table-view .table-cell {
-    -fx-text-fill: #2c3e50;
+    -fx-text-fill: #2d3748;
 }
 
 /* ScrollPane */

@@ -1,6 +1,6 @@
 /* sidebar.css */
 .sidebar {
-    -fx-background-color: #00132d;
+    -fx-background-color: linear-gradient(to bottom, #764ba2, #667eea);
     -fx-padding: 20;
     -fx-spacing: 15;
 }
@@ -49,6 +49,7 @@
 
 .sidebar-button:hover,
 .sidebar-button-active {
-    -fx-background-color: -it-primary;
+    -fx-background-color: rgba(255, 255, 255, 0.2);
     -fx-text-fill: white;
+    -fx-translate-x: 5;
 }

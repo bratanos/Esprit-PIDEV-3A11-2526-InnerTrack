@@ -10,34 +10,55 @@
             fx:controller="com.innertrack.controller.chat.MessagingChatController"
             styleClass="dashboard-view" maxHeight="Infinity" maxWidth="Infinity">
 
-    <!-- Top Bar -->
     <top>
-        <HBox spacing="15" alignment="CENTER_LEFT"
-              style="-fx-padding: 14 22; -fx-background-color: white;
-                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);">
-            <Button onAction="#handleBack"
-                    style="-fx-background-color: #f1f1f1; -fx-background-radius: 50;
-                           -fx-padding: 8; -fx-cursor: hand;">
-                <graphic>
-                    <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#2c3e50"/>
-                </graphic>
-            </Button>
-            <VBox spacing="1">
-                <Label fx:id="conversationTitleLabel" text="Messagerie"
-                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-                <Label fx:id="conversationSubLabel" text="Sélectionnez une conversation"
-                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
-            </VBox>
-        </HBox>
+        <VBox>
+            <!-- Main top bar — added HBox.hgrow on title VBox and menuButton at end -->
+            <HBox spacing="15" alignment="CENTER_LEFT"
+                  style="-fx-padding: 14 22; -fx-background-color: white;
+                         -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);">
+
+                <Button onAction="#handleBack"
+                        style="-fx-background-color: #f1f1f1; -fx-background-radius: 50;
+                               -fx-padding: 8; -fx-cursor: hand;">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#2c3e50"/>
+                    </graphic>
+                </Button>
+
+                <VBox spacing="1" HBox.hgrow="ALWAYS">
+                    <Label fx:id="conversationTitleLabel" text="%chat.title"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <Label fx:id="conversationSubLabel" text="%chat.subtitle"
+                           style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+                </VBox>
+
+                <!-- Triple-dot menu — hidden until conversation selected -->
+                <Button fx:id="menuButton" onAction="#handleMenuButton"
+                        visible="false" managed="false"
+                        text="⋮"
+                        style="-fx-background-color: transparent; -fx-font-size: 20px;
+                               -fx-font-weight: bold; -fx-text-fill: #718096;
+                               -fx-background-radius: 50; -fx-padding: 4 10; -fx-cursor: hand;"/>
+
+            </HBox>
+
+            <!-- Unread banner — hidden by default, shown by controller -->
+            <Label fx:id="unreadBanner"
+                   text=""
+                   visible="false" managed="false"
+                   style="-fx-background-color: #667eea; -fx-text-fill: white;
+                          -fx-font-weight: bold; -fx-font-size: 13px;
+                          -fx-padding: 8 22; -fx-max-width: Infinity;"/>
+        </VBox>
     </top>
 
     <center>
         <HBox>
-            <!-- ── Left panel: conversation list ── -->
+            <!-- Left panel: conversation list -->
             <VBox prefWidth="280" minWidth="240"
                   style="-fx-background-color: #fafafa;
                          -fx-border-color: #ebebeb; -fx-border-width: 0 1 0 0;">
-                <Label text="Conversations"
+                <Label text="%chat.conversations"
                        style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;
                               -fx-padding: 16 16 8 16; -fx-text-transform: uppercase;"/>
                 <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
@@ -46,14 +67,12 @@
                 </ScrollPane>
             </VBox>
 
-            <!-- ── Right panel: message area ── -->
+            <!-- Right panel: message area -->
             <VBox HBox.hgrow="ALWAYS">
-
-                <!-- Messages -->
                 <ScrollPane fx:id="messagesScroll" fitToWidth="true" VBox.vgrow="ALWAYS"
                             style="-fx-background-color: #f4f7f6; -fx-background: #f4f7f6;">
                     <VBox fx:id="messagesBox" spacing="4"
-                          style="-fx-padding: 16 0 16 0;"/>
+                          style="-fx-padding: 16 0;"/>
                 </ScrollPane>
 
                 <!-- Input bar -->
@@ -61,10 +80,9 @@
                       style="-fx-padding: 12 16; -fx-background-color: white;
                              -fx-border-color: #ebebeb; -fx-border-width: 1 0 0 0;">
                     <TextArea fx:id="messageInput"
-                              promptText="Sélectionnez une conversation pour écrire…"
+                              promptText="%chat.inputPrompt"
                               prefRowCount="2" wrapText="true"
-                              HBox.hgrow="ALWAYS"
-                              disable="true"
+                              HBox.hgrow="ALWAYS" disable="true"
                               style="-fx-font-size: 14px; -fx-background-radius: 12;
                                      -fx-border-radius: 12; -fx-border-color: #ddd;"/>
                     <Button fx:id="sendButton" onAction="#handleSend"

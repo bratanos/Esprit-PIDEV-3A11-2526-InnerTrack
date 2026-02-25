@@ -33,35 +33,39 @@
             <Separator opacity="0.1"/>
 
             <VBox spacing="5">
-                <Button text="Tableau de bord"
+                <Button text="%sidebar.user.dashboard"
                         styleClass="sidebar-button, sidebar-button-active" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-th-large" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
-                <Button text="Mon Journal" styleClass="sidebar-button" maxWidth="Infinity"
+                <Button text="%sidebar.user.journal" styleClass="sidebar-button" maxWidth="Infinity"
                         onAction="#handleGoToJournal">
                     <graphic><FontIcon iconLiteral="fas-book" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
-                <Button text="Mes Habitudes" styleClass="sidebar-button" maxWidth="Infinity"
+                <Button text="%sidebar.user.habits" styleClass="sidebar-button" maxWidth="Infinity"
                         onAction="#handleGoToHabits">
                     <graphic><FontIcon iconLiteral="fas-check-circle" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
-                <Button text="Trouver un thérapeute" onAction="#handleGoToMap"
+                <Button text="%sidebar.user.map" onAction="#handleGoToMap"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-map-marker-alt" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
-                <Button text="Messagerie" onAction="#handleGoToMessages"
+                <Button text="%sidebar.messages" onAction="#handleGoToMessages"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-comments" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
-                <Button text="Profil &amp; Paramètres" onAction="#handleGoToSettings"
+                <Button text="%sidebar.profile" onAction="#handleGoToProfile"
                         styleClass="sidebar-button" maxWidth="Infinity">
-                    <graphic><FontIcon iconLiteral="fas-user-cog" iconSize="18" iconColor="#ffffff"/></graphic>
+                    <graphic><FontIcon iconLiteral="fas-user" iconSize="18" iconColor="#ffffff"/></graphic>
+                </Button>
+                <Button text="%sidebar.settings" onAction="#handleGoToSettings"
+                        styleClass="sidebar-button" maxWidth="Infinity">
+                    <graphic><FontIcon iconLiteral="fas-cog" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
             </VBox>
 
             <Region VBox.vgrow="ALWAYS"/>
 
-            <Button text="Déconnexion" styleClass="sidebar-button"
+            <Button text="%sidebar.logout" styleClass="sidebar-button"
                     maxWidth="Infinity" onAction="#handleLogout">
                 <graphic><FontIcon iconLiteral="fas-sign-out-alt" iconSize="18" iconColor="#ffffff"/></graphic>
             </Button>
@@ -80,8 +84,8 @@
                     <VBox>
                         <Label fx:id="welcomeLabel"
                                style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
-                               text="Bonjour"/>
-                        <Label text="Continuez vos efforts, chaque petit pas compte."
+                               text="%dashboard.user.welcome"/>
+                        <Label text="%dashboard.user.title"
                                style="-fx-text-fill: #7f8c8d;"/>
                     </VBox>
                     <Region HBox.hgrow="ALWAYS"/>
@@ -103,50 +107,50 @@
                         <FontIcon iconLiteral="fas-fire" iconSize="24" iconColor="#e67e22"/>
                         <Label fx:id="streakLabel" styleClass="stat-value" text="0"
                                style="-fx-text-fill: #e67e22;"/>
-                        <Label styleClass="stat-label" text="Série actuelle"/>
+                        <Label styleClass="stat-label" text="%dashboard.user.streak"/>
                     </VBox>
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
                         <FontIcon iconLiteral="fas-pen-nib" iconSize="24" iconColor="#1d7bed"/>
                         <Label fx:id="journalEntriesLabel" styleClass="stat-value" text="0"/>
-                        <Label styleClass="stat-label" text="Entrées au journal"/>
+                        <Label styleClass="stat-label" text="%dashboard.user.entries"/>
                     </VBox>
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
                         <FontIcon iconLiteral="fas-check-double" iconSize="24" iconColor="#27ae60"/>
                         <Label fx:id="habitsCompletedLabel" styleClass="stat-value" text="0%"
                                style="-fx-text-fill: #27ae60;"/>
-                        <Label styleClass="stat-label" text="Habitudes suivies"/>
+                        <Label styleClass="stat-label" text="%dashboard.user.habits"/>
                     </VBox>
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
                         <FontIcon iconLiteral="fas-comments" iconSize="24" iconColor="#FF69B4"/>
                         <Label fx:id="activeConvLabel" styleClass="stat-value" text="0"
                                style="-fx-text-fill: #FF69B4;"/>
-                        <Label styleClass="stat-label" text="Conversations actives"/>
+                        <Label styleClass="stat-label" text="%dashboard.user.activeConv"/>
                     </VBox>
                 </HBox>
 
                 <!-- Daily Inspiration -->
                 <VBox styleClass="dashboard-card" spacing="15"
                       style="-fx-background-color: linear-gradient(to right, #1d7bed, #4CA8F5); -fx-padding: 30;">
-                    <Label text="Inspiration du jour"
+                    <Label text="%dashboard.user.inspiration"
                            style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-                    <Label text="&quot;Le succès n'est pas final, l'échec n'est pas fatal : c'est le courage de continuer qui compte.&quot;"
+                    <Label text="%dashboard.user.quote"
                            style="-fx-font-style: italic; -fx-font-size: 16px; -fx-text-fill: white;"
                            wrapText="true"/>
-                    <Label text="— Winston Churchill" style="-fx-text-fill: rgba(255,255,255,0.8);"/>
+                    <Label text="%dashboard.user.quoteAuthor" style="-fx-text-fill: rgba(255,255,255,0.8);"/>
                 </VBox>
 
                 <!-- Quick Actions -->
                 <HBox spacing="20">
                     <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="10">
                         <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-                        <Label text="Missions d'aujourd'hui" style="-fx-font-weight: bold;"/>
+                        <Label text="%dashboard.user.tasks" style="-fx-font-weight: bold;"/>
                         <CheckBox text="Méditation (10 min)" style="-fx-padding: 5 0;"/>
                         <CheckBox text="Écrire dans le journal" selected="true" style="-fx-padding: 5 0;"/>
                         <CheckBox text="Boire 2L d'eau" style="-fx-padding: 5 0;"/>
                     </VBox>
                     <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="10" alignment="CENTER">
                         <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-                        <Label text="Comment vous sentez-vous ?" style="-fx-font-weight: bold;"/>
+                        <Label text="%dashboard.user.feelings" style="-fx-font-weight: bold;"/>
                         <HBox spacing="15" alignment="CENTER">
                             <Button text="😊" style="-fx-font-size: 20; -fx-background-color: #f1f1f1;"/>
                             <Button text="😐" style="-fx-font-size: 20; -fx-background-color: #f1f1f1;"/>

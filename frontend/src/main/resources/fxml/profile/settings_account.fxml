@@ -11,7 +11,7 @@
         <Insets top="30" right="30" bottom="30" left="30" />
     </padding>
 
-    <Label text="Informations du compte" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <Label text="%profile.settings.accountInfo" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
     
     <GridPane hgap="20" vgap="15">
         <Label text="%settings.account.creationDate" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="text-muted" />
@@ -23,9 +23,11 @@
 
     <Separator />
 
-    <Label text="Actions de sécurité" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <Label text="%profile.settings.security" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
 
     <VBox spacing="20">
+        <Button text="%profile.settings.changePwd" onAction="#handleChangePassword" style="-fx-background-color: transparent; -fx-text-fill: #1d7bed; -fx-cursor: hand;" />
+
         <VBox spacing="5">
             <Button text="%settings.account.deactivate" onAction="#handleDeactivate" styleClass="btn" style="-fx-text-fill: #e67e22;" />
             <Label text="%settings.account.deactivateInfo" styleClass="text-muted" style="-fx-font-size: 12px;" />

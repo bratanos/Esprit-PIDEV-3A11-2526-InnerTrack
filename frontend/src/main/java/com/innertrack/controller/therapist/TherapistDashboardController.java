@@ -16,19 +16,30 @@ import java.util.List;
 
 public class TherapistDashboardController {
 
-    @FXML private Label  welcomeLabel;
-    @FXML private Label  totalPatientsLabel;
-    @FXML private Label  appointmentsTodayLabel;
-    @FXML private Label  totalConsultationsLabel;
-    @FXML private Label  pendingRequestsLabel;
-    @FXML private javafx.scene.shape.Circle profileCircle;
-    @FXML private Label  userFullNameLabel;
-    @FXML private Label  notifBadge;
-    @FXML private HBox   pendingAlert;
-    @FXML private Label  pendingAlertLabel;
-    @FXML private VBox   profileIncompleteCard;
+    @FXML
+    private Label welcomeLabel;
+    @FXML
+    private Label totalPatientsLabel;
+    @FXML
+    private Label appointmentsTodayLabel;
+    @FXML
+    private Label totalConsultationsLabel;
+    @FXML
+    private Label pendingRequestsLabel;
+    @FXML
+    private javafx.scene.shape.Circle profileCircle;
+    @FXML
+    private Label userFullNameLabel;
+    @FXML
+    private Label notifBadge;
+    @FXML
+    private HBox pendingAlert;
+    @FXML
+    private Label pendingAlertLabel;
+    @FXML
+    private VBox profileIncompleteCard;
 
-    private final MessagingDao      messagingDao = new MessagingDao();
+    private final MessagingDao messagingDao = new MessagingDao();
     private final TherapistProfileDao profileDao = new TherapistProfileDao();
 
     @FXML
@@ -81,11 +92,30 @@ public class TherapistDashboardController {
 
     // ── Navigation ────────────────────────────────────────────
 
-    @FXML private void handleGoToProfile()        { ViewManager.loadView("psychologue/therapist_profile_setup"); }
-    @FXML private void handleGoToLocation()       { ViewManager.loadView("psychologue/therapist_location"); }
-    @FXML private void handleGoToNotifications()  { ViewManager.loadView("psychologue/notifications"); }
-    @FXML private void handleGoToMessages()       { ViewManager.loadView("messaging/chat"); }
-    @FXML private void handleGoToSettings()       { ViewManager.loadView("profile/settings_main"); }
+    @FXML
+    private void handleGoToProfile() {
+        ViewManager.loadView("psychologue/therapist_profile_setup");
+    }
+
+    @FXML
+    private void handleGoToLocation() {
+        ViewManager.loadView("psychologue/therapist_location");
+    }
+
+    @FXML
+    private void handleGoToNotifications() {
+        ViewManager.loadView("psychologue/therapist_notifications");
+    }
+
+    @FXML
+    private void handleGoToMessages() {
+        ViewManager.loadView("chat/messaging_chat");
+    }
+
+    @FXML
+    private void handleGoToSettings() {
+        ViewManager.loadView("profile/settings_main");
+    }
 
     @FXML
     private void handleLogout() {
@@ -96,7 +126,8 @@ public class TherapistDashboardController {
     // ── Helpers ───────────────────────────────────────────────
 
     private void updateProfileImage(String picPath) {
-        if (picPath == null || picPath.isEmpty()) return;
+        if (picPath == null || picPath.isEmpty())
+            return;
         try {
             java.io.File file = new java.io.File(picPath);
             if (file.exists()) {

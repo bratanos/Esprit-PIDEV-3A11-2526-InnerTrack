@@ -5,11 +5,11 @@
 <?import javafx.geometry.Insets?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox spacing="30" styleClass="dashboard-container"
+<VBox spacing="30" styleClass="dashboard-container, settings-view"
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.innertrack.controller.settings.SettingsController"
       stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css, @../../styles/base/typography.css, @../../styles/base/controls.css, @../../styles/themes/theme-light.css, @../../styles/views/settings.css"
-      styleClass="settings-view">
+      >
     
     <padding>
         <Insets top="30" right="40" bottom="30" left="40" />
@@ -24,7 +24,7 @@
         </Button>
         <VBox>
             <Label text="%settings.title" styleClass="title" />
-            <Label text="Personnalisez votre expérience et gérez votre compte." styleClass="text-muted" />
+            <Label text="%settings.subtitle" styleClass="text-muted" />
         </VBox>
     </HBox>
 

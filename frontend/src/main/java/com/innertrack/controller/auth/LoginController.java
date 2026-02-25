@@ -3,6 +3,7 @@ package com.innertrack.controller.auth;
 import com.innertrack.service.AuthService;
 import com.innertrack.util.ViewManager;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -18,6 +19,10 @@ public class LoginController {
 
     @FXML
     private Label errorLabel;
+
+    // Remember Me checkbox
+    @FXML
+    private CheckBox rememberMeCheckbox;
 
     private final AuthService authService = new AuthService();
 
@@ -40,8 +45,29 @@ public class LoginController {
 
         if ("SUCCESS".equals(result)) {
             System.out.println("Login successful for user: " + email);
-            // Success! Determine redirection based on role
-            com.innertrack.model.User user = com.innertrack.session.SessionManager.getInstance().getCurrentUser();
+
+            //  REMEMBER ME LOGIC (added here)
+            if (rememberMeCheckbox != null && rememberMeCheckbox.isSelected()) {
+                String token = com.innertrack.session.SessionManager
+                        .getInstance()
+                        .getJwtToken();
+
+                com.innertrack.service.RememberMeService
+                        .getInstance()
+                        .save(email, token);
+            } else {
+                // Clear any old token if unchecked
+                com.innertrack.service.RememberMeService
+                        .getInstance()
+                        .clear();
+            }
+
+            // Determine redirection based on role
+            com.innertrack.model.User user =
+                    com.innertrack.session.SessionManager
+                            .getInstance()
+                            .getCurrentUser();
+
             List<String> roles = user.getRoles();
             String dashboardView;
 
@@ -55,10 +81,13 @@ public class LoginController {
 
             System.out.println("Redirecting to: " + dashboardView);
             ViewManager.loadView(dashboardView);
-            // The dashboard's initialize() will handle its own visibility needs.
+
+            // Update UI for logged-in session
             MainLayoutController.getInstance().updateUiForSession();
+
         } else {
             System.err.println("Login failed: " + result);
+
             if ("Account not verified. Please verify your email.".equals(result)) {
                 VerifyOtpController controller = ViewManager.loadView("verify_otp");
                 if (controller != null) {

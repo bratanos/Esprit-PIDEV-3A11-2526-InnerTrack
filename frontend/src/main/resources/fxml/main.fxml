@@ -9,27 +9,27 @@
       maxWidth="1000">
 
     <VBox spacing="10" alignment="CENTER">
-        <Label text="Bienvenue sur InnerTrack" styleClass="title" style="-fx-font-size: 32px;" />
-        <Label text="Votre compagnon de santé mentale au quotidien." styleClass="subtitle" style="-fx-font-size: 18px;" />
+        <Label text="%main.welcome.title" styleClass="title" style="-fx-font-size: 32px;" />
+        <Label text="%main.welcome.subtitle" styleClass="subtitle" style="-fx-font-size: 18px;" />
     </VBox>
 
     <HBox spacing="20" alignment="CENTER">
         <VBox spacing="10" styleClass="card" style="-fx-padding: 20; -fx-pref-width: 280;" alignment="TOP_CENTER">
-            <Label text="Journaling" styleClass="title" style="-fx-font-size: 18px;" />
-            <Label text="Écrivez vos pensées et suivez votre humeur." wrapText="true" textAlignment="CENTER" styleClass="subtitle" />
-            <Button text="Commencer" styleClass="btn, btn-primary" />
+            <Label text="%main.card1.title" styleClass="title" style="-fx-font-size: 18px;" />
+            <Label text="%main.card1.subtitle" wrapText="true" textAlignment="CENTER" styleClass="subtitle" />
+            <Button text="%main.card1.btn" styleClass="btn, btn-primary" />
         </VBox>
 
         <VBox spacing="10" styleClass="card" style="-fx-padding: 20; -fx-pref-width: 280;" alignment="TOP_CENTER">
-            <Label text="Parcours" styleClass="title" style="-fx-font-size: 18px;" />
-            <Label text="Découvrez des exercices de méditation." wrapText="true" textAlignment="CENTER" styleClass="subtitle" />
-            <Button text="Explorer" styleClass="btn, btn-secondary" />
+            <Label text="%main.card2.title" styleClass="title" style="-fx-font-size: 18px;" />
+            <Label text="%main.card2.subtitle" wrapText="true" textAlignment="CENTER" styleClass="subtitle" />
+            <Button text="%main.card2.btn" styleClass="btn, btn-secondary" />
         </VBox>
         
         <VBox spacing="10" styleClass="card" style="-fx-padding: 20; -fx-pref-width: 280;" alignment="TOP_CENTER">
-            <Label text="Spécialistes" styleClass="title" style="-fx-font-size: 18px;" />
-            <Label text="Prenez rendez-vous avec nos psychologues." wrapText="true" textAlignment="CENTER" styleClass="subtitle" />
-            <Button text="Consulter" styleClass="btn, btn-secondary" />
+            <Label text="%main.card3.title" styleClass="title" style="-fx-font-size: 18px;" />
+            <Label text="%main.card3.subtitle" wrapText="true" textAlignment="CENTER" styleClass="subtitle" />
+            <Button text="%main.card3.btn" styleClass="btn, btn-secondary" />
         </VBox>
     </HBox>
 

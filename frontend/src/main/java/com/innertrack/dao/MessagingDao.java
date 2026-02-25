@@ -26,8 +26,9 @@ public class MessagingDao {
      * Also creates a notification for the therapist.
      */
     public boolean sendContactRequest(int clientId, int therapistId, String message) {
-        // Check if one already exists
-        if (contactRequestExists(clientId, therapistId)) return false;
+        // Check if one already exists or IF BLOCKED
+        if (contactRequestExists(clientId, therapistId) || isBlocked(clientId, therapistId))
+            return false;
 
         String sql = "INSERT INTO contact_request (client_id, therapist_id, message) VALUES (?,?,?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -38,7 +39,8 @@ public class MessagingDao {
             if (rows > 0) {
                 int requestId = -1;
                 try (ResultSet keys = stmt.getGeneratedKeys()) {
-                    if (keys.next()) requestId = keys.getInt(1);
+                    if (keys.next())
+                        requestId = keys.getInt(1);
                 }
                 // Create notification for therapist
                 createNotification(new Notification(
@@ -46,8 +48,7 @@ public class MessagingDao {
                         "CONTACT_REQUEST",
                         "Nouvelle demande de contact",
                         "Un patient souhaite vous contacter.",
-                        requestId
-                ));
+                        requestId));
                 return true;
             }
         } catch (SQLException e) {
@@ -57,15 +58,25 @@ public class MessagingDao {
     }
 
     public boolean contactRequestExists(int clientId, int therapistId) {
-        String sql = "SELECT id FROM contact_request WHERE client_id=? AND therapist_id=? AND status='PENDING'";
+        // Block if there's a pending request OR an active conversation already
+        String sql = "SELECT COUNT(*) FROM contact_request " +
+                "WHERE client_id=? AND therapist_id=? AND status='PENDING' " +
+                "UNION ALL " +
+                "SELECT COUNT(*) FROM conversation " +
+                "WHERE client_id=? AND therapist_id=? AND status='ACTIVE'";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, clientId);
             stmt.setInt(2, therapistId);
+            stmt.setInt(3, clientId);
+            stmt.setInt(4, therapistId);
             try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next();
+                while (rs.next()) {
+                    if (rs.getInt(1) > 0)
+                        return true;
+                }
             }
         } catch (SQLException e) {
-            System.err.println("MessagingDao.contactRequestExists: " + e.getMessage());
+            System.err.println("contactRequestExists: " + e.getMessage());
         }
         return false;
     }
@@ -99,7 +110,14 @@ public class MessagingDao {
     public Conversation acceptRequest(int requestId) {
         // Get the request
         ContactRequest req = getContactRequest(requestId);
-        if (req == null) return null;
+        if (req == null)
+            return null;
+
+        // Defensive: Check if blocked since request was sent
+        if (isBlocked(req.getClientId(), req.getTherapistId())) {
+            updateRequestStatus(requestId, "DECLINED");
+            return null;
+        }
 
         // Update request status
         updateRequestStatus(requestId, "ACCEPTED");
@@ -114,8 +132,7 @@ public class MessagingDao {
                     "CONTACT_REQUEST",
                     "Demande acceptée",
                     "Votre thérapeute a accepté votre demande. Vous pouvez maintenant échanger.",
-                    conv.getId()
-            ));
+                    conv.getId()));
         }
         return conv;
     }
@@ -129,8 +146,7 @@ public class MessagingDao {
                     "CONTACT_REQUEST",
                     "Demande refusée",
                     "Le thérapeute n'est pas disponible pour le moment.",
-                    requestId
-            ));
+                    requestId));
         }
     }
 
@@ -150,7 +166,8 @@ public class MessagingDao {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) return mapContactRequest(rs);
+                if (rs.next())
+                    return mapContactRequest(rs);
             }
         } catch (SQLException e) {
             System.err.println("MessagingDao.getContactRequest: " + e.getMessage());
@@ -204,7 +221,8 @@ public class MessagingDao {
                     conv.setClientName(rs.getString("client_name"));
                     conv.setTherapistName(rs.getString("therapist_name"));
                     Timestamp ts = rs.getTimestamp("created_at");
-                    if (ts != null) conv.setCreatedAt(ts.toLocalDateTime());
+                    if (ts != null)
+                        conv.setCreatedAt(ts.toLocalDateTime());
                     list.add(conv);
                 }
             }
@@ -214,9 +232,115 @@ public class MessagingDao {
         return list;
     }
 
+    public Conversation getConversationBetween(int u1, int u2) {
+        String sql = "SELECT * FROM conversation WHERE ((client_id = ? AND therapist_id = ?) " +
+                "OR (client_id = ? AND therapist_id = ?)) AND status = 'ACTIVE'";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, u1);
+            stmt.setInt(2, u2);
+            stmt.setInt(3, u2);
+            stmt.setInt(4, u1);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Conversation conv = new Conversation();
+                    conv.setId(rs.getInt("id"));
+                    conv.setClientId(rs.getInt("client_id"));
+                    conv.setTherapistId(rs.getInt("therapist_id"));
+                    conv.setStatus(rs.getString("status"));
+                    return conv;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("MessagingDao.getConversationBetween: " + e.getMessage());
+        }
+        return null;
+    }
+
+    // ── BLOCKING ─────────────────────────────────────────────
+
+    public boolean isBlocked(int clientId, int therapistId) {
+        String sql = "SELECT COUNT(*) FROM blocked_user WHERE client_id = ? AND therapist_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, clientId);
+            stmt.setInt(2, therapistId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            // Table might not exist yet, treat as not blocked but log it
+            System.err.println("MessagingDao.isBlocked check failed: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean updateBlockingStatus(int clientId, int therapistId, boolean block) {
+        String sql;
+        if (block) {
+            sql = "INSERT IGNORE INTO blocked_user (client_id, therapist_id) VALUES (?, ?)";
+        } else {
+            sql = "DELETE FROM blocked_user WHERE client_id = ? AND therapist_id = ?";
+        }
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, clientId);
+            stmt.setInt(2, therapistId);
+            int affected = stmt.executeUpdate();
+
+            if (block) {
+                // Also set any active conversation to BLOCKED
+                String blockConv = "UPDATE conversation SET status = 'BLOCKED' WHERE client_id = ? AND therapist_id = ? AND status = 'ACTIVE'";
+                try (PreparedStatement ps = connection.prepareStatement(blockConv)) {
+                    ps.setInt(1, clientId);
+                    ps.setInt(2, therapistId);
+                    ps.executeUpdate();
+                }
+            } else {
+                // When unblocking, maybe set it back to ACTIVE?
+                // Or just leave it blocked and require a new contact request?
+                // For now, let's leave it blocked to be safe, they need to re-initiate if they
+                // want.
+                // But wait, the user said "unblocked by the therapist" implies they can talk
+                // again.
+                // Let's set it back to ACTIVE so they can resume.
+                String activeConv = "UPDATE conversation SET status = 'ACTIVE' WHERE client_id = ? AND therapist_id = ? AND status = 'BLOCKED'";
+                try (PreparedStatement ps = connection.prepareStatement(activeConv)) {
+                    ps.setInt(1, clientId);
+                    ps.setInt(2, therapistId);
+                    ps.executeUpdate();
+                }
+            }
+
+            return affected > 0 || block; // If it was already blocked/unblocked, it might return 0 but it's still
+                                          // "success"
+        } catch (SQLException e) {
+            System.err.println("MessagingDao.updateBlockingStatus failed: " + e.getMessage());
+        }
+        return false;
+    }
+
     // ── MESSAGES ─────────────────────────────────────────────
 
     public boolean sendMessage(int conversationId, int senderId, String content) {
+        // Validation: Only allow sending if the conversation is ACTIVE
+        String checkSql = "SELECT status FROM conversation WHERE id = ?";
+        try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
+            checkStmt.setInt(1, conversationId);
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if (rs.next()) {
+                    String status = rs.getString("status");
+                    if (!"ACTIVE".equals(status)) {
+                        System.err.println("Attempted to send message to non-active conversation: " + conversationId);
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking conversation status: " + e.getMessage());
+            return false;
+        }
+
         String sql = "INSERT INTO message (conversation_id, sender_id, content) VALUES (?,?,?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, conversationId);
@@ -246,7 +370,8 @@ public class MessagingDao {
                     msg.setRead(rs.getBoolean("is_read"));
                     msg.setSenderName(rs.getString("sender_name"));
                     Timestamp ts = rs.getTimestamp("sent_at");
-                    if (ts != null) msg.setSentAt(ts.toLocalDateTime());
+                    if (ts != null)
+                        msg.setSentAt(ts.toLocalDateTime());
                     list.add(msg);
                 }
             }
@@ -276,8 +401,10 @@ public class MessagingDao {
             stmt.setString(2, n.getType());
             stmt.setString(3, n.getTitle());
             stmt.setString(4, n.getBody());
-            if (n.getReferenceId() != null) stmt.setInt(5, n.getReferenceId());
-            else stmt.setNull(5, Types.INTEGER);
+            if (n.getReferenceId() != null)
+                stmt.setInt(5, n.getReferenceId());
+            else
+                stmt.setNull(5, Types.INTEGER);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("MessagingDao.createNotification: " + e.getMessage());
@@ -291,7 +418,8 @@ public class MessagingDao {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) list.add(mapNotification(rs));
+                while (rs.next())
+                    list.add(mapNotification(rs));
             }
         } catch (SQLException e) {
             System.err.println("MessagingDao.getUnreadNotifications: " + e.getMessage());
@@ -304,7 +432,8 @@ public class MessagingDao {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) return rs.getInt(1);
+                if (rs.next())
+                    return rs.getInt(1);
             }
         } catch (SQLException e) {
             System.err.println("MessagingDao.countUnread: " + e.getMessage());
@@ -332,9 +461,11 @@ public class MessagingDao {
         cr.setMessage(rs.getString("message"));
         cr.setStatus(rs.getString("status"));
         Timestamp ts = rs.getTimestamp("created_at");
-        if (ts != null) cr.setCreatedAt(ts.toLocalDateTime());
+        if (ts != null)
+            cr.setCreatedAt(ts.toLocalDateTime());
         Timestamp resp = rs.getTimestamp("responded_at");
-        if (resp != null) cr.setRespondedAt(resp.toLocalDateTime());
+        if (resp != null)
+            cr.setRespondedAt(resp.toLocalDateTime());
         return cr;
     }
 
@@ -347,9 +478,11 @@ public class MessagingDao {
         n.setBody(rs.getString("body"));
         n.setRead(rs.getBoolean("is_read"));
         int refId = rs.getInt("reference_id");
-        if (!rs.wasNull()) n.setReferenceId(refId);
+        if (!rs.wasNull())
+            n.setReferenceId(refId);
         Timestamp ts = rs.getTimestamp("created_at");
-        if (ts != null) n.setCreatedAt(ts.toLocalDateTime());
+        if (ts != null)
+            n.setCreatedAt(ts.toLocalDateTime());
         return n;
     }
 }

@@ -27,8 +27,8 @@
                 </graphic>
             </Button>
             <VBox>
-                <Label text="Profil &amp; Paramètres" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
-                <Label text="Gérez vos informations personnelles et vos préférences." style="-fx-text-fill: #7f8c8d;" />
+                <Label text="%profile.settings.title" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                <Label text="%profile.settings.subtitle" style="-fx-text-fill: #7f8c8d;" />
             </VBox>
         </HBox>
 
@@ -39,7 +39,7 @@
                     <Insets top="30" right="30" bottom="30" left="30" />
                 </padding>
                 
-                <Label text="Photo de Profil" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+                <Label text="%profile.settings.pic" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
                 
                 <StackPane>
                     <Circle fx:id="profileCircle" radius="80" styleClass="profile-pic" />
@@ -51,13 +51,11 @@
                 </StackPane>
                 
                 <VBox alignment="CENTER" spacing="5">
-                    <Label fx:id="nameLabel" text="Nom d'utilisateur" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
-                    <Label fx:id="roleLabel" text="Rôle" style="-fx-text-fill: #1d7bed; -fx-font-weight: bold;" />
+                    <Label fx:id="nameLabel" text="%profile.settings.username" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+                    <Label fx:id="roleLabel" text="%profile.settings.role" style="-fx-text-fill: #1d7bed; -fx-font-weight: bold;" />
                 </VBox>
                 
                 <Separator />
-                
-                <Button text="Changer de mot de passe" onAction="#handleChangePassword" style="-fx-background-color: transparent; -fx-text-fill: #1d7bed; -fx-cursor: hand;" />
             </VBox>
 
             <!-- Details Card (User Info) -->
@@ -66,7 +64,7 @@
                     <Insets top="30" right="30" bottom="30" left="30" />
                 </padding>
                 
-                <Label text="Informations Personnelles" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+                <Label text="%profile.settings.info" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
                 
                 <GridPane hgap="20" vgap="20">
                     <columnConstraints>
@@ -74,57 +72,22 @@
                         <ColumnConstraints hgrow="ALWAYS" />
                     </columnConstraints>
                     
-                    <Label text="Prénom :" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-                    <TextField fx:id="firstNameField" promptText="Votre prénom" styleClass="input-field" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                    <Label text="%profile.settings.firstName" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                    <TextField fx:id="firstNameField" promptText="%profile.settings.firstNamePrompt" styleClass="input-field" GridPane.rowIndex="0" GridPane.columnIndex="1" />
                     
-                    <Label text="Nom :" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-                    <TextField fx:id="lastNameField" promptText="Votre nom" styleClass="input-field" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                    <Label text="%profile.settings.lastName" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                    <TextField fx:id="lastNameField" promptText="%profile.settings.lastNamePrompt" styleClass="input-field" GridPane.rowIndex="1" GridPane.columnIndex="1" />
                     
-                    <Label text="Email :" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                    <Label text="%profile.settings.email" GridPane.rowIndex="2" GridPane.columnIndex="0" />
                     <TextField fx:id="emailField" editable="false" style="-fx-opacity: 0.7;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
                 </GridPane>
                 
                 <HBox spacing="15" alignment="CENTER_RIGHT">
-                    <Button text="Annuler" onAction="#handleBack" style="-fx-background-color: #f1f1f1; -fx-text-fill: #7f8c8d; -fx-padding: 10 25; -fx-background-radius: 5;" />
-                    <Button text="Enregistrer les modifications" onAction="#handleUpdateProfile" 
+                    <Button text="%profile.settings.cancelBtn" onAction="#handleBack" style="-fx-background-color: #f1f1f1; -fx-text-fill: #7f8c8d; -fx-padding: 10 25; -fx-background-radius: 5;" />
+                    <Button text="%profile.settings.saveBtn" onAction="#handleUpdateProfile" 
                             style="-fx-background-color: #1d7bed; -fx-text-fill: white; -fx-padding: 10 25; -fx-background-radius: 5; -fx-font-weight: bold;" />
                 </HBox>
 
-                <Separator />
-
-                <!-- Appearance Section -->
-                <Label text="Apparence &amp; Langue" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-                <HBox spacing="20">
-                    <ToggleButton fx:id="lightThemeBtn" text="Mode Clair" onAction="#setLightTheme" prefWidth="150" styleClass="btn" />
-                    <ToggleButton fx:id="darkThemeBtn" text="Mode Sombre" onAction="#setDarkTheme" prefWidth="150" styleClass="btn" />
-                </HBox>
-                <ComboBox fx:id="languageComboBox" prefWidth="200" onAction="#handleLanguageChange" />
-
-                <Separator />
-
-                <!-- Accessibility Section -->
-                <Label text="Accessibilité (Taille du texte)" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-                <VBox spacing="10">
-                    <RadioButton fx:id="fontSmallBtn" text="Petit" onAction="#setFontSmall" />
-                    <RadioButton fx:id="fontNormalBtn" text="Normal" onAction="#setFontNormal" />
-                    <RadioButton fx:id="fontLargeBtn" text="Grand" onAction="#setFontLarge" />
-                </VBox>
-
-                <Separator />
-
-                <!-- Account Security & Meta -->
-                <Label text="Sécurité &amp; Compte" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-                <GridPane hgap="20" vgap="10">
-                    <Label text="Créé le :" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="text-muted" />
-                    <Label fx:id="creationDateLabel" GridPane.rowIndex="0" GridPane.columnIndex="1" />
-                    <Label text="Dernière connexion :" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="text-muted" />
-                    <Label fx:id="lastLoginLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-                </GridPane>
-                
-                <VBox spacing="15">
-                    <Button text="Désactiver mon compte" onAction="#handleDeactivate" style="-fx-text-fill: #e67e22; -fx-background-color: transparent; -fx-cursor: hand;" />
-                    <Button text="Bloquer mon compte (Action critique)" onAction="#handleDelete" style="-fx-text-fill: #e74c3c; -fx-background-color: transparent; -fx-cursor: hand;" />
-                </VBox>
             </VBox>
         </HBox>
     </VBox>

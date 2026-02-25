@@ -13,17 +13,25 @@ import java.net.URL;
 public class ViewManager {
 
     private static Pane contentContainer;
+    private static String currentActiveView;
 
     public static void setContainer(Pane container) {
         contentContainer = container;
     }
 
     public static <T> T loadView(String fxmlName) {
+        currentActiveView = fxmlName;
         if (contentContainer == null) {
             System.err.println("Error: Content container not set in ViewManager.");
             return null;
         }
         return loadView(fxmlName, contentContainer);
+    }
+
+    public static void reloadCurrentView() {
+        if (currentActiveView != null && contentContainer != null) {
+            loadView(currentActiveView, contentContainer);
+        }
     }
 
     public static <T> T loadView(String fxmlName, Pane container) {

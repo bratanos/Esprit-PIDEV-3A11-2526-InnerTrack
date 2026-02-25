@@ -1,9 +1,11 @@
 package com.innertrack.controller.user;
 
+import com.innertrack.dao.MessagingDao;
 import com.innertrack.dao.TherapistProfileDao;
 import com.innertrack.dao.UserDao;
 import com.innertrack.model.TherapistProfile;
 import com.innertrack.model.User;
+import com.innertrack.session.SessionManager;
 import com.innertrack.util.ViewManager;
 import com.sothawo.mapjfx.Coordinate;
 import com.sothawo.mapjfx.MapType;
@@ -13,11 +15,14 @@ import com.sothawo.mapjfx.XYZParam;
 import com.sothawo.mapjfx.event.MarkerEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +30,9 @@ import java.util.Map;
 public class TherapistMapController {
 
     private static final Coordinate TUNISIA_CENTER = new Coordinate(33.8869, 9.5375);
+
     private static final double TUNISIA_OVERVIEW_ZOOM = 6;
+
     private static final String OSM_ENGLISH_TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
     @FXML
@@ -51,14 +58,22 @@ public class TherapistMapController {
 
     private final TherapistProfileDao profileDao = new TherapistProfileDao();
     private final UserDao userDao = new UserDao();
+    private final MessagingDao messagingDao = new MessagingDao();
+
+    // 🔒 Cached data (KEY FIX)
+    private List<TherapistProfile> cachedTherapists;
+    private final List<Marker> activeMarkers = new ArrayList<>();
 
     private final Map<String, TherapistProfile> markerIdToProfile = new HashMap<>();
+
+    private TherapistProfile selectedProfile;
+
+    // ──────────────────────────────────────────────
 
     @FXML
     public void initialize() {
         initInfoCardEmpty();
         configureMap();
-        wireMarkerClicks();
     }
 
     @FXML
@@ -66,11 +81,9 @@ public class TherapistMapController {
         ViewManager.loadView("user/dashboard");
     }
 
-    @FXML
-    private void handleContact() {
-        contactButton.setText("Bientôt disponible");
-        contactButton.setDisable(true);
-    }
+    // ──────────────────────────────────────────────
+    // MAP CONFIGURATION
+    // ──────────────────────────────────────────────
 
     private void configureMap() {
         XYZParam xyzParam = new XYZParam()
@@ -78,46 +91,75 @@ public class TherapistMapController {
                 .withAttributions("© OpenStreetMap contributors")
                 .withMaxZoom(19);
 
-        mapView.setMapType(MapType.XYZ);
         mapView.setXYZParam(xyzParam);
 
         mapView.initializedProperty().addListener((obs, oldV, initialized) -> {
-            if (!initialized) {
+            if (!initialized)
                 return;
-            }
+
+            mapView.setMapType(MapType.XYZ);
             mapView.setCenter(TUNISIA_CENTER);
             mapView.setZoom(TUNISIA_OVERVIEW_ZOOM);
-            loadTherapistsOnMap();
+
+            wireMarkerClicks();
+            loadTherapistsOnce();
         });
 
+        // 🔁 CRITICAL FIX: re-render markers on zoom
+        mapView.zoomProperty().addListener((obs, oldZ, newZ) -> {
+            if (cachedTherapists != null) {
+                refreshMarkers();
+            }
+        });
+
+        mapView.setOnContextMenuRequested(e -> e.consume());
         mapView.initialize();
     }
 
-    private void loadTherapistsOnMap() {
+    // ──────────────────────────────────────────────
+    // DATA LOADING
+    // ──────────────────────────────────────────────
+
+    private void loadTherapistsOnce() {
         Thread t = new Thread(() -> {
-            List<TherapistProfile> therapists = profileDao.findAllWithLocation();
-            Platform.runLater(() -> addMarkers(therapists));
+            cachedTherapists = profileDao.findAllWithLocation();
+            Platform.runLater(this::refreshMarkers);
         }, "load-therapists-thread");
+
         t.setDaemon(true);
         t.start();
     }
 
-    private void addMarkers(List<TherapistProfile> therapists) {
-        URL circleUrl = getClass().getResource("/Images/circle-pink.svg");
-        if (circleUrl == null) {
-            System.err.println("Missing resource: /Images/circle-pink.svg");
+    // ──────────────────────────────────────────────
+    // MARKER MANAGEMENT (THE REAL FIX)
+    // ──────────────────────────────────────────────
+
+    private void refreshMarkers() {
+        // Remove existing markers first
+        for (Marker marker : activeMarkers) {
+            mapView.removeMarker(marker);
+        }
+        activeMarkers.clear();
+        markerIdToProfile.clear();
+
+        URL icon = getClass().getResource("/Images/circle-pink.svg");
+        if (icon == null) {
+            System.err.println("❌ Missing marker icon: /Images/circle-pink.svg");
             return;
         }
 
-        for (TherapistProfile t : therapists) {
-            if (!t.hasLocation()) {
+        for (TherapistProfile t : cachedTherapists) {
+            if (!t.hasLocation())
                 continue;
-            }
-            Coordinate c = new Coordinate(t.getLatitude(), t.getLongitude());
-            Marker m = new Marker(circleUrl, -10, -10)
-                    .setPosition(c)
+
+            Marker m = new Marker(icon, -11, -11)
+                    .setPosition(new Coordinate(
+                            t.getLatitude(),
+                            t.getLongitude()))
                     .setVisible(true);
+
             mapView.addMarker(m);
+            activeMarkers.add(m);
             markerIdToProfile.put(m.getId(), t);
         }
     }
@@ -125,60 +167,106 @@ public class TherapistMapController {
     private void wireMarkerClicks() {
         mapView.addEventHandler(MarkerEvent.MARKER_CLICKED, e -> {
             Marker m = e.getMarker();
-            if (m == null) {
+            if (m == null)
                 return;
+
+            TherapistProfile profile = markerIdToProfile.get(m.getId());
+            if (profile != null) {
+                showTherapist(profile);
             }
-            TherapistProfile p = markerIdToProfile.get(m.getId());
-            if (p == null) {
-                return;
-            }
-            showTherapist(p);
         });
     }
 
+    // ──────────────────────────────────────────────
+    // INFO CARD
+    // ──────────────────────────────────────────────
+
     private void initInfoCardEmpty() {
         nameLabel.setText("Choisissez un thérapeute");
-        specializationLabel.setText("Cliquez sur un marqueur rose pour voir les détails.");
+        specializationLabel.setText("Cliquez sur un marqueur pour voir les détails.");
         addressLabel.setText("");
         bioLabel.setText("");
         contactButton.setDisable(true);
     }
 
     private void showTherapist(TherapistProfile profile) {
-        contactButton.setDisable(false);
+        selectedProfile = profile;
+
         contactButton.setText("Contacter");
+        contactButton.setDisable(false);
+
+        User client = SessionManager.getInstance().getCurrentUser();
+        if (messagingDao.contactRequestExists(client.getId(), profile.getUserId())) {
+            contactButton.setText("✓ Demande envoyée");
+            contactButton.setDisable(true);
+        }
 
         nameLabel.setText("Chargement…");
         specializationLabel.setText("");
         addressLabel.setText("");
         bioLabel.setText("");
 
-        Thread t = new Thread(() -> {
+        new Thread(() -> {
             try {
                 User user = userDao.read(profile.getUserId());
-                String fullName = user != null ? user.getFullName() : "Thérapeute";
-                String spec = safe(profile.getSpecialization());
-                String addr = safe(profile.getAddress());
-                String bio = safe(profile.getBio());
-
                 Platform.runLater(() -> {
-                    nameLabel.setText(fullName);
-                    specializationLabel.setText(spec.isBlank() ? "Spécialisation: —" : "Spécialisation: " + spec);
-                    addressLabel.setText(addr.isBlank() ? "Adresse: —" : "Adresse: " + addr);
-                    bioLabel.setText(bio.isBlank() ? "Bio: —" : bio);
+                    nameLabel.setText(user != null ? user.getFullName() : "Thérapeute");
+                    specializationLabel.setText(format("🩺 ", profile.getSpecialization()));
+                    addressLabel.setText(format("📍 ", profile.getAddress()));
+                    bioLabel.setText(profile.getBio() == null || profile.getBio().isBlank()
+                            ? "Aucune bio renseignée."
+                            : profile.getBio());
                 });
-            } catch (Exception ex) {
+            } catch (SQLException e) {
                 Platform.runLater(() -> {
                     nameLabel.setText("Erreur");
-                    specializationLabel.setText(ex.getMessage());
+                    specializationLabel.setText("Impossible de charger les infos.");
                 });
             }
-        }, "load-therapist-thread");
-        t.setDaemon(true);
-        t.start();
+        }, "load-therapist-thread").start();
+
     }
 
-    private static String safe(String s) {
-        return s == null ? "" : s.trim();
+    // ──────────────────────────────────────────────
+    // CONTACT
+    // ──────────────────────────────────────────────
+
+    @FXML
+    private void handleContact() {
+        if (selectedProfile == null)
+            return;
+
+        User client = SessionManager.getInstance().getCurrentUser();
+
+        boolean sent = messagingDao.sendContactRequest(
+                client.getId(),
+                selectedProfile.getUserId(),
+                "Bonjour, je souhaite prendre contact avec vous.");
+
+        if (sent) {
+            contactButton.setText("✓ Demande envoyée");
+            contactButton.setDisable(true);
+            showAlert("Demande envoyée",
+                    "Votre demande a été envoyée au thérapeute.");
+        } else {
+            showAlert("Erreur",
+                    "Impossible d'envoyer la demande.");
+        }
+    }
+
+    // ──────────────────────────────────────────────
+
+    private static String format(String prefix, String value) {
+        return value == null || value.isBlank()
+                ? prefix + "—"
+                : prefix + value.trim();
+    }
+
+    private void showAlert(String title, String msg) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle(title);
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        a.showAndWait();
     }
 }

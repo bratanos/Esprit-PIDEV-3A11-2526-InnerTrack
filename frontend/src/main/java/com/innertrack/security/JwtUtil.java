@@ -1,5 +1,6 @@
 package com.innertrack.security;
 
+import com.innertrack.config.AppConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,8 +14,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class JwtUtil {
-    private static final String SECRET_KEY = "your_super_secret_key_that_should_be_stored_safely_in_env_or_config";
-    private static final long EXPIRATION_TIME = 86400000; // 24 hours
+    private static final String SECRET_KEY = AppConfig.get("jwt.secret");
+    private static final long EXPIRATION_TIME = Long.parseLong(AppConfig.get("jwt.expiration"));
 
     private static final Key SIGNING_KEY = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
@@ -22,6 +23,18 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", roles);
         return createToken(claims, email);
+    }
+
+    public static boolean isValid(String token) {
+        try {
+            io.jsonwebtoken.Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)   // use whatever key name your JwtUtil already uses
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private static String createToken(Map<String, Object> claims, String subject) {

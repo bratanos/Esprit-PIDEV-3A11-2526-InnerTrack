@@ -17,16 +17,16 @@ import java.util.List;
 import java.util.Random;
 
 public class AuthService {
-    private final UserDao                 userDao        = new UserDao();
-    private final EmailVerificationCodeDao otpDao        = new EmailVerificationCodeDao();
-    private final ClientProfileDao        clientProfileDao    = new ClientProfileDao();
-    private final TherapistProfileDao     therapistProfileDao = new TherapistProfileDao();
+    private final UserDao userDao = new UserDao();
+    private final EmailVerificationCodeDao otpDao = new EmailVerificationCodeDao();
+    private final ClientProfileDao clientProfileDao = new ClientProfileDao();
+    private final TherapistProfileDao therapistProfileDao = new TherapistProfileDao();
 
     public String register(String email, String password, String firstName, String lastName,
-                           List<String> requestedRoles) {
-        if (requestedRoles.contains("ROLE_ADMIN")) {
-            return "Registration for Admin is not allowed.";
-        }
+            List<String> requestedRoles) {
+         if (requestedRoles.contains("ROLE_ADMIN")) {
+         return "Registration for Admin is not allowed.";
+         }
         if (userDao.findByEmail(email) != null) {
             return "User already exists.";
         }
@@ -64,7 +64,8 @@ public class AuthService {
      * from services if a legacy user has no profile yet.
      */
     public void createProfileForUser(User user) {
-        if (user == null) return;
+        if (user == null)
+            return;
         List<String> roles = user.getRoles();
         if (roles.contains("ROLE_PSYCHOLOGUE")) {
             if (therapistProfileDao.findByUserId(user.getId()) == null) {
@@ -93,13 +94,18 @@ public class AuthService {
 
     public String verifyOtp(String email, String code) {
         User user = userDao.findByEmail(email);
-        if (user == null)         return "User not found.";
-        if (user.isVerified())    return "User already verified.";
+        if (user == null)
+            return "User not found.";
+        if (user.isVerified())
+            return "User already verified.";
 
         EmailVerificationCode evc = otpDao.findByUserId(user.getId());
-        if (evc == null)          return "No verification code found.";
-        if (evc.getExpiresAt().isBefore(LocalDateTime.now())) return "Code expired.";
-        if (evc.getVerifyAttempts() >= 5) return "Too many failed attempts. Request a new code.";
+        if (evc == null)
+            return "No verification code found.";
+        if (evc.getExpiresAt().isBefore(LocalDateTime.now()))
+            return "Code expired.";
+        if (evc.getVerifyAttempts() >= 5)
+            return "Too many failed attempts. Request a new code.";
 
         if (!evc.getCode().equals(code)) {
             evc.setVerifyAttempts(evc.getVerifyAttempts() + 1);
@@ -115,8 +121,10 @@ public class AuthService {
 
     public String resendOtp(String email) {
         User user = userDao.findByEmail(email);
-        if (user == null)      return "User not found.";
-        if (user.isVerified()) return "User already verified.";
+        if (user == null)
+            return "User not found.";
+        if (user.isVerified())
+            return "User already verified.";
 
         EmailVerificationCode evc = otpDao.findByUserId(user.getId());
         if (evc == null) {
@@ -144,8 +152,10 @@ public class AuthService {
 
     public String login(String email, String password) {
         User user = userDao.findByEmail(email);
-        if (user == null) return "Invalid credentials.";
-        if (!BCryptHasher.check(password, user.getPassword())) return "Invalid credentials.";
+        if (user == null)
+            return "Invalid credentials.";
+        if (!BCryptHasher.check(password, user.getPassword()))
+            return "Invalid credentials.";
 
         if (!user.isVerified() || !"ACTIVE".equals(user.getStatus())) {
             if ("BLOCKED".equals(user.getStatus())) {
@@ -154,7 +164,8 @@ public class AuthService {
             return "Account not verified. Please verify your email.";
         }
 
-        // Ensure profile exists for legacy users who registered before profiles were introduced
+        // Ensure profile exists for legacy users who registered before profiles were
+        // introduced
         createProfileForUser(user);
 
         String token = JwtUtil.generateToken(user.getEmail(), user.getRoles());
@@ -168,7 +179,8 @@ public class AuthService {
 
     public String requestPasswordReset(String email) {
         User user = userDao.findByEmail(email);
-        if (user == null) return "Email non trouvé.";
+        if (user == null)
+            return "Email non trouvé.";
 
         String code = String.format("%06d", new java.util.Random().nextInt(999999));
         com.innertrack.dao.PasswordResetDao resetDao = new com.innertrack.dao.PasswordResetDao();
@@ -182,7 +194,8 @@ public class AuthService {
     public String resetPassword(String email, String code, String newPassword) {
         com.innertrack.dao.PasswordResetDao resetDao = new com.innertrack.dao.PasswordResetDao();
         int userId = resetDao.findUserIdByValidCode(email, code);
-        if (userId == -1) return "Code invalide ou expiré.";
+        if (userId == -1)
+            return "Code invalide ou expiré.";
 
         String hashed = org.mindrot.jbcrypt.BCrypt.hashpw(newPassword, org.mindrot.jbcrypt.BCrypt.gensalt());
         if (userDao.updatePassword(userId, hashed)) {

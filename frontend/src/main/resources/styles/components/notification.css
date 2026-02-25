@@ -1,4 +1,15 @@
 /* notification.css */
-.notification {
-    /* Styles for notifications */
+.notification-card {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent transparent #fc8181;
+    -fx-border-width: 0 0 0 4;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 10, 0, 0, 4);
+    -fx-padding: 15;
+}
+
+.notification-dot {
+    -fx-background-color: #fc8181;
+    -fx-background-radius: 50%;
 }

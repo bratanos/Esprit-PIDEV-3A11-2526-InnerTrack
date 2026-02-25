@@ -24,9 +24,9 @@
                 </graphic>
             </Button>
             <VBox spacing="2">
-                <Label text="Trouver un thérapeute"
+                <Label text="%user.map.title"
                        style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-                <Label text="Cliquez sur un marqueur rose pour voir les informations du thérapeute."
+                <Label text="%user.map.subtitle"
                        style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
@@ -35,7 +35,7 @@
                   style="-fx-background-color: #FFF0F5; -fx-padding: 8 14;
                          -fx-background-radius: 20;">
                 <Label text="●" style="-fx-text-fill: #FF69B4; -fx-font-size: 18px;"/>
-                <Label text="Cabinet de thérapeute"
+                <Label text="%user.map.legend"
                        style="-fx-text-fill: #C2185B; -fx-font-size: 13px;"/>
             </HBox>
         </HBox>
@@ -53,7 +53,7 @@
                   maxWidth="340"
                   StackPane.alignment="TOP_RIGHT"
                   style="-fx-padding: 16; -fx-background-color: rgba(255,255,255,0.96); -fx-background-radius: 14; -fx-border-radius: 14; -fx-border-color: #FF69B4; -fx-border-width: 2; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 18, 0, 0, 6); -fx-translate-x: -16; -fx-translate-y: 16;">
-                <Label text="Thérapeute"
+                <Label text="%user.map.therapist"
                        style="-fx-font-size: 14px; -fx-font-weight: 800; -fx-text-fill: #2c3e50;"/>
 
                 <Label fx:id="nameLabel" text="" wrapText="true"
@@ -67,13 +67,13 @@
 
                 <Separator/>
 
-                <Label text="Bio" style="-fx-font-size: 13px; -fx-font-weight: 800; -fx-text-fill: #2c3e50;"/>
+                <Label text="%user.map.bio" style="-fx-font-size: 13px; -fx-font-weight: 800; -fx-text-fill: #2c3e50;"/>
                 <Label fx:id="bioLabel" text="" wrapText="true"
                        style="-fx-text-fill: #2c3e50; -fx-font-size: 13px;"/>
 
                 <Region VBox.vgrow="ALWAYS"/>
 
-                <Button fx:id="contactButton" text="Contacter" onAction="#handleContact"
+                <Button fx:id="contactButton" text="%user.map.contactBtn" onAction="#handleContact"
                         style="-fx-background-color: #FF69B4; -fx-text-fill: white; -fx-font-weight: 800; -fx-background-radius: 10; -fx-padding: 10 16; -fx-cursor: hand;"/>
             </VBox>
         </StackPane>

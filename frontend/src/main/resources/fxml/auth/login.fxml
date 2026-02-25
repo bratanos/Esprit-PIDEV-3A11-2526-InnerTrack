@@ -9,7 +9,13 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.innertrack.controller.auth.LoginController"
       spacing="30" alignment="TOP_CENTER"
-      maxWidth="400" stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css, @../../styles/base/typography.css, @../../styles/base/controls.css, @../../styles/themes/theme-light.css, @../../styles/views/auth.css"
+      maxWidth="400"
+      stylesheets="@../../styles/base/tokens.css,
+                   @../../styles/base/root.css,
+                   @../../styles/base/typography.css,
+                   @../../styles/base/controls.css,
+                   @../../styles/themes/theme-light.css,
+                   @../../styles/views/auth.css"
       styleClass="auth-view">
 
     <ImageView fitHeight="80" preserveRatio="true">
@@ -19,33 +25,55 @@
     </ImageView>
 
     <VBox spacing="8" alignment="CENTER">
-        <Label text="Connexion" styleClass="title" />
-        <Label text="Heureux de vous revoir sur InnerTrack" styleClass="subtitle" />
+        <Label text="%auth.login.title" styleClass="title" />
+        <Label text="%auth.login.subtitle" styleClass="subtitle" />
     </VBox>
 
     <VBox spacing="20" alignment="CENTER">
         <VBox spacing="5" alignment="CENTER_LEFT">
-            <Label text="Email" styleClass="subtitle" />
-            <TextField fx:id="emailField" promptText="exemple@email.com" maxWidth="Infinity" />
+            <Label text="%auth.email" styleClass="subtitle" />
+            <TextField fx:id="emailField"
+                       promptText="exemple@email.com"
+                       maxWidth="Infinity" />
         </VBox>
 
         <VBox spacing="5" alignment="CENTER_LEFT">
-            <Label text="Mot de passe" styleClass="subtitle" />
-            <PasswordField fx:id="passwordField" promptText="••••••••" maxWidth="Infinity" />
-            <Hyperlink text="Mot de passe oublié ?" onAction="#goToForgotPassword" styleClass="text-link" style="-fx-font-size: 13px;" />
+            <Label text="%auth.password" styleClass="subtitle" />
+            <PasswordField fx:id="passwordField"
+                           promptText="••••••••"
+                           maxWidth="Infinity" />
+            <Hyperlink text="%auth.forgotQuestion"
+                       onAction="#goToForgotPassword"
+                       styleClass="text-link"
+                       style="-fx-font-size: 13px;" />
         </VBox>
     </VBox>
 
     <VBox spacing="15" alignment="CENTER">
-        <Button text="Se connecter" fx:id="loginButton" onAction="#handleLogin" 
-                maxWidth="Infinity" styleClass="btn, btn-primary" />
-        
+
+        <!-- REMEMBER ME CHECKBOX (ADDED) -->
+        <CheckBox fx:id="rememberMeCheckbox"
+                  text="Se souvenir de moi"
+                  style="-fx-text-fill: #4a5568; -fx-font-size: 13px;" />
+
+        <!-- Existing login button -->
+        <Button text="%auth.loginButton"
+                fx:id="loginButton"
+                onAction="#handleLogin"
+                maxWidth="Infinity"
+                styleClass="btn, btn-primary" />
+
         <HBox spacing="5" alignment="CENTER">
-            <Label text="Pas encore de compte ?" styleClass="subtitle" />
-            <Hyperlink text="S'inscrire" onAction="#goToRegister" styleClass="text-link" />
+            <Label text="%auth.noAccount" styleClass="subtitle" />
+            <Hyperlink text="%auth.registerLink"
+                       onAction="#goToRegister"
+                       styleClass="text-link" />
         </HBox>
     </VBox>
 
-    <Label fx:id="errorLabel" wrapText="true" textAlignment="CENTER" styleClass="text-danger" />
+    <Label fx:id="errorLabel"
+           wrapText="true"
+           textAlignment="CENTER"
+           styleClass="text-danger" />
 
 </VBox>

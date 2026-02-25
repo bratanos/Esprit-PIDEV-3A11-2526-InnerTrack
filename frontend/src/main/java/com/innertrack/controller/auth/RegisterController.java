@@ -36,7 +36,7 @@ public class RegisterController {
     public void initialize() {
         MainLayoutController.getInstance().setNavbarVisible(false);
         MainLayoutController.getInstance().setFooterVisible(false);
-        roleComboBox.setItems(FXCollections.observableArrayList("Normal User", "Psychologue"));
+        roleComboBox.setItems(FXCollections.observableArrayList("Normal User", "Psychologue", "Admin"));
     }
 
     @FXML
@@ -60,7 +60,11 @@ public class RegisterController {
         }
 
         // Map UI role names to ROLE_ codes
-        String roleCode = selectedRole.equals("Psychologue") ? "ROLE_PSYCHOLOGUE" : "ROLE_USER";
+        String roleCode = "ROLE_USER";
+        if (selectedRole.equals("Psychologue"))
+            roleCode = "ROLE_PSYCHOLOGUE";
+        else if (selectedRole.equals("Admin"))
+            roleCode = "ROLE_ADMIN";
 
         String result = authService.register(email, password, firstName, lastName, Collections.singletonList(roleCode));
 

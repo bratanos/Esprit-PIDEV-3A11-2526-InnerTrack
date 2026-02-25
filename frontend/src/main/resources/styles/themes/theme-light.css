@@ -1,10 +1,51 @@
 /* theme-light.css */
 @import "../base/tokens.css";
 
+.root.light-theme,
+.light-theme,
 .root {
-    -fx-background-color: linear-gradient(to bottom, #D9A9FF, #00132d);
+    -fx-background-color: linear-gradient(to bottom right, #f3e7ff 0%, #e0f2fe 100%);
+    -it-bg: transparent;
 }
 
-.dashboard-container {
+.dashboard-container,
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane>.viewport {
+    -fx-background-color: transparent;
+}
+
+.dashboard-card,
+.card {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    /* Glassmorphism */
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 10, 0, 0, 4);
+}
+
+/* ─── Admin Chat Dialog ─── */
+.chat-dialog-box {
     -fx-background-color: #f4f7f6;
+}
+
+.chat-message-sender {
+    -fx-font-weight: bold;
+    -fx-text-fill: #4a5568;
+    -fx-font-size: 11px;
+}
+
+.chat-message-content {
+    -fx-background-color: white;
+    -fx-padding: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 4, 0, 0, 1);
+    -fx-text-fill: #2d3748;
+}
+
+.reported-user-message .chat-message-content {
+    -fx-border-color: #fc8181;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
 }

@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import com.innertrack.util.ViewManager;
+
 public class SettingsService {
     private static SettingsService instance;
     private final UserSettingsDao settingsDao = new UserSettingsDao();
@@ -77,10 +79,12 @@ public class SettingsService {
     // Called by ViewManager after every view load so each new node
     // gets the currently active theme instead of the FXML-hardcoded one.
     public void applyThemeToNode(Parent node) {
-        if (node == null || currentSettings == null) return;
+        if (node == null || currentSettings == null)
+            return;
         String lightCss = getResourcePath("/styles/themes/theme-light.css");
-        String darkCss  = getResourcePath("/styles/themes/theme-dark.css");
-        if (lightCss == null || darkCss == null) return;
+        String darkCss = getResourcePath("/styles/themes/theme-dark.css");
+        if (lightCss == null || darkCss == null)
+            return;
 
         node.getStylesheets().remove(lightCss);
         node.getStylesheets().remove(darkCss);
@@ -94,12 +98,14 @@ public class SettingsService {
     private void applyTheme() {
         Platform.runLater(() -> {
             Stage stage = MainApp.getPrimaryStage();
-            if (stage == null || stage.getScene() == null) return;
+            if (stage == null || stage.getScene() == null)
+                return;
             Scene scene = stage.getScene();
 
             String lightCss = getResourcePath("/styles/themes/theme-light.css");
-            String darkCss  = getResourcePath("/styles/themes/theme-dark.css");
-            if (lightCss == null || darkCss == null) return;
+            String darkCss = getResourcePath("/styles/themes/theme-dark.css");
+            if (lightCss == null || darkCss == null)
+                return;
 
             // Swap theme on scene stylesheet list
             scene.getStylesheets().remove(lightCss);
@@ -135,7 +141,8 @@ public class SettingsService {
     private void applyFontSize() {
         Platform.runLater(() -> {
             Stage stage = MainApp.getPrimaryStage();
-            if (stage == null || stage.getScene() == null) return;
+            if (stage == null || stage.getScene() == null)
+                return;
             Parent root = stage.getScene().getRoot();
 
             root.getStyleClass().removeAll("font-small", "font-normal", "font-large");
@@ -151,6 +158,10 @@ public class SettingsService {
         Locale locale = "FR".equals(currentSettings.getLanguage()) ? Locale.FRENCH : Locale.ENGLISH;
         Locale.setDefault(locale);
         bundle = ResourceBundle.getBundle("messages", locale);
+
+        Platform.runLater(() -> {
+            ViewManager.reloadCurrentView();
+        });
     }
 
     public String getString(String key) {
@@ -169,4 +180,5 @@ public class SettingsService {
             return null;
         }
     }
+
 }

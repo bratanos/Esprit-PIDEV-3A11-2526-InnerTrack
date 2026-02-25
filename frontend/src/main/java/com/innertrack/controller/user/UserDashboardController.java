@@ -11,15 +11,24 @@ import com.innertrack.session.SessionManager;
 
 public class UserDashboardController {
 
-    @FXML private Label  welcomeLabel;
-    @FXML private Label  streakLabel;
-    @FXML private Label  journalEntriesLabel;
-    @FXML private Label  habitsCompletedLabel;
-    @FXML private Label  activeConvLabel;
-    @FXML private javafx.scene.shape.Circle profileCircle;
-    @FXML private Label  userFullNameLabel;
-    @FXML private HBox   acceptedAlert;
-    @FXML private Label  acceptedAlertLabel;
+    @FXML
+    private Label welcomeLabel;
+    @FXML
+    private Label streakLabel;
+    @FXML
+    private Label journalEntriesLabel;
+    @FXML
+    private Label habitsCompletedLabel;
+    @FXML
+    private Label activeConvLabel;
+    @FXML
+    private javafx.scene.shape.Circle profileCircle;
+    @FXML
+    private Label userFullNameLabel;
+    @FXML
+    private HBox acceptedAlert;
+    @FXML
+    private Label acceptedAlertLabel;
 
     private final MessagingDao messagingDao = new MessagingDao();
 
@@ -54,11 +63,35 @@ public class UserDashboardController {
         }, "user-dash-data").start();
     }
 
-    @FXML private void handleGoToJournal()  { System.out.println("Journal"); }
-    @FXML private void handleGoToHabits()   { System.out.println("Habits"); }
-    @FXML private void handleGoToSettings() { ViewManager.loadView("profile/settings_main"); }
-    @FXML private void handleGoToMap()      { ViewManager.loadView("user/therapist_map"); }
-    @FXML private void handleGoToMessages() { ViewManager.loadView("messaging/chat"); }
+    @FXML
+    private void handleGoToJournal() {
+        System.out.println("Journal");
+    }
+
+    @FXML
+    private void handleGoToHabits() {
+        System.out.println("Habits");
+    }
+
+    @FXML
+    private void handleGoToProfile() {
+        ViewManager.loadView("profile/settings");
+    }
+
+    @FXML
+    private void handleGoToSettings() {
+        ViewManager.loadView("profile/settings_main");
+    }
+
+    @FXML
+    private void handleGoToMap() {
+        ViewManager.loadView("user/therapist_map");
+    }
+
+    @FXML
+    private void handleGoToMessages() {
+        ViewManager.loadView("chat/messaging_chat");
+    }
 
     @FXML
     private void handleLogout() {
@@ -67,7 +100,8 @@ public class UserDashboardController {
     }
 
     private void updateProfileImage(String picPath) {
-        if (picPath == null || picPath.isEmpty()) return;
+        if (picPath == null || picPath.isEmpty())
+            return;
         try {
             java.io.File file = new java.io.File(picPath);
             if (file.exists()) {
