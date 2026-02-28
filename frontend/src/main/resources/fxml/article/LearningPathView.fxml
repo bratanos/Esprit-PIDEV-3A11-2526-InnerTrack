@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.innertrack.controller.article.LearningPathController"
+            styleClass="main-container"
+            stylesheets="@../../styles/views/article.css">
+
+    <top>
+        <VBox styleClass="page-header">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="📚" style="-fx-font-size: 32px;"/>
+                <VBox>
+                    <Label text="Parcours d'articles" styleClass="page-title"/>
+                    <Label text="Créez des séquences d'articles pour guider les utilisateurs" styleClass="page-subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <HBox spacing="10" alignment="CENTER_RIGHT" styleClass="sub-nav-bar">
+                    <Button text="📰 Articles" onAction="#goToArticles" styleClass="nav-button"/>
+                    <Button text="📁 Catégories" onAction="#goToCategories" styleClass="nav-button"/>
+                    <Button text="📚 Parcours" onAction="#loadPaths" styleClass="nav-button, active"/>
+                    <Separator orientation="VERTICAL" prefHeight="20"/>
+                    <Button text="🏠 Dashboard" onAction="#goToDashboard" styleClass="nav-button-alt"/>
+                </HBox>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <HBox fx:id="mainContent" spacing="20" style="-fx-padding: 20;">
+                <VBox fx:id="sidebarVBox" spacing="12" prefWidth="300" styleClass="sidebar">
+                    <Label text="Parcours existants" styleClass="sidebar-header"/>
+                    <ListView fx:id="pathListView" VBox.vgrow="ALWAYS"/>
+                    <Button fx:id="btnNew" text="Nouveau parcours" onAction="#newPath" styleClass="btn-primary" prefWidth="Infinity"/>
+                </VBox>
+
+                <ScrollPane fx:id="detailScrollPane" fitToWidth="true" HBox.hgrow="ALWAYS" style="-fx-background: transparent; -fx-background-color: transparent;">
+                    <VBox fx:id="detailView" spacing="15" styleClass="detail-panel">
+                        <HBox fx:id="returnButtonContainer" alignment="CENTER_RIGHT" visible="false" managed="false" style="-fx-padding: 0 0 10 0;">
+                            <Button fx:id="btnBackToArticle"
+                                    text="← Retour à l'article"
+                                    onAction="#goToArticles"
+                                    style="-fx-background-color: transparent;
+                                       -fx-text-fill: #0078d4;
+                                       -fx-cursor: hand;
+                                       -fx-font-size: 12px;
+                                       -fx-underline: true;
+                                       -fx-padding: 4 8 4 8;"/>
+                        </HBox>
+
+                        <Label text="Détails du parcours" styleClass="detail-title"/>
+
+                        <GridPane hgap="12" vgap="12">
+                            <Label text="Titre :" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="detail-label"/>
+                            <TextField fx:id="titreField" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+                            <Label text="Description :" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="detail-label"/>
+                            <TextArea fx:id="descriptionArea" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2" prefHeight="80"/>
+
+                            <Label text="Créé par :" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="detail-label"/>
+                            <TextField fx:id="createdByField" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+                        </GridPane>
+
+                        <Separator/>
+
+                        <Label text="Articles dans ce parcours" styleClass="section-title"/>
+
+                        <HBox fx:id="articlesManagementBox" spacing="10">
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="📄 Articles disponibles" styleClass="field-label"/>
+                                <ListView fx:id="availableArticlesListView" prefHeight="200"/>
+                            </VBox>
+
+                            <VBox spacing="12" alignment="CENTER" prefWidth="60">
+                                <Button fx:id="btnAddToPath" text="+" styleClass="btn-primary" prefWidth="44" prefHeight="44">
+                                    <tooltip>
+                                        <Tooltip text="Ajouter l'article sélectionné au parcours" />
+                                    </tooltip>
+                                </Button>
+                                <Button fx:id="btnRemoveFromPath" text="🗑" styleClass="btn-danger" prefWidth="44" prefHeight="44">
+                                    <tooltip>
+                                        <Tooltip text="Retirer l'article sélectionné du parcours" />
+                                    </tooltip>
+                                </Button>
+                            </VBox>
+
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="📚 Articles du parcours" styleClass="field-label"/>
+                                <ListView fx:id="pathArticlesListView" prefHeight="200"/>
+                            </VBox>
+                        </HBox>
+
+                        <HBox fx:id="orderButtonsBox" spacing="10" alignment="CENTER">
+                            <Button fx:id="btnMoveUp" text="↑ Monter" styleClass="btn-secondary"/>
+                            <Button fx:id="btnMoveDown" text="↓ Descendre" styleClass="btn-secondary"/>
+                        </HBox>
+
+                        <HBox fx:id="actionButtonsBox" spacing="12" alignment="CENTER_RIGHT">
+                            <Button fx:id="btnSavePath" text="Enregistrer" styleClass="btn-primary"/>
+                            <Button fx:id="btnDeletePath" text="Supprimer" styleClass="btn-danger"/>
+                        </HBox>
+                    </VBox>
+                </ScrollPane>
+            </HBox>
+
+            <VBox fx:id="emptyStateBox" alignment="CENTER" spacing="15" visible="false">
+                <Label text="📚" style="-fx-font-size: 64px; -fx-opacity: 0.3;"/>
+                <Label text="Rien n'est disponible pour le moment" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #605e5c;"/>
+                <Label text="Revenez plus tard pour découvrir de nouveaux parcours." style="-fx-text-fill: #8a8886;"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

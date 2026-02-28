@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 127.0.0.1
--- Généré le : sam. 28 fév. 2026 à 12:23
--- Version du serveur : 10.4.32-MariaDB
--- Version de PHP : 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Feb 26, 2026 at 07:50 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,61 +18,87 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `testdb`
+-- Database: `aritcledb`
 --
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `comments`
+-- Table structure for table `article`
 --
 
-CREATE TABLE `comments` (
-  `id` int(11) NOT NULL,
-  `user` int(11) NOT NULL,
-  `comment` varchar(255) NOT NULL,
-  `creation` datetime NOT NULL DEFAULT current_timestamp(),
-  `modified` tinyint(1) NOT NULL DEFAULT 0,
-  `likes` int(11) NOT NULL DEFAULT 0,
-  `parent` int(11) DEFAULT NULL
+CREATE TABLE `article` (
+  `id_Article` int(11) NOT NULL,
+  `titre` varchar(200) NOT NULL,
+  `contenu` text NOT NULL,
+  `auteur` varchar(100) NOT NULL,
+  `datePublication` date NOT NULL,
+  `id_categorie` int(11) DEFAULT NULL,
+  `readability` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `comments`
+-- Dumping data for table `article`
 --
 
-INSERT INTO `comments` (`id`, `user`, `comment`, `creation`, `modified`, `likes`, `parent`) VALUES
-(7, 1, 'C++ and Wasm because why not', '2026-02-14 23:35:13', 1, 0, NULL),
-(8, 1, 'Everything is open source if you can read assembly', '2026-02-14 23:35:13', 0, 0, 7),
-(12, 1, 'i like it very much', '2026-02-17 14:06:36', 1, 0, NULL),
-(14, 1, 'C++ is the best', '2026-02-17 14:06:43', 0, 0, NULL),
-(15, 1, 'Thanks for everything C++!', '2026-02-17 14:36:15', 0, 0, 7),
-(17, 1, 'please', '2026-02-17 15:14:15', 0, 0, NULL),
-(19, 1, 'huh', '2026-02-17 15:18:03', 0, 0, NULL),
-(30, 1, '<h1>fdsdfdsfdsf</h1>        ', '2026-02-18 09:27:22', 1, 0, NULL),
-(31, 1, 'web symfony', '2026-02-18 09:27:33', 0, 0, 7),
-(38, 1, 'commentaire1', '2026-02-28 02:54:51', 0, 0, 30),
-(39, 1, 'visit the doctor', '2026-02-28 03:08:26', 0, 0, 30),
-(40, 1, 'the doctor is absent', '2026-02-28 03:12:00', 0, 0, 39),
-(41, 1, 'welcome', '2026-02-28 04:43:05', 0, 0, 30),
-(42, 1, 'Oh My Gosh', '2026-02-28 04:43:19', 0, 0, 30),
-(43, 1, 'woops', '2026-02-28 04:43:44', 0, 0, 30),
-(44, 1, 'my new first comment', '2026-02-28 04:54:33', 0, 0, NULL);
-
---
--- Déclencheurs `comments`
---
-DELIMITER $$
-CREATE TRIGGER `set_modified_flag` BEFORE UPDATE ON `comments` FOR EACH ROW IF NOT (NEW.comment <=> OLD.comment) THEN
-  SET NEW.modified = 1;
-END IF
-$$
-DELIMITER ;
+INSERT INTO `article` (`id_Article`, `titre`, `contenu`, `auteur`, `datePublication`, `id_categorie`, `readability`) VALUES
+(17, 'Comment gérer l\'anxiété au quotidien?', 'L\'anxiété est une réaction normale face au stress, mais elle peut devenir envahissante. Voici quelques techniques efficaces : la respiration profonde, la méditation guidée, l\'exercice régulier, et tenir un journal de gratitude. Il est important de reconnaître les signes d\'anxiété et de consulter un professionnel si nécessaire. Pratiquez la technique 5-4-3-2-1 : identifiez 5 choses que vous voyez, 4 que vous touchez, 3 que vous entendez, 2 que vous sentez, et 1 que vous goûtez..', 'Dr Sophie Martin', '2024-01-15', 1, 'Moyen'),
+(18, '5 minutes de méditation pour débutants', 'Commencer la méditation n\'a pas besoin d\'être compliqué. Asseyez-vous confortablement, fermez les yeux, et concentrez-vous sur votre respiration. Comptez jusqu\'à 4 en inspirant, retenez pendant 4 secondes, puis expirez sur 4 temps. Répétez pendant 5 minutes chaque matin. Ne vous découragez pas si votre esprit vagabonde, c\'est normal. Ramenez simplement votre attention sur votre souffle.', 'Marie Dubois', '2024-01-20', 28, 'Moyen'),
+(19, 'Les superaliments pour booster votre énergie', 'Certains aliments sont particulièrement riches en nutriments essentiels. Les épinards contiennent du fer, les baies sont riches en antioxydants, les noix apportent des oméga-3, le saumon fournit des protéines de qualité et le quinoa est une excellente source de glucides complexes. Intégrez-les progressivement dans votre alimentation quotidienne pour ressentir une amélioration de votre vitalité et maintenir un niveau d\'énergie stable..', 'Pierre Lefevre', '2024-02-01', 29, 'Moyen'),
+(20, 'Programme d\'entraînement de 20 minutes à domicile', 'Pas besoin de salle de sport ! Voici un circuit rapide efficace : commencez par 2 minutes d\'échauffement avec des jumping jacks, puis effectuez 3 séries de pompes (10 répétitions), squats (15 répétitions), burpees (5 répétitions), et planche (30 secondes). Terminez par 3 minutes d\'étirements complets. Répétez ce programme 3 fois par semaine pour voir des résultats visibles en un mois.', 'Thomas Bernard', '2024-02-05', 30, 'Moyen'),
+(21, 'Techniques de relaxation rapide au travail', 'Le stress au travail est courant, mais gérable. Essayez la technique 4-7-8 : inspirez pendant 4 secondes, retenez 7 secondes, expirez 8 secondes. Faites aussi des pauses régulières, marchez quelques minutes toutes les heures, et gardez votre espace de travail organisé. Utilisez la méthode Pomodoro : travaillez 25 minutes puis prenez 5 minutes de pause. Hydratez-vous régulièrement et évitez la caféine excessive.', 'Claire Moreau', '2024-02-10', 31, 'Moyen'),
+(22, 'Comprendre les troubles anxieux généralisés', 'L\'anxiété généralisée touche environ 5% de la population. Elle se caractérise par des inquiétudes excessives et persistantes qui perturbent le quotidien. Les thérapies cognitivo-comportementales montrent des résultats prometteurs dans le traitement de ce trouble.', 'Dr Amina Saidi', '2025-01-15', 35, 'Moyen'),
+(23, 'La résilience face aux épreuves de la vie', 'La résilience est cette capacité remarquable à rebondir après un traumatisme. Elle ne signifie pas l\'absence de souffrance, mais la capacité de traverser les difficultés en trouvant des ressources intérieures et du soutien social.', 'Karim Bennani', '2025-01-20', 35, 'Moyen'),
+(24, 'La pleine conscience au quotidien', 'La pleine conscience consiste à porter son attention sur le moment présent...', 'Claire Fontaine', '2025-02-05', 28, 'Moyen'),
+(25, 'Aliments anti-stress : que manger ?', 'Certains aliments comme le chocolat noir, les amandes et les agrumes aident à réduire le cortisol...', 'Dr Marc Leclerc', '2025-02-05', 29, 'Moyen'),
+(26, 'Renforcement musculaire sans matériel', 'Voici 5 exercices à faire chez soi : pompes, squats, gainage, fentes, jumping jacks...', 'Sarah Moreau', '2025-02-19', 30, 'Moyen'),
+(27, 'Comment reconnaître un trouble anxieux', 'Les signes incluent des inquiétudes excessives, des troubles du sommeil, des palpitations...', 'Dr Amina Saidi', '2025-02-19', 35, 'Moyen'),
+(28, 'Méditation pour débutants : 3 techniques simples', 'La méditation de pleine conscience, la scan corporel, et la méditation sur la respiration...', 'Marie Dubois', '2025-03-28', 28, 'Moyen'),
+(29, 'Gestion du stress : la méthode 4-7-8', 'Inspirez par le nez 4 secondes, retenez votre souffle 7 secondes, expirez par la bouche 8 secondes...', 'Thomas Bernier', '2025-02-27', 31, 'Moyen'),
+(30, 'Les bienfaits de la marche rapide', '30 minutes de marche rapide par jour réduisent le risque de maladies cardiovasculaires...', 'Pierre Lefevre', '2025-02-27', 30, 'Moyen'),
+(34, 'Le sommeil et la santé', 'Le sommeil est bon pour la santé. Dormir sept à huit heures par nuit aide le corps à se reposer. Un bon sommeil réduit le stress. Il aide aussi la mémoire. Les enfants ont besoin de plus de sommeil que les adultes. Il faut éviter les écrans avant de dormir. Une chambre calme et sombre aide à bien dormir. Le sommeil est essentiel pour être en forme chaque jour', 'Dr Claire Martin', '2022-03-03', 1, 'Facile');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `doctrine_migration_versions`
+-- Table structure for table `article_tag`
+--
+
+CREATE TABLE `article_tag` (
+  `id_article` int(11) NOT NULL,
+  `id_tag` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categorie`
+--
+
+CREATE TABLE `categorie` (
+  `id_categorie` int(11) NOT NULL,
+  `nom` varchar(100) NOT NULL,
+  `description` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `categorie`
+--
+
+INSERT INTO `categorie` (`id_categorie`, `nom`, `description`) VALUES
+(1, 'Santé Mentale.', 'Articles sur la santé mentale'),
+(28, 'Méditation', 'Techniques de méditation et pleine conscience'),
+(29, 'Nutrition', 'Conseils nutritionnels et alimentation équilibrée'),
+(30, 'Exercice Physique', 'Programmes d\'entraînement et activité physique.'),
+(31, 'Gestion du Stress', 'Méthodes pour gérer le stress et l\'anxiété'),
+(34, 'Développement Personnel', 'Croissance personnelle et auto-amélioration'),
+(35, 'Psychologie Clinique', 'Troubles psychologiques, thérapies et interventions cliniques'),
+(36, 'Neurosciences??', 'Cerveau, cognition et bases biologiques du comportement');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctrine_migration_versions`
 --
 
 CREATE TABLE `doctrine_migration_versions` (
@@ -82,7 +108,7 @@ CREATE TABLE `doctrine_migration_versions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `doctrine_migration_versions`
+-- Dumping data for table `doctrine_migration_versions`
 --
 
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
@@ -92,24 +118,44 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 -- --------------------------------------------------------
 
 --
--- Structure de la table `email_verification_code`
+-- Table structure for table `email_verification_code`
 --
 
 CREATE TABLE `email_verification_code` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
   `code` varchar(255) NOT NULL,
   `expires_at` datetime NOT NULL,
   `used_at` datetime DEFAULT NULL,
-  `resend_attempts` int(11) NOT NULL DEFAULT 0,
-  `verify_attempts` int(11) NOT NULL DEFAULT 0,
-  `last_sent_at` datetime NOT NULL
+  `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `messenger_messages`
+-- Table structure for table `learning_path`
+--
+
+CREATE TABLE `learning_path` (
+  `id_path` int(11) NOT NULL,
+  `titre` varchar(200) NOT NULL,
+  `description` text DEFAULT NULL,
+  `date_creation` date DEFAULT curdate(),
+  `created_by` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `learning_path`
+--
+
+INSERT INTO `learning_path` (`id_path`, `titre`, `description`, `date_creation`, `created_by`) VALUES
+(1, 'Apprivoiser l’anxiété', 'Une série d’articles pour comprendre et gérer l’anxiété au quotidien.', '2026-02-22', 'Dr Amina Saidi'),
+(2, 'Méditation pour débutants', 'Apprenez à méditer pas à pas avec des techniques simples.', '2026-02-24', 'Marie Dubois'),
+(3, 'Mieux dormir naturellement', 'Alimentation, exercices et routines pour améliorer votre sommeil.', '2026-02-24', 'Dr Marc Leclerc');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messenger_messages`
 --
 
 CREATE TABLE `messenger_messages` (
@@ -123,7 +169,7 @@ CREATE TABLE `messenger_messages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `messenger_messages`
+-- Dumping data for table `messenger_messages`
 --
 
 INSERT INTO `messenger_messages` (`id`, `body`, `headers`, `queue_name`, `created_at`, `available_at`, `delivered_at`) VALUES
@@ -133,186 +179,211 @@ INSERT INTO `messenger_messages` (`id`, `body`, `headers`, `queue_name`, `create
 -- --------------------------------------------------------
 
 --
--- Structure de la table `password_reset_codes`
+-- Table structure for table `path_article`
 --
 
-CREATE TABLE `password_reset_codes` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `code` varchar(10) NOT NULL,
-  `expires_at` datetime NOT NULL,
-  `used_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `reactions`
---
-
-CREATE TABLE `reactions` (
-  `user` int(11) NOT NULL,
-  `comment` int(11) NOT NULL,
-  `reaction` varchar(8) DEFAULT NULL
+CREATE TABLE `path_article` (
+  `id_path` int(11) NOT NULL,
+  `id_article` int(11) NOT NULL,
+  `ordre` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `reactions`
+-- Dumping data for table `path_article`
 --
 
-INSERT INTO `reactions` (`user`, `comment`, `reaction`) VALUES
-(1, 15, '👍'),
-(1, 17, '😡'),
-(1, 19, '👍'),
-(1, 30, NULL),
-(1, 31, '😡'),
-(1, 39, '😂'),
-(1, 41, '😂');
+INSERT INTO `path_article` (`id_path`, `id_article`, `ordre`) VALUES
+(1, 17, 3),
+(1, 21, 5),
+(1, 22, 2),
+(1, 23, 4),
+(1, 29, 1),
+(2, 18, 1),
+(2, 24, 3),
+(2, 28, 2),
+(3, 19, 1),
+(3, 25, 3),
+(3, 30, 2);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `user`
+-- Table structure for table `tag`
+--
+
+CREATE TABLE `tag` (
+  `id_tag` int(11) NOT NULL,
+  `nom` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `roles` longtext NOT NULL COMMENT '(DC2Type:json)',
-  `is_verified` tinyint(1) NOT NULL DEFAULT 0,
-  `status` varchar(255) NOT NULL DEFAULT 'PENDING'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `roles` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`roles`)),
+  `is_verified` tinyint(4) NOT NULL,
+  `status` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `user`
---
-
-INSERT INTO `user` (`id`, `email`, `password`, `roles`, `is_verified`, `status`) VALUES
-(1, 'root_root@root.root', 'password', 'role', 1, 'PENDING'),
-(2, 'second.user@com', 'hidden', '', 0, 'PENDING');
-
---
--- Index pour les tables déchargées
+-- Indexes for dumped tables
 --
 
 --
--- Index pour la table `comments`
+-- Indexes for table `article`
 --
-ALTER TABLE `comments`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `parent` (`parent`),
-  ADD KEY `user` (`user`);
+ALTER TABLE `article`
+  ADD PRIMARY KEY (`id_Article`),
+  ADD KEY `id_categorie` (`id_categorie`);
 
 --
--- Index pour la table `doctrine_migration_versions`
+-- Indexes for table `article_tag`
+--
+ALTER TABLE `article_tag`
+  ADD PRIMARY KEY (`id_article`,`id_tag`),
+  ADD KEY `id_tag` (`id_tag`);
+
+--
+-- Indexes for table `categorie`
+--
+ALTER TABLE `categorie`
+  ADD PRIMARY KEY (`id_categorie`);
+
+--
+-- Indexes for table `doctrine_migration_versions`
 --
 ALTER TABLE `doctrine_migration_versions`
   ADD PRIMARY KEY (`version`);
 
 --
--- Index pour la table `email_verification_code`
+-- Indexes for table `email_verification_code`
 --
 ALTER TABLE `email_verification_code`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_EVC_USER` (`user_id`);
+  ADD KEY `IDX_BD2ADC58A76ED395` (`user_id`);
 
 --
--- Index pour la table `messenger_messages`
+-- Indexes for table `learning_path`
+--
+ALTER TABLE `learning_path`
+  ADD PRIMARY KEY (`id_path`);
+
+--
+-- Indexes for table `messenger_messages`
 --
 ALTER TABLE `messenger_messages`
   ADD PRIMARY KEY (`id`),
   ADD KEY `IDX_75EA56E0FB7336F0E3BD61CE16BA31DBBF396750` (`queue_name`,`available_at`,`delivered_at`,`id`);
 
 --
--- Index pour la table `password_reset_codes`
+-- Indexes for table `path_article`
 --
-ALTER TABLE `password_reset_codes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_PRC_USER` (`user_id`);
+ALTER TABLE `path_article`
+  ADD PRIMARY KEY (`id_path`,`id_article`),
+  ADD KEY `id_article` (`id_article`);
 
 --
--- Index pour la table `reactions`
+-- Indexes for table `tag`
 --
-ALTER TABLE `reactions`
-  ADD PRIMARY KEY (`user`,`comment`) USING BTREE,
-  ADD KEY `comment_reply_fk` (`comment`);
+ALTER TABLE `tag`
+  ADD PRIMARY KEY (`id_tag`),
+  ADD UNIQUE KEY `nom` (`nom`);
 
 --
--- Index pour la table `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `UNIQ_8D93D649E7927C74` (`email`);
 
 --
--- AUTO_INCREMENT pour les tables déchargées
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT pour la table `comments`
+-- AUTO_INCREMENT for table `article`
 --
-ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+ALTER TABLE `article`
+  MODIFY `id_Article` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
--- AUTO_INCREMENT pour la table `email_verification_code`
+-- AUTO_INCREMENT for table `categorie`
+--
+ALTER TABLE `categorie`
+  MODIFY `id_categorie` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
+--
+-- AUTO_INCREMENT for table `email_verification_code`
 --
 ALTER TABLE `email_verification_code`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT pour la table `messenger_messages`
+-- AUTO_INCREMENT for table `learning_path`
+--
+ALTER TABLE `learning_path`
+  MODIFY `id_path` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `messenger_messages`
 --
 ALTER TABLE `messenger_messages`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT pour la table `password_reset_codes`
+-- AUTO_INCREMENT for table `tag`
 --
-ALTER TABLE `password_reset_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tag`
+  MODIFY `id_tag` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pour la table `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- Contraintes pour les tables déchargées
+-- Constraints for dumped tables
 --
 
 --
--- Contraintes pour la table `comments`
+-- Constraints for table `article`
 --
-ALTER TABLE `comments`
-  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+ALTER TABLE `article`
+  ADD CONSTRAINT `article_ibfk_1` FOREIGN KEY (`id_categorie`) REFERENCES `categorie` (`id_categorie`);
 
 --
--- Contraintes pour la table `email_verification_code`
+-- Constraints for table `article_tag`
+--
+ALTER TABLE `article_tag`
+  ADD CONSTRAINT `article_tag_ibfk_1` FOREIGN KEY (`id_article`) REFERENCES `article` (`id_Article`) ON DELETE CASCADE,
+  ADD CONSTRAINT `article_tag_ibfk_2` FOREIGN KEY (`id_tag`) REFERENCES `tag` (`id_tag`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `email_verification_code`
 --
 ALTER TABLE `email_verification_code`
-  ADD CONSTRAINT `FK_EVC_USER` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `FK_BD2ADC58A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
--- Contraintes pour la table `password_reset_codes`
+-- Constraints for table `path_article`
 --
-ALTER TABLE `password_reset_codes`
-  ADD CONSTRAINT `FK_PRC_USER` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
-
---
--- Contraintes pour la table `reactions`
---
-ALTER TABLE `reactions`
-  ADD CONSTRAINT `comment_reply_fk` FOREIGN KEY (`comment`) REFERENCES `comments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `user_reply_fk` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `path_article`
+  ADD CONSTRAINT `path_article_ibfk_1` FOREIGN KEY (`id_path`) REFERENCES `learning_path` (`id_path`) ON DELETE CASCADE,
+  ADD CONSTRAINT `path_article_ibfk_2` FOREIGN KEY (`id_article`) REFERENCES `article` (`id_Article`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
 
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
@@ -2108,4 +2179,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-

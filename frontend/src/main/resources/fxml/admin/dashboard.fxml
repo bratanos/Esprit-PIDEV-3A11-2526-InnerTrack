@@ -43,6 +43,11 @@
                     <graphic><FontIcon iconLiteral="fas-users" iconSize="16" iconColor="#ffffff"/></graphic>
                 </Button>
 
+                <Button fx:id="btnArticles" text="Articles"
+                        styleClass="sidebar-button" maxWidth="Infinity" onAction="#handleGoToArticles">
+                    <graphic><FontIcon iconLiteral="fas-newspaper" iconSize="16" iconColor="#ffffff"/></graphic>
+                </Button>
+
                 <!-- Reports button with pending count badge -->
                 <StackPane maxWidth="Infinity">
                     <Button fx:id="btnReports" text="Reports"

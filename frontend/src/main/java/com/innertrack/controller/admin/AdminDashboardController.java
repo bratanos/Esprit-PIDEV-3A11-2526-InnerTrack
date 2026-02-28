@@ -648,8 +648,28 @@ public class AdminDashboardController {
     }
 
     @FXML
+    private void handleGoToDashboard() {
+        ViewManager.loadView("admin/dashboard");
+    }
+
+    @FXML
+    private void handleGoToUsers() {
+        ViewManager.loadView("admin/users_list");
+    }
+
+    @FXML
+    private void handleGoToReports() {
+        ViewManager.loadView("admin/reports_list");
+    }
+
+    @FXML
     private void handleGoToProfile() {
         ViewManager.loadView("profile/settings");
+    }
+
+    @FXML
+    private void handleGoToArticles() {
+        ViewManager.loadView("article/ArticleView");
     }
 
     @FXML

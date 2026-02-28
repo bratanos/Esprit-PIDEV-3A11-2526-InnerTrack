@@ -80,6 +80,11 @@
                     <graphic><FontIcon iconLiteral="fas-users" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
 
+                <Button text="📰 Articles" onAction="#handleGoToArticles"
+                        styleClass="sidebar-button" maxWidth="Infinity">
+                    <graphic><FontIcon iconLiteral="fas-newspaper" iconSize="18" iconColor="#ffffff"/></graphic>
+                </Button>
+
                 <Button text="%sidebar.settings" onAction="#handleGoToSettings"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-cog" iconSize="18" iconColor="#ffffff"/></graphic>

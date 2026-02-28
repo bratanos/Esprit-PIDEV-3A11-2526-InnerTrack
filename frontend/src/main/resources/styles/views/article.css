@@ -1,0 +1,305 @@
+/* ============================================================================
+   VIBRANT PROFESSIONAL THEME - InnerTrack
+   Dynamic, colorful, and alive design with smooth animations
+   JavaFX Compatible Version
+   ============================================================================ */
+
+.root {
+    -fx-background-color: #f5f7fa;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 14px;
+}
+
+/* ============================================================================
+   MAIN CONTAINER
+   ============================================================================ */
+
+.main-container {
+    -fx-background-color: #f5f7fa;
+}
+
+/* ============================================================================
+   HEADER - Vibrant Gradient (JavaFX syntax)
+   ============================================================================ */
+
+.page-header {
+    -fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    -fx-padding: 24 28;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 15, 0, 0, 4);
+}
+
+.page-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0, 0, 2);
+}
+
+.page-subtitle {
+    -fx-font-size: 15px;
+    -fx-text-fill: rgba(255, 255, 255, 0.95);
+    -fx-padding: 5 0 0 0;
+}
+
+/* ============================================================================
+   CARD COMPONENTS - Colorful & Dynamic
+   ============================================================================ */
+
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 18px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.15), 10, 0, 0, 3);
+}
+
+.card:hover {
+    -fx-background-color: #f0f4ff;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.35), 18, 0, 0, 6);
+}
+
+.card-selected {
+    -fx-background-color: #e8f0fe;
+    -fx-border-color: #667eea;
+    -fx-border-width: 3px;
+    -fx-border-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.5), 20, 0, 0, 8);
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4c51bf;
+}
+
+.card-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #5a67d8;
+}
+
+.card-badge {
+    -fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);
+    -fx-text-fill: white;
+    -fx-background-radius: 16px;
+    -fx-padding: 5 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 6, 0, 0, 2);
+}
+
+/* ============================================================================
+   SIDEBAR - Colorful accent
+   ============================================================================ */
+
+.sidebar {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-spacing: 14;
+    -fx-border-color: #e0e7ff;
+    -fx-border-width: 0 2 0 0;
+}
+
+.sidebar-header {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4c51bf;
+    -fx-padding: 0 0 10 0;
+}
+
+/* ============================================================================
+   DETAIL PANEL - Vibrant with accent
+   ============================================================================ */
+
+.detail-panel {
+    -fx-background-color: white;
+    -fx-background-radius: 16px;
+    -fx-padding: 28;
+    -fx-border-color: #e0e7ff;
+    -fx-border-width: 2px;
+    -fx-border-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 15, 0, 0, 5);
+}
+
+.detail-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4c51bf;
+}
+
+.detail-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5a67d8;
+    -fx-padding: 0 0 6 0;
+}
+
+.detail-value {
+    -fx-font-size: 15px;
+    -fx-text-fill: #2d3748;
+    -fx-padding: 0 0 18 0;
+}
+
+/* ============================================================================
+   SEARCH BAR - Colorful focus effect
+   ============================================================================ */
+
+.search-field {
+    -fx-background-color: white;
+    -fx-background-radius: 24px;
+    -fx-border-color: #cbd5e0;
+    -fx-border-radius: 24px;
+    -fx-border-width: 2px;
+    -fx-padding: 14 20;
+    -fx-font-size: 14px;
+    -fx-pref-height: 48px;
+    -fx-prompt-text-fill: #a0aec0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
+}
+
+.search-field:focused {
+    -fx-border-color: #667eea;
+    -fx-border-width: 3px;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 15, 0, 0, 3);
+}
+
+/* ============================================================================
+   BUTTONS - Vibrant Gradients (JavaFX Compatible)
+   ============================================================================ */
+
+.button {
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-padding: 12 24;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.btn-primary {
+    -fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.5), 12, 0, 0, 4);
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to bottom, #5568d3 0%, #6842a0 100%);
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.7), 18, 0, 0, 6);
+}
+
+.btn-primary:pressed {
+    -fx-background-color: #4c51bf;
+}
+
+.btn-secondary {
+    -fx-background-color: linear-gradient(to bottom, #4299e1 0%, #3182ce 100%);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(66, 153, 225, 0.4), 10, 0, 0, 3);
+}
+
+.btn-secondary:hover {
+    -fx-background-color: linear-gradient(to bottom, #3182ce 0%, #2c5282 100%);
+    -fx-effect: dropshadow(gaussian, rgba(66, 153, 225, 0.6), 15, 0, 0, 5);
+}
+
+.btn-success {
+    -fx-background-color: linear-gradient(to bottom, #48bb78 0%, #38a169 100%);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(72, 187, 120, 0.4), 10, 0, 0, 3);
+}
+
+.btn-success:hover {
+    -fx-background-color: linear-gradient(to bottom, #38a169 0%, #2f855a 100%);
+    -fx-effect: dropshadow(gaussian, rgba(72, 187, 120, 0.7), 16, 0, 0, 5);
+}
+
+.btn-success:pressed {
+    -fx-background-color: #2f855a;
+}
+
+.btn-danger {
+    -fx-background-color: linear-gradient(to bottom, #fc8181 0%, #f56565 100%);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(252, 129, 129, 0.4), 10, 0, 0, 3);
+}
+
+.btn-danger:hover {
+    -fx-background-color: linear-gradient(to bottom, #f56565 0%, #e53e3e 100%);
+    -fx-effect: dropshadow(gaussian, rgba(252, 129, 129, 0.7), 16, 0, 0, 5);
+}
+
+.btn-info {
+    -fx-background-color: linear-gradient(to bottom, #f6ad55 0%, #ed8936 100%);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(246, 173, 85, 0.4), 10, 0, 0, 3);
+}
+
+.btn-info:hover {
+    -fx-background-color: linear-gradient(to bottom, #ed8936 0%, #dd6b20 100%);
+}
+
+.btn-ghost {
+    -fx-background-color: transparent;
+    -fx-text-fill: #667eea;
+    -fx-border-color: #667eea;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+}
+
+.btn-ghost:hover {
+    -fx-background-color: #f0f4ff;
+    -fx-border-color: #5568d3;
+    -fx-border-width: 3px;
+}
+
+.tag-button {
+    -fx-background-color: #edf2f7;
+    -fx-background-radius: 20px;
+    -fx-text-fill: #4a5568;
+    -fx-font-size: 11px;
+    -fx-padding: 4 12;
+    -fx-cursor: hand;
+}
+
+.tag-button:hover {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #2d3748;
+}
+
+/* ============================================================================
+   FORM INPUTS - Colorful & Interactive
+   ============================================================================ */
+
+.text-field,
+.text-area,
+.date-picker,
+.combo-box {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-border-color: #cbd5e0;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2d3748;
+}
+
+.text-field:focused,
+.text-area:focused,
+.date-picker:focused,
+.combo-box:focused {
+    -fx-border-color: #667eea;
+    -fx-border-width: 3px;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 12, 0, 0, 2);
+}
+
+/* Table View styling */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}

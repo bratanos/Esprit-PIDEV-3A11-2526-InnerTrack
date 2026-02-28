@@ -1,6 +1,6 @@
 module com.innertrack {
     requires transitive javafx.graphics;
-    requires javafx.controls;
+    requires transitive javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
     requires javafx.swing;
@@ -11,6 +11,9 @@ module com.innertrack {
     requires atlantafx.base;
     requires jakarta.mail;
     requires twilio;
+    requires javafx.media;
+    requires org.apache.lucene.core;
+    requires org.apache.lucene.queryparser;
 
     requires com.sothawo.mapjfx;
     requires io.redlink.geocoding.osm;
@@ -44,26 +47,23 @@ module com.innertrack {
     opens com.innertrack.controller.community to javafx.fxml;
     opens com.innertrack.controller to javafx.fxml;
     opens com.innertrack.controller.journal to javafx.fxml;
+    opens com.innertrack.controller.article to javafx.fxml;
     opens com.innertrack.util to javafx.fxml;
-
-    // Auth resources
-    // Removed opens fxml.auth as it is not a valid package
 
     exports com.innertrack.app;
     exports com.innertrack.model;
     exports com.innertrack.service;
     exports com.innertrack.security;
     exports com.innertrack.session;
-    exports com.innertrack.controller.chat; // ← NEW
+    exports com.innertrack.controller.chat;
     exports com.innertrack.controller.admin;
     exports com.innertrack.controller.therapist;
     exports com.innertrack.controller.user;
     exports com.innertrack.controller.profile;
+    exports com.innertrack.controller.article;
     exports com.innertrack.util;
-
-    opens com.innertrack.app to javafx.fxml;
-
     exports com.innertrack.controller.auth;
 
+    opens com.innertrack.app to javafx.fxml;
     opens com.innertrack.controller.auth to javafx.fxml;
 }

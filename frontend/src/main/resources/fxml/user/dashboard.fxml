@@ -61,6 +61,11 @@
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-users" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
+
+                <Button text="📰 Articles" onAction="#handleGoToArticles"
+                        styleClass="sidebar-button" maxWidth="Infinity">
+                    <graphic><FontIcon iconLiteral="fas-newspaper" iconSize="18" iconColor="#ffffff"/></graphic>
+                </Button>
                 <Button text="%sidebar.profile" onAction="#handleGoToProfile"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-user" iconSize="18" iconColor="#ffffff"/></graphic>

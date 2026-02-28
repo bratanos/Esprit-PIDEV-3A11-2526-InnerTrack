@@ -22,13 +22,16 @@ public class ArticleDao {
             stmt.setString(2, article.getContenu());
             stmt.setInt(3, article.getAuteurUserId());
             stmt.setDate(4, Date.valueOf(article.getDatePublication()));
-            if (article.getCategorieId() != null) stmt.setInt(5, article.getCategorieId());
-            else stmt.setNull(5, Types.INTEGER);
+            if (article.getCategorieId() != null)
+                stmt.setInt(5, article.getCategorieId());
+            else
+                stmt.setNull(5, Types.INTEGER);
             stmt.setString(6, article.getReadability());
             int rows = stmt.executeUpdate();
             if (rows > 0) {
                 try (ResultSet keys = stmt.getGeneratedKeys()) {
-                    if (keys.next()) article.setId(keys.getInt(1));
+                    if (keys.next())
+                        article.setId(keys.getInt(1));
                 }
                 syncTags(article);
                 return true;
@@ -60,7 +63,7 @@ public class ArticleDao {
         List<Article> list = new ArrayList<>();
         String sql = "SELECT * FROM article ORDER BY datePublication DESC";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Article a = map(rs);
                 a.setTags(findTagsForArticle(a.getId()));
@@ -96,7 +99,8 @@ public class ArticleDao {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, categorieId);
             try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) list.add(map(rs));
+                while (rs.next())
+                    list.add(map(rs));
             }
         } catch (SQLException e) {
             System.err.println("ArticleDao.findByCategorie error: " + e.getMessage());
@@ -110,12 +114,15 @@ public class ArticleDao {
             stmt.setString(1, article.getTitre());
             stmt.setString(2, article.getContenu());
             stmt.setDate(3, Date.valueOf(article.getDatePublication()));
-            if (article.getCategorieId() != null) stmt.setInt(4, article.getCategorieId());
-            else stmt.setNull(4, Types.INTEGER);
+            if (article.getCategorieId() != null)
+                stmt.setInt(4, article.getCategorieId());
+            else
+                stmt.setNull(4, Types.INTEGER);
             stmt.setString(5, article.getReadability());
             stmt.setInt(6, article.getId());
             boolean updated = stmt.executeUpdate() > 0;
-            if (updated) syncTags(article);
+            if (updated)
+                syncTags(article);
             return updated;
         } catch (SQLException e) {
             System.err.println("ArticleDao.update error: " + e.getMessage());
@@ -134,6 +141,54 @@ public class ArticleDao {
         return false;
     }
 
+    public List<Article> findAllWithCategory() {
+        List<Article> list = new ArrayList<>();
+        String sql = "SELECT a.*, c.nom as nom_categorie FROM article a " +
+                "LEFT JOIN categorie c ON a.id_categorie = c.id_categorie " +
+                "ORDER BY a.datePublication DESC";
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Article a = map(rs);
+                a.setCategorieNom(rs.getString("nom_categorie"));
+                a.setTags(findTagsForArticle(a.getId()));
+                list.add(a);
+            }
+        } catch (SQLException e) {
+            System.err.println("ArticleDao.findAllWithCategory error: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public boolean existsByTitre(String titre) {
+        String sql = "SELECT COUNT(*) FROM article WHERE titre = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, titre);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("ArticleDao.existsByTitre error: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean existsByTitreExcludingId(String titre, int id) {
+        String sql = "SELECT COUNT(*) FROM article WHERE titre = ? AND id_Article != ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, titre);
+            stmt.setInt(2, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("ArticleDao.existsByTitreExcludingId error: " + e.getMessage());
+        }
+        return false;
+    }
+
     // ── Tag helpers ───────────────────────────────────────────
 
     private void syncTags(Article article) throws SQLException {
@@ -142,7 +197,8 @@ public class ArticleDao {
             del.setInt(1, article.getId());
             del.executeUpdate();
         }
-        if (article.getTags() == null || article.getTags().isEmpty()) return;
+        if (article.getTags() == null || article.getTags().isEmpty())
+            return;
         String ins = "INSERT INTO article_tag (id_article, id_tag) VALUES (?,?)";
         try (PreparedStatement stmt = connection.prepareStatement(ins)) {
             for (Tag tag : article.getTags()) {
@@ -181,7 +237,8 @@ public class ArticleDao {
         a.setAuteurUserId(rs.getInt("auteur_user_id"));
         a.setDatePublication(rs.getDate("datePublication").toLocalDate());
         int catId = rs.getInt("id_categorie");
-        if (!rs.wasNull()) a.setCategorieId(catId);
+        if (!rs.wasNull())
+            a.setCategorieId(catId);
         a.setReadability(rs.getString("readability"));
         return a;
     }

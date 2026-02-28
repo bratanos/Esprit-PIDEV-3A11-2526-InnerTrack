@@ -211,6 +211,11 @@ public class UserDashboardController {
     }
 
     @FXML
+    private void handleGoToArticles() {
+        ViewManager.loadView("article/ArticleView");
+    }
+
+    @FXML
     private void handleLogout() {
         SessionManager.getInstance().cleanSession();
         ViewManager.loadView("login");
