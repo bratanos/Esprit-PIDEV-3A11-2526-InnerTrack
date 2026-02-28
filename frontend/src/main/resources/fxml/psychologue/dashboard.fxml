@@ -75,6 +75,11 @@
                     <graphic><FontIcon iconLiteral="fas-brain" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
 
+                <Button text="🗣️ Community" onAction="#handleGoToCommunity"
+                        styleClass="sidebar-button" maxWidth="Infinity">
+                    <graphic><FontIcon iconLiteral="fas-users" iconSize="18" iconColor="#ffffff"/></graphic>
+                </Button>
+
                 <Button text="%sidebar.settings" onAction="#handleGoToSettings"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-cog" iconSize="18" iconColor="#ffffff"/></graphic>

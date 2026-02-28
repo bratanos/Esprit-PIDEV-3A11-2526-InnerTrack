@@ -17,13 +17,14 @@ public class ReportDao {
 
     /** File a new report. Returns true on success. */
     public boolean fileReport(Report report) {
-        String sql = "INSERT INTO report (reporter_id, reported_id, reason, details, status) " +
-                "VALUES (?, ?, ?, ?, 'PENDING')";
+        String sql = "INSERT INTO report (reporter_id, reported_id, reason, details, status, context) " +
+                "VALUES (?, ?, ?, ?, 'PENDING', ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, report.getReporterId());
             stmt.setInt(2, report.getReportedId());
             stmt.setString(3, report.getReason());
             stmt.setString(4, report.getDetails());
+            stmt.setString(5, report.getContext() != null ? report.getContext() : "MESSAGING");
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("ReportDao.fileReport: " + e.getMessage());
@@ -111,6 +112,7 @@ public class ReportDao {
         r.setReason(rs.getString("reason"));
         r.setDetails(rs.getString("details"));
         r.setStatus(rs.getString("status"));
+        r.setContext(rs.getString("context"));
         r.setReporterName(rs.getString("reporter_name"));
         r.setReportedName(rs.getString("reported_name"));
         Timestamp ca = rs.getTimestamp("created_at");

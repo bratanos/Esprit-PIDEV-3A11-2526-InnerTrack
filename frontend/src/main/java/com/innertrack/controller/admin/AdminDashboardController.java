@@ -23,6 +23,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class AdminDashboardController {
     @FXML
     private VBox usersPane;
     @FXML
-    private ScrollPane reportsPane;
+    private VBox reportsPane;
 
     // ── Analytics ─────────────────────────────────────────────
     @FXML
@@ -99,9 +100,16 @@ public class AdminDashboardController {
     @FXML
     private VBox reportsListBox;
 
+    // ── Active Locks ──────────────────────────────────────────
+    @FXML
+    private VBox locksListBox;
+    @FXML
+    private Label emptyLocksLabel;
+
     private final AdminUserDao adminDao = new AdminUserDao();
     private final ReportDao reportDao = new ReportDao();
     private final MessagingDao messagingDao = new MessagingDao();
+    private final com.innertrack.dao.ChatLockDao chatLockDao = new com.innertrack.dao.ChatLockDao();
     private final DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final DateTimeFormatter dfFull = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -235,6 +243,81 @@ public class AdminDashboardController {
         }, "load-reports").start();
     }
 
+    @FXML
+    private void loadActiveLocksTab(javafx.event.Event event) {
+        if (event.getSource() instanceof javafx.scene.control.Tab selectedTab && selectedTab.isSelected()) {
+            loadActiveLocks();
+        }
+    }
+
+    private void loadActiveLocks() {
+        new Thread(() -> {
+            List<com.innertrack.model.ChatLock> locks = chatLockDao.getAllActiveLocks();
+            Platform.runLater(() -> {
+                locksListBox.getChildren().clear();
+                if (locks.isEmpty()) {
+                    emptyLocksLabel.setVisible(true);
+                    emptyLocksLabel.setManaged(true);
+                } else {
+                    emptyLocksLabel.setVisible(false);
+                    emptyLocksLabel.setManaged(false);
+                    for (com.innertrack.model.ChatLock lock : locks) {
+                        locksListBox.getChildren().add(buildLockCard(lock));
+                    }
+                }
+            });
+        }, "load-locks-thread").start();
+    }
+
+    private VBox buildLockCard(com.innertrack.model.ChatLock lock) {
+        VBox card = new VBox(12);
+        card.setPadding(new Insets(18));
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 12;" +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.07), 8, 0, 0, 2);");
+
+        HBox header = new HBox(12);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        header.getChildren().addAll(
+                badge("🔒 LOCKED", "#fc8181"));
+
+        Label nameLbl = new Label("Patient: " + lock.getUserName());
+        nameLbl.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2d3748;");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        header.getChildren().addAll(nameLbl, spacer);
+
+        HBox details = new HBox(20);
+        VBox reasonBox = labeledValue("Reason", lock.getReason());
+
+        String duration = lock.isPermanent() ? "Permanent" : lock.getLockedUntil().format(dfFull);
+        VBox durationBox = labeledValue("Locked Until", duration);
+
+        VBox issuedBox = labeledValue("Issued At", lock.getLockedAt() != null ? lock.getLockedAt().format(df) : "—");
+
+        details.getChildren().addAll(reasonBox, durationBox, issuedBox);
+
+        HBox actions = new HBox(12);
+        actions.setAlignment(Pos.CENTER_RIGHT);
+
+        Button unlockBtn = actionBtn("🔓 Retirer la punition (Unlock)", "#48bb78");
+        unlockBtn.setOnAction(e -> {
+            chatLockDao.unlockUser(lock.getId());
+            messagingDao.createNotification(new com.innertrack.model.Notification(
+                    lock.getUserId(), "SYSTEM",
+                    "Punishment Removed",
+                    "Your community posting lock has been removed early by an administrator.",
+                    0));
+            loadActiveLocks();
+        });
+
+        actions.getChildren().add(unlockBtn);
+        card.getChildren().addAll(header, new Separator(), details, actions);
+        return card;
+    }
+
     private VBox buildReportCard(Report report) {
         VBox card = new VBox(12);
         card.setPadding(new Insets(18));
@@ -250,8 +333,12 @@ public class AdminDashboardController {
         // Header row
         HBox header = new HBox(10);
         header.setAlignment(Pos.CENTER_LEFT);
+
+        boolean isCommunity = "COMMUNITY".equalsIgnoreCase(report.getContext());
+
         header.getChildren().addAll(
                 badge("⚠ " + report.getReasonLabel(), "#fc8181"),
+                badge(isCommunity ? "🌐 Communauté" : "💬 Message Privé", isCommunity ? "#8b5cf6" : "#4299e1"),
                 badge(report.getStatus(), badgeColor));
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -288,8 +375,11 @@ public class AdminDashboardController {
             actions.setAlignment(Pos.CENTER_RIGHT);
             int adminId = SessionManager.getInstance().getCurrentUser().getId();
 
-            Button chatBtn = actionBtn("💬 Voir messages", "#4299e1");
-            chatBtn.setOnAction(e -> showChatDialog(report));
+            if (!isCommunity) {
+                Button chatBtn = actionBtn("💬 Voir messages", "#4299e1");
+                chatBtn.setOnAction(e -> showChatDialog(report));
+                actions.getChildren().add(chatBtn);
+            }
 
             Button banBtn = actionBtn("🚫 Bannir le patient", "#fc8181");
             Button warnBtn = actionBtn("⚠ Avertir seulement", "#f6ad55");
@@ -316,7 +406,38 @@ public class AdminDashboardController {
                 loadReports();
             });
 
-            actions.getChildren().addAll(chatBtn, dismissBtn, warnBtn, banBtn);
+            actions.getChildren().addAll(dismissBtn, warnBtn, banBtn);
+
+            // Chat Lock button
+            Button lockBtn = actionBtn("🔒 Lock Chat", "#8b5cf6");
+            lockBtn.setOnAction(e -> {
+                ChoiceDialog<String> durationDialog = new ChoiceDialog<>("24 hours",
+                        "1 hour", "24 hours", "7 days", "Permanent");
+                durationDialog.setTitle("Lock Chat");
+                durationDialog.setHeaderText("Lock " + report.getReportedName() + "'s community posting");
+                durationDialog.setContentText("Duration:");
+                durationDialog.showAndWait().ifPresent(duration -> {
+                    LocalDateTime until = switch (duration) {
+                        case "1 hour" -> LocalDateTime.now().plusHours(1);
+                        case "24 hours" -> LocalDateTime.now().plusHours(24);
+                        case "7 days" -> LocalDateTime.now().plusDays(7);
+                        default -> null; // Permanent
+                    };
+                    chatLockDao.lockUser(report.getReportedId(),
+                            "Report: " + report.getReasonLabel(), until, adminId);
+                    messagingDao.createNotification(new com.innertrack.model.Notification(
+                            report.getReportedId(), "SYSTEM",
+                            "Community Posting Locked",
+                            "Your community posting has been locked" +
+                                    (until != null ? " until " + until.format(dfFull) : " permanently") +
+                                    ". Reason: " + report.getReasonLabel(),
+                            0));
+                    reportDao.reviewReport(report.getId(), adminId, "REVIEWED");
+                    loadReports();
+                });
+            });
+            actions.getChildren().add(lockBtn);
+
             card.getChildren().add(actions);
         }
 

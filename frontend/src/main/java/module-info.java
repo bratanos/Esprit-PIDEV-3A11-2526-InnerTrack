@@ -41,6 +41,7 @@ module com.innertrack {
     opens com.innertrack.controller.profile to javafx.fxml;
     opens com.innertrack.controller.settings to javafx.fxml;
     opens com.innertrack.controller.chat to javafx.fxml;
+    opens com.innertrack.controller.community to javafx.fxml;
     opens com.innertrack.controller to javafx.fxml;
     opens com.innertrack.controller.journal to javafx.fxml;
     opens com.innertrack.util to javafx.fxml;

@@ -24,7 +24,7 @@
 
             <VBox styleClass="profile-section">
                 <javafx.scene.shape.Circle fx:id="profileCircle" radius="35" styleClass="profile-pic"/>
-                <Label text="Admin" styleClass="profile-name"/>
+                <Label fx:id="userFullNameLabel" text="Admin" styleClass="profile-name"/>
                 <Label text="Administrator"
                        style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
             </VBox>
@@ -214,33 +214,52 @@
             </VBox>
 
             <!-- ── REPORTS PANE ── -->
-            <ScrollPane fx:id="reportsPane" fitToWidth="true" visible="false"
-                        style="-fx-background-color: #f4f7f6; -fx-background: #f4f7f6;">
-                <VBox spacing="20" style="-fx-padding: 32 40;">
-
-                    <HBox alignment="CENTER_LEFT" spacing="12">
-                        <VBox>
-                            <Label text="Reports"
-                                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-                            <Label fx:id="reportsSummaryLabel" text=""
-                                   style="-fx-text-fill: #7f8c8d;"/>
-                        </VBox>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button text="↻ Refresh" onAction="#refreshReports"
-                                style="-fx-background-color: #667eea; -fx-text-fill: white;
-                                       -fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;
-                                       -fx-font-weight: bold;"/>
-                    </HBox>
-
-                    <Label fx:id="reportsEmptyLabel"
-                           text="No reports at the moment."
-                           style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"
-                           visible="false" managed="false"/>
-
-                    <VBox fx:id="reportsListBox" spacing="14"/>
-
-                </VBox>
-            </ScrollPane>
+            <VBox fx:id="reportsPane" visible="false" style="-fx-background-color: transparent;">
+                <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 32 40 10 40;">
+                    <VBox>
+                        <Label text="Reports &amp; Moderation"
+                               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                        <Label fx:id="reportsSummaryLabel" text=""
+                               style="-fx-text-fill: #7f8c8d;"/>
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="↻ Refresh" onAction="#refreshReports"
+                            style="-fx-background-color: #667eea; -fx-text-fill: white;
+                                   -fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;
+                                   -fx-font-weight: bold;"/>
+                </HBox>
+                
+                <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                    <tabs>
+                        <Tab text="Signalements (Reports)">
+                            <content>
+                                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f4f7f6;">
+                                    <VBox spacing="20" style="-fx-padding: 20 40 40 40;">
+                                        <Label fx:id="reportsEmptyLabel"
+                                               text="No reports at the moment."
+                                               style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"
+                                               visible="false" managed="false"/>
+                                        <VBox fx:id="reportsListBox" spacing="14"/>
+                                    </VBox>
+                                </ScrollPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Punitions Actives (Active Locks)" onSelectionChanged="#loadActiveLocksTab">
+                            <content>
+                                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f4f7f6;">
+                                    <VBox spacing="20" style="-fx-padding: 20 40 40 40;">
+                                        <Label fx:id="emptyLocksLabel"
+                                               text="No active punishments."
+                                               style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"
+                                               visible="false" managed="false"/>
+                                        <VBox fx:id="locksListBox" spacing="14"/>
+                                    </VBox>
+                                </ScrollPane>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </VBox>
 
         </StackPane>
     </center>

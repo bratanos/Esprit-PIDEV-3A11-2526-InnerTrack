@@ -1,0 +1,116 @@
+/* community.css - Modern Reddit-style UI */
+
+.community-view {
+    -fx-background-color: #dae0e6;
+    /* classic reddit gray background */
+}
+
+/* Header */
+.community-header {
+    -fx-background-color: white;
+    -fx-border-color: #edeff1;
+    -fx-border-width: 0 0 1 0;
+}
+
+.community-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1c1c1c;
+}
+
+/* Lock Banner */
+.lock-banner {
+    -fx-background-color: #ffe5e5;
+    -fx-border-color: #ffb8b8;
+    -fx-border-width: 0 0 1 0;
+}
+
+.lock-banner-text {
+    -fx-text-fill: #d93025;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* Filter Bar & New Comment */
+.filter-bar,
+.new-comment-bar {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #edeff1 transparent;
+    -fx-padding: 12 20;
+}
+
+.filter-bar .text-field,
+.new-comment-bar .text-field {
+    -fx-background-color: #f6f7f8;
+    -fx-border-color: transparent;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 8 12;
+    -fx-text-fill: #1c1c1c;
+    -fx-font-size: 14px;
+}
+
+.filter-bar .text-field:focused,
+.new-comment-bar .text-field:focused {
+    -fx-background-color: white;
+    -fx-border-color: #0079d3;
+}
+
+.btn-reddit-primary {
+    -fx-background-color: #0079d3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 6 16;
+    -fx-cursor: hand;
+}
+
+.btn-reddit-primary:hover {
+    -fx-background-color: #1484d6;
+}
+
+.btn-reddit-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #0079d3;
+    -fx-font-weight: bold;
+    -fx-border-color: #0079d3;
+    -fx-border-radius: 20;
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+}
+
+.btn-reddit-secondary:hover {
+    -fx-background-color: #f6f7f8;
+}
+
+/* TreeView customizations */
+.comments-tree {
+    -fx-background-color: transparent;
+    -fx-padding: 16 0;
+    -fx-control-inner-background: #dae0e6;
+    -fx-control-inner-background-alt: #dae0e6;
+    -fx-background-insets: 0;
+}
+
+.comments-tree:focused {
+    -fx-background-color: transparent;
+}
+
+.comments-tree .tree-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 6 16;
+}
+
+.comments-tree .tree-cell:selected,
+.comments-tree .tree-cell:focused {
+    -fx-background-color: transparent;
+}
+
+/* Hide default disclosure arrow, we will handle indent manually if needed */
+.comments-tree .tree-disclosure-node {
+    -fx-padding: 0;
+}
+
+.comments-tree .tree-disclosure-node .arrow {
+    -fx-background-color: transparent;
+}

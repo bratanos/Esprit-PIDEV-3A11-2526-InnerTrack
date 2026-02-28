@@ -9,6 +9,7 @@ public class Report {
     private String reason; // SPAM | HARASSMENT | INAPPROPRIATE | OTHER
     private String details;
     private String status; // PENDING | REVIEWED | DISMISSED
+    private String context; // MESSAGING | COMMUNITY
     private LocalDateTime createdAt;
     private LocalDateTime reviewedAt;
     private Integer reviewedBy;
@@ -26,6 +27,16 @@ public class Report {
         this.reason = reason;
         this.details = details;
         this.status = "PENDING";
+        this.context = "MESSAGING"; // Default, overridden if specified
+    }
+
+    public Report(int reporterId, int reportedId, String reason, String details, String context) {
+        this.reporterId = reporterId;
+        this.reportedId = reportedId;
+        this.reason = reason;
+        this.details = details;
+        this.status = "PENDING";
+        this.context = context;
     }
 
     // ── Getters / Setters ─────────────────────────────────────
@@ -76,6 +87,14 @@ public class Report {
 
     public void setStatus(String v) {
         this.status = v;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public LocalDateTime getCreatedAt() {

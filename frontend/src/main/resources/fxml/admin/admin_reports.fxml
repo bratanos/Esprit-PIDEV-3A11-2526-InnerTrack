@@ -31,16 +31,41 @@
     </top>
 
     <center>
-        <ScrollPane fitToWidth="true"
-                    style="-fx-background-color: #f4f7f6; -fx-background: #f4f7f6;">
-            <VBox style="-fx-padding: 30 60;" spacing="16">
-                <Label fx:id="emptyLabel"
-                       text="Aucun signalement pour le moment."
-                       style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"
-                       visible="false" managed="false"/>
-                <VBox fx:id="reportsList" spacing="14"/>
-            </VBox>
-        </ScrollPane>
+        <TabPane tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: transparent;">
+            <tabs>
+                <!-- Existing Reports Tab -->
+                <Tab text="Signalements (Reports)">
+                    <content>
+                        <ScrollPane fitToWidth="true"
+                                    style="-fx-background-color: #f4f7f6; -fx-background: #f4f7f6;">
+                            <VBox style="-fx-padding: 30 60;" spacing="16">
+                                <Label fx:id="emptyLabel"
+                                       text="Aucun signalement pour le moment."
+                                       style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"
+                                       visible="false" managed="false"/>
+                                <VBox fx:id="reportsList" spacing="14"/>
+                            </VBox>
+                        </ScrollPane>
+                    </content>
+                </Tab>
+
+                <!-- New Active Punishments Tab -->
+                <Tab text="Punitions Actives (Active Locks)" onSelectionChanged="#loadActiveLocksTab">
+                    <content>
+                        <ScrollPane fitToWidth="true"
+                                    style="-fx-background-color: #f4f7f6; -fx-background: #f4f7f6;">
+                            <VBox style="-fx-padding: 30 60;" spacing="16">
+                                <Label fx:id="emptyLocksLabel"
+                                       text="Aucune punition active."
+                                       style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"
+                                       visible="false" managed="false"/>
+                                <VBox fx:id="locksList" spacing="14"/>
+                            </VBox>
+                        </ScrollPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
     </center>
 
 </BorderPane>

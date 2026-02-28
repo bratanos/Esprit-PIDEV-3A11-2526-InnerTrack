@@ -123,6 +123,11 @@ public class TherapistDashboardController {
     }
 
     @FXML
+    private void handleGoToCommunity() {
+        ViewManager.loadView("community/community");
+    }
+
+    @FXML
     private void handleLogout() {
         SessionManager.getInstance().cleanSession();
         ViewManager.loadView("login");
