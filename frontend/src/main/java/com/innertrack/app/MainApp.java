@@ -11,10 +11,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class MainApp extends Application {
 
+    private static Dotenv dotenv;
+
     private static Stage primaryStage;
+
+    public static String getEnv(String key) {
+        if (dotenv == null) {
+            dotenv = Dotenv.load();
+        }
+        return dotenv.get(key);
+    }
 
     public static Stage getPrimaryStage() {
         return primaryStage;
@@ -26,13 +36,11 @@ public class MainApp extends Application {
 
         // Set the AtlantaFX theme
         Application.setUserAgentStylesheet(
-                new PrimerLight().getUserAgentStylesheet()
-        );
+                new PrimerLight().getUserAgentStylesheet());
 
         // Load the main layout
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/MainLayout.fxml")
-        );
+                getClass().getResource("/fxml/MainLayout.fxml"));
         loader.setResources(SettingsService.getInstance().getBundle());
         Parent root = loader.load();
 
@@ -43,14 +51,12 @@ public class MainApp extends Application {
         scene.getStylesheets().add(
                 getClass()
                         .getResource("/styles/base/typography.css")
-                        .toExternalForm()
-        );
+                        .toExternalForm());
 
         primaryStage.show();
 
         // ── AUTO-LOGIN CHECK (ADDED) ────────────────────────────
-        User remembered =
-                RememberMeService.getInstance().tryAutoLogin();
+        User remembered = RememberMeService.getInstance().tryAutoLogin();
 
         if (remembered != null) {
             // Valid saved session → go straight to dashboard

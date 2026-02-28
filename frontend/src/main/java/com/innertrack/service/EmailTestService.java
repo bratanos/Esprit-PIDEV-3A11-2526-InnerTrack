@@ -1,5 +1,7 @@
 package com.innertrack.service;
 
+import com.innertrack.app.MainApp;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,7 +14,7 @@ import java.net.http.HttpResponse;
 public class EmailTestService {
 
     private static final String API_URL = "https://api.brevo.com/v3/smtp/email";
-    private static final String API_KEY = System.getenv("BREVO_API_KEY");
+    private static final String API_KEY = MainApp.getEnv("BREVO_API_KEY");
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public void envoyerRapport(String destinataire, String nomUtilisateur,

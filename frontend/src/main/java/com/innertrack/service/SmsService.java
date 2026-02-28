@@ -1,5 +1,7 @@
 package com.innertrack.service;
 
+import com.innertrack.app.MainApp;
+
 /**
  * Service for sending WhatsApp messages and SMS via Twilio API.
  * Requires environment variables: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN.
@@ -9,9 +11,9 @@ package com.innertrack.service;
  */
 public class SmsService {
 
-    private static final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
-    private static final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
-    private static final String FROM_NUMBER = System.getenv("TWILIO_FROM_NUMBER"); // e.g., "+14155238886"
+    private static final String ACCOUNT_SID = MainApp.getEnv("TWILIO_ACCOUNT_SID");
+    private static final String AUTH_TOKEN = MainApp.getEnv("TWILIO_AUTH_TOKEN");
+    private static final String FROM_NUMBER = MainApp.getEnv("TWILIO_FROM_NUMBER"); // e.g., "+14155238886"
 
     private static SmsService instance;
     private boolean initialized = false;

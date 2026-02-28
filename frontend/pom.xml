@@ -156,6 +156,12 @@
       <artifactId>twilio</artifactId>
       <version>10.0.0</version>
     </dependency>
+    <!-- Dotenv for environment variables -->
+    <dependency>
+      <groupId>io.github.cdimascio</groupId>
+      <artifactId>dotenv-java</artifactId>
+      <version>3.0.0</version>
+    </dependency>
   </dependencies>
 
   <build>
