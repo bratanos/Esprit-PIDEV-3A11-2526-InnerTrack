@@ -51,9 +51,24 @@
 
     <!-- Footer -->
     <bottom>
-        <VBox fx:id="footer" styleClass="footer">
-            <Label fx:id="footerLabel" text="%main.footer" styleClass="subtitle" />
-        </VBox>
+        <StackPane>
+            <VBox fx:id="footer" styleClass="footer">
+                <Label fx:id="footerLabel" text="%main.footer" styleClass="subtitle" />
+            </VBox>
+            
+            <!-- Vosk Loading Indicator (Bottom Right) -->
+            <HBox fx:id="voskLoadingBox" spacing="10" alignment="CENTER_RIGHT" 
+                  visible="false" managed="false" StackPane.alignment="BOTTOM_RIGHT"
+                  style="-fx-padding: 8 15; -fx-background-color: rgba(255, 255, 255, 0.9); -fx-background-radius: 10; -fx-border-color: #8b5cf6; -fx-border-radius: 10; -fx-border-width: 1;">
+                <StackPane.margin>
+                    <Insets bottom="10" right="20" />
+                </StackPane.margin>
+                <Label text="Assistant Vocal: Chargement..." 
+                       style="-fx-font-size: 11px; -fx-text-fill: #8b5cf6; -fx-font-weight: bold;" />
+                <ProgressBar fx:id="voskProgressBar" prefWidth="120" prefHeight="10" 
+                             style="-fx-accent: #8b5cf6;" />
+            </HBox>
+        </StackPane>
     </bottom>
 
 </BorderPane>

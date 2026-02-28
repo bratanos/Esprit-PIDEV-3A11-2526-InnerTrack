@@ -38,6 +38,9 @@
         <Tab text="%settings.account">
             <fx:include source="settings_account.fxml" />
         </Tab>
+        <Tab text="Voix &amp; Audio">
+            <fx:include source="settings_audio.fxml" />
+        </Tab>
         <Tab text="%settings.about">
             <fx:include source="settings_about.fxml" />
         </Tab>

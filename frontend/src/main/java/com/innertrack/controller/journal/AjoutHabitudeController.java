@@ -48,6 +48,11 @@ public class AjoutHabitudeController {
     private Label sommeilIndicateurLabel;
 
     private HabitudeService habitudeService;
+    private com.innertrack.service.TranscriptionService transcriptionService;
+    private boolean isRecording = false;
+
+    @FXML
+    private Button btnVoice;
 
     private int getCurrentUserId() {
         return SessionManager.getInstance().getCurrentUser().getId();
@@ -56,6 +61,7 @@ public class AjoutHabitudeController {
     @FXML
     public void initialize() {
         habitudeService = new HabitudeService();
+        transcriptionService = com.innertrack.service.TranscriptionService.getInstance();
         datePicker.setValue(LocalDate.now());
 
         emotionComboBox.getItems().addAll(
@@ -191,6 +197,30 @@ public class AjoutHabitudeController {
             alert.setTitle("Error");
             alert.setContentText("Error : " + e.getMessage());
             alert.show();
+        }
+    }
+
+    @FXML
+    void startVoiceInput() {
+        if (!isRecording) {
+            isRecording = true;
+            btnVoice.setText("🛑");
+            btnVoice.setStyle(
+                    "-fx-font-size: 16px; -fx-background-radius: 50%; -fx-background-color: #f56565; -fx-text-fill: white;");
+
+            transcriptionService.startTranscription(text -> {
+                javafx.application.Platform.runLater(() -> {
+                    String currentText = noteTextArea.getText();
+                    if (currentText == null)
+                        currentText = "";
+                    noteTextArea.setText(currentText + (currentText.isEmpty() ? "" : " ") + text);
+                });
+            });
+        } else {
+            isRecording = false;
+            transcriptionService.stopTranscription();
+            btnVoice.setText("🎙");
+            btnVoice.setStyle("-fx-font-size: 16px; -fx-background-radius: 50%;");
         }
     }
 

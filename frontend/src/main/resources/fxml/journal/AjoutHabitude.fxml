@@ -108,9 +108,14 @@
                     <!-- Notes -->
                     <VBox spacing="6">
                         <Label text="Personal Notes" styleClass="field-label"/>
-                        <TextArea fx:id="noteTextArea"
-                                  promptText="Describe your habit, your feelings..."
-                                  styleClass="custom-text-area" prefRowCount="4" wrapText="true"/>
+                        <HBox spacing="10" alignment="TOP_LEFT">
+                            <TextArea fx:id="noteTextArea"
+                                      promptText="Describe your habit, your feelings..."
+                                      styleClass="custom-text-area" prefRowCount="4" wrapText="true"
+                                      HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="btnVoice" text="🎙" onAction="#startVoiceInput"
+                                    style="-fx-font-size: 16px; -fx-background-radius: 50%;"/>
+                        </HBox>
                     </VBox>
 
                     <!-- Date -->

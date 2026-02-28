@@ -69,3 +69,7 @@ Thumbs.db
 
 # Secrets
 .env
+
+# Large Models
+**/vosk-model-*
+**/vosk/

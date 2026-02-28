@@ -33,6 +33,12 @@ public class MainLayoutController {
     @FXML
     private Label footerLabel;
 
+    @FXML
+    private HBox voskLoadingBox;
+
+    @FXML
+    private javafx.scene.control.ProgressBar voskProgressBar;
+
     public static MainLayoutController getInstance() {
         return instance;
     }
@@ -50,16 +56,28 @@ public class MainLayoutController {
         footer.setManaged(visible);
     }
 
+    private final javafx.beans.property.BooleanProperty isLoggedIn = new javafx.beans.property.SimpleBooleanProperty(
+            false);
+
     @FXML
     public void initialize() {
         instance = this;
         ViewManager.setContainer(contentContainer);
         footerLabel.setText("© " + Year.now().getValue() + " InnerTrack — All rights reserved");
+
+        // Initialize Vosk loading and bind UI (only show when loading AND logged in)
+        com.innertrack.service.TranscriptionService vosk = com.innertrack.service.TranscriptionService.getInstance();
+        voskLoadingBox.visibleProperty().bind(
+                javafx.beans.binding.Bindings.and(vosk.loadingProperty(), isLoggedIn));
+        voskLoadingBox.managedProperty().bind(voskLoadingBox.visibleProperty());
+        voskProgressBar.setProgress(-1.0); // Indeterminate
+
         updateUiForSession();
     }
 
     public void updateUiForSession() {
         boolean loggedIn = SessionManager.getInstance().getCurrentUser() != null;
+        isLoggedIn.set(loggedIn);
         loginLink.setVisible(!loggedIn);
         registerLink.setVisible(!loggedIn);
         profileBtn.setVisible(loggedIn);

@@ -12,11 +12,19 @@ public class SettingsController {
 
     @FXML
     public void initialize() {
-        // Any general settings hub initialization
+        // Stop monitoring if the user switches away from the Audio tab
+        settingsTabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
+            if (newTab != null && !newTab.getText().contains("Audio")) {
+                com.innertrack.service.AudioDeviceService.getInstance().stopMonitoring();
+            }
+        });
     }
 
     @FXML
     private void handleBack() {
+        // Stop any active mic monitoring when leaving settings
+        com.innertrack.service.AudioDeviceService.getInstance().stopMonitoring();
+
         String role = SessionManager.getInstance().getCurrentUser().getRoles().get(0);
         if (role.contains("ADMIN")) {
             ViewManager.loadView("admin/dashboard");

@@ -25,8 +25,12 @@ public class AjoutJournalController {
     private Label descErrorLabel;
     @FXML
     private Label dateErrorLabel;
+    @FXML
+    private Button btnVoice;
 
     private JournalService journalService;
+    private com.innertrack.service.TranscriptionService transcriptionService;
+    private boolean isRecording = false;
 
     private int getCurrentUserId() {
         return SessionManager.getInstance().getCurrentUser().getId();
@@ -35,6 +39,7 @@ public class AjoutJournalController {
     @FXML
     public void initialize() {
         journalService = new JournalService();
+        transcriptionService = com.innertrack.service.TranscriptionService.getInstance();
         datePicker.setValue(LocalDate.now());
 
         humeurSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
@@ -119,11 +124,25 @@ public class AjoutJournalController {
 
     @FXML
     void startVoiceInput() {
-        // Voice input via Vosk is not currently configured.
-        // Placeholder for future integration.
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Information");
-        alert.setContentText("Voice input is not yet available.");
-        alert.show();
+        if (!isRecording) {
+            isRecording = true;
+            btnVoice.setText("🛑");
+            btnVoice.setStyle(
+                    "-fx-font-size: 16px; -fx-background-radius: 50%; -fx-background-color: #f56565; -fx-text-fill: white;");
+
+            transcriptionService.startTranscription(text -> {
+                javafx.application.Platform.runLater(() -> {
+                    String currentText = noteTextArea.getText();
+                    if (currentText == null)
+                        currentText = "";
+                    noteTextArea.setText(currentText + (currentText.isEmpty() ? "" : " ") + text);
+                });
+            });
+        } else {
+            isRecording = false;
+            transcriptionService.stopTranscription();
+            btnVoice.setText("🎙");
+            btnVoice.setStyle("-fx-font-size: 16px; -fx-background-radius: 50%;");
+        }
     }
 }

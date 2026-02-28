@@ -67,7 +67,7 @@
                                       prefRowCount="6"
                                       wrapText="true"
                                       HBox.hgrow="ALWAYS"/>
-                            <Button text="🎙" onAction="#startVoiceInput"
+                            <Button fx:id="btnVoice" text="🎙" onAction="#startVoiceInput"
                                     style="-fx-font-size: 16px; -fx-background-radius: 50%;"/>
                         </HBox>
                         <Label fx:id="descErrorLabel" text="⚠ Description is required"

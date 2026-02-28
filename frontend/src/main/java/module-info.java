@@ -6,7 +6,8 @@ module com.innertrack {
     requires javafx.swing;
     requires java.net.http;
     requires java.sql;
-    requires java.desktop;
+    requires transitive java.desktop;
+    requires vosk;
     requires com.google.gson;
     requires atlantafx.base;
     requires jakarta.mail;
@@ -63,6 +64,7 @@ module com.innertrack {
     exports com.innertrack.controller.article;
     exports com.innertrack.util;
     exports com.innertrack.controller.auth;
+    exports com.innertrack.controller.settings;
 
     opens com.innertrack.app to javafx.fxml;
     opens com.innertrack.controller.auth to javafx.fxml;
