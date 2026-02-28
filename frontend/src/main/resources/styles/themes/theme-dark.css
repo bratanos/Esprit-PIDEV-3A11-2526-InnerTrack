@@ -8,9 +8,9 @@
     -it-card: #1c1f26;
     -it-text: #e2e8f0;
     -it-text-muted: #94a3b8;
-    -it-primary: #4f8ef7;
-    -it-primary-hover: #3b7de8;
-    -it-primary-active: #60a5fa;
+    -it-primary: #8b5cf6;
+    -it-primary-hover: #7c3aed;
+    -it-primary-active: #6d28d9;
     -it-secondary: #1e3a5f;
     -it-secondary-hover: #2a4f7a;
     -it-secondary-active: #152c47;
@@ -18,7 +18,7 @@
     -it-error: #f87171;
     -it-border: #2d3748;
 
-    -fx-background-color: linear-gradient(to bottom right, #0f1117, #151a24);
+    -fx-background-color: #0f1117;
     -fx-base: #1c1f26;
     -fx-control-inner-background: #1a1d24;
     -fx-text-fill: #ffffff;
@@ -248,7 +248,7 @@
 }
 
 .dark-theme .tab-pane .tab:selected .tab-label {
-    -fx-text-fill: #4f8ef7;
+    -fx-text-fill: #8b5cf6;
 }
 
 .dark-theme .tab-pane .tab:hover .tab-label {
@@ -370,4 +370,51 @@
     -fx-border-color: #f87171;
     -fx-border-width: 1.5;
     -fx-border-radius: 8;
+}
+
+/* ─── Back Button ─── */
+.dark-theme .btn-back {
+    -fx-background-color: #252932;
+    -fx-background-radius: 50;
+    -fx-padding: 8;
+    -fx-cursor: hand;
+}
+
+.dark-theme .btn-back:hover {
+    -fx-background-color: #2d3748;
+}
+
+.dark-theme .icon-back {
+    -fx-icon-color: #e2e8f0;
+}
+
+/* ─── Specialized Buttons ─── */
+.dark-theme .btn-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #60a5fa;
+    -fx-cursor: hand;
+}
+
+.dark-theme .btn-link:hover {
+    -fx-text-fill: #93c5fd;
+    -fx-underline: true;
+}
+
+.dark-theme .btn-warning-text {
+    -fx-text-fill: #fb923c !important;
+}
+
+.dark-theme .btn-danger-text {
+    -fx-text-fill: #f87171 !important;
+}
+
+/* ─── Fixes for Settings Inputs ─── */
+.dark-theme .input-field {
+    -fx-background-color: #1a1d24;
+    -fx-text-fill: #e2e8f0;
+    -fx-border-color: #2d3748;
+}
+
+.dark-theme .input-field:focused {
+    -fx-border-color: -it-primary;
 }

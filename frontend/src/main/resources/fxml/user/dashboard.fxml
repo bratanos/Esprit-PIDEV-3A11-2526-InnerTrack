@@ -18,7 +18,7 @@
 
     <!-- Sidebar -->
     <left>
-        <VBox styleClass="sidebar" prefWidth="250">
+        <VBox styleClass="sidebar" prefWidth="280">
             <VBox styleClass="sidebar-logo" alignment="CENTER">
                 <ImageView fitWidth="150" preserveRatio="true">
                     <image><Image url="@../../images/innertracklogo1.png"/></image>
@@ -52,6 +52,10 @@
                 <Button text="%sidebar.messages" onAction="#handleGoToMessages"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-comments" iconSize="18" iconColor="#ffffff"/></graphic>
+                </Button>
+                <Button text="🧪 Tests Psy" onAction="#handleGoToTests"
+                        styleClass="sidebar-button" maxWidth="Infinity">
+                    <graphic><FontIcon iconLiteral="fas-brain" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
                 <Button text="%sidebar.profile" onAction="#handleGoToProfile"
                         styleClass="sidebar-button" maxWidth="Infinity">

@@ -1,0 +1,383 @@
+/* ============================================
+   CSS pour l'Interface de Liste des Tests
+   Style moderne et professionnel
+   ============================================ */
+@import "../base/tokens.css";
+
+/* Couleurs principales */
+.root {
+    -fx-background-color: -it-bg;
+    -fx-font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* Fix for icons: ensure font-family doesn't override ikonli */
+.ikonli-font-icon {
+    -fx-font-family: 'FontAwesome5Free-Solid';
+}
+
+/* ============================================
+   EN-TÊTE
+   ============================================ */
+.header {
+    -fx-background-color: linear-gradient(to right, #8b5cf6 0%, #7c3aed 100%);
+    -fx-effect: dropshadow(gaussian, rgba(124, 58, 237, 0.3), 15, 0, 0, 4);
+    -fx-padding: 30px;
+}
+
+.title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 26px;
+}
+
+.subtitle {
+    -fx-text-fill: rgba(255, 255, 255, 0.9);
+    -fx-padding: 5 0 0 0;
+    -fx-font-size: 14px;
+}
+
+/* ============================================
+   BOUTONS
+   ============================================ */
+.add-test-btn,
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #8b5cf6, #7c3aed);
+    -fx-text-fill: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 12px 28px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(124, 58, 237, 0.3), 10, 0, 0, 3);
+    -fx-transition: all 0.3s;
+}
+
+.add-test-btn:hover,
+.btn-primary:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(124, 58, 237, 0.5), 15, 0, 0, 5);
+}
+
+.btn-secondary {
+    -fx-background-color: -it-card;
+    -fx-text-fill: -it-text;
+    -fx-border-color: -it-border;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: -it-bg;
+    -fx-border-color: -it-primary;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+/* ============================================
+   CARTE DE TEST
+   ============================================ */
+.test-card {
+    -fx-background-color: -it-card;
+    -fx-border-color: -it-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-padding: 20px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 10, 0, 0, 2);
+}
+
+.test-card:hover {
+    -fx-background-color: linear-gradient(to bottom right, -it-card, -it-bg);
+    -fx-border-color: -it-primary;
+    -fx-translate-y: -3px;
+    -fx-effect: dropshadow(gaussian, rgba(124, 58, 237, 0.15), 15, 0, 0, 5);
+}
+
+.test-card-selected {
+    -fx-background-color: linear-gradient(to right, rgba(139, 92, 246, 0.15), -it-card);
+    -fx-border-color: -it-primary;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.2), 12, 0, 0, 4);
+}
+
+.test-card-title {
+    -fx-text-fill: -it-text;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+
+.test-card-badge {
+    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-padding: 5px 12px;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+/* ============================================
+   SECTION DÉTAILS
+   ============================================ */
+.details-section {
+    -fx-background-color: -it-card;
+}
+
+.test-title-large {
+    -fx-text-fill: -it-text;
+    -fx-font-weight: bold;
+}
+
+.info-box {
+    -fx-background-color: -it-bg;
+    -fx-padding: 15px;
+    -fx-background-radius: 8px;
+    -fx-border-color: -it-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+}
+
+.info-label-bold {
+    -fx-text-fill: #4a5568;
+    -fx-font-weight: bold;
+}
+
+.info-label-value {
+    -fx-text-fill: #2d3748;
+}
+
+/* ============================================
+   BOUTONS D'EN-TÊTE (Modifier/Supprimer)
+   ============================================ */
+.edit-btn-header {
+    -fx-background-color: linear-gradient(to bottom, #4299e1, #3182ce);
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.edit-btn-header:hover {
+    -fx-background-color: linear-gradient(to bottom, #3182ce, #2c5282);
+}
+
+.delete-btn-header {
+    -fx-background-color: linear-gradient(to bottom, #fc8181, #f56565);
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.delete-btn-header:hover {
+    -fx-background-color: linear-gradient(to bottom, #f56565, #e53e3e);
+}
+
+.add-question-small-btn {
+    -fx-background-color: linear-gradient(to bottom, #48bb78, #38a169);
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+
+.add-question-small-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #38a169, #2f855a);
+}
+
+/* ============================================
+   CARTE DE QUESTION
+   ============================================ */
+.question-card {
+    -fx-background-color: -it-card;
+    -fx-border-color: -it-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0, 0, 1);
+}
+
+.question-card:hover {
+    -fx-background-color: -it-bg;
+    -fx-border-color: -it-primary;
+}
+
+.question-number {
+    -fx-background-color: #667eea;
+    -fx-text-fill: white;
+    -fx-background-radius: 50%;
+    -fx-padding: 8px;
+    -fx-min-width: 35px;
+    -fx-min-height: 35px;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+}
+
+.question-text {
+    -fx-text-fill: -it-text;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+/* ============================================
+   BOUTONS OUI/NON/PARFOIS
+   ============================================ */
+.reponse-btn {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #4a5568;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px 14px;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+
+.reponse-btn:hover {
+    -fx-background-color: -it-border;
+}
+
+.reponse-btn-oui {
+    -fx-background-color: linear-gradient(to bottom, #48bb78, #38a169);
+    -fx-text-fill: white;
+}
+
+.reponse-btn-oui:hover {
+    -fx-background-color: linear-gradient(to bottom, #38a169, #2f855a);
+}
+
+.reponse-btn-non {
+    -fx-background-color: linear-gradient(to bottom, #fc8181, #f56565);
+    -fx-text-fill: white;
+}
+
+.reponse-btn-non:hover {
+    -fx-background-color: linear-gradient(to bottom, #f56565, #e53e3e);
+}
+
+.reponse-btn-parfois {
+    -fx-background-color: linear-gradient(to bottom, #f6ad55, #ed8936);
+    -fx-text-fill: white;
+}
+
+.reponse-btn-parfois:hover {
+    -fx-background-color: linear-gradient(to bottom, #ed8936, #dd6b20);
+}
+
+/* ============================================
+   BOUTONS D'ACTION QUESTION
+   ============================================ */
+.question-edit-btn {
+    -fx-background-color: #4299e1;
+    -fx-text-fill: white;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px 12px;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+
+.question-edit-btn:hover {
+    -fx-background-color: #3182ce;
+}
+
+.question-delete-btn {
+    -fx-background-color: #fc8181;
+    -fx-text-fill: white;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px 12px;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+
+.question-delete-btn:hover {
+    -fx-background-color: #f56565;
+}
+
+/* ============================================
+   ÉTAT VIDE (Aucun test sélectionné)
+   ============================================ */
+.empty-state {
+    -fx-background-color: -it-card;
+}
+
+.empty-icon {
+    -fx-text-fill: -it-border;
+}
+
+.empty-title {
+    -fx-text-fill: -it-text;
+}
+
+.empty-subtitle {
+    -fx-text-fill: -it-text-muted;
+}
+
+/* ============================================
+   PIED DE PAGE
+   ============================================ */
+.footer {
+    -fx-background-color: -it-card;
+    -fx-border-color: -it-border;
+    -fx-border-width: 1px 0 0 0;
+}
+
+.status-label {
+    -fx-text-fill: -it-text-muted;
+    -fx-font-size: 13px;
+}
+
+.refresh-btn {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #4a5568;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+
+.refresh-btn:hover {
+    -fx-background-color: -it-border;
+}
+
+/* ============================================
+   SEPARATOR
+   ============================================ */
+.separator {
+    -fx-background-color: #e2e8f0;
+}
+
+.separator .line {
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/* ============================================
+   SPLIT PANE
+   ============================================ */
+.split-pane {
+    -fx-background-color: transparent;
+}
+
+.split-pane>.split-pane-divider {
+    -fx-background-color: -it-border;
+    -fx-padding: 0 1 0 0;
+}
+
+.btn-retry-quick {
+    -fx-background-color: transparent;
+    -fx-text-fill: -it-primary;
+    -fx-font-size: 18px;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+}
+
+.btn-retry-quick:hover {
+    -fx-background-color: rgba(139, 92, 246, 0.1);
+    -fx-background-radius: 50%;
+}

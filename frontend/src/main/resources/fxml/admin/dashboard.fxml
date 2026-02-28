@@ -15,7 +15,7 @@
 
     <!-- Sidebar -->
     <left>
-        <VBox styleClass="sidebar" prefWidth="240">
+        <VBox styleClass="sidebar" prefWidth="280">
             <VBox styleClass="sidebar-logo" alignment="CENTER">
                 <ImageView fitWidth="130" preserveRatio="true">
                     <image><Image url="@../../images/innertracklogo1.png"/></image>

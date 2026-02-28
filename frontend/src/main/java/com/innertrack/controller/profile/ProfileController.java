@@ -38,6 +38,8 @@ public class ProfileController {
     @FXML
     private TextField lastNameField;
     @FXML
+    private TextField phoneField;
+    @FXML
     private TextField emailField;
 
     // ── Extended profile fields ───────────────────────────────
@@ -75,6 +77,9 @@ public class ProfileController {
         }
         firstNameField.setText(currentUser.getFirstName());
         lastNameField.setText(currentUser.getLastName());
+        if (phoneField != null) {
+            phoneField.setText(currentUser.getPhoneNumber() != null ? currentUser.getPhoneNumber() : "");
+        }
         emailField.setText(currentUser.getEmail());
         updateProfileImage();
     }
@@ -150,6 +155,9 @@ public class ProfileController {
         // 1. Save basic identity to user table (unchanged)
         currentUser.setFirstName(firstNameField.getText().trim());
         currentUser.setLastName(lastNameField.getText().trim());
+        if (phoneField != null) {
+            currentUser.setPhoneNumber(phoneField.getText().trim());
+        }
 
         // 2. Save extended profile fields to the profile table
         String bio = bioField != null ? bioField.getText().trim() : null;

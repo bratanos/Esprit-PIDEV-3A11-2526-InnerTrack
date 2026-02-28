@@ -1,8 +1,8 @@
 /* sidebar.css */
 .sidebar {
-    -fx-background-color: linear-gradient(to bottom, #764ba2, #667eea);
-    -fx-padding: 20;
-    -fx-spacing: 15;
+    -fx-background-color: linear-gradient(to bottom, #8b5cf6, #6d28d9);
+    -fx-padding: 25 10;
+    -fx-spacing: 12;
 }
 
 .sidebar .sidebar-logo {
@@ -35,11 +35,12 @@
 .sidebar-button {
     -fx-background-color: transparent;
     -fx-text-fill: white;
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
     -fx-alignment: center-left;
-    -fx-padding: 12 20;
+    -fx-padding: 10 15;
     -fx-background-radius: 8;
     -fx-cursor: hand;
+    -fx-graphic-text-gap: 12;
 }
 
 .sidebar-button .ikonli-font-icon {

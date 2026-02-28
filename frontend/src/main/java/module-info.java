@@ -8,6 +8,7 @@ module com.innertrack {
     requires com.google.gson;
     requires atlantafx.base;
     requires jakarta.mail;
+    requires twilio;
 
     requires com.sothawo.mapjfx;
     requires io.redlink.geocoding.osm;
@@ -35,7 +36,8 @@ module com.innertrack {
     opens com.innertrack.controller.user to javafx.fxml;
     opens com.innertrack.controller.profile to javafx.fxml;
     opens com.innertrack.controller.settings to javafx.fxml;
-    opens com.innertrack.controller.chat to javafx.fxml;       // ← NEW: MessagingChatController
+    opens com.innertrack.controller.chat to javafx.fxml; // ← NEW: MessagingChatController
+    opens com.innertrack.controller to javafx.fxml; // ← Salma: test controllers
     opens com.innertrack.util to javafx.fxml;
 
     // Auth resources
@@ -46,7 +48,7 @@ module com.innertrack {
     exports com.innertrack.service;
     exports com.innertrack.security;
     exports com.innertrack.session;
-    exports com.innertrack.controller.chat;                    // ← NEW
+    exports com.innertrack.controller.chat; // ← NEW
     exports com.innertrack.controller.admin;
     exports com.innertrack.controller.therapist;
     exports com.innertrack.controller.user;
@@ -54,6 +56,8 @@ module com.innertrack {
     exports com.innertrack.util;
 
     opens com.innertrack.app to javafx.fxml;
+
     exports com.innertrack.controller.auth;
+
     opens com.innertrack.controller.auth to javafx.fxml;
 }

@@ -1,0 +1,94 @@
+/* ============================================
+   CSS pour les Recommandations IA (ML)
+   Style premium, vibrant et aéré
+   ============================================ */
+@import "../base/tokens.css";
+
+.root {
+    -fx-background-color: -it-bg;
+}
+
+.header-banner {
+    -fx-background-color: linear-gradient(to right, #8b5cf6 0%, #7c3aed 100%);
+    -fx-padding: 30px;
+    -fx-background-radius: 0 0 20px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(124, 58, 237, 0.3), 15, 0, 0, 5);
+}
+
+.cluster-badge {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: white;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 20px;
+    -fx-font-weight: bold;
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-border-radius: 20px;
+}
+
+.rec-card {
+    -fx-background-color: -it-card;
+    -fx-background-radius: 15px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
+    -fx-border-color: -it-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+}
+
+.rec-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.15), 15, 0, 0, 4);
+    -fx-translate-y: -2px;
+}
+
+.rec-section-title {
+    -fx-text-fill: -it-text;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.rec-item-box {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 10px;
+    -fx-padding: 12px 15px;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 0 0 4px;
+    -fx-border-radius: 0 10px 10px 0;
+}
+
+.rec-icon {
+    -fx-font-size: 24px;
+}
+
+.rec-label {
+    -fx-text-fill: #4a5568;
+    -fx-font-weight: bold;
+}
+
+.rec-value {
+    -fx-text-fill: -it-text;
+}
+
+.action-button {
+    -fx-background-color: linear-gradient(to right, #8b5cf6, #7c3aed);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 35px;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 10, 0, 0, 3);
+}
+
+.action-button:hover {
+    -fx-background-color: linear-gradient(to right, #5a67d8, #6b46c1);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}

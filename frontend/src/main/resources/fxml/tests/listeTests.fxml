@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.innertrack.controller.ListeTestsController"
+      stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css,
+                   @../../styles/base/typography.css, @../../styles/base/controls.css,
+                   @../../styles/views/salma-liste-tests.css"
+      styleClass="test-view"
+      spacing="0" maxHeight="Infinity" maxWidth="Infinity">
+
+    <!-- Left panel: Tests list -->
+    <VBox prefWidth="450" minWidth="400" styleClass="tests-panel"
+          style="-fx-background-color: -it-bg; -fx-border-color: -it-border; -fx-border-width: 0 1 0 0;">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <spacing>15</spacing>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button text="← Retour" onAction="#retournerDashboard" styleClass="btn-secondary"/>
+            <Label text="🧪 Tests Psychologiques"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: -it-text;"/>
+        </HBox>
+
+        <!-- Search -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <TextField fx:id="searchField" promptText="🔍 Rechercher un test..."
+                       HBox.hgrow="ALWAYS" onAction="#rechercherTest"/>
+            <Button text="🔍" onAction="#rechercherTest" styleClass="btn-secondary"/>
+        </HBox>
+
+        <!-- Stats -->
+        <HBox spacing="20" alignment="CENTER_LEFT"
+              style="-fx-background-color: -it-card; -fx-background-radius: 8; -fx-padding: 10;">
+            <VBox alignment="CENTER" spacing="2">
+                <Label fx:id="totalTestsLabel" text="0"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: -it-primary;"/>
+                <Label text="Tests" style="-fx-font-size: 11px; -fx-text-fill: -it-text-muted;"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="2">
+                <Label fx:id="totalQuestionsLabel" text="0"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: -it-success;"/>
+                <Label text="Questions" style="-fx-font-size: 11px; -fx-text-fill: -it-text-muted;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Tests list (scrollable) -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background-color: transparent;">
+            <VBox fx:id="testsListContainer" spacing="10"/>
+        </ScrollPane>
+
+        <!-- Action buttons -->
+        <HBox spacing="10">
+            <Button fx:id="btnAjouterTest" text="+ Ajouter" onAction="#ouvrirAjoutTest" styleClass="btn-primary"/>
+            <Button text="🔄 Actualiser" onAction="#actualiserListe" styleClass="btn-secondary"/>
+            <Button text="📊 Stats" onAction="#ouvrirStatistiques" styleClass="btn-secondary"/>
+        </HBox>
+    </VBox>
+
+    <!-- Right panel: Test details -->
+    <VBox HBox.hgrow="ALWAYS" style="-fx-background-color: -it-card;">
+        <padding><Insets top="20" right="25" bottom="20" left="25"/></padding>
+        <spacing>15</spacing>
+
+        <!-- Empty state -->
+        <VBox fx:id="emptyStateSection" alignment="CENTER" spacing="15"
+              VBox.vgrow="ALWAYS">
+            <Label text="📋" style="-fx-font-size: 60px;"/>
+            <Label text="Sélectionnez un test" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -it-text-muted;"/>
+            <Label text="Choisissez un test dans la liste pour voir les détails et passer le test."
+                   style="-fx-text-fill: -it-text-muted;" wrapText="true"/>
+        </VBox>
+
+        <!-- Details section (hidden by default) -->
+        <VBox fx:id="detailsSection" spacing="15" visible="false" managed="false"
+              VBox.vgrow="ALWAYS">
+
+            <!-- Test info header -->
+            <VBox spacing="8" style="-fx-background-color: -it-bg; -fx-background-radius: 12; -fx-padding: 20;">
+                <Label fx:id="testTitreLabel" text=""
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: -it-text;"/>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label fx:id="testTypeLabel" text=""
+                           style="-fx-background-color: rgba(124, 58, 237, 0.1); -fx-text-fill: -it-primary; -fx-padding: 4 12; -fx-background-radius: 12; -fx-font-weight: bold;"/>
+                    <Label fx:id="testNbQuestionsLabel" text=""
+                           style="-fx-text-fill: -it-text-muted;"/>
+                </HBox>
+                <Label fx:id="testDescriptionLabel" text="" wrapText="true"
+                       style="-fx-text-fill: -it-text; -fx-font-size: 13px;"/>
+
+                <!-- CRUD buttons -->
+                <HBox fx:id="crudButtonsBox" spacing="10">
+                    <Button text="✏️ Modifier" onAction="#modifierTest" styleClass="btn-secondary"/>
+                    <Button text="🗑️ Supprimer" onAction="#supprimerTest" styleClass="btn-danger-text"/>
+                    <Button text="+ Question" onAction="#ajouterNouvelleQuestion" styleClass="btn-primary"/>
+                </HBox>
+            </VBox>
+
+            <!-- Questions list -->
+            <Label text="Questions du test"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -it-text;"/>
+
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        styleClass="questions-scroll"
+                        style="-fx-background-color: transparent;">
+                <VBox fx:id="questionsListContainer" spacing="12" style="-fx-padding: 5;"/>
+            </ScrollPane>
+        </VBox>
+
+        <!-- Status bar -->
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: -it-bg; -fx-padding: 8 15; -fx-background-radius: 8;">
+            <Label fx:id="statusLabel" text="Prêt"
+                   style="-fx-text-fill: -it-text-muted; -fx-font-size: 12px;"/>
+        </HBox>
+    </VBox>
+</HBox>

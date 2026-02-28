@@ -118,6 +118,11 @@ public class TherapistDashboardController {
     }
 
     @FXML
+    private void handleGoToTests() {
+        ViewManager.loadView("tests/listeTests");
+    }
+
+    @FXML
     private void handleLogout() {
         SessionManager.getInstance().cleanSession();
         ViewManager.loadView("login");

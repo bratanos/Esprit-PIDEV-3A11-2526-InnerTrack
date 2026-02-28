@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.innertrack.controller.AjouterTestController"
+            fitToWidth="true" fitToHeight="true"
+            stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css,
+                         @../../styles/base/typography.css, @../../styles/base/controls.css"
+            styleClass="test-view">
+
+    <VBox spacing="20" style="-fx-padding: 30;">
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Button text="← Retour" onAction="#retournerListeTests"
+                    styleClass="btn-secondary"/>
+            <Label text="Ajouter un Test Psychologique"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: -it-text;"/>
+        </HBox>
+
+        <!-- Test info form -->
+        <VBox spacing="15" styleClass="form-card" style="-fx-background-color: -it-card; -fx-background-radius: 12; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);">
+            <Label text="📝 Informations du test" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Separator/>
+
+            <Label text="Titre du test"/>
+            <TextField fx:id="titreField" promptText="Ex: Test d'anxiété de Beck"/>
+
+            <Label text="Type de test"/>
+            <ComboBox fx:id="typeComboBox" maxWidth="Infinity"/>
+
+            <Label text="Description"/>
+            <TextArea fx:id="descriptionArea" promptText="Description détaillée du test..."
+                      prefRowCount="4" wrapText="true"/>
+
+            <Label text="Nombre de questions prévu"/>
+            <Spinner fx:id="nombreQuestionsSpinner" prefWidth="150"/>
+        </VBox>
+
+        <!-- Questions section -->
+        <VBox spacing="15" styleClass="form-card" style="-fx-background-color: -it-card; -fx-background-radius: 12; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="❓ Questions" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="questionsCountLabel" text="0 question(s) ajoutée(s)"
+                       style="-fx-text-fill: -it-text-muted;"/>
+                <Button fx:id="ajouterQuestionBtn" text="+ Ajouter une question"
+                        onAction="#ajouterQuestion" styleClass="btn-primary"/>
+            </HBox>
+            <Separator/>
+
+            <!-- Question input box (hidden by default) -->
+            <VBox fx:id="ajoutQuestionBox" spacing="10" visible="false" managed="false"
+                  style="-fx-background-color: -it-bg; -fx-padding: 15; -fx-background-radius: 8;">
+                <Label text="Contenu de la question" style="-fx-font-weight: bold;"/>
+                <TextArea fx:id="questionContentArea" promptText="Saisissez la question..."
+                          prefRowCount="3" wrapText="true"/>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button text="Annuler" onAction="#annulerQuestion" styleClass="btn-secondary"/>
+                    <Button text="✓ Valider" onAction="#validerQuestion" styleClass="btn-primary"/>
+                </HBox>
+            </VBox>
+
+            <!-- Questions list -->
+            <Label fx:id="noQuestionsLabel" text="Aucune question ajoutée pour le moment."
+                   style="-fx-text-fill: -it-text-muted; -fx-font-style: italic;"/>
+            <VBox fx:id="questionsListBox" spacing="10"/>
+        </VBox>
+
+        <!-- Action buttons -->
+        <HBox spacing="15" alignment="CENTER_RIGHT">
+            <Button text="Annuler" onAction="#annulerTest" styleClass="btn-secondary"/>
+            <Button text="✅ Enregistrer le test" onAction="#enregistrerTest" styleClass="btn-primary"
+                    style="-fx-font-size: 14px; -fx-padding: 12 30;"/>
+        </HBox>
+
+    </VBox>
+</ScrollPane>

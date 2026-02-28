@@ -107,6 +107,12 @@ public class UserDao implements ICrudService<User> {
             // Column might not exist in the current database schema
         }
 
+        try {
+            user.setPhoneNumber(rs.getString("phone_number"));
+        } catch (SQLException e) {
+            // Column might not exist
+        }
+
         String rolesJson = rs.getString("roles");
         List<String> roles;
         try {
@@ -177,7 +183,7 @@ public class UserDao implements ICrudService<User> {
     @Override
     public boolean update(User user) throws SQLException {
         // Generic update for all fields except password (handled separately usually)
-        String sql = "UPDATE user SET email = ?, is_verified = ?, status = ?, roles = ?, first_name = ?, last_name = ?, profile_picture = ? WHERE id = ?";
+        String sql = "UPDATE user SET email = ?, is_verified = ?, status = ?, roles = ?, first_name = ?, last_name = ?, profile_picture = ?, phone_number = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, user.getEmail());
             stmt.setBoolean(2, user.isVerified());
@@ -186,7 +192,8 @@ public class UserDao implements ICrudService<User> {
             stmt.setString(5, user.getFirstName());
             stmt.setString(6, user.getLastName());
             stmt.setString(7, user.getProfilePicture());
-            stmt.setInt(8, user.getId());
+            stmt.setString(8, user.getPhoneNumber());
+            stmt.setInt(9, user.getId());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("update error : " + e.getMessage());

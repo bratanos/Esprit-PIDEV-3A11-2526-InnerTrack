@@ -11,7 +11,7 @@
 <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" 
             xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.innertrack.controller.profile.ProfileController"
-            stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css, @../../styles/base/typography.css, @../../styles/base/controls.css, @../../styles/themes/theme-light.css, @../../styles/views/settings.css"
+            stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css, @../../styles/base/typography.css, @../../styles/base/controls.css, @../../styles/views/settings.css"
             styleClass="settings-view">
     
     <VBox spacing="30" styleClass="dashboard-container">
@@ -21,14 +21,14 @@
 
         <!-- Header -->
         <HBox spacing="20" alignment="CENTER_LEFT">
-            <Button onAction="#handleBack" style="-fx-background-color: #f1f1f1; -fx-background-radius: 50; -fx-padding: 8; -fx-cursor: hand;">
+            <Button onAction="#handleBack" styleClass="btn-back">
                 <graphic>
-                    <FontIcon iconLiteral="fas-arrow-left" iconSize="20" iconColor="#2c3e50" />
+                    <FontIcon iconLiteral="fas-arrow-left" iconSize="20" styleClass="icon-back" />
                 </graphic>
             </Button>
             <VBox>
-                <Label text="%profile.settings.title" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
-                <Label text="%profile.settings.subtitle" style="-fx-text-fill: #7f8c8d;" />
+                <Label text="%profile.settings.title" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: -it-text;" />
+                <Label text="%profile.settings.subtitle" style="-fx-text-fill: -it-text-muted;" />
             </VBox>
         </HBox>
 
@@ -52,7 +52,7 @@
                 
                 <VBox alignment="CENTER" spacing="5">
                     <Label fx:id="nameLabel" text="%profile.settings.username" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
-                    <Label fx:id="roleLabel" text="%profile.settings.role" style="-fx-text-fill: #1d7bed; -fx-font-weight: bold;" />
+                    <Label fx:id="roleLabel" text="%profile.settings.role" style="-fx-text-fill: -it-primary; -fx-font-weight: bold;" />
                 </VBox>
                 
                 <Separator />
@@ -78,14 +78,17 @@
                     <Label text="%profile.settings.lastName" GridPane.rowIndex="1" GridPane.columnIndex="0" />
                     <TextField fx:id="lastNameField" promptText="%profile.settings.lastNamePrompt" styleClass="input-field" GridPane.rowIndex="1" GridPane.columnIndex="1" />
                     
-                    <Label text="%profile.settings.email" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-                    <TextField fx:id="emailField" editable="false" style="-fx-opacity: 0.7;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                    <Label text="%profile.settings.phone" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                    <TextField fx:id="phoneField" promptText="%profile.settings.phonePrompt" styleClass="input-field" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                    
+                    <Label text="%profile.settings.email" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                    <TextField fx:id="emailField" editable="false" style="-fx-opacity: 0.7; -fx-background-color: -it-bg;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
                 </GridPane>
                 
                 <HBox spacing="15" alignment="CENTER_RIGHT">
-                    <Button text="%profile.settings.cancelBtn" onAction="#handleBack" style="-fx-background-color: #f1f1f1; -fx-text-fill: #7f8c8d; -fx-padding: 10 25; -fx-background-radius: 5;" />
-                    <Button text="%profile.settings.saveBtn" onAction="#handleUpdateProfile" 
-                            style="-fx-background-color: #1d7bed; -fx-text-fill: white; -fx-padding: 10 25; -fx-background-radius: 5; -fx-font-weight: bold;" />
+                    <Button text="%profile.settings.cancelBtn" onAction="#handleBack" styleClass="btn-secondary" style="-fx-padding: 10 25;" />
+                    <Button text="%profile.settings.saveBtn" onAction="#handleUpdateProfile" styleClass="btn-primary"
+                            style="-fx-padding: 10 25; -fx-font-weight: bold;" />
                 </HBox>
 
             </VBox>

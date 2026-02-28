@@ -49,3 +49,46 @@
     -fx-border-width: 1;
     -fx-border-radius: 8;
 }
+
+/* ─── Back Button ─── */
+.btn-back {
+    -fx-background-color: #f1f1f1;
+    -fx-background-radius: 50;
+    -fx-padding: 8;
+    -fx-cursor: hand;
+}
+
+.btn-back:hover {
+    -fx-background-color: #e2e8f0;
+}
+
+.icon-back {
+    -fx-icon-color: #2c3e50;
+}
+
+/* ─── Specialized Buttons ─── */
+.btn-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1d7bed;
+    -fx-cursor: hand;
+}
+
+.btn-link:hover {
+    -fx-text-fill: #1561c0;
+    -fx-underline: true;
+}
+
+.btn-warning-text {
+    -fx-text-fill: #e67e22 !important;
+}
+
+.btn-danger-text {
+    -fx-text-fill: #e74c3c !important;
+}
+
+/* ─── Fixes for Settings Inputs ─── */
+.input-field {
+    -fx-background-color: -it-bg;
+    -fx-text-fill: -it-text;
+    -fx-border-color: -it-border;
+}

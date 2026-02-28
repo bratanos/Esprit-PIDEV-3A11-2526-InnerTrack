@@ -19,6 +19,7 @@ public class User {
 
     private LocalDateTime createdAt;
     private LocalDateTime lastLogin;
+    private String phoneNumber;
 
     public int getId() {
         return id;
@@ -106,6 +107,14 @@ public class User {
 
     public void setLastLogin(LocalDateTime lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getFullName() {
