@@ -4,8 +4,22 @@
 .root.light-theme,
 .light-theme,
 .root {
+    /* Main Background */
     -fx-background-color: linear-gradient(to bottom right, #f3e7ff 0%, #e0f2fe 100%);
+
+    /* Design Tokens (Light Mode Defaults) */
     -it-bg: transparent;
+    /* Overridden for main container */
+    -it-card: #ffffff;
+    -it-text: #2d3748;
+    -it-text-muted: #718096;
+    -it-primary: #8b5cf6;
+    -it-primary-hover: #7c3aed;
+    -it-primary-active: #6d28d9;
+    -it-secondary: #4299e1;
+    -it-border: #e2e8f0;
+    -it-success: #48bb78;
+    -it-error: #fc8181;
 }
 
 .dashboard-container,

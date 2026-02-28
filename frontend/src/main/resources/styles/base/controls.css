@@ -1,11 +1,12 @@
 /* controls.css - Reusable Global Components */
-@import "tokens.css";
+/* @import "tokens.css"; */
+/* Rely on global style loading */
 
 /* Buttons */
 .button,
 .btn {
     -fx-font-size: 14;
-    -fx-text-fill: -it-text;
+    -fx-text-fill: derive(-it-text, 0%);
     -fx-cursor: hand;
     -fx-background-radius: 8;
 }
@@ -13,28 +14,33 @@
 .btn-primary,
 .button1,
 .button2 {
-    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+    -fx-background-color: linear-gradient(to right, #a78bfa, #8b5cf6);
     -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 25;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 92, 246, 0.3), 10, 0, 0, 4);
 }
 
 .btn-primary:hover,
 .button1:hover,
 .button2:hover {
-    -fx-background-color: linear-gradient(to right, #764ba2, #667eea);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
+    -fx-background-color: linear-gradient(to right, #8b5cf6, #7c3aed);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
 }
 
 .btn-primary:pressed,
 .button1:pressed,
 .button2:pressed {
-    -fx-background-color: #5a67d8;
+    -fx-scale-x: 0.96;
+    -fx-scale-y: 0.96;
 }
 
 .btn-secondary,
 .button3 {
-    -fx-background-color: -it-border;
-    -fx-text-fill: -it-text;
+    -fx-background-color: derive(-it-border, 0%);
+    -fx-text-fill: derive(-it-text, 0%);
 }
 
 .btn-secondary:hover,
@@ -60,17 +66,20 @@
 /* Cards */
 .dashboard-card,
 .card {
-    -fx-background-color: -it-card;
+    -fx-background-color: derive(-it-card, 0%);
     -fx-background-radius: 12;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 15, 0, 0, 5);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 15, 0, 0, 5);
+    -fx-border-color: derive(-it-border, 0%);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12;
 }
 
 /* Inputs */
 .text-field,
 .password-field {
-    -fx-background-color: -it-bg;
-    -fx-text-fill: -it-text;
-    -fx-border-color: -it-border;
+    -fx-background-color: derive(-it-bg, 0%);
+    -fx-text-fill: derive(-it-text, 0%);
+    -fx-border-color: derive(-it-border, 0%);
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-padding: 8 15 8 15;
@@ -78,8 +87,8 @@
 
 .text-field:focused,
 .password-field:focused {
-    -fx-border-color: -it-primary;
-    -fx-background-color: -it-card;
+    -fx-border-color: derive(-it-primary, 0%);
+    -fx-background-color: derive(-it-card, 0%);
     -fx-effect: dropshadow(three-pass-box, rgba(124, 58, 237, 0.2), 5, 0, 0, 0);
 }
 
@@ -150,6 +159,25 @@
 
 .table-view .table-cell {
     -fx-text-fill: -it-text;
+}
+
+/* Links */
+.hyperlink,
+.text-link {
+    -fx-text-fill: -it-secondary;
+    -fx-underline: false;
+    -fx-border-color: transparent;
+}
+
+.hyperlink:hover,
+.text-link:hover {
+    -fx-text-fill: derive(-it-secondary, -20%);
+    -fx-underline: true;
+}
+
+.hyperlink:visited,
+.text-link:visited {
+    -fx-text-fill: -it-secondary;
 }
 
 /* ScrollPane */

@@ -70,7 +70,7 @@
                     <graphic><FontIcon iconLiteral="fas-comments" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
 
-                <Button text="🧪 Tests Psy" onAction="#handleGoToTests"
+                <Button text="🧪 Psy Tests" onAction="#handleGoToTests"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-brain" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>

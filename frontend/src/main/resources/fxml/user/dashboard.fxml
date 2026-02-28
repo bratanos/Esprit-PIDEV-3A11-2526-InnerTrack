@@ -53,7 +53,7 @@
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-comments" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
-                <Button text="🧪 Tests Psy" onAction="#handleGoToTests"
+                <Button text="🧪 Psy Tests" onAction="#handleGoToTests"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-brain" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
@@ -87,21 +87,20 @@
                 <HBox spacing="20" alignment="CENTER_LEFT">
                     <VBox>
                         <Label fx:id="welcomeLabel"
-                               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+                               styleClass="dashboard-header-label"
                                text="%dashboard.user.welcome"/>
                         <Label text="%dashboard.user.title"
-                               style="-fx-text-fill: #7f8c8d;"/>
+                               styleClass="dashboard-subtitle-label"/>
                     </VBox>
                     <Region HBox.hgrow="ALWAYS"/>
                     <!-- Accepted request notification -->
                     <HBox fx:id="acceptedAlert" spacing="8" alignment="CENTER"
                           visible="false" managed="false"
-                          style="-fx-background-color: #D4EDDA; -fx-background-radius: 10;
-                                 -fx-padding: 8 16; -fx-cursor: hand;"
+                          styleClass="alert-success-punchy"
                           onMouseClicked="#handleGoToMessages">
-                        <FontIcon iconLiteral="fas-check-circle" iconSize="16" iconColor="#155724"/>
+                        <FontIcon iconLiteral="fas-check-circle" iconSize="16" iconColor="white"/>
                         <Label fx:id="acceptedAlertLabel" text=""
-                               style="-fx-text-fill: #155724; -fx-font-size: 13px;"/>
+                               style="-fx-text-fill: white; -fx-font-weight: bold;"/>
                     </HBox>
                 </HBox>
 
@@ -133,32 +132,28 @@
                 </HBox>
 
                 <!-- Daily Inspiration -->
-                <VBox styleClass="dashboard-card" spacing="15"
-                      style="-fx-background-color: linear-gradient(to right, #1d7bed, #4CA8F5); -fx-padding: 30;">
-                    <Label text="%dashboard.user.inspiration"
-                           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-                    <Label text="%dashboard.user.quote"
-                           style="-fx-font-style: italic; -fx-font-size: 16px; -fx-text-fill: white;"
-                           wrapText="true"/>
-                    <Label text="%dashboard.user.quoteAuthor" style="-fx-text-fill: rgba(255,255,255,0.8);"/>
+                <VBox styleClass="dashboard-quote-card" spacing="15">
+                    <Label text="%dashboard.user.inspiration" styleClass="quote-header"/>
+                    <Label fx:id="quoteTextLabel" text="%dashboard.user.quote" styleClass="quote-text" wrapText="true"/>
+                    <Label fx:id="quoteAuthorLabel" text="%dashboard.user.quoteAuthor" styleClass="quote-author"/>
                 </VBox>
 
-                <!-- Quick Actions -->
+                <!-- Quick Actions & Summaries -->
                 <HBox spacing="20">
                     <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="10">
                         <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-                        <Label text="%dashboard.user.tasks" style="-fx-font-weight: bold;"/>
-                        <CheckBox text="Méditation (10 min)" style="-fx-padding: 5 0;"/>
-                        <CheckBox text="Écrire dans le journal" selected="true" style="-fx-padding: 5 0;"/>
-                        <CheckBox text="Boire 2L d'eau" style="-fx-padding: 5 0;"/>
+                        <Label text="My Latest Activities" style="-fx-font-weight: bold;"/>
+                        
+                        <Label fx:id="derniereEntreeLabel" text="Latest journal entry: None" style="-fx-text-fill: #4a5568; -fx-padding: 5 0;"/>
+                        <Label fx:id="nombreHabitudesLabel" text="Active habits: 0" style="-fx-text-fill: #4a5568; -fx-padding: 5 0;"/>
+                        <Label fx:id="moyenneHumeurLabel" text="Average Mood (last 10): —" style="-fx-text-fill: #4a5568; -fx-padding: 5 0;"/>
+                        
                     </VBox>
-                    <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="10" alignment="CENTER">
-                        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-                        <Label text="%dashboard.user.feelings" style="-fx-font-weight: bold;"/>
-                        <HBox spacing="15" alignment="CENTER">
-                            <Button text="😊" style="-fx-font-size: 20; -fx-background-color: #f1f1f1;"/>
-                            <Button text="😐" style="-fx-font-size: 20; -fx-background-color: #f1f1f1;"/>
-                            <Button text="😔" style="-fx-font-size: 20; -fx-background-color: #f1f1f1;"/>
+                    <VBox styleClass="dashboard-card, action-card" HBox.hgrow="ALWAYS" spacing="15" alignment="CENTER">
+                        <Label text="Quick Actions" styleClass="section-title"/>
+                        <HBox spacing="20" alignment="CENTER">
+                            <Button text="📓 Journal" styleClass="btn-primary" onAction="#handleGoToJournal"/>
+                            <Button text="🌿 Habit" styleClass="btn-primary" onAction="#handleGoToHabits"/>
                         </HBox>
                     </VBox>
                 </HBox>

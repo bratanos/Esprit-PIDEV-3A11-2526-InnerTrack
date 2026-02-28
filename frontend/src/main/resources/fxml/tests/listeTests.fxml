@@ -20,14 +20,14 @@
         <spacing>15</spacing>
 
         <HBox spacing="10" alignment="CENTER_LEFT">
-            <Button text="← Retour" onAction="#retournerDashboard" styleClass="btn-secondary"/>
-            <Label text="🧪 Tests Psychologiques"
+            <Button text="← Back" onAction="#retournerDashboard" styleClass="btn-secondary"/>
+            <Label text="🧪 Psychological Tests"
                    style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: -it-text;"/>
         </HBox>
 
         <!-- Search -->
         <HBox spacing="10" alignment="CENTER_LEFT">
-            <TextField fx:id="searchField" promptText="🔍 Rechercher un test..."
+            <TextField fx:id="searchField" promptText="🔍 Search for a test..."
                        HBox.hgrow="ALWAYS" onAction="#rechercherTest"/>
             <Button text="🔍" onAction="#rechercherTest" styleClass="btn-secondary"/>
         </HBox>
@@ -55,8 +55,8 @@
 
         <!-- Action buttons -->
         <HBox spacing="10">
-            <Button fx:id="btnAjouterTest" text="+ Ajouter" onAction="#ouvrirAjoutTest" styleClass="btn-primary"/>
-            <Button text="🔄 Actualiser" onAction="#actualiserListe" styleClass="btn-secondary"/>
+            <Button fx:id="btnAjouterTest" text="+ Add" onAction="#ouvrirAjoutTest" styleClass="btn-primary"/>
+            <Button text="🔄 Refresh" onAction="#actualiserListe" styleClass="btn-secondary"/>
             <Button text="📊 Stats" onAction="#ouvrirStatistiques" styleClass="btn-secondary"/>
         </HBox>
     </VBox>
@@ -70,8 +70,8 @@
         <VBox fx:id="emptyStateSection" alignment="CENTER" spacing="15"
               VBox.vgrow="ALWAYS">
             <Label text="📋" style="-fx-font-size: 60px;"/>
-            <Label text="Sélectionnez un test" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -it-text-muted;"/>
-            <Label text="Choisissez un test dans la liste pour voir les détails et passer le test."
+            <Label text="Select a test" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -it-text-muted;"/>
+            <Label text="Choose a test from the list to see details and take the test."
                    style="-fx-text-fill: -it-text-muted;" wrapText="true"/>
         </VBox>
 
@@ -94,14 +94,14 @@
 
                 <!-- CRUD buttons -->
                 <HBox fx:id="crudButtonsBox" spacing="10">
-                    <Button text="✏️ Modifier" onAction="#modifierTest" styleClass="btn-secondary"/>
-                    <Button text="🗑️ Supprimer" onAction="#supprimerTest" styleClass="btn-danger-text"/>
+                    <Button text="✏️ Edit" onAction="#modifierTest" styleClass="btn-secondary"/>
+                    <Button text="🗑️ Delete" onAction="#supprimerTest" styleClass="btn-danger-text"/>
                     <Button text="+ Question" onAction="#ajouterNouvelleQuestion" styleClass="btn-primary"/>
                 </HBox>
             </VBox>
 
             <!-- Questions list -->
-            <Label text="Questions du test"
+            <Label text="Test Questions"
                    style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -it-text;"/>
 
             <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
@@ -113,7 +113,7 @@
 
         <!-- Status bar -->
         <HBox alignment="CENTER_LEFT" style="-fx-background-color: -it-bg; -fx-padding: 8 15; -fx-background-radius: 8;">
-            <Label fx:id="statusLabel" text="Prêt"
+            <Label fx:id="statusLabel" text="Ready"
                    style="-fx-text-fill: -it-text-muted; -fx-font-size: 12px;"/>
         </HBox>
     </VBox>

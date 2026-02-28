@@ -382,11 +382,28 @@ public class MessagingDao {
     }
 
     public void markMessagesRead(int conversationId, int userId) {
-        String sql = "UPDATE message SET is_read=1 WHERE conversation_id=? AND sender_id != ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, conversationId);
-            stmt.setInt(2, userId);
-            stmt.executeUpdate();
+        String sqlMsg = "UPDATE message SET is_read=1 WHERE conversation_id=? AND sender_id != ?";
+        String sqlNotif = "UPDATE notification SET is_read=1 WHERE user_id=? AND reference_id=? AND type='MESSAGE'";
+        try {
+            connection.setAutoCommit(false);
+            try (PreparedStatement stmtMsg = connection.prepareStatement(sqlMsg);
+                    PreparedStatement stmtNotif = connection.prepareStatement(sqlNotif)) {
+
+                stmtMsg.setInt(1, conversationId);
+                stmtMsg.setInt(2, userId);
+                stmtMsg.executeUpdate();
+
+                stmtNotif.setInt(1, userId);
+                stmtNotif.setInt(2, conversationId);
+                stmtNotif.executeUpdate();
+
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+            } finally {
+                connection.setAutoCommit(true);
+            }
         } catch (SQLException e) {
             System.err.println("MessagingDao.markMessagesRead: " + e.getMessage());
         }
@@ -448,6 +465,16 @@ public class MessagingDao {
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("MessagingDao.markNotificationRead: " + e.getMessage());
+        }
+    }
+
+    public void markAllNotificationsRead(int userId) {
+        String sql = "UPDATE notification SET is_read=1 WHERE user_id=? AND is_read=0";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("MessagingDao.markAllNotificationsRead: " + e.getMessage());
         }
     }
 

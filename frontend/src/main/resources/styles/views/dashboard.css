@@ -1,59 +1,71 @@
-/* dashboard.css */
-.dashboard-view {
-    /* Namespace for dashboard specific styles */
+/* dashboard.css - Punchy View Specifics */
+
+.dashboard-header-label {
+    -fx-font-size: 28;
+    -fx-font-weight: bold;
+    -fx-text-fill: -it-text;
 }
 
+.dashboard-subtitle-label {
+    -fx-font-size: 14;
+    -fx-text-fill: -it-text-muted;
+}
+
+/* Quote Card with Punchy Gradient */
+.dashboard-quote-card {
+    -fx-background-color: linear-gradient(to right, -it-primary, -it-secondary);
+    -fx-background-radius: 20;
+    -fx-padding: 30;
+    -fx-effect: dropshadow(three-pass-box, rgba(139, 92, 246, 0.3), 20, 0, 0, 10);
+}
+
+.quote-header {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.quote-text {
+    -fx-font-size: 16;
+    -fx-font-style: italic;
+    -fx-text-fill: white;
+}
+
+.quote-author {
+    -fx-font-size: 13;
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+}
+
+/* Stat Cards Overrides */
 .dashboard-view .stat-card {
-    -fx-padding: 20;
-    -fx-spacing: 10;
+    -fx-alignment: center;
+    -fx-spacing: 12;
 }
 
 .dashboard-view .stat-value {
-    -fx-font-size: 28;
+    -fx-font-size: 32;
     -fx-font-weight: bold;
-    -fx-text-fill: #667eea;
+    -fx-text-fill: -it-primary;
 }
 
-.dashboard-view .stat-label {
-    -fx-font-size: 14;
-    -fx-text-fill: #718096;
+/* Punchy Alerts */
+.alert-success-punchy {
+    -fx-background-color: -it-success;
+    -fx-background-radius: 12;
+    -fx-padding: 10 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(16, 185, 129, 0.4), 10, 0, 0, 4);
+    -fx-cursor: hand;
 }
 
-.dashboard-view .content-header {
-    -fx-padding: 0 0 20 0;
+/* Quick Action Styles */
+.action-card {
+    -fx-border-color: -it-primary;
+    -fx-border-width: 2;
+    -fx-border-radius: 15;
 }
 
-/* Styled Bar Chart in Dashboard */
-.dashboard-view .styled-bar-chart {
-    -fx-background-color: #f7fafc;
-    -fx-border-radius: 12;
-    -fx-padding: 10;
-}
-
-.dashboard-view .styled-bar-chart .category-axis,
-.dashboard-view .styled-bar-chart .number-axis {
-    -fx-stroke: #2d3748;
-    -fx-tick-mark-visible: false;
-    -fx-tick-label-fill: #2d3748;
-    -fx-font-size: 14;
-}
-
-.dashboard-view .styled-bar-chart .axis-label {
+.section-title {
     -fx-font-size: 18;
     -fx-font-weight: bold;
-    -fx-fill: #2d3748;
-}
-
-.dashboard-view .styled-bar-chart .chart-title {
-    -fx-font-size: 20;
-    -fx-font-weight: bold;
-    -fx-fill: #667eea;
-}
-
-.dashboard-view .truck-series .chart-bar {
-    -fx-bar-fill: #667eea;
-}
-
-.dashboard-view .chart-pie-label {
-    -fx-fill: white;
+    -fx-text-fill: -it-text;
 }

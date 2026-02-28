@@ -24,8 +24,8 @@
 
             <VBox styleClass="profile-section">
                 <javafx.scene.shape.Circle fx:id="profileCircle" radius="35" styleClass="profile-pic"/>
-                <Label fx:id="userFullNameLabel" text="Admin" styleClass="profile-name"/>
-                <Label text="Administrateur"
+                <Label text="Admin" styleClass="profile-name"/>
+                <Label text="Administrator"
                        style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
             </VBox>
 
@@ -45,7 +45,7 @@
 
                 <!-- Reports button with pending count badge -->
                 <StackPane maxWidth="Infinity">
-                    <Button fx:id="btnReports" text="Signalements"
+                    <Button fx:id="btnReports" text="Reports"
                             styleClass="sidebar-button" maxWidth="Infinity"
                             onAction="#showReports" StackPane.alignment="CENTER_LEFT">
                         <graphic><FontIcon iconLiteral="fas-flag" iconSize="16" iconColor="#ffffff"/></graphic>
@@ -141,8 +141,8 @@
                                style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
                         <BarChart fx:id="registrationsChart" prefHeight="250"
                                   style="-fx-background-color: transparent;">
-                            <xAxis><CategoryAxis label="Mois"/></xAxis>
-                            <yAxis><NumberAxis label="Inscriptions"/></yAxis>
+                            <xAxis><CategoryAxis label="Month"/></xAxis>
+                            <yAxis><NumberAxis label="Registrations"/></yAxis>
                         </BarChart>
                     </VBox>
 
@@ -220,20 +220,20 @@
 
                     <HBox alignment="CENTER_LEFT" spacing="12">
                         <VBox>
-                            <Label text="Signalements"
+                            <Label text="Reports"
                                    style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                             <Label fx:id="reportsSummaryLabel" text=""
                                    style="-fx-text-fill: #7f8c8d;"/>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Button text="↻ Actualiser" onAction="#refreshReports"
+                        <Button text="↻ Refresh" onAction="#refreshReports"
                                 style="-fx-background-color: #667eea; -fx-text-fill: white;
                                        -fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;
                                        -fx-font-weight: bold;"/>
                     </HBox>
 
                     <Label fx:id="reportsEmptyLabel"
-                           text="Aucun signalement pour le moment."
+                           text="No reports at the moment."
                            style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"
                            visible="false" managed="false"/>
 

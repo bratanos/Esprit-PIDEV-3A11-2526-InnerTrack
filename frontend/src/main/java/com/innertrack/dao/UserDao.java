@@ -3,13 +3,12 @@ package com.innertrack.dao;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.innertrack.model.User;
-import com.innertrack.service.ICrudService;
 import com.innertrack.util.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDao implements ICrudService<User> {
+public class UserDao {
     private final Connection connection;
     private final Gson gson = new Gson();
 
@@ -59,7 +58,6 @@ public class UserDao implements ICrudService<User> {
         return false;
     }
 
-    @Override
     public boolean create(User user) throws SQLException {
         String sql = "INSERT INTO user (email, password, roles, is_verified, status, first_name, last_name, profile_picture) VALUES (?,?,?,?,?,?,?,?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -148,7 +146,6 @@ public class UserDao implements ICrudService<User> {
         return false;
     }
 
-    @Override
     public User read(int id) throws SQLException {
         String sql = "SELECT * FROM user WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -165,7 +162,6 @@ public class UserDao implements ICrudService<User> {
         return null;
     }
 
-    @Override
     public List<User> findAll() throws SQLException {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM user";
@@ -180,7 +176,6 @@ public class UserDao implements ICrudService<User> {
         return users;
     }
 
-    @Override
     public boolean update(User user) throws SQLException {
         // Generic update for all fields except password (handled separately usually)
         String sql = "UPDATE user SET email = ?, is_verified = ?, status = ?, roles = ?, first_name = ?, last_name = ?, profile_picture = ?, phone_number = ? WHERE id = ?";
@@ -201,7 +196,6 @@ public class UserDao implements ICrudService<User> {
         return false;
     }
 
-    @Override
     public boolean delete(int id) throws SQLException {
         String sql = "DELETE FROM user WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

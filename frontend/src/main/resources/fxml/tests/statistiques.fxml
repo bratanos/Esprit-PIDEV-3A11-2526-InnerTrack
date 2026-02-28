@@ -15,10 +15,10 @@
 
     <!-- Header -->
     <HBox alignment="CENTER_LEFT" spacing="15">
-        <Label text="📊 Statistiques des Tests"
+        <Label text="📊 Test Statistics"
                style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: -it-text;"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="✕ Fermer" onAction="#fermer" styleClass="btn-secondary"/>
+        <Button text="✕ Close" onAction="#fermer" styleClass="btn-secondary"/>
     </HBox>
 
     <!-- KPIs -->
@@ -26,19 +26,19 @@
         <VBox alignment="CENTER" spacing="5"
               style="-fx-background-color: -it-card; -fx-background-radius: 12; -fx-padding: 20; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 2);">
             <Label text="🎯" style="-fx-font-size: 24px;"/>
-            <Label fx:id="totalPassesLabel" text="0 tests passés"
+            <Label fx:id="totalPassesLabel" text="0 tests taken"
                    style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #667eea;"/>
         </VBox>
         <VBox alignment="CENTER" spacing="5"
               style="-fx-background-color: -it-card; -fx-background-radius: 12; -fx-padding: 20; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 2);">
             <Label text="📈" style="-fx-font-size: 24px;"/>
-            <Label fx:id="scoreMoyenLabel" text="Score moyen : —"
+            <Label fx:id="scoreMoyenLabel" text="Average score : —"
                    style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #48bb78;"/>
         </VBox>
         <VBox alignment="CENTER" spacing="5"
               style="-fx-background-color: -it-card; -fx-background-radius: 12; -fx-padding: 20; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 2);">
             <Label text="⭐" style="-fx-font-size: 24px;"/>
-            <Label fx:id="testFavoriLabel" text="Test favori : —"
+            <Label fx:id="testFavoriLabel" text="Favorite test : —"
                    style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ed8936;"/>
         </VBox>
     </HBox>
@@ -49,8 +49,8 @@
         <VBox HBox.hgrow="ALWAYS"
               style="-fx-background-color: -it-card; -fx-background-radius: 12; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 2);">
             <BarChart fx:id="barChart" VBox.vgrow="ALWAYS">
-                <xAxis><CategoryAxis label="Type de test"/></xAxis>
-                <yAxis><NumberAxis label="Nombre de passages"/></yAxis>
+                <xAxis><CategoryAxis label="Test Type"/></xAxis>
+                <yAxis><NumberAxis label="Number of takes"/></yAxis>
             </BarChart>
         </VBox>
 

@@ -3,8 +3,10 @@ module com.innertrack {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
+    requires javafx.swing;
     requires java.net.http;
     requires java.sql;
+    requires java.desktop;
     requires com.google.gson;
     requires atlantafx.base;
     requires jakarta.mail;
@@ -18,6 +20,7 @@ module com.innertrack {
     // Security & JWT
     requires jbcrypt;
     requires jjwt.api;
+    requires io.github.cdimascio.dotenv.java;
 
     // UI Libraries
     requires com.jfoenix;
@@ -26,6 +29,7 @@ module com.innertrack {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.fontawesome5;
     requires jdk.jsobject;
+    requires itextpdf;
 
     opens com.innertrack.model to com.google.gson, javafx.base;
     opens com.innertrack.dao to java.sql;
@@ -36,12 +40,13 @@ module com.innertrack {
     opens com.innertrack.controller.user to javafx.fxml;
     opens com.innertrack.controller.profile to javafx.fxml;
     opens com.innertrack.controller.settings to javafx.fxml;
-    opens com.innertrack.controller.chat to javafx.fxml; // ← NEW: MessagingChatController
-    opens com.innertrack.controller to javafx.fxml; // ← Salma: test controllers
+    opens com.innertrack.controller.chat to javafx.fxml;
+    opens com.innertrack.controller to javafx.fxml;
+    opens com.innertrack.controller.journal to javafx.fxml;
     opens com.innertrack.util to javafx.fxml;
 
     // Auth resources
-    opens fxml.auth to javafx.fxml;
+    // Removed opens fxml.auth as it is not a valid package
 
     exports com.innertrack.app;
     exports com.innertrack.model;

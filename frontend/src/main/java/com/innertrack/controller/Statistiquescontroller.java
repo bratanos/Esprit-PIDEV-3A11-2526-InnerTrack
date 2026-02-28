@@ -89,7 +89,7 @@ public class Statistiquescontroller implements Initializable {
 
     private void chargerBarChart() {
         barChart.getData().clear();
-        barChart.setTitle(isTherapist ? "Tous les tests passés par catégorie" : "Tests passés par catégorie");
+        barChart.setTitle(isTherapist ? "All tests taken by category" : "Tests taken by category");
         barChart.setLegendVisible(false);
 
         try {
@@ -142,7 +142,7 @@ public class Statistiquescontroller implements Initializable {
 
     private void chargerPieChart() {
         pieChart.getData().clear();
-        pieChart.setTitle("Répartition des niveaux");
+        pieChart.setTitle("Level Distribution");
 
         try {
             Connection cnx = DBConnection.getInstance().getConnection();
@@ -153,11 +153,11 @@ public class Statistiquescontroller implements Initializable {
                 sql = """
                             SELECT
                                 CASE
-                                    WHEN LOWER(resultat) LIKE '%critique%' THEN 'Critique 🔴'
-                                    WHEN LOWER(resultat) LIKE '%élevé%'   THEN 'Élevé 🟠'
-                                    WHEN LOWER(resultat) LIKE '%modér%'   THEN 'Modéré 🟡'
-                                    WHEN LOWER(resultat) LIKE '%faible%'  THEN 'Faible 🟢'
-                                    ELSE 'Autre ⚪'
+                                    WHEN LOWER(resultat) LIKE '%critique%' THEN 'Critical 🔴'
+                                    WHEN LOWER(resultat) LIKE '%élevé%'   THEN 'High 🟠'
+                                    WHEN LOWER(resultat) LIKE '%modér%'   THEN 'Moderate 🟡'
+                                    WHEN LOWER(resultat) LIKE '%faible%'  THEN 'Low 🟢'
+                                    ELSE 'Other ⚪'
                                 END AS niveau_cat,
                                 COUNT(*) as nb
                             FROM resultat
@@ -168,11 +168,11 @@ public class Statistiquescontroller implements Initializable {
                 sql = """
                             SELECT
                                 CASE
-                                    WHEN LOWER(resultat) LIKE '%critique%' THEN 'Critique 🔴'
-                                    WHEN LOWER(resultat) LIKE '%élevé%'   THEN 'Élevé 🟠'
-                                    WHEN LOWER(resultat) LIKE '%modér%'   THEN 'Modéré 🟡'
-                                    WHEN LOWER(resultat) LIKE '%faible%'  THEN 'Faible 🟢'
-                                    ELSE 'Autre ⚪'
+                                    WHEN LOWER(resultat) LIKE '%critique%' THEN 'Critical 🔴'
+                                    WHEN LOWER(resultat) LIKE '%élevé%'   THEN 'High 🟠'
+                                    WHEN LOWER(resultat) LIKE '%modér%'   THEN 'Moderate 🟡'
+                                    WHEN LOWER(resultat) LIKE '%faible%'  THEN 'Low 🟢'
+                                    ELSE 'Other ⚪'
                                 END AS niveau_cat,
                                 COUNT(*) as nb
                             FROM resultat WHERE id_utilisateur = ?
@@ -184,8 +184,8 @@ public class Statistiquescontroller implements Initializable {
             ResultSet rs = ps.executeQuery();
 
             Map<String, String> couleurs = Map.of(
-                    "Critique 🔴", "#e53e3e", "Élevé 🟠", "#ed8936",
-                    "Modéré 🟡", "#ecc94b", "Faible 🟢", "#48bb78", "Autre ⚪", "#a0aec0");
+                    "Critical 🔴", "#e53e3e", "High 🟠", "#ed8936",
+                    "Moderate 🟡", "#ecc94b", "Low 🟢", "#48bb78", "Other ⚪", "#a0aec0");
 
             boolean hasData = false;
             while (rs.next()) {
@@ -197,7 +197,7 @@ public class Statistiquescontroller implements Initializable {
                 }
             }
             if (!hasData)
-                pieChart.getData().add(new PieChart.Data("Aucun résultat", 1));
+                pieChart.getData().add(new PieChart.Data("No results", 1));
 
             javafx.application.Platform.runLater(() -> {
                 pieChart.getData().forEach(d -> {

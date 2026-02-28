@@ -70,6 +70,7 @@ public class MessagingChatController {
 
         loadConversationList();
         loadUnreadBanner();
+        messagingDao.markAllNotificationsRead(currentUserId);
 
         poller = Executors.newSingleThreadScheduledExecutor(r -> {
             Thread t = new Thread(r, "chat-poller");
@@ -121,14 +122,14 @@ public class MessagingChatController {
 
         // Block — therapist only
         if (iAmTherapist) {
-            MenuItem blockItem = new MenuItem("🚫  Bloquer " + otherName);
+            MenuItem blockItem = new MenuItem("🚫  Block " + otherName);
             blockItem.setOnAction(e -> handleBlock(otherUserId, otherName));
             menu.getItems().add(blockItem);
             menu.getItems().add(new SeparatorMenuItem());
         }
 
         // Report — both sides
-        MenuItem reportItem = new MenuItem("⚠  Signaler " + otherName);
+        MenuItem reportItem = new MenuItem("⚠  Report " + otherName);
         reportItem.setOnAction(e -> handleReport(otherUserId, otherName));
         menu.getItems().add(reportItem);
 
@@ -137,11 +138,11 @@ public class MessagingChatController {
 
     private void handleBlock(int otherUserId, String otherName) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Bloquer");
-        confirm.setHeaderText("Bloquer " + otherName + " ?");
+        confirm.setTitle("Block");
+        confirm.setHeaderText("Block " + otherName + " ?");
         confirm.setContentText(
-                "Cet utilisateur ne pourra plus vous contacter via la messagerie.\n\n" +
-                        "Note: Cela ne suspend pas son compte, mais il ne pourra plus vous envoyer de messages ni de nouvelles demandes.");
+                "This user will no longer be able to contact you via messaging.\n\n" +
+                        "Note: This does not suspend their account, but they will no longer be able to send you messages or new requests.");
         confirm.showAndWait().ifPresent(bt -> {
             if (bt != ButtonType.OK)
                 return;
@@ -154,11 +155,11 @@ public class MessagingChatController {
 
             if (ok) {
                 // Optional: Notify admins that a block happened (without suspending)
-                notifyAdmins("Utilisateur bloqué",
+                notifyAdmins("User blocked",
                         SessionManager.getInstance().getCurrentUser().getFullName()
-                                + " a bloqué les messages de " + otherName + ".");
+                                + " has blocked messages from " + otherName + ".");
 
-                showAlert("Bloqué", otherName + " a été bloqué. Il ne pourra plus vous contacter.");
+                showAlert("Blocked", otherName + " has been blocked. They can no longer contact you.");
 
                 // Refresh views
                 loadConversationList();
@@ -171,17 +172,17 @@ public class MessagingChatController {
                     menuButton.setManaged(false);
                 }
             } else {
-                showAlert("Erreur", "Impossible de bloquer l'utilisateur.");
+                showAlert("Error", "Unable to block the user.");
             }
         });
     }
 
     private void handleReport(int otherUserId, String otherName) {
         ChoiceDialog<String> reasonDialog = new ChoiceDialog<>(
-                "Harcèlement", "Spam", "Harcèlement", "Contenu inapproprié", "Autre");
-        reasonDialog.setTitle("Signaler");
-        reasonDialog.setHeaderText("Signaler " + otherName);
-        reasonDialog.setContentText("Raison :");
+                "Harassment", "Spam", "Harassment", "Inappropriate Content", "Other");
+        reasonDialog.setTitle("Report");
+        reasonDialog.setHeaderText("Report " + otherName);
+        reasonDialog.setContentText("Reason :");
 
         reasonDialog.showAndWait().ifPresent(selectedLabel -> {
             String reasonCode = switch (selectedLabel) {
@@ -192,20 +193,20 @@ public class MessagingChatController {
             };
 
             TextInputDialog detailsDialog = new TextInputDialog();
-            detailsDialog.setTitle("Détails");
-            detailsDialog.setHeaderText("Décrivez le problème (optionnel)");
-            detailsDialog.setContentText("Détails :");
+            detailsDialog.setTitle("Details");
+            detailsDialog.setHeaderText("Describe the problem (optional)");
+            detailsDialog.setContentText("Details :");
 
             detailsDialog.showAndWait().ifPresent(details -> {
                 Report report = new Report(currentUserId, otherUserId, reasonCode, details);
                 boolean filed = reportDao.fileReport(report);
                 if (filed) {
-                    notifyAdmins("Nouveau signalement",
+                    notifyAdmins("New report",
                             SessionManager.getInstance().getCurrentUser().getFullName()
-                                    + " a signalé " + otherName + " pour : " + selectedLabel);
-                    showAlert("Signalement envoyé", "Votre signalement a été transmis à l'administrateur.");
+                                    + " has reported " + otherName + " for : " + selectedLabel);
+                    showAlert("Report sent", "Your report has been transmitted to the administrator.");
                 } else {
-                    showAlert("Erreur", "Impossible d'envoyer le signalement.");
+                    showAlert("Error", "Unable to send the report.");
                 }
             });
         });
@@ -239,9 +240,9 @@ public class MessagingChatController {
                 ? selectedConversation.getTherapistId()
                 : selectedConversation.getClientId();
         messagingDao.createNotification(new Notification(
-                otherId, "MESSAGE", "Nouveau message",
+                otherId, "MESSAGE", "New message",
                 SessionManager.getInstance().getCurrentUser().getFullName()
-                        + " vous a envoyé un message.",
+                        + " sent you a message.",
                 selectedConversation.getId()));
 
         refreshMessages();
@@ -256,7 +257,7 @@ public class MessagingChatController {
             Platform.runLater(() -> {
                 if (unreadBanner != null) {
                     if (unread > 0) {
-                        unreadBanner.setText("💬 " + unread + " message(s) non lu(s) dans vos conversations");
+                        unreadBanner.setText("💬 " + unread + " unread message(s) in your conversations");
                         unreadBanner.setVisible(true);
                         unreadBanner.setManaged(true);
                     } else {
@@ -276,7 +277,7 @@ public class MessagingChatController {
             Platform.runLater(() -> {
                 conversationsList.getChildren().clear();
                 if (convs.isEmpty()) {
-                    Label empty = new Label("Aucune conversation active.");
+                    Label empty = new Label("No active conversations.");
                     empty.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 13px; -fx-padding: 20;");
                     conversationsList.getChildren().add(empty);
                 } else {
@@ -301,45 +302,37 @@ public class MessagingChatController {
                 : "?";
 
         Label avatar = new Label(initial);
-        avatar.setStyle("-fx-background-color: #667eea; -fx-text-fill: white;" +
-                "-fx-font-weight: bold; -fx-font-size: 16px;" +
-                "-fx-min-width: 40; -fx-min-height: 40;" +
-                "-fx-background-radius: 50; -fx-alignment: center;");
+        avatar.getStyleClass().add("chat-avatar");
 
         VBox info = new VBox(2);
         Label nameL = new Label(otherName != null ? otherName : "Conversation");
-        nameL.setStyle("-fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-size: 14px;");
+        nameL.getStyleClass().add("chat-conv-name");
+
         String dateStr = conv.getCreatedAt() != null ? conv.getCreatedAt().format(dateFmt) : "";
         Label dateL = new Label(dateStr);
-        dateL.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 11px;");
+        dateL.getStyleClass().add("chat-conv-date");
+
         info.getChildren().addAll(nameL, dateL);
         row.getChildren().addAll(avatar, info);
+        row.getStyleClass().add("chat-conv-row");
 
-        row.setOnMouseEntered(
-                e -> row.setStyle("-fx-cursor: hand; -fx-background-color: #EEF2FF; -fx-background-radius: 8;"));
-        row.setOnMouseExited(e -> {
-            if (selectedConversation != null && selectedConversation.getId() == conv.getId())
-                row.setStyle("-fx-cursor: hand; -fx-background-color: #E0E7FF; -fx-background-radius: 8;");
-            else
-                row.setStyle("-fx-cursor: hand; -fx-background-radius: 8;");
-        });
         row.setOnMouseClicked(e -> openConversation(conv, row));
         return row;
     }
 
     private void openConversation(Conversation conv, HBox row) {
-        conversationsList.getChildren().forEach(n -> n.setStyle("-fx-cursor: hand; -fx-background-radius: 8;"));
-        row.setStyle("-fx-cursor: hand; -fx-background-color: #E0E7FF; -fx-background-radius: 8;");
+        conversationsList.getChildren().forEach(n -> n.getStyleClass().remove("chat-conv-row-selected"));
+        row.getStyleClass().add("chat-conv-row-selected");
 
         selectedConversation = conv;
         String otherName = conv.getClientId() == currentUserId
                 ? conv.getTherapistName()
                 : conv.getClientName();
         conversationTitleLabel.setText(otherName != null ? otherName : "Conversation");
-        conversationSubLabel.setText("Conversation active");
+        conversationSubLabel.setText("Active now");
         sendButton.setDisable(false);
         messageInput.setDisable(false);
-        messageInput.setPromptText("Écrire un message…");
+        messageInput.setPromptText("Type a message...");
 
         // Show triple-dot now that a conversation is open
         if (menuButton != null) {
@@ -363,7 +356,7 @@ public class MessagingChatController {
         messagesBox.getChildren().clear();
 
         if (messages.isEmpty()) {
-            Label hint = new Label("Commencez la conversation en envoyant un message ci-dessous.");
+            Label hint = new Label("Start the conversation by sending a message below.");
             hint.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 13px;");
             hint.setWrapText(true);
             messagesBox.getChildren().add(hint);
@@ -378,9 +371,7 @@ public class MessagingChatController {
                 String date = msg.getSentAt().format(fullDate);
                 if (!date.equals(lastDate)) {
                     Label sep = new Label(date);
-                    sep.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 11px;" +
-                            "-fx-background-color: #f1f1f1; -fx-background-radius: 10;" +
-                            "-fx-padding: 2 10;");
+                    sep.getStyleClass().add("chat-date-separator");
                     HBox sepRow = new HBox(sep);
                     sepRow.setAlignment(Pos.CENTER);
                     sepRow.setPadding(new Insets(8, 0, 8, 0));
@@ -392,16 +383,11 @@ public class MessagingChatController {
             Label bubble = new Label(msg.getContent());
             bubble.setWrapText(true);
             bubble.setMaxWidth(380);
-            bubble.setStyle(isMe
-                    ? "-fx-background-color: #667eea; -fx-text-fill: white;" +
-                            "-fx-background-radius: 18 18 4 18; -fx-padding: 10 16; -fx-font-size: 14px;"
-                    : "-fx-background-color: white; -fx-text-fill: #2d3748;" +
-                            "-fx-background-radius: 18 18 18 4; -fx-padding: 10 16; -fx-font-size: 14px;" +
-                            "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 4, 0, 0, 1);");
+            bubble.getStyleClass().add(isMe ? "chat-bubble-me" : "chat-bubble-them");
 
             String timeStr = msg.getSentAt() != null ? msg.getSentAt().format(timeFmt) : "";
             Label timeLabel = new Label(timeStr);
-            timeLabel.setStyle("-fx-text-fill: #bdc3c7; -fx-font-size: 10px;");
+            timeLabel.getStyleClass().add("chat-time-label");
 
             VBox bubbleCol = new VBox(2, bubble, timeLabel);
             bubbleCol.setMaxWidth(400);

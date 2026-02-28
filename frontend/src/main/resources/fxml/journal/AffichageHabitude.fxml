@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.innertrack.controller.journal.AffichageHabitudeController"
+            stylesheets="@../../styles/views/journal.css">
+
+    <!-- ================= EN-TETE ================= -->
+    <top>
+        <VBox spacing="0">
+            <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+                <padding><Insets top="20" right="30" bottom="20" left="30"/></padding>
+                <Button text="⬅ Dashboard" styleClass="cancel-button" onAction="#allerAuDashboard" style="-fx-border-color: transparent; -fx-padding: 8 15;"/>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="🌿 Habits" styleClass="title" style="-fx-font-size: 24px;"/>
+                    <Label text="View, manage, and analyze your habits" styleClass="subtitle" style="-fx-font-size: 13px;"/>
+                </VBox>
+                <Button text="+ New Habit" styleClass="add-test-btn"
+                        onAction="#ajouterHabitude" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="15"
+                  style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
+                <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
+                <TextField fx:id="searchField"
+                           promptText="Search a habit..."
+                           prefWidth="300"
+                           styleClass="search-field"/>
+                <Button fx:id="clearButton" text="❌" styleClass="icon-button"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="📄 Export PDF" onAction="#exporterPDF" styleClass="export-button"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ================= CONTENU ================= -->
+    <center>
+        <VBox spacing="0" style="-fx-background-color: #f5f7fa;">
+
+            <!-- Barre statistiques -->
+            <HBox spacing="15" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
+                <padding><Insets top="10" right="30" bottom="10" left="30"/></padding>
+                <HBox styleClass="stat-card" alignment="CENTER" prefWidth="150">
+                    <VBox alignment="CENTER" spacing="2">
+                        <Label fx:id="totalHabitudesLabel" text="0" styleClass="stat-number" style="-fx-font-size: 22px;"/>
+                        <Label text="Habits" styleClass="stat-label"/>
+                    </VBox>
+                </HBox>
+                <HBox styleClass="stat-card" alignment="CENTER" prefWidth="150">
+                    <VBox alignment="CENTER" spacing="2">
+                        <Label fx:id="moyenneEnergieLabel" text="—" styleClass="stat-number" style="-fx-font-size: 22px;"/>
+                        <Label text="Avg Energy" styleClass="stat-label"/>
+                    </VBox>
+                </HBox>
+                <HBox styleClass="stat-card" alignment="CENTER" prefWidth="150">
+                    <VBox alignment="CENTER" spacing="2">
+                        <Label fx:id="moyenneStressLabel" text="—" styleClass="stat-number" style="-fx-font-size: 22px;"/>
+                        <Label text="Avg Stress" styleClass="stat-label"/>
+                    </VBox>
+                </HBox>
+                <HBox styleClass="stat-card" alignment="CENTER" prefWidth="150">
+                    <VBox alignment="CENTER" spacing="2">
+                        <Label fx:id="moyenneSommeilLabel" text="—" styleClass="stat-number" style="-fx-font-size: 22px;"/>
+                        <Label text="Avg Sleep" styleClass="stat-label"/>
+                    </VBox>
+                </HBox>
+            </HBox>
+
+            <!-- Tableau -->
+            <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS" style="-fx-padding: 20;">
+                <VBox VBox.vgrow="ALWAYS" style="-fx-padding: 15;">
+                    <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
+
+                    <HBox styleClass="section-box" alignment="CENTER_LEFT" spacing="10">
+                        <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
+                        <Label text="🌿  My Habits" styleClass="section-title" style="-fx-font-size: 16px;" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+
+                    <TableView fx:id="habitudeTable" VBox.vgrow="ALWAYS"
+                               style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px;">
+                        <columns>
+                            <TableColumn fx:id="nomColumn" text="🏷️ Name" prefWidth="200"/>
+                            <TableColumn fx:id="emotionColumn" text="💭 Emotion" prefWidth="120"/>
+                            <TableColumn fx:id="noteColumn" text="📝 Note" prefWidth="600"/>
+                            <TableColumn fx:id="energieColumn" text="⚡ Energy" prefWidth="100"/>
+                            <TableColumn fx:id="stressColumn" text="😰 Stress" prefWidth="100"/>
+                            <TableColumn fx:id="sommeilColumn" text="😴 Sleep" prefWidth="100"/>
+                            <TableColumn fx:id="dateColumn" text="📅 Date" prefWidth="120"/>
+                            <TableColumn fx:id="qrColumn" text="👁 See Details" prefWidth="170"/>
+                        </columns>
+                        <placeholder>
+                            <VBox alignment="CENTER" spacing="10">
+                                <Label text="🌿" style="-fx-font-size: 48px; -fx-text-fill: #cbd5e0;"/>
+                                <Label text="No habits recorded"/>
+                            </VBox>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <!-- ================= FOOTER ================= -->
+    <bottom>
+        <HBox styleClass="footer" alignment="CENTER_RIGHT" spacing="10">
+            <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+            <Label fx:id="statusLabel" HBox.hgrow="ALWAYS"/>
+            <Button text="✏️ Edit" styleClass="edit-btn-header" onAction="#modifierHabitude"/>
+            <Button text="🗑️ Delete" styleClass="delete-btn-header" onAction="#supprimerHabitude"/>
+            <Button text="📓 Journal" styleClass="refresh-btn" onAction="#allerAuJournal"/>
+        </HBox>
+    </bottom>
+</BorderPane>

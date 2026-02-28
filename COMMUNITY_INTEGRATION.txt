@@ -1,0 +1,2111 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1
+-- Généré le : sam. 28 fév. 2026 à 12:23
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de données : `testdb`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL,
+  `user` int(11) NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  `creation` datetime NOT NULL DEFAULT current_timestamp(),
+  `modified` tinyint(1) NOT NULL DEFAULT 0,
+  `likes` int(11) NOT NULL DEFAULT 0,
+  `parent` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `comments`
+--
+
+INSERT INTO `comments` (`id`, `user`, `comment`, `creation`, `modified`, `likes`, `parent`) VALUES
+(7, 1, 'C++ and Wasm because why not', '2026-02-14 23:35:13', 1, 0, NULL),
+(8, 1, 'Everything is open source if you can read assembly', '2026-02-14 23:35:13', 0, 0, 7),
+(12, 1, 'i like it very much', '2026-02-17 14:06:36', 1, 0, NULL),
+(14, 1, 'C++ is the best', '2026-02-17 14:06:43', 0, 0, NULL),
+(15, 1, 'Thanks for everything C++!', '2026-02-17 14:36:15', 0, 0, 7),
+(17, 1, 'please', '2026-02-17 15:14:15', 0, 0, NULL),
+(19, 1, 'huh', '2026-02-17 15:18:03', 0, 0, NULL),
+(30, 1, '<h1>fdsdfdsfdsf</h1>        ', '2026-02-18 09:27:22', 1, 0, NULL),
+(31, 1, 'web symfony', '2026-02-18 09:27:33', 0, 0, 7),
+(38, 1, 'commentaire1', '2026-02-28 02:54:51', 0, 0, 30),
+(39, 1, 'visit the doctor', '2026-02-28 03:08:26', 0, 0, 30),
+(40, 1, 'the doctor is absent', '2026-02-28 03:12:00', 0, 0, 39),
+(41, 1, 'welcome', '2026-02-28 04:43:05', 0, 0, 30),
+(42, 1, 'Oh My Gosh', '2026-02-28 04:43:19', 0, 0, 30),
+(43, 1, 'woops', '2026-02-28 04:43:44', 0, 0, 30),
+(44, 1, 'my new first comment', '2026-02-28 04:54:33', 0, 0, NULL);
+
+--
+-- Déclencheurs `comments`
+--
+DELIMITER $$
+CREATE TRIGGER `set_modified_flag` BEFORE UPDATE ON `comments` FOR EACH ROW IF NOT (NEW.comment <=> OLD.comment) THEN
+  SET NEW.modified = 1;
+END IF
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `doctrine_migration_versions`
+--
+
+CREATE TABLE `doctrine_migration_versions` (
+  `version` varchar(191) NOT NULL,
+  `executed_at` datetime DEFAULT NULL,
+  `execution_time` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `doctrine_migration_versions`
+--
+
+INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
+('DoctrineMigrations\\Version20260122110709', NULL, NULL),
+('DoctrineMigrations\\Version20260126123343', '2026-01-26 13:36:03', 431);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `email_verification_code`
+--
+
+CREATE TABLE `email_verification_code` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `used_at` datetime DEFAULT NULL,
+  `resend_attempts` int(11) NOT NULL DEFAULT 0,
+  `verify_attempts` int(11) NOT NULL DEFAULT 0,
+  `last_sent_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `messenger_messages`
+--
+
+CREATE TABLE `messenger_messages` (
+  `id` bigint(20) NOT NULL,
+  `body` longtext NOT NULL,
+  `headers` longtext NOT NULL,
+  `queue_name` varchar(190) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `available_at` datetime NOT NULL,
+  `delivered_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `messenger_messages`
+--
+
+INSERT INTO `messenger_messages` (`id`, `body`, `headers`, `queue_name`, `created_at`, `available_at`, `delivered_at`) VALUES
+(1, 'O:36:\\\"Symfony\\\\Component\\\\Messenger\\\\Envelope\\\":2:{s:44:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0stamps\\\";a:1:{s:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\";a:1:{i:0;O:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\":1:{s:55:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\0busName\\\";s:21:\\\"messenger.bus.default\\\";}}}s:45:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0message\\\";O:51:\\\"Symfony\\\\Component\\\\Mailer\\\\Messenger\\\\SendEmailMessage\\\":2:{s:60:\\\"\\0Symfony\\\\Component\\\\Mailer\\\\Messenger\\\\SendEmailMessage\\0message\\\";O:28:\\\"Symfony\\\\Component\\\\Mime\\\\Email\\\":6:{i:0;N;i:1;N;i:2;s:157:\\\"\r\n                <p>Votre code de vérification :</p>\r\n                <h2>771831</h2>\r\n                <p>Ce code expire dans 10 minutes.</p>\r\n            \\\";i:3;s:5:\\\"utf-8\\\";i:4;a:0:{}i:5;a:2:{i:0;O:37:\\\"Symfony\\\\Component\\\\Mime\\\\Header\\\\Headers\\\":2:{s:46:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\Headers\\0headers\\\";a:3:{s:4:\\\"from\\\";a:1:{i:0;O:47:\\\"Symfony\\\\Component\\\\Mime\\\\Header\\\\MailboxListHeader\\\":5:{s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0name\\\";s:4:\\\"From\\\";s:56:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lineLength\\\";i:76;s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lang\\\";N;s:53:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0charset\\\";s:5:\\\"utf-8\\\";s:58:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\MailboxListHeader\\0addresses\\\";a:1:{i:0;O:30:\\\"Symfony\\\\Component\\\\Mime\\\\Address\\\":2:{s:39:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Address\\0address\\\";s:22:\\\"no-reply@innertrack.tn\\\";s:36:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Address\\0name\\\";s:0:\\\"\\\";}}}}s:2:\\\"to\\\";a:1:{i:0;O:47:\\\"Symfony\\\\Component\\\\Mime\\\\Header\\\\MailboxListHeader\\\":5:{s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0name\\\";s:2:\\\"To\\\";s:56:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lineLength\\\";i:76;s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lang\\\";N;s:53:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0charset\\\";s:5:\\\"utf-8\\\";s:58:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\MailboxListHeader\\0addresses\\\";a:1:{i:0;O:30:\\\"Symfony\\\\Component\\\\Mime\\\\Address\\\":2:{s:39:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Address\\0address\\\";s:17:\\\"test2@example.com\\\";s:36:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Address\\0name\\\";s:0:\\\"\\\";}}}}s:7:\\\"subject\\\";a:1:{i:0;O:48:\\\"Symfony\\\\Component\\\\Mime\\\\Header\\\\UnstructuredHeader\\\":5:{s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0name\\\";s:7:\\\"Subject\\\";s:56:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lineLength\\\";i:76;s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lang\\\";N;s:53:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0charset\\\";s:5:\\\"utf-8\\\";s:55:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\UnstructuredHeader\\0value\\\";s:34:\\\"Vérifiez votre email - InnerTrack\\\";}}}s:49:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\Headers\\0lineLength\\\";i:76;}i:1;N;}}s:61:\\\"\\0Symfony\\\\Component\\\\Mailer\\\\Messenger\\\\SendEmailMessage\\0envelope\\\";N;}}', '[]', 'default', '2026-02-02 20:05:45', '2026-02-02 20:05:45', NULL),
+(2, 'O:36:\\\"Symfony\\\\Component\\\\Messenger\\\\Envelope\\\":2:{s:44:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0stamps\\\";a:1:{s:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\";a:1:{i:0;O:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\":1:{s:55:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\0busName\\\";s:21:\\\"messenger.bus.default\\\";}}}s:45:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0message\\\";O:51:\\\"Symfony\\\\Component\\\\Mailer\\\\Messenger\\\\SendEmailMessage\\\":2:{s:60:\\\"\\0Symfony\\\\Component\\\\Mailer\\\\Messenger\\\\SendEmailMessage\\0message\\\";O:28:\\\"Symfony\\\\Component\\\\Mime\\\\Email\\\":6:{i:0;N;i:1;N;i:2;s:157:\\\"\r\n                <p>Votre code de vérification :</p>\r\n                <h2>841432</h2>\r\n                <p>Ce code expire dans 10 minutes.</p>\r\n            \\\";i:3;s:5:\\\"utf-8\\\";i:4;a:0:{}i:5;a:2:{i:0;O:37:\\\"Symfony\\\\Component\\\\Mime\\\\Header\\\\Headers\\\":2:{s:46:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\Headers\\0headers\\\";a:3:{s:4:\\\"from\\\";a:1:{i:0;O:47:\\\"Symfony\\\\Component\\\\Mime\\\\Header\\\\MailboxListHeader\\\":5:{s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0name\\\";s:4:\\\"From\\\";s:56:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lineLength\\\";i:76;s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lang\\\";N;s:53:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0charset\\\";s:5:\\\"utf-8\\\";s:58:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\MailboxListHeader\\0addresses\\\";a:1:{i:0;O:30:\\\"Symfony\\\\Component\\\\Mime\\\\Address\\\":2:{s:39:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Address\\0address\\\";s:22:\\\"no-reply@innertrack.tn\\\";s:36:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Address\\0name\\\";s:0:\\\"\\\";}}}}s:2:\\\"to\\\";a:1:{i:0;O:47:\\\"Symfony\\\\Component\\\\Mime\\\\Header\\\\MailboxListHeader\\\":5:{s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0name\\\";s:2:\\\"To\\\";s:56:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lineLength\\\";i:76;s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lang\\\";N;s:53:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0charset\\\";s:5:\\\"utf-8\\\";s:58:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\MailboxListHeader\\0addresses\\\";a:1:{i:0;O:30:\\\"Symfony\\\\Component\\\\Mime\\\\Address\\\":2:{s:39:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Address\\0address\\\";s:17:\\\"test3@example.com\\\";s:36:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Address\\0name\\\";s:0:\\\"\\\";}}}}s:7:\\\"subject\\\";a:1:{i:0;O:48:\\\"Symfony\\\\Component\\\\Mime\\\\Header\\\\UnstructuredHeader\\\":5:{s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0name\\\";s:7:\\\"Subject\\\";s:56:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lineLength\\\";i:76;s:50:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0lang\\\";N;s:53:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\AbstractHeader\\0charset\\\";s:5:\\\"utf-8\\\";s:55:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\UnstructuredHeader\\0value\\\";s:34:\\\"Vérifiez votre email - InnerTrack\\\";}}}s:49:\\\"\\0Symfony\\\\Component\\\\Mime\\\\Header\\\\Headers\\0lineLength\\\";i:76;}i:1;N;}}s:61:\\\"\\0Symfony\\\\Component\\\\Mailer\\\\Messenger\\\\SendEmailMessage\\0envelope\\\";N;}}', '[]', 'default', '2026-02-02 20:44:45', '2026-02-02 20:44:45', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `password_reset_codes`
+--
+
+CREATE TABLE `password_reset_codes` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `used_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `reactions`
+--
+
+CREATE TABLE `reactions` (
+  `user` int(11) NOT NULL,
+  `comment` int(11) NOT NULL,
+  `reaction` varchar(8) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `reactions`
+--
+
+INSERT INTO `reactions` (`user`, `comment`, `reaction`) VALUES
+(1, 15, '👍'),
+(1, 17, '😡'),
+(1, 19, '👍'),
+(1, 30, NULL),
+(1, 31, '😡'),
+(1, 39, '😂'),
+(1, 41, '😂');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user`
+--
+
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `roles` longtext NOT NULL COMMENT '(DC2Type:json)',
+  `is_verified` tinyint(1) NOT NULL DEFAULT 0,
+  `status` varchar(255) NOT NULL DEFAULT 'PENDING'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `user`
+--
+
+INSERT INTO `user` (`id`, `email`, `password`, `roles`, `is_verified`, `status`) VALUES
+(1, 'root_root@root.root', 'password', 'role', 1, 'PENDING'),
+(2, 'second.user@com', 'hidden', '', 0, 'PENDING');
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `parent` (`parent`),
+  ADD KEY `user` (`user`);
+
+--
+-- Index pour la table `doctrine_migration_versions`
+--
+ALTER TABLE `doctrine_migration_versions`
+  ADD PRIMARY KEY (`version`);
+
+--
+-- Index pour la table `email_verification_code`
+--
+ALTER TABLE `email_verification_code`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_EVC_USER` (`user_id`);
+
+--
+-- Index pour la table `messenger_messages`
+--
+ALTER TABLE `messenger_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_75EA56E0FB7336F0E3BD61CE16BA31DBBF396750` (`queue_name`,`available_at`,`delivered_at`,`id`);
+
+--
+-- Index pour la table `password_reset_codes`
+--
+ALTER TABLE `password_reset_codes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_PRC_USER` (`user_id`);
+
+--
+-- Index pour la table `reactions`
+--
+ALTER TABLE `reactions`
+  ADD PRIMARY KEY (`user`,`comment`) USING BTREE,
+  ADD KEY `comment_reply_fk` (`comment`);
+
+--
+-- Index pour la table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- AUTO_INCREMENT pour la table `email_verification_code`
+--
+ALTER TABLE `email_verification_code`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `messenger_messages`
+--
+ALTER TABLE `messenger_messages`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT pour la table `password_reset_codes`
+--
+ALTER TABLE `password_reset_codes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `email_verification_code`
+--
+ALTER TABLE `email_verification_code`
+  ADD CONSTRAINT `FK_EVC_USER` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `password_reset_codes`
+--
+ALTER TABLE `password_reset_codes`
+  ADD CONSTRAINT `FK_PRC_USER` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `reactions`
+--
+ALTER TABLE `reactions`
+  ADD CONSTRAINT `comment_reply_fk` FOREIGN KEY (`comment`) REFERENCES `comments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_reply_fk` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Feb 28, 2026 at 12:54 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `testdb`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ai_recommandation`
+--
+
+CREATE TABLE `ai_recommandation` (
+  `id_recommandation` int(11) NOT NULL,
+  `id_utilisateur` int(11) NOT NULL,
+  `id_test` int(11) NOT NULL,
+  `cluster_profil` varchar(255) NOT NULL,
+  `confiance` double NOT NULL,
+  `habitudes_suggerees` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`habitudes_suggerees`)),
+  `plan_action` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`plan_action`)),
+  `alertes_critiques` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`alertes_critiques`)),
+  `date_generation` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `article`
+--
+
+CREATE TABLE `article` (
+  `id_Article` int(11) NOT NULL,
+  `titre` varchar(200) NOT NULL,
+  `contenu` text NOT NULL,
+  `auteur_user_id` int(11) NOT NULL,
+  `datePublication` date NOT NULL,
+  `id_categorie` int(11) DEFAULT NULL,
+  `readability` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `article_tag`
+--
+
+CREATE TABLE `article_tag` (
+  `id_article` int(11) NOT NULL,
+  `id_tag` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `blocked_user`
+--
+
+CREATE TABLE `blocked_user` (
+  `id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `therapist_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `blocked_user`
+--
+
+INSERT INTO `blocked_user` (`id`, `client_id`, `therapist_id`, `created_at`) VALUES
+(1, 20, 23, '2026-02-25 23:48:01'),
+(3, 28, 23, '2026-02-27 14:06:58');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categorie`
+--
+
+CREATE TABLE `categorie` (
+  `id_categorie` int(11) NOT NULL,
+  `nom` varchar(100) NOT NULL,
+  `description` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `client_profile`
+--
+
+CREATE TABLE `client_profile` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `bio` text DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `client_profile`
+--
+
+INSERT INTO `client_profile` (`id`, `user_id`, `date_of_birth`, `bio`, `created_at`) VALUES
+(1, 20, NULL, NULL, '2026-02-22 23:55:25'),
+(2, 28, NULL, NULL, '2026-02-26 00:36:40');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contact_request`
+--
+
+CREATE TABLE `contact_request` (
+  `id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `therapist_id` int(11) NOT NULL,
+  `message` text DEFAULT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'PENDING',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `responded_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `contact_request`
+--
+
+INSERT INTO `contact_request` (`id`, `client_id`, `therapist_id`, `message`, `status`, `created_at`, `responded_at`) VALUES
+(1, 20, 23, 'Bonjour, je souhaite prendre contact avec vous.', 'ACCEPTED', '2026-02-25 20:34:14', '2026-02-25 20:36:02'),
+(2, 20, 23, 'Bonjour, je souhaite prendre contact avec vous.', 'ACCEPTED', '2026-02-25 22:08:32', '2026-02-25 22:09:11'),
+(3, 28, 23, 'Bonjour, je souhaite prendre contact avec vous.', 'ACCEPTED', '2026-02-26 00:37:10', '2026-02-26 00:37:48'),
+(4, 20, 24, 'Bonjour, je souhaite prendre contact avec vous.', 'ACCEPTED', '2026-02-27 15:07:56', '2026-02-27 15:08:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `conversation`
+--
+
+CREATE TABLE `conversation` (
+  `id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `therapist_id` int(11) NOT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'PENDING',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `conversation`
+--
+
+INSERT INTO `conversation` (`id`, `client_id`, `therapist_id`, `status`, `created_at`) VALUES
+(1, 20, 23, 'BLOCKED', '2026-02-25 20:36:03'),
+(3, 28, 23, 'BLOCKED', '2026-02-26 00:37:48'),
+(4, 20, 24, 'ACTIVE', '2026-02-27 15:08:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctrine_migration_versions`
+--
+
+CREATE TABLE `doctrine_migration_versions` (
+  `version` varchar(191) NOT NULL,
+  `executed_at` datetime DEFAULT NULL,
+  `execution_time` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `doctrine_migration_versions`
+--
+
+INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
+('DoctrineMigrations\\Version20260122110709', '2026-01-27 13:15:08', 205),
+('DoctrineMigrations\\Version20260126123343', NULL, NULL),
+('DoctrineMigrations\\Version20260126123544', NULL, NULL),
+('DoctrineMigrations\\Version20260127123032', '2026-01-27 13:31:18', 160),
+('DoctrineMigrations\\Version20260203191836', NULL, NULL),
+('DoctrineMigrations\\Version20260218195818', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_verification_code`
+--
+
+CREATE TABLE `email_verification_code` (
+  `id` int(11) NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `used_at` datetime DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `resend_attempts` int(11) NOT NULL,
+  `verify_attempts` int(11) NOT NULL,
+  `last_sent_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `email_verification_code`
+--
+
+INSERT INTO `email_verification_code` (`id`, `code`, `expires_at`, `used_at`, `user_id`, `resend_attempts`, `verify_attempts`, `last_sent_at`) VALUES
+(5, '797904', '2026-02-12 19:20:38', '2026-02-12 19:11:09', 5, 1, 0, '2026-02-12 19:10:38'),
+(6, '430492', '2026-02-12 19:53:12', '2026-02-12 19:43:34', 6, 1, 0, '2026-02-12 19:43:12'),
+(7, '717720', '2026-02-13 16:13:50', '2026-02-13 16:04:32', 7, 1, 0, '2026-02-13 16:03:50'),
+(8, '989425', '2026-02-13 16:15:22', NULL, 8, 1, 0, '2026-02-13 16:05:22'),
+(9, '904032', '2026-02-18 09:28:10', '2026-02-18 09:18:29', 16, 1, 0, '2026-02-18 09:18:10'),
+(10, '127296', '2026-02-19 09:14:06', '2026-02-19 09:04:30', 17, 1, 0, '2026-02-19 09:04:06'),
+(11, '844185', '2026-02-19 09:19:05', '2026-02-19 09:09:29', 18, 1, 0, '2026-02-19 09:09:05'),
+(12, '007551', '2026-02-22 16:17:02', '2026-02-22 16:07:30', 19, 1, 0, '2026-02-22 16:07:02'),
+(13, '178197', '2026-02-23 00:05:25', '2026-02-22 23:56:01', 20, 1, 0, '2026-02-22 23:55:25'),
+(14, '173450', '2026-02-23 13:33:51', '2026-02-23 13:24:17', 21, 1, 0, '2026-02-23 13:23:51'),
+(16, '932343', '2026-02-23 13:49:37', '2026-02-23 13:39:49', 23, 1, 0, '2026-02-23 13:39:37'),
+(17, '526842', '2026-02-23 22:33:48', '2026-02-23 22:24:28', 24, 1, 0, '2026-02-23 22:23:48'),
+(18, '623568', '2026-02-25 22:14:12', '2026-02-25 22:04:41', 27, 1, 0, '2026-02-25 22:04:12'),
+(19, '869975', '2026-02-26 00:46:40', '2026-02-26 00:36:53', 28, 1, 0, '2026-02-26 00:36:40');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `habittracker`
+--
+
+CREATE TABLE `habittracker` (
+  `Id_Habit` int(11) NOT NULL,
+  `nom_habitude` varchar(150) DEFAULT NULL,
+  `emotion_dominantes` varchar(50) DEFAULT NULL,
+  `note_textuelle` text DEFAULT NULL,
+  `niveau_energie` int(11) NOT NULL,
+  `niveau_stress` int(11) NOT NULL,
+  `qualite_sommeil` int(11) NOT NULL,
+  `date_creation` date NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_journal` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `historique_resultat`
+--
+
+CREATE TABLE `historique_resultat` (
+  `id_historique` int(11) NOT NULL,
+  `id_utilisateur` int(11) NOT NULL,
+  `id_test` int(11) NOT NULL,
+  `score` int(11) NOT NULL,
+  `pourcentage` double NOT NULL,
+  `niveau` varchar(50) DEFAULT NULL,
+  `date_passage` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `journal_emotionnel`
+--
+
+CREATE TABLE `journal_emotionnel` (
+  `id_journal` int(11) NOT NULL,
+  `humeur` int(11) NOT NULL,
+  `note_textuelle` text DEFAULT NULL,
+  `date_saisie` date NOT NULL,
+  `id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `learning_path`
+--
+
+CREATE TABLE `learning_path` (
+  `id_path` int(11) NOT NULL,
+  `titre` varchar(200) NOT NULL,
+  `description` text DEFAULT NULL,
+  `date_creation` date NOT NULL DEFAULT curdate(),
+  `created_by_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message`
+--
+
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL,
+  `conversation_id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `sent_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `message`
+--
+
+INSERT INTO `message` (`id`, `conversation_id`, `sender_id`, `content`, `is_read`, `sent_at`) VALUES
+(1, 1, 23, 'bonjour', 1, '2026-02-25 20:36:13'),
+(2, 1, 20, 'hello i\'m looking to see if you\'re available', 1, '2026-02-25 20:37:05'),
+(3, 1, 20, 'YO PLEASE RESPOND I NEED HELP', 1, '2026-02-26 00:13:00'),
+(4, 3, 23, 'yo', 1, '2026-02-26 00:39:20'),
+(5, 1, 20, 'respond please', 1, '2026-02-26 00:48:23'),
+(6, 1, 20, 'eaea', 1, '2026-02-26 00:52:50'),
+(7, 3, 23, 'put that pussy on the phone please', 1, '2026-02-27 15:04:14'),
+(8, 3, 28, 'OMG THIS IS SEXUAL HARRASMENT', 1, '2026-02-27 15:05:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messenger_messages`
+--
+
+CREATE TABLE `messenger_messages` (
+  `id` bigint(20) NOT NULL,
+  `body` longtext NOT NULL,
+  `headers` longtext NOT NULL,
+  `queue_name` varchar(190) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `available_at` datetime NOT NULL,
+  `delivered_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notification`
+--
+
+CREATE TABLE `notification` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `type` varchar(30) NOT NULL DEFAULT 'SYSTEM',
+  `title` varchar(150) NOT NULL,
+  `body` text DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `reference_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notification`
+--
+
+INSERT INTO `notification` (`id`, `user_id`, `type`, `title`, `body`, `is_read`, `reference_id`, `created_at`) VALUES
+(1, 23, 'CONTACT_REQUEST', 'Nouvelle demande de contact', 'Un patient souhaite vous contacter.', 0, 1, '2026-02-25 20:34:14'),
+(2, 20, 'CONTACT_REQUEST', 'Demande acceptée', 'Votre thérapeute a accepté votre demande. Vous pouvez maintenant échanger.', 0, 1, '2026-02-25 20:36:03'),
+(3, 20, 'MESSAGE', 'Nouveau message', 'imen makhlouf vous a envoyé un message.', 0, 1, '2026-02-25 20:36:13'),
+(4, 23, 'MESSAGE', 'Nouveau message', 'ahmed maalaoui vous a envoyé un message.', 0, 1, '2026-02-25 20:37:05'),
+(5, 23, 'CONTACT_REQUEST', 'Nouvelle demande de contact', 'Un patient souhaite vous contacter.', 0, 2, '2026-02-25 22:08:32'),
+(6, 27, 'SYSTEM', 'Nouveau signalement', 'imen makhlouf a signalé ahmed maalaoui pour : Harcèlement', 0, 0, '2026-02-25 23:25:55'),
+(7, 20, 'SYSTEM', 'Avertissement', 'Votre comportement a été signalé. Respectez les règles de la plateforme.', 0, 0, '2026-02-25 23:26:35'),
+(8, 27, 'SYSTEM', 'Nouveau signalement', 'imen makhlouf a signalé ahmed maalaoui pour : Harcèlement', 0, 0, '2026-02-26 00:03:33'),
+(9, 23, 'MESSAGE', 'Nouveau message', 'ahmed maalaoui vous a envoyé un message.', 0, 1, '2026-02-26 00:13:00'),
+(10, 20, 'SYSTEM', 'Compte suspendu', 'Votre compte a été temporairement suspendu suite à un signalement.', 0, 0, '2026-02-26 00:33:59'),
+(11, 27, 'SYSTEM', 'Blocage signalé', 'imen makhlouf a bloqué l\'utilisateur ahmed maalaoui.', 0, 0, '2026-02-26 00:33:59'),
+(12, 27, 'SYSTEM', 'Nouveau signalement', 'imen makhlouf a signalé ahmed maalaoui pour : Contenu inapproprié', 0, 0, '2026-02-26 00:34:08'),
+(13, 20, 'SYSTEM', 'Compte bloqué', 'Votre compte a été bloqué suite à un signalement.', 0, 0, '2026-02-26 00:35:22'),
+(14, 23, 'CONTACT_REQUEST', 'Nouvelle demande de contact', 'Un patient souhaite vous contacter.', 0, 3, '2026-02-26 00:37:10'),
+(15, 28, 'CONTACT_REQUEST', 'Demande acceptée', 'Votre thérapeute a accepté votre demande. Vous pouvez maintenant échanger.', 0, 3, '2026-02-26 00:37:48'),
+(16, 28, 'MESSAGE', 'Nouveau message', 'imen makhlouf vous a envoyé un message.', 0, 3, '2026-02-26 00:39:20'),
+(17, 27, 'SYSTEM', 'Utilisateur bloqué', 'imen makhlouf a bloqué les messages de ahmed maalaoui.', 0, 0, '2026-02-26 00:48:01'),
+(18, 23, 'MESSAGE', 'Nouveau message', 'ahmed maalaoui vous a envoyé un message.', 0, 1, '2026-02-26 00:48:23'),
+(19, 27, 'SYSTEM', 'Nouveau signalement', 'ahmed maalaoui a signalé imen makhlouf pour : Autre', 0, 0, '2026-02-26 00:48:34'),
+(20, 23, 'MESSAGE', 'Nouveau message', 'ahmed maalaoui vous a envoyé un message.', 0, 1, '2026-02-26 00:52:50'),
+(21, 27, 'SYSTEM', 'Utilisateur bloqué', 'imen makhlouf a bloqué les messages de ahmed maalaoui.', 0, 0, '2026-02-26 00:53:15'),
+(22, 28, 'MESSAGE', 'Nouveau message', 'imen makhlouf vous a envoyé un message.', 0, 3, '2026-02-27 15:04:14'),
+(23, 23, 'MESSAGE', 'Nouveau message', 'emna maalaoui vous a envoyé un message.', 0, 3, '2026-02-27 15:05:37'),
+(24, 27, 'SYSTEM', 'Nouveau signalement', 'emna maalaoui a signalé imen makhlouf pour : Harcèlement', 0, 0, '2026-02-27 15:05:45'),
+(25, 23, 'SYSTEM', 'Avertissement', 'Votre comportement a été signalé. Respectez les règles de la plateforme.', 0, 0, '2026-02-27 15:06:33'),
+(26, 27, 'SYSTEM', 'Utilisateur bloqué', 'imen makhlouf a bloqué les messages de emna maalaoui.', 0, 0, '2026-02-27 15:06:58'),
+(27, 24, 'CONTACT_REQUEST', 'Nouvelle demande de contact', 'Un patient souhaite vous contacter.', 0, 4, '2026-02-27 15:07:56'),
+(28, 20, 'CONTACT_REQUEST', 'Demande acceptée', 'Votre thérapeute a accepté votre demande. Vous pouvez maintenant échanger.', 0, 4, '2026-02-27 15:08:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_reset_codes`
+--
+
+CREATE TABLE `password_reset_codes` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `used_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `password_reset_codes`
+--
+
+INSERT INTO `password_reset_codes` (`id`, `user_id`, `code`, `expires_at`, `used_at`, `created_at`) VALUES
+(1, 23, '969172', '2026-02-25 23:40:25', '2026-02-25 23:30:48', '2026-02-25 23:30:25');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `path_article`
+--
+
+CREATE TABLE `path_article` (
+  `id_path` int(11) NOT NULL,
+  `id_article` int(11) NOT NULL,
+  `ordre` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `question`
+--
+
+CREATE TABLE `question` (
+  `id_question` int(11) NOT NULL,
+  `id_test` int(11) NOT NULL,
+  `contenu` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `question`
+--
+
+INSERT INTO `question` (`id_question`, `id_test`, `contenu`) VALUES
+(5, 3, 'Je me sens globalement satisfait(e) de la personne que je suis!'),
+(6, 3, 'J’ai confiance en mes capacités pour faire face aux difficultés de la vie.'),
+(7, 3, 'Je reconnais mes qualités autant que mes défauts.'),
+(8, 3, 'Je me sens digne de respect et de considération.'),
+(9, 3, 'J’ai tendance à me comparer négativement aux autres.'),
+(10, 3, 'Je me sens capable de prendre des décisions importantes par moi-même.'),
+(11, 3, 'Les échecs ne remettent pas complètement en cause ma valeur personnelle.'),
+(12, 3, 'Je m’exprime librement sans craindre excessivement le jugement des autres.'),
+(13, 3, 'Je me sens fier(ère) de mes accomplissements, même les plus modestes.'),
+(14, 3, 'J’ai souvent l’impression de ne pas être « assez bien ».'),
+(49, 2, 'Ressentez-vous une inquiétude excessive ou difficile à contrôler concernant différents aspects de votre vie quotidienne ?'),
+(50, 2, 'Avez-vous des difficultés à vous détendre, même en l’absence de problème immédiat ?'),
+(51, 2, 'Présentez-vous des symptômes physiques tels que palpitations, tensions musculaires, sueurs ou tremblements en situation de stress ?'),
+(52, 2, 'Éprouvez-vous des difficultés de concentration en raison de pensées envahissantes ou préoccupantes ?'),
+(53, 2, 'Avez-vous des troubles du sommeil (difficulté d’endormissement, réveils nocturnes, sommeil non réparateur) liés à des préoccupations ?'),
+(54, 2, 'Vous sentez-vous fréquemment irritable ou à fleur de peau sans raison clairement identifiable ?'),
+(55, 2, 'Évitez-vous certaines situations sociales ou professionnelles par crainte d’un malaise ou d’un jugement négatif ?'),
+(56, 2, 'Anticipez-vous régulièrement des scénarios négatifs ou catastrophiques concernant l’avenir ?'),
+(57, 2, 'Ressentez-vous une sensation persistante d’agitation intérieure ou d’être « sur le qui-vive » ?'),
+(58, 2, 'Ces manifestations interfèrent-elles avec votre fonctionnement quotidien (travail, études, relations, activités habituelles) ?'),
+(59, 18, 'Avez-vous des difficultés à maintenir votre attention lors de tâches longues ou répétitives (cours, réunions, lecture) ?'),
+(60, 18, 'Avez-vous tendance à faire des erreurs d’inattention dans vos travaux ou responsabilités quotidiennes ?'),
+(61, 18, 'Avez-vous du mal à organiser vos tâches ou à gérer efficacement votre temps ?'),
+(62, 18, 'Procrastinez-vous fréquemment les tâches demandant un effort mental soutenu ?'),
+(63, 18, 'Perdez-vous régulièrement des objets nécessaires à vos activités (clés, téléphone, documents) ?'),
+(64, 18, 'Vous arrive-t-il d’être facilement distrait(e) par des stimuli externes ou vos propres pensées ?'),
+(65, 18, 'Avez-vous du mal à rester assis(e) ou ressentez-vous un besoin fréquent de bouger ?'),
+(66, 18, 'Interrompez-vous parfois les autres ou répondez-vous avant la fin d’une question ?'),
+(67, 18, 'Avez-vous tendance à agir de manière impulsive sans mesurer pleinement les conséquences ?'),
+(68, 18, 'Ces difficultés impactent-elles votre performance scolaire, professionnelle ou vos relations sociales ?'),
+(69, 5, 'Craignez-vous intensément l’abandon, réel ou imaginaire, au point d’adopter des comportements pour l’éviter ?'),
+(70, 5, 'Vos relations sont-elles souvent intenses, instables, alternant entre idéalisation et dévalorisation de l’autre ?'),
+(71, 5, 'Avez-vous une image de vous-même instable ou changeante (valeurs, identité, objectifs) ?'),
+(72, 5, 'Présentez-vous des comportements impulsifs potentiellement dommageables (dépenses excessives, conduites à risque, crises alimentaires, etc.) ?'),
+(73, 5, 'Avez-vous des sautes d’humeur marquées et rapides (colère, tristesse, anxiété) déclenchées par des événements relationnels ?'),
+(74, 5, 'Ressentez-vous un sentiment chronique de vide intérieur ?'),
+(75, 5, 'Avez-vous des difficultés à contrôler votre colère ou des accès de colère intenses ?'),
+(76, 5, 'Avez-vous déjà eu des pensées d’automutilation ou des comportements auto-agressifs ?'),
+(77, 5, 'Vous arrive-t-il de vous sentir dissocié(e), comme détaché(e) de vous-même ou de la réalité lors de situations stressantes ?'),
+(78, 5, 'Ces difficultés affectent-elles de manière significative votre vie affective, sociale ou professionnelle ?'),
+(79, 19, 'Revivez-vous involontairement un événement traumatique à travers des souvenirs envahissants ou des flashbacks ?'),
+(80, 19, 'Faites-vous des cauchemars liés à un événement traumatique ?'),
+(81, 19, 'Évitez-vous certaines personnes, lieux ou situations qui vous rappellent cet événement ?'),
+(82, 19, 'Ressentez-vous une détresse intense lorsque quelque chose vous rappelle le traumatisme ?'),
+(83, 19, 'Êtes-vous constamment sur vos gardes ou en état d’hypervigilance ?'),
+(84, 19, 'Sursautez-vous facilement à des bruits ou stimuli soudains ?'),
+(85, 19, 'Avez-vous des difficultés de concentration depuis l’événement ?'),
+(86, 19, 'Ressentez-vous un détachement émotionnel ou une difficulté à éprouver des émotions positives ?'),
+(87, 19, 'Éprouvez-vous des sentiments persistants de culpabilité, de honte ou de responsabilité liés à l’événement ?'),
+(88, 19, 'Ces symptômes impactent-ils significativement votre vie quotidienne (travail, études, relations) ?'),
+(89, 16, 'Avez-vous déjà entendu des voix ou perçu des choses que les autres ne semblent pas entendre ou voir ?'),
+(90, 16, 'Avez-vous le sentiment que certaines personnes cherchent à vous nuire sans preuve claire ?'),
+(91, 16, 'Avez-vous l’impression que des messages spéciaux vous sont adressés à travers la télévision, les réseaux sociaux ou d’autres médias ?'),
+(92, 16, 'Vos pensées vous paraissent-elles parfois confuses, désorganisées ou difficiles à exprimer clairement ?'),
+(93, 16, 'Avez-vous du mal à distinguer ce qui est réel de ce qui pourrait ne pas l’être ?'),
+(94, 16, 'Vous arrive-t-il de vous isoler socialement de manière marquée et inhabituelle ?'),
+(95, 16, 'Avez-vous perdu de l’intérêt ou de la motivation pour des activités auparavant importantes pour vous ?'),
+(96, 16, 'Les autres vous ont-ils déjà fait remarquer des comportements ou des discours inhabituels ?'),
+(97, 16, 'Ressentez-vous une diminution importante de vos émotions ou une difficulté à les exprimer ?'),
+(98, 16, 'Ces expériences affectent-elles significativement votre vie scolaire, professionnelle ou sociale ?'),
+(99, 20, 'Identifiez-vous facilement les émotions que vous ressentez dans différentes situations ?'),
+(100, 20, 'Êtes-vous capable de comprendre les causes de vos réactions émotionnelles ?'),
+(101, 20, 'Savez-vous gérer votre stress ou votre colère sans perdre le contrôle ?'),
+(102, 20, 'Restez-vous calme face aux critiques ou aux conflits ?'),
+(103, 20, 'Percevez-vous facilement les émotions des autres à travers leur ton de voix ou leur langage corporel ?'),
+(104, 20, 'Faites-vous preuve d’empathie lorsque quelqu’un partage une difficulté personnelle ?'),
+(105, 20, 'Adaptez-vous votre manière de communiquer en fonction de l’état émotionnel de votre interlocuteur ?'),
+(106, 20, 'Êtes-vous capable de motiver et d’encourager les autres de manière constructive ?'),
+(107, 20, 'Prenez-vous du recul avant de réagir dans une situation émotionnellement chargée ?'),
+(108, 20, 'Vos compétences émotionnelles contribuent-elles positivement à vos relations personnelles ou professionnelles ?'),
+(109, 21, 'Avez-vous tendance à planifier vos activités à l’avance de manière structurée ?'),
+(110, 21, 'Respectez-vous généralement les délais fixés pour vos tâches ou projets ?'),
+(111, 21, 'Avez-vous des difficultés à maintenir votre concentration sur une tâche jusqu’à son achèvement ?'),
+(112, 21, 'Changez-vous fréquemment d’activité avant d’avoir terminé la précédente ?'),
+(113, 21, 'Prenez-vous vos décisions après avoir analysé les informations disponibles ?'),
+(114, 21, 'Avez-vous besoin d’un environnement organisé pour être efficace ?'),
+(115, 21, 'Avez-vous tendance à agir rapidement sans réfléchir longuement aux conséquences pratiques ?'),
+(116, 21, 'Retenez-vous facilement des informations importantes (consignes, dates, détails techniques) ?'),
+(117, 21, 'Vous adaptez-vous rapidement lorsque les plans changent de manière imprévue ?'),
+(118, 21, 'Votre manière de travailler est-elle perçue par les autres comme méthodique et fiable ?'),
+(119, 22, 'Préférez-vous passer du temps avec un grand groupe de personnes plutôt que seul(e) ?'),
+(120, 22, 'Vous sentez-vous rechargé(e) après des interactions sociales prolongées ?'),
+(121, 22, 'Aimez-vous partager vos idées immédiatement avec les autres ?'),
+(122, 22, 'Vous sentez-vous à l’aise pour engager une conversation avec des inconnus ?'),
+(123, 22, 'Préférez-vous apprendre en discutant plutôt qu’en lisant ou en réfléchissant seul(e) ?'),
+(124, 22, 'Vous concentrez-vous principalement sur les faits concrets et les détails précis ?'),
+(125, 22, 'Préférez-vous les informations pratiques plutôt que les théories abstraites ?'),
+(126, 22, 'Vous fiez-vous à votre expérience passée pour prendre des décisions plutôt qu’à votre intuition ?'),
+(127, 22, 'Avez-vous tendance à remarquer facilement les détails autour de vous ?'),
+(128, 22, 'Préférez-vous des solutions éprouvées plutôt que des idées nouvelles et innovantes ?'),
+(129, 22, 'Prenez-vous vos décisions en vous basant surtout sur la logique et l’objectivité ?'),
+(130, 22, 'Avez-vous tendance à analyser les situations de manière détachée plutôt qu’émotionnelle ?'),
+(131, 22, 'Évaluez-vous plus souvent les gens sur leurs actions que sur leurs intentions ?'),
+(132, 22, 'Dans les conflits, privilégiez-vous la justice et la cohérence plutôt que l’harmonie ?'),
+(133, 22, 'Évitez-vous de laisser vos émotions influencer vos décisions importantes ?'),
+(134, 22, 'Préférez-vous planifier vos activités plutôt que de les improviser ?'),
+(135, 22, 'Vous sentez-vous plus à l’aise lorsque les choses sont organisées et structurées ?'),
+(136, 22, 'Aimez-vous respecter un emploi du temps strict plutôt que de rester flexible ?'),
+(137, 22, 'Terminez-vous vos tâches bien avant les délais plutôt que de travailler au dernier moment ?'),
+(138, 22, 'Avez-vous besoin d’avoir un plan clair avant de commencer un projet ?'),
+(139, 23, 'Vous sentez-vous capable de surmonter des obstacles imprévus ?'),
+(140, 23, 'Apprenez-vous de vos erreurs plutôt que de vous décourager ?'),
+(141, 23, 'Vous adaptez-vous rapidement aux changements soudains ?'),
+(142, 23, 'Gardez-vous espoir même après un échec important ?'),
+(143, 23, 'Cherchez-vous des solutions plutôt que de vous concentrer sur le problème ?'),
+(144, 23, 'Trouvez-vous du positif dans des situations difficiles ?'),
+(145, 23, 'Vous sentez-vous capable de demander de l’aide quand nécessaire ?'),
+(146, 23, 'Rebondissez-vous après des critiques ou des remarques négatives ?'),
+(147, 23, 'Restez-vous concentré(e) sur vos objectifs malgré les difficultés ?'),
+(148, 23, 'Pensez-vous que vous pouvez contrôler votre avenir malgré les obstacles ?');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reponse`
+--
+
+CREATE TABLE `reponse` (
+  `id_reponse` int(11) NOT NULL,
+  `id_question` int(11) NOT NULL,
+  `contenu` varchar(255) NOT NULL,
+  `points` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `reponse`
+--
+
+INSERT INTO `reponse` (`id_reponse`, `id_question`, `contenu`, `points`) VALUES
+(1, 49, 'Oui', 2),
+(2, 50, 'Oui', 2),
+(3, 51, 'Oui', 2),
+(4, 52, 'Oui', 2),
+(5, 53, 'Oui', 2),
+(6, 54, 'Oui', 2),
+(7, 55, 'Oui', 2),
+(8, 56, 'Oui', 2),
+(9, 57, 'Oui', 2),
+(10, 58, 'Oui', 2),
+(11, 5, 'Oui', 2),
+(12, 6, 'Oui', 2),
+(13, 7, 'Oui', 2),
+(14, 8, 'Oui', 2),
+(15, 9, 'Oui', 2),
+(16, 10, 'Oui', 2),
+(17, 11, 'Oui', 2),
+(18, 12, 'Oui', 2),
+(19, 13, 'Oui', 2),
+(20, 14, 'Oui', 2),
+(21, 69, 'Oui', 2),
+(22, 70, 'Oui', 2),
+(23, 71, 'Oui', 2),
+(24, 72, 'Oui', 2),
+(25, 73, 'Oui', 2),
+(26, 74, 'Oui', 2),
+(27, 75, 'Oui', 2),
+(28, 76, 'Oui', 2),
+(29, 77, 'Oui', 2),
+(30, 78, 'Oui', 2),
+(31, 89, 'Oui', 2),
+(32, 90, 'Oui', 2),
+(33, 91, 'Oui', 2),
+(34, 92, 'Oui', 2),
+(35, 93, 'Oui', 2),
+(36, 94, 'Oui', 2),
+(37, 95, 'Oui', 2),
+(38, 96, 'Oui', 2),
+(39, 97, 'Oui', 2),
+(40, 98, 'Oui', 2),
+(41, 59, 'Oui', 2),
+(42, 60, 'Oui', 2),
+(43, 61, 'Oui', 2),
+(44, 62, 'Oui', 2),
+(45, 63, 'Oui', 2),
+(46, 64, 'Oui', 2),
+(47, 65, 'Oui', 2),
+(48, 66, 'Oui', 2),
+(49, 67, 'Oui', 2),
+(50, 68, 'Oui', 2),
+(51, 79, 'Oui', 2),
+(52, 80, 'Oui', 2),
+(53, 81, 'Oui', 2),
+(54, 82, 'Oui', 2),
+(55, 83, 'Oui', 2),
+(56, 84, 'Oui', 2),
+(57, 85, 'Oui', 2),
+(58, 86, 'Oui', 2),
+(59, 87, 'Oui', 2),
+(60, 88, 'Oui', 2),
+(61, 99, 'Oui', 2),
+(62, 100, 'Oui', 2),
+(63, 101, 'Oui', 2),
+(64, 102, 'Oui', 2),
+(65, 103, 'Oui', 2),
+(66, 104, 'Oui', 2),
+(67, 105, 'Oui', 2),
+(68, 106, 'Oui', 2),
+(69, 107, 'Oui', 2),
+(70, 108, 'Oui', 2),
+(71, 109, 'Oui', 2),
+(72, 110, 'Oui', 2),
+(73, 111, 'Oui', 2),
+(74, 112, 'Oui', 2),
+(75, 113, 'Oui', 2),
+(76, 114, 'Oui', 2),
+(77, 115, 'Oui', 2),
+(78, 116, 'Oui', 2),
+(79, 117, 'Oui', 2),
+(80, 118, 'Oui', 2),
+(81, 119, 'Oui', 2),
+(82, 120, 'Oui', 2),
+(83, 121, 'Oui', 2),
+(84, 122, 'Oui', 2),
+(85, 123, 'Oui', 2),
+(86, 124, 'Oui', 2),
+(87, 125, 'Oui', 2),
+(88, 126, 'Oui', 2),
+(89, 127, 'Oui', 2),
+(90, 128, 'Oui', 2),
+(91, 129, 'Oui', 2),
+(92, 130, 'Oui', 2),
+(93, 131, 'Oui', 2),
+(94, 132, 'Oui', 2),
+(95, 133, 'Oui', 2),
+(96, 134, 'Oui', 2),
+(97, 135, 'Oui', 2),
+(98, 136, 'Oui', 2),
+(99, 137, 'Oui', 2),
+(100, 138, 'Oui', 2),
+(101, 139, 'Oui', 2),
+(102, 140, 'Oui', 2),
+(103, 141, 'Oui', 2),
+(104, 142, 'Oui', 2),
+(105, 143, 'Oui', 2),
+(106, 144, 'Oui', 2),
+(107, 145, 'Oui', 2),
+(108, 146, 'Oui', 2),
+(109, 147, 'Oui', 2),
+(110, 148, 'Oui', 2),
+(111, 49, 'Non', 0),
+(112, 50, 'Non', 0),
+(113, 51, 'Non', 0),
+(114, 52, 'Non', 0),
+(115, 53, 'Non', 0),
+(116, 54, 'Non', 0),
+(117, 55, 'Non', 0),
+(118, 56, 'Non', 0),
+(119, 57, 'Non', 0),
+(120, 58, 'Non', 0),
+(121, 5, 'Non', 0),
+(122, 6, 'Non', 0),
+(123, 7, 'Non', 0),
+(124, 8, 'Non', 0),
+(125, 9, 'Non', 0),
+(126, 10, 'Non', 0),
+(127, 11, 'Non', 0),
+(128, 12, 'Non', 0),
+(129, 13, 'Non', 0),
+(130, 14, 'Non', 0),
+(131, 69, 'Non', 0),
+(132, 70, 'Non', 0),
+(133, 71, 'Non', 0),
+(134, 72, 'Non', 0),
+(135, 73, 'Non', 0),
+(136, 74, 'Non', 0),
+(137, 75, 'Non', 0),
+(138, 76, 'Non', 0),
+(139, 77, 'Non', 0),
+(140, 78, 'Non', 0),
+(141, 89, 'Non', 0),
+(142, 90, 'Non', 0),
+(143, 91, 'Non', 0),
+(144, 92, 'Non', 0),
+(145, 93, 'Non', 0),
+(146, 94, 'Non', 0),
+(147, 95, 'Non', 0),
+(148, 96, 'Non', 0),
+(149, 97, 'Non', 0),
+(150, 98, 'Non', 0),
+(151, 59, 'Non', 0),
+(152, 60, 'Non', 0),
+(153, 61, 'Non', 0),
+(154, 62, 'Non', 0),
+(155, 63, 'Non', 0),
+(156, 64, 'Non', 0),
+(157, 65, 'Non', 0),
+(158, 66, 'Non', 0),
+(159, 67, 'Non', 0),
+(160, 68, 'Non', 0),
+(161, 79, 'Non', 0),
+(162, 80, 'Non', 0),
+(163, 81, 'Non', 0),
+(164, 82, 'Non', 0),
+(165, 83, 'Non', 0),
+(166, 84, 'Non', 0),
+(167, 85, 'Non', 0),
+(168, 86, 'Non', 0),
+(169, 87, 'Non', 0),
+(170, 88, 'Non', 0),
+(171, 99, 'Non', 0),
+(172, 100, 'Non', 0),
+(173, 101, 'Non', 0),
+(174, 102, 'Non', 0),
+(175, 103, 'Non', 0),
+(176, 104, 'Non', 0),
+(177, 105, 'Non', 0),
+(178, 106, 'Non', 0),
+(179, 107, 'Non', 0),
+(180, 108, 'Non', 0),
+(181, 109, 'Non', 0),
+(182, 110, 'Non', 0),
+(183, 111, 'Non', 0),
+(184, 112, 'Non', 0),
+(185, 113, 'Non', 0),
+(186, 114, 'Non', 0),
+(187, 115, 'Non', 0),
+(188, 116, 'Non', 0),
+(189, 117, 'Non', 0),
+(190, 118, 'Non', 0),
+(191, 119, 'Non', 0),
+(192, 120, 'Non', 0),
+(193, 121, 'Non', 0),
+(194, 122, 'Non', 0),
+(195, 123, 'Non', 0),
+(196, 124, 'Non', 0),
+(197, 125, 'Non', 0),
+(198, 126, 'Non', 0),
+(199, 127, 'Non', 0),
+(200, 128, 'Non', 0),
+(201, 129, 'Non', 0),
+(202, 130, 'Non', 0),
+(203, 131, 'Non', 0),
+(204, 132, 'Non', 0),
+(205, 133, 'Non', 0),
+(206, 134, 'Non', 0),
+(207, 135, 'Non', 0),
+(208, 136, 'Non', 0),
+(209, 137, 'Non', 0),
+(210, 138, 'Non', 0),
+(211, 139, 'Non', 0),
+(212, 140, 'Non', 0),
+(213, 141, 'Non', 0),
+(214, 142, 'Non', 0),
+(215, 143, 'Non', 0),
+(216, 144, 'Non', 0),
+(217, 145, 'Non', 0),
+(218, 146, 'Non', 0),
+(219, 147, 'Non', 0),
+(220, 148, 'Non', 0),
+(221, 49, 'Parfois', 1),
+(222, 50, 'Parfois', 1),
+(223, 51, 'Parfois', 1),
+(224, 52, 'Parfois', 1),
+(225, 53, 'Parfois', 1),
+(226, 54, 'Parfois', 1),
+(227, 55, 'Parfois', 1),
+(228, 56, 'Parfois', 1),
+(229, 57, 'Parfois', 1),
+(230, 58, 'Parfois', 1),
+(231, 5, 'Parfois', 1),
+(232, 6, 'Parfois', 1),
+(233, 7, 'Parfois', 1),
+(234, 8, 'Parfois', 1),
+(235, 9, 'Parfois', 1),
+(236, 10, 'Parfois', 1),
+(237, 11, 'Parfois', 1),
+(238, 12, 'Parfois', 1),
+(239, 13, 'Parfois', 1),
+(240, 14, 'Parfois', 1),
+(241, 69, 'Parfois', 1),
+(242, 70, 'Parfois', 1),
+(243, 71, 'Parfois', 1),
+(244, 72, 'Parfois', 1),
+(245, 73, 'Parfois', 1),
+(246, 74, 'Parfois', 1),
+(247, 75, 'Parfois', 1),
+(248, 76, 'Parfois', 1),
+(249, 77, 'Parfois', 1),
+(250, 78, 'Parfois', 1),
+(251, 89, 'Parfois', 1),
+(252, 90, 'Parfois', 1),
+(253, 91, 'Parfois', 1),
+(254, 92, 'Parfois', 1),
+(255, 93, 'Parfois', 1),
+(256, 94, 'Parfois', 1),
+(257, 95, 'Parfois', 1),
+(258, 96, 'Parfois', 1),
+(259, 97, 'Parfois', 1),
+(260, 98, 'Parfois', 1),
+(261, 59, 'Parfois', 1),
+(262, 60, 'Parfois', 1),
+(263, 61, 'Parfois', 1),
+(264, 62, 'Parfois', 1),
+(265, 63, 'Parfois', 1),
+(266, 64, 'Parfois', 1),
+(267, 65, 'Parfois', 1),
+(268, 66, 'Parfois', 1),
+(269, 67, 'Parfois', 1),
+(270, 68, 'Parfois', 1),
+(271, 79, 'Parfois', 1),
+(272, 80, 'Parfois', 1),
+(273, 81, 'Parfois', 1),
+(274, 82, 'Parfois', 1),
+(275, 83, 'Parfois', 1),
+(276, 84, 'Parfois', 1),
+(277, 85, 'Parfois', 1),
+(278, 86, 'Parfois', 1),
+(279, 87, 'Parfois', 1),
+(280, 88, 'Parfois', 1),
+(281, 99, 'Parfois', 1),
+(282, 100, 'Parfois', 1),
+(283, 101, 'Parfois', 1),
+(284, 102, 'Parfois', 1),
+(285, 103, 'Parfois', 1),
+(286, 104, 'Parfois', 1),
+(287, 105, 'Parfois', 1),
+(288, 106, 'Parfois', 1),
+(289, 107, 'Parfois', 1),
+(290, 108, 'Parfois', 1),
+(291, 109, 'Parfois', 1),
+(292, 110, 'Parfois', 1),
+(293, 111, 'Parfois', 1),
+(294, 112, 'Parfois', 1),
+(295, 113, 'Parfois', 1),
+(296, 114, 'Parfois', 1),
+(297, 115, 'Parfois', 1),
+(298, 116, 'Parfois', 1),
+(299, 117, 'Parfois', 1),
+(300, 118, 'Parfois', 1),
+(301, 119, 'Parfois', 1),
+(302, 120, 'Parfois', 1),
+(303, 121, 'Parfois', 1),
+(304, 122, 'Parfois', 1),
+(305, 123, 'Parfois', 1),
+(306, 124, 'Parfois', 1),
+(307, 125, 'Parfois', 1),
+(308, 126, 'Parfois', 1),
+(309, 127, 'Parfois', 1),
+(310, 128, 'Parfois', 1),
+(311, 129, 'Parfois', 1),
+(312, 130, 'Parfois', 1),
+(313, 131, 'Parfois', 1),
+(314, 132, 'Parfois', 1),
+(315, 133, 'Parfois', 1),
+(316, 134, 'Parfois', 1),
+(317, 135, 'Parfois', 1),
+(318, 136, 'Parfois', 1),
+(319, 137, 'Parfois', 1),
+(320, 138, 'Parfois', 1),
+(321, 139, 'Parfois', 1),
+(322, 140, 'Parfois', 1),
+(323, 141, 'Parfois', 1),
+(324, 142, 'Parfois', 1),
+(325, 143, 'Parfois', 1),
+(326, 144, 'Parfois', 1),
+(327, 145, 'Parfois', 1),
+(328, 146, 'Parfois', 1),
+(329, 147, 'Parfois', 1),
+(330, 148, 'Parfois', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reponse_utilisateur`
+--
+
+CREATE TABLE `reponse_utilisateur` (
+  `id_reponse_utilisateur` int(11) NOT NULL,
+  `id_utilisateur` int(11) NOT NULL,
+  `id_question` int(11) NOT NULL,
+  `id_reponse` int(11) NOT NULL,
+  `date_reponse` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `reponse_utilisateur`
+--
+
+INSERT INTO `reponse_utilisateur` (`id_reponse_utilisateur`, `id_utilisateur`, `id_question`, `id_reponse`, `date_reponse`) VALUES
+(12, 20, 5, 11, '2026-02-28 01:22:19'),
+(13, 20, 6, 12, '2026-02-28 01:22:20'),
+(14, 20, 7, 123, '2026-02-28 01:22:21'),
+(15, 20, 8, 234, '2026-02-28 01:22:22'),
+(16, 20, 9, 125, '2026-02-28 01:22:22'),
+(17, 20, 10, 236, '2026-02-28 01:22:23'),
+(18, 20, 11, 17, '2026-02-28 01:22:24'),
+(19, 20, 12, 238, '2026-02-28 01:22:25'),
+(20, 20, 13, 19, '2026-02-28 01:22:26'),
+(21, 20, 14, 130, '2026-02-28 01:22:26'),
+(22, 20, 69, 241, '2026-02-28 01:41:38'),
+(23, 20, 70, 22, '2026-02-28 01:41:39'),
+(24, 20, 71, 133, '2026-02-28 01:41:40'),
+(25, 20, 72, 24, '2026-02-28 01:41:40'),
+(26, 20, 73, 245, '2026-02-28 01:41:41'),
+(27, 20, 74, 26, '2026-02-28 01:41:42'),
+(28, 20, 75, 137, '2026-02-28 01:41:44'),
+(29, 20, 76, 28, '2026-02-28 01:41:50'),
+(30, 20, 77, 249, '2026-02-28 01:41:51'),
+(31, 20, 78, 30, '2026-02-28 01:41:52'),
+(52, 23, 89, 31, '2026-02-28 02:00:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `report`
+--
+
+CREATE TABLE `report` (
+  `id` int(11) NOT NULL,
+  `reporter_id` int(11) NOT NULL,
+  `reported_id` int(11) NOT NULL,
+  `reason` varchar(50) NOT NULL,
+  `details` text DEFAULT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'PENDING',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `reviewed_at` datetime DEFAULT NULL,
+  `reviewed_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `report`
+--
+
+INSERT INTO `report` (`id`, `reporter_id`, `reported_id`, `reason`, `details`, `status`, `created_at`, `reviewed_at`, `reviewed_by`) VALUES
+(1, 23, 20, 'HARASSMENT', 'said some bullshit ban this nigga', 'REVIEWED', '2026-02-25 23:25:55', '2026-02-25 23:26:35', 27),
+(2, 23, 20, 'HARASSMENT', '', 'DISMISSED', '2026-02-26 00:03:33', '2026-02-26 00:04:00', 27),
+(3, 23, 20, 'INAPPROPRIATE', '', 'REVIEWED', '2026-02-26 00:34:08', '2026-02-26 00:35:22', 27),
+(4, 20, 23, 'OTHER', '', 'DISMISSED', '2026-02-26 00:48:34', '2026-02-27 15:06:26', 27),
+(5, 28, 23, 'HARASSMENT', 'VERY RUDE', 'REVIEWED', '2026-02-27 15:05:45', '2026-02-27 15:06:33', 27);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resultat`
+--
+
+CREATE TABLE `resultat` (
+  `id_resultat` int(11) NOT NULL,
+  `id_test` int(11) NOT NULL,
+  `id_utilisateur` int(11) NOT NULL,
+  `score_total` int(11) NOT NULL,
+  `score_max_possible` int(11) NOT NULL,
+  `pourcentage` double NOT NULL,
+  `resultat` varchar(255) NOT NULL,
+  `interpretation` text DEFAULT NULL,
+  `date_passage` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `resultat`
+--
+
+INSERT INTO `resultat` (`id_resultat`, `id_test`, `id_utilisateur`, `score_total`, `score_max_possible`, `pourcentage`, `resultat`, `interpretation`, `date_passage`) VALUES
+(1, 2, 20, 10, 20, 65, 'Niveau faible', 'Vous présentez peu de signes.', '2026-02-28 00:37:39'),
+(2, 3, 20, 11, 20, 55, 'Non défini', '', '2026-02-28 01:22:27'),
+(3, 5, 20, 13, 20, 65, 'Niveau modéré', 'Quelques signes à surveiller.', '2026-02-28 01:41:56'),
+(4, 22, 20, 25, 40, 62.5, 'Niveau élevé', 'Il est conseillé de consulter un professionnel.', '2026-02-28 01:53:40');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tag`
+--
+
+CREATE TABLE `tag` (
+  `id_tag` int(11) NOT NULL,
+  `nom` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `test_psychologique`
+--
+
+CREATE TABLE `test_psychologique` (
+  `id_test` int(11) NOT NULL,
+  `titre` varchar(255) NOT NULL,
+  `id_type` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `nombre_questions` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `test_psychologique`
+--
+
+INSERT INTO `test_psychologique` (`id_test`, `titre`, `id_type`, `description`, `nombre_questions`) VALUES
+(2, 'Test d\'anxiété ', 2, 'Mesure le niveau d\'anxiété chez l\'utilisateur', 20),
+(3, 'Évaluation de l’Estime de Soi', 1, 'Ce test vise à évaluer la perception que l’utilisateur a de lui-même, sa confiance personnelle et sa valeur ressentie au quotidien. ', 5),
+(5, 'Test de BPD', 2, 'Ce questionnaire vise à repérer la présence possible de caractéristiques associées au Trouble de la personnalité borderline.', 20),
+(16, 'Schizophrénie', 2, 'Aide au dépistage', 10),
+(18, 'ADHD', 3, 'Ce questionnaire a pour objectif d’identifier la présence éventuelle de symptômes associés au Trouble du déficit de l\'attention avec ou sans hyperactivité', 10),
+(19, 'Test de dépistage du Trouble de Stress Post-Traumatique (TSPT / PTSD)', 2, 'Ce questionnaire vise à repérer la présence possible de symptômes associés au Trouble de stress post-traumatique.', 10),
+(20, 'Test d’Intelligence Émotionnelle', 5, 'Ce questionnaire vise à évaluer votre niveau d’intelligence émotionnelle, c’est-à-dire votre capacité à identifier, comprendre, gérer vos propres émotions et celles des autres.', 10),
+(21, 'Fonctionnement cognitif et comportemental', 1, 'Ce questionnaire vise à explorer certains aspects de votre organisation, de votre concentration, de votre prise de décision et de votre mode de fonctionnement quotidien, sans se centrer sur les émotions.', 10),
+(22, 'MBTI Test', 3, 'Ce test MBTI explore vos préférences personnelles dans quatre dimensions :\n\nExtraversion / Introversion : source d’énergie\n\nSensation / Intuition : perception de l’information\n\nThinking / Feeling : prise de décision\n\nJudging / Perceiving : style d’organisation', 20),
+(23, 'Test de Résilience', 3, 'Évaluer votre capacité à faire face aux difficultés et à rebondir après des situations stressantes.', 10);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `therapist_profile`
+--
+
+CREATE TABLE `therapist_profile` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `specialization` varchar(255) DEFAULT NULL,
+  `license_number` varchar(100) DEFAULT NULL,
+  `bio` text DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `address` varchar(500) DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `session_rate` int(11) DEFAULT NULL,
+  `available_days` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `therapist_profile`
+--
+
+INSERT INTO `therapist_profile` (`id`, `user_id`, `specialization`, `license_number`, `bio`, `created_at`, `address`, `latitude`, `longitude`, `phone`, `session_rate`, `available_days`) VALUES
+(1, 21, NULL, NULL, NULL, '2026-02-23 13:23:51', NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 23, 'Psychologie du travail', '', 'je suis une psy trés professionelle plus de 20 ans experience', '2026-02-23 13:39:37', 'نهج الخيرية, Montplaisir, خير الدين باشا, معتمدية حي الخضراء, Tunis, 1002, Tunisia', 36.8229502, 10.1866047, '93061108', 60, 'MON,WED,FRI'),
+(4, 24, NULL, '', '', '2026-02-23 22:23:48', NULL, 34.73907339121123, 10.774669647216799, '', NULL, '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tranche_resultat`
+--
+
+CREATE TABLE `tranche_resultat` (
+  `id_tranche` int(11) NOT NULL,
+  `id_test` int(11) NOT NULL,
+  `score_min` int(11) NOT NULL,
+  `score_max` int(11) NOT NULL,
+  `libelle` varchar(255) NOT NULL,
+  `interpretation` text DEFAULT NULL,
+  `niveau` varchar(50) DEFAULT 'Normal'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tranche_resultat`
+--
+
+INSERT INTO `tranche_resultat` (`id_tranche`, `id_test`, `score_min`, `score_max`, `libelle`, `interpretation`, `niveau`) VALUES
+(61, 2, 0, 10, 'Niveau faible', 'Vous présentez peu de signes.', 'faible'),
+(62, 3, 0, 2, 'Niveau faible', 'Vous présentez peu de signes.', 'faible'),
+(63, 5, 0, 10, 'Niveau faible', 'Vous présentez peu de signes.', 'faible'),
+(64, 16, 0, 5, 'Niveau faible', 'Vous présentez peu de signes.', 'faible'),
+(65, 18, 0, 5, 'Niveau faible', 'Vous présentez peu de signes.', 'faible'),
+(66, 19, 0, 5, 'Niveau faible', 'Vous présentez peu de signes.', 'faible'),
+(67, 20, 0, 5, 'Niveau faible', 'Vous présentez peu de signes.', 'faible'),
+(68, 21, 0, 5, 'Niveau faible', 'Vous présentez peu de signes.', 'faible'),
+(69, 22, 0, 10, 'Niveau faible', 'Vous présentez peu de signes.', 'faible'),
+(70, 23, 0, 5, 'Niveau faible', 'Vous présentez peu de signes.', 'faible'),
+(76, 2, 11, 20, 'Niveau modéré', 'Quelques signes à surveiller.', 'modere'),
+(77, 3, 3, 5, 'Niveau modéré', 'Quelques signes à surveiller.', 'modere'),
+(78, 5, 11, 20, 'Niveau modéré', 'Quelques signes à surveiller.', 'modere'),
+(79, 16, 6, 10, 'Niveau modéré', 'Quelques signes à surveiller.', 'modere'),
+(80, 18, 6, 10, 'Niveau modéré', 'Quelques signes à surveiller.', 'modere'),
+(81, 19, 6, 10, 'Niveau modéré', 'Quelques signes à surveiller.', 'modere'),
+(82, 20, 6, 10, 'Niveau modéré', 'Quelques signes à surveiller.', 'modere'),
+(83, 21, 6, 10, 'Niveau modéré', 'Quelques signes à surveiller.', 'modere'),
+(84, 22, 11, 20, 'Niveau modéré', 'Quelques signes à surveiller.', 'modere'),
+(85, 23, 6, 10, 'Niveau modéré', 'Quelques signes à surveiller.', 'modere'),
+(91, 2, 21, 30, 'Niveau élevé', 'Il est conseillé de consulter un professionnel.', 'eleve'),
+(92, 3, 6, 7, 'Niveau élevé', 'Il est conseillé de consulter un professionnel.', 'eleve'),
+(93, 5, 21, 30, 'Niveau élevé', 'Il est conseillé de consulter un professionnel.', 'eleve'),
+(94, 16, 11, 15, 'Niveau élevé', 'Il est conseillé de consulter un professionnel.', 'eleve'),
+(95, 18, 11, 15, 'Niveau élevé', 'Il est conseillé de consulter un professionnel.', 'eleve'),
+(96, 19, 11, 15, 'Niveau élevé', 'Il est conseillé de consulter un professionnel.', 'eleve'),
+(97, 20, 11, 15, 'Niveau élevé', 'Il est conseillé de consulter un professionnel.', 'eleve'),
+(98, 21, 11, 15, 'Niveau élevé', 'Il est conseillé de consulter un professionnel.', 'eleve'),
+(99, 22, 21, 30, 'Niveau élevé', 'Il est conseillé de consulter un professionnel.', 'eleve'),
+(100, 23, 11, 15, 'Niveau élevé', 'Il est conseillé de consulter un professionnel.', 'eleve'),
+(106, 2, 31, 40, 'Niveau critique', 'Consultez un professionnel rapidement.', 'critique'),
+(107, 3, 8, 10, 'Niveau critique', 'Consultez un professionnel rapidement.', 'critique'),
+(108, 5, 31, 40, 'Niveau critique', 'Consultez un professionnel rapidement.', 'critique'),
+(109, 16, 16, 20, 'Niveau critique', 'Consultez un professionnel rapidement.', 'critique'),
+(110, 18, 16, 20, 'Niveau critique', 'Consultez un professionnel rapidement.', 'critique'),
+(111, 19, 16, 20, 'Niveau critique', 'Consultez un professionnel rapidement.', 'critique'),
+(112, 20, 16, 20, 'Niveau critique', 'Consultez un professionnel rapidement.', 'critique'),
+(113, 21, 16, 20, 'Niveau critique', 'Consultez un professionnel rapidement.', 'critique'),
+(114, 22, 31, 40, 'Niveau critique', 'Consultez un professionnel rapidement.', 'critique'),
+(115, 23, 16, 20, 'Niveau critique', 'Consultez un professionnel rapidement.', 'critique');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `type_test`
+--
+
+CREATE TABLE `type_test` (
+  `id_type` int(11) NOT NULL,
+  `libelle` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `type_test`
+--
+
+INSERT INTO `type_test` (`id_type`, `libelle`) VALUES
+(1, 'Anxiété'),
+(2, 'Dépression'),
+(3, 'Stress'),
+(4, 'Personnalité'),
+(5, 'Soft skills'),
+(6, 'Relationnel et Social'),
+(7, 'Projectif');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `roles` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`roles`)),
+  `is_verified` tinyint(4) NOT NULL,
+  `status` varchar(20) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `profile_picture` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `last_login` datetime DEFAULT NULL,
+  `phone_number` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `email`, `password`, `roles`, `is_verified`, `status`, `first_name`, `last_name`, `profile_picture`, `created_at`, `last_login`, `phone_number`) VALUES
+(5, 'test2@gmail.com', '$2a$10$MSPfy6xXVilX9R9ILkBe0eqyp42HEtK6NwCDi/xuadEB/wu9pNFSG', '[\"ROLE_USER\"]', 1, 'ACTIVE', '', '', NULL, '2026-02-19 10:29:22', NULL, NULL),
+(6, 'test3@gmail.com', '$2a$10$mO0gZyGW0TdIolUHD6PjDOe5rg2VxPDRhvPG0yZQzYu7aMNT73sYq', '[\"ROLE_PSYCHOLOGUE\"]', 1, 'ACTIVE', '', '', NULL, '2026-02-19 10:29:22', NULL, NULL),
+(7, 'test4@gmail.com', '$2a$10$oCnzGiba7xwyl12BzrOij.p4GbeHJkWrrvNGXPgI4zG/j.ilR7Cn2', '[\"ROLE_PSYCHOLOGUE\"]', 1, 'ACTIVE', '', '', NULL, '2026-02-19 10:29:22', NULL, NULL),
+(8, 'test5@gmail.com', '$2a$10$EjHQMsCqHC6SPxOLdxxbvO.mHpuMBLswYr03Sc4IC0l6XBEsY9ux2', '[\"ROLE_USER\"]', 0, 'PENDING', '', '', NULL, '2026-02-19 10:29:22', NULL, NULL),
+(16, 'test7@gmail.com', '$2a$10$aV31PkIJGgX.uM.b9qaiAOI7wg91xTnszJxRm./yUoSnOSqKnT3KG', '[\"ROLE_PSYCHOLOGUE\"]', 1, 'ACTIVE', '', '', NULL, '2026-02-19 10:29:22', NULL, NULL),
+(17, 'maalaoui.ahmed@gmail.com', '$2a$10$tbDvSE9FlGqhrCuubQPUy.5bWU6oC7Izq.kCAXNsWI51K7pV/3mA6', '[\"ROLE_USER\"]', 1, 'ACTIVE', 'maalaoui', 'ahmed', 'C:\\Users\\Laptop l\\Desktop\\javafx-symfony-test\\javafx-symfony-test\\uploads\\profiles\\17_1771488428109_istockphoto-1443828576-612x612.jpg', '2026-02-19 10:29:22', NULL, NULL),
+(18, 'sliment@gmail.com', '$2a$10$A6/3RnpJNdFxHJ0KwpnHDus/dQbfo/5k2OJpJCjgdAvCYltPvMqRW', '[\"ROLE_PSYCHOLOGUE\"]', 0, 'PENDING', 'slimen', 'abyeth', 'C:\\Users\\Laptop l\\Desktop\\javafx-symfony-test\\javafx-symfony-test\\uploads\\profiles\\18_1771488651018_6736559ae72edd152d769cb2490b2c8e.jpg', '2026-02-19 10:29:22', '2026-02-22 19:58:35', NULL),
+(19, 'maalaoui@gmail.com', '$2a$10$Hxz4u03pICYS.MGb6weO7e.KUw2bgkzXzXjIkCHrvYrr/rg.cGZii', '[\"ROLE_USER\"]', 1, 'ACTIVE', 'ahmed', 'maalaoui', 'C:\\Users\\Bratan\\javafx-symfony-test\\javafx-symfony-test\\uploads\\profiles\\19_1771779678361_35 BURPEES.jpg', '2026-02-22 16:07:02', '2026-02-22 19:59:43', NULL),
+(20, 'ahmed1@gmail.com', '$2a$10$g6VLDEEozZWn/KwVLEGiBubnTn12qGv1D2gIVavhokPO3Rs2HDzIO', '[\"ROLE_USER\"]', 1, 'ACTIVE', 'ahmed', 'maalaoui', 'C:\\Users\\Bratan\\javafx-symfony-test\\javafx-symfony-test\\uploads\\profiles\\20_1771801012512_ds hombres.jpg', '2026-02-22 23:55:25', '2026-02-28 03:15:57', '93061108'),
+(21, 'ahmed@gmail.com', '$2a$10$6kjfvrthEjMLJxMSJcQhceQ5d7T1TFoWSi47rZkGBpFGulubjd8wG', '[\"ROLE_PSYCHOLOGUE\"]', 1, 'ACTIVE', 'ahmed', 'tbib', NULL, '2026-02-23 13:23:51', '2026-02-24 19:37:29', NULL),
+(23, 'imen@gmail.com', '$2a$10$esswbQgOY1/7CtFUh1sTOeu3JpVNXSZ/MurLzYQ0eTFD6UXNo2K8m', '[\"ROLE_PSYCHOLOGUE\"]', 1, 'ACTIVE', 'imen', 'makhlouf', 'C:\\Users\\Bratan\\javafx-symfony-test\\javafx-symfony-test\\uploads\\profiles\\23_1772005529016_4_DiagrammeObjets.png', '2026-02-23 13:39:37', '2026-02-28 03:01:54', NULL),
+(24, 'mohamed@gmail.com', '$2a$10$Ii0eterZFDD/O/ssiop/xuV5OpJ4LBeIH230RAr/69w1iaW7kgBqa', '[\"ROLE_PSYCHOLOGUE\"]', 1, 'ACTIVE', 'mohamed', 'salah', 'C:\\Users\\Bratan\\javafx-symfony-test\\javafx-symfony-test\\uploads\\profiles\\24_1772201383878_35 BURPEES.jpg', '2026-02-23 22:23:48', '2026-02-27 15:08:15', NULL),
+(27, 'admin@innertrack.com', '$2a$10$TRj60oLMdnKHIrF5nJ9BMuuEWVxE4b.S0E7kjwiGjfj3LiEq/C/fS', '[\"ROLE_ADMIN\"]', 1, 'ACTIVE', 'admin', 'innertrack', NULL, '2026-02-25 22:04:12', '2026-02-27 15:06:08', NULL),
+(28, 'emna@gmail.com', '$2a$10$9H4TY2DHmmj/Qm5zo0UZuuNRM8q/eQMBdBvg0ZKUfHrcfz5o2tNMW', '[\"ROLE_USER\"]', 1, 'ACTIVE', 'emna', 'maalaoui', NULL, '2026-02-26 00:36:40', '2026-02-27 15:05:19', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_settings`
+--
+
+CREATE TABLE `user_settings` (
+  `user_id` int(11) NOT NULL,
+  `theme` enum('LIGHT','DARK') DEFAULT 'LIGHT',
+  `font_size` enum('SMALL','NORMAL','LARGE') DEFAULT 'NORMAL',
+  `language` enum('EN','FR') DEFAULT 'FR'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_settings`
+--
+
+INSERT INTO `user_settings` (`user_id`, `theme`, `font_size`, `language`) VALUES
+(18, 'DARK', 'NORMAL', 'EN'),
+(19, 'DARK', 'NORMAL', 'EN'),
+(20, 'LIGHT', 'NORMAL', 'FR'),
+(21, 'LIGHT', 'NORMAL', 'FR'),
+(23, 'DARK', 'NORMAL', 'EN'),
+(24, 'LIGHT', 'NORMAL', 'FR'),
+(27, 'LIGHT', 'NORMAL', 'FR'),
+(28, 'LIGHT', 'NORMAL', 'FR');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `ai_recommandation`
+--
+ALTER TABLE `ai_recommandation`
+  ADD PRIMARY KEY (`id_recommandation`),
+  ADD KEY `IDX_AI_REC_USER` (`id_utilisateur`),
+  ADD KEY `IDX_AI_REC_TEST` (`id_test`);
+
+--
+-- Indexes for table `article`
+--
+ALTER TABLE `article`
+  ADD PRIMARY KEY (`id_Article`),
+  ADD KEY `fk_article_user` (`auteur_user_id`),
+  ADD KEY `fk_article_categorie` (`id_categorie`);
+
+--
+-- Indexes for table `article_tag`
+--
+ALTER TABLE `article_tag`
+  ADD PRIMARY KEY (`id_article`,`id_tag`),
+  ADD KEY `fk_at_tag` (`id_tag`);
+
+--
+-- Indexes for table `blocked_user`
+--
+ALTER TABLE `blocked_user`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_block_pair` (`client_id`,`therapist_id`),
+  ADD KEY `fk_block_therapist` (`therapist_id`);
+
+--
+-- Indexes for table `categorie`
+--
+ALTER TABLE `categorie`
+  ADD PRIMARY KEY (`id_categorie`);
+
+--
+-- Indexes for table `client_profile`
+--
+ALTER TABLE `client_profile`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `contact_request`
+--
+ALTER TABLE `contact_request`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_cr_client` (`client_id`),
+  ADD KEY `fk_cr_therapist` (`therapist_id`);
+
+--
+-- Indexes for table `conversation`
+--
+ALTER TABLE `conversation`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_conv` (`client_id`,`therapist_id`),
+  ADD KEY `fk_conv_therapist` (`therapist_id`);
+
+--
+-- Indexes for table `doctrine_migration_versions`
+--
+ALTER TABLE `doctrine_migration_versions`
+  ADD PRIMARY KEY (`version`);
+
+--
+-- Indexes for table `email_verification_code`
+--
+ALTER TABLE `email_verification_code`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_BD2ADC58A76ED395` (`user_id`);
+
+--
+-- Indexes for table `habittracker`
+--
+ALTER TABLE `habittracker`
+  ADD PRIMARY KEY (`Id_Habit`),
+  ADD KEY `fk_habit_user` (`id`),
+  ADD KEY `fk_habit_journal` (`id_journal`);
+
+--
+-- Indexes for table `historique_resultat`
+--
+ALTER TABLE `historique_resultat`
+  ADD PRIMARY KEY (`id_historique`),
+  ADD KEY `IDX_HIST_USER` (`id_utilisateur`),
+  ADD KEY `IDX_HIST_TEST` (`id_test`);
+
+--
+-- Indexes for table `journal_emotionnel`
+--
+ALTER TABLE `journal_emotionnel`
+  ADD PRIMARY KEY (`id_journal`),
+  ADD KEY `fk_journal_user` (`id`);
+
+--
+-- Indexes for table `learning_path`
+--
+ALTER TABLE `learning_path`
+  ADD PRIMARY KEY (`id_path`),
+  ADD KEY `fk_lp_user` (`created_by_id`);
+
+--
+-- Indexes for table `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_msg_conv` (`conversation_id`,`sent_at`),
+  ADD KEY `fk_msg_sender` (`sender_id`);
+
+--
+-- Indexes for table `messenger_messages`
+--
+ALTER TABLE `messenger_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_75EA56E0FB7336F0E3BD61CE16BA31DBBF396750` (`queue_name`,`available_at`,`delivered_at`,`id`);
+
+--
+-- Indexes for table `notification`
+--
+ALTER TABLE `notification`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_notif_user` (`user_id`,`is_read`);
+
+--
+-- Indexes for table `password_reset_codes`
+--
+ALTER TABLE `password_reset_codes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_reset_user` (`user_id`);
+
+--
+-- Indexes for table `path_article`
+--
+ALTER TABLE `path_article`
+  ADD PRIMARY KEY (`id_path`,`id_article`),
+  ADD KEY `fk_pa_article` (`id_article`);
+
+--
+-- Indexes for table `question`
+--
+ALTER TABLE `question`
+  ADD PRIMARY KEY (`id_question`),
+  ADD KEY `IDX_QUESTION_TEST` (`id_test`);
+
+--
+-- Indexes for table `reponse`
+--
+ALTER TABLE `reponse`
+  ADD PRIMARY KEY (`id_reponse`),
+  ADD KEY `IDX_REPONSE_QUESTION` (`id_question`);
+
+--
+-- Indexes for table `reponse_utilisateur`
+--
+ALTER TABLE `reponse_utilisateur`
+  ADD PRIMARY KEY (`id_reponse_utilisateur`),
+  ADD KEY `IDX_RU_USER` (`id_utilisateur`),
+  ADD KEY `IDX_RU_QUESTION` (`id_question`),
+  ADD KEY `IDX_RU_REPONSE` (`id_reponse`);
+
+--
+-- Indexes for table `report`
+--
+ALTER TABLE `report`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_report_status` (`status`),
+  ADD KEY `idx_report_reporter` (`reporter_id`),
+  ADD KEY `fk_report_reported` (`reported_id`);
+
+--
+-- Indexes for table `resultat`
+--
+ALTER TABLE `resultat`
+  ADD PRIMARY KEY (`id_resultat`),
+  ADD UNIQUE KEY `UNIQ_RESULT_TEST_USER` (`id_test`,`id_utilisateur`),
+  ADD KEY `IDX_RESULTAT_USER` (`id_utilisateur`);
+
+--
+-- Indexes for table `tag`
+--
+ALTER TABLE `tag`
+  ADD PRIMARY KEY (`id_tag`),
+  ADD UNIQUE KEY `nom` (`nom`);
+
+--
+-- Indexes for table `test_psychologique`
+--
+ALTER TABLE `test_psychologique`
+  ADD PRIMARY KEY (`id_test`),
+  ADD KEY `IDX_TEST_TYPE` (`id_type`);
+
+--
+-- Indexes for table `therapist_profile`
+--
+ALTER TABLE `therapist_profile`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `tranche_resultat`
+--
+ALTER TABLE `tranche_resultat`
+  ADD PRIMARY KEY (`id_tranche`),
+  ADD KEY `IDX_TRANCHE_TEST` (`id_test`);
+
+--
+-- Indexes for table `type_test`
+--
+ALTER TABLE `type_test`
+  ADD PRIMARY KEY (`id_type`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_8D93D649E7927C74` (`email`);
+
+--
+-- Indexes for table `user_settings`
+--
+ALTER TABLE `user_settings`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `ai_recommandation`
+--
+ALTER TABLE `ai_recommandation`
+  MODIFY `id_recommandation` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `article`
+--
+ALTER TABLE `article`
+  MODIFY `id_Article` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `blocked_user`
+--
+ALTER TABLE `blocked_user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `categorie`
+--
+ALTER TABLE `categorie`
+  MODIFY `id_categorie` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `client_profile`
+--
+ALTER TABLE `client_profile`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `contact_request`
+--
+ALTER TABLE `contact_request`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `conversation`
+--
+ALTER TABLE `conversation`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `email_verification_code`
+--
+ALTER TABLE `email_verification_code`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `habittracker`
+--
+ALTER TABLE `habittracker`
+  MODIFY `Id_Habit` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `historique_resultat`
+--
+ALTER TABLE `historique_resultat`
+  MODIFY `id_historique` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `journal_emotionnel`
+--
+ALTER TABLE `journal_emotionnel`
+  MODIFY `id_journal` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `learning_path`
+--
+ALTER TABLE `learning_path`
+  MODIFY `id_path` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `message`
+--
+ALTER TABLE `message`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `messenger_messages`
+--
+ALTER TABLE `messenger_messages`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `notification`
+--
+ALTER TABLE `notification`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT for table `password_reset_codes`
+--
+ALTER TABLE `password_reset_codes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `question`
+--
+ALTER TABLE `question`
+  MODIFY `id_question` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+
+--
+-- AUTO_INCREMENT for table `reponse`
+--
+ALTER TABLE `reponse`
+  MODIFY `id_reponse` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=331;
+
+--
+-- AUTO_INCREMENT for table `reponse_utilisateur`
+--
+ALTER TABLE `reponse_utilisateur`
+  MODIFY `id_reponse_utilisateur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+
+--
+-- AUTO_INCREMENT for table `report`
+--
+ALTER TABLE `report`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `resultat`
+--
+ALTER TABLE `resultat`
+  MODIFY `id_resultat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `tag`
+--
+ALTER TABLE `tag`
+  MODIFY `id_tag` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `test_psychologique`
+--
+ALTER TABLE `test_psychologique`
+  MODIFY `id_test` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- AUTO_INCREMENT for table `therapist_profile`
+--
+ALTER TABLE `therapist_profile`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `tranche_resultat`
+--
+ALTER TABLE `tranche_resultat`
+  MODIFY `id_tranche` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+
+--
+-- AUTO_INCREMENT for table `type_test`
+--
+ALTER TABLE `type_test`
+  MODIFY `id_type` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `ai_recommandation`
+--
+ALTER TABLE `ai_recommandation`
+  ADD CONSTRAINT `FK_AI_REC_TEST` FOREIGN KEY (`id_test`) REFERENCES `test_psychologique` (`id_test`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_AI_REC_USER` FOREIGN KEY (`id_utilisateur`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `article`
+--
+ALTER TABLE `article`
+  ADD CONSTRAINT `fk_article_categorie` FOREIGN KEY (`id_categorie`) REFERENCES `categorie` (`id_categorie`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_article_user` FOREIGN KEY (`auteur_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `article_tag`
+--
+ALTER TABLE `article_tag`
+  ADD CONSTRAINT `fk_at_article` FOREIGN KEY (`id_article`) REFERENCES `article` (`id_Article`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_at_tag` FOREIGN KEY (`id_tag`) REFERENCES `tag` (`id_tag`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `blocked_user`
+--
+ALTER TABLE `blocked_user`
+  ADD CONSTRAINT `fk_block_client` FOREIGN KEY (`client_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_block_therapist` FOREIGN KEY (`therapist_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `client_profile`
+--
+ALTER TABLE `client_profile`
+  ADD CONSTRAINT `fk_client_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `contact_request`
+--
+ALTER TABLE `contact_request`
+  ADD CONSTRAINT `fk_cr_client` FOREIGN KEY (`client_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_cr_therapist` FOREIGN KEY (`therapist_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `conversation`
+--
+ALTER TABLE `conversation`
+  ADD CONSTRAINT `fk_conv_client` FOREIGN KEY (`client_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_conv_therapist` FOREIGN KEY (`therapist_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `email_verification_code`
+--
+ALTER TABLE `email_verification_code`
+  ADD CONSTRAINT `FK_BD2ADC58A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `habittracker`
+--
+ALTER TABLE `habittracker`
+  ADD CONSTRAINT `fk_habit_journal` FOREIGN KEY (`id_journal`) REFERENCES `journal_emotionnel` (`id_journal`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_habit_user` FOREIGN KEY (`id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `historique_resultat`
+--
+ALTER TABLE `historique_resultat`
+  ADD CONSTRAINT `FK_HIST_TEST` FOREIGN KEY (`id_test`) REFERENCES `test_psychologique` (`id_test`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_HIST_USER` FOREIGN KEY (`id_utilisateur`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `journal_emotionnel`
+--
+ALTER TABLE `journal_emotionnel`
+  ADD CONSTRAINT `fk_journal_user` FOREIGN KEY (`id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `learning_path`
+--
+ALTER TABLE `learning_path`
+  ADD CONSTRAINT `fk_lp_user` FOREIGN KEY (`created_by_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `message`
+--
+ALTER TABLE `message`
+  ADD CONSTRAINT `fk_msg_conv` FOREIGN KEY (`conversation_id`) REFERENCES `conversation` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_msg_sender` FOREIGN KEY (`sender_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `notification`
+--
+ALTER TABLE `notification`
+  ADD CONSTRAINT `fk_notif_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `password_reset_codes`
+--
+ALTER TABLE `password_reset_codes`
+  ADD CONSTRAINT `fk_reset_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `path_article`
+--
+ALTER TABLE `path_article`
+  ADD CONSTRAINT `fk_pa_article` FOREIGN KEY (`id_article`) REFERENCES `article` (`id_Article`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_pa_path` FOREIGN KEY (`id_path`) REFERENCES `learning_path` (`id_path`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `question`
+--
+ALTER TABLE `question`
+  ADD CONSTRAINT `FK_QUESTION_TEST` FOREIGN KEY (`id_test`) REFERENCES `test_psychologique` (`id_test`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `reponse`
+--
+ALTER TABLE `reponse`
+  ADD CONSTRAINT `FK_REPONSE_QUESTION` FOREIGN KEY (`id_question`) REFERENCES `question` (`id_question`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `reponse_utilisateur`
+--
+ALTER TABLE `reponse_utilisateur`
+  ADD CONSTRAINT `FK_RU_QUESTION` FOREIGN KEY (`id_question`) REFERENCES `question` (`id_question`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_RU_REPONSE` FOREIGN KEY (`id_reponse`) REFERENCES `reponse` (`id_reponse`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_RU_USER` FOREIGN KEY (`id_utilisateur`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `report`
+--
+ALTER TABLE `report`
+  ADD CONSTRAINT `fk_report_reported` FOREIGN KEY (`reported_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_report_reporter` FOREIGN KEY (`reporter_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `resultat`
+--
+ALTER TABLE `resultat`
+  ADD CONSTRAINT `FK_RESULTAT_TEST` FOREIGN KEY (`id_test`) REFERENCES `test_psychologique` (`id_test`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_RESULTAT_USER` FOREIGN KEY (`id_utilisateur`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `test_psychologique`
+--
+ALTER TABLE `test_psychologique`
+  ADD CONSTRAINT `FK_TEST_TYPE` FOREIGN KEY (`id_type`) REFERENCES `type_test` (`id_type`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `therapist_profile`
+--
+ALTER TABLE `therapist_profile`
+  ADD CONSTRAINT `fk_therapist_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tranche_resultat`
+--
+ALTER TABLE `tranche_resultat`
+  ADD CONSTRAINT `FK_TRANCHE_TEST` FOREIGN KEY (`id_test`) REFERENCES `test_psychologique` (`id_test`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `user_settings`
+--
+ALTER TABLE `user_settings`
+  ADD CONSTRAINT `FK_SETTINGS_USER` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+

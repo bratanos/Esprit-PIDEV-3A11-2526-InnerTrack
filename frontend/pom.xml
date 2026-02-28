@@ -162,6 +162,28 @@
       <artifactId>dotenv-java</artifactId>
       <version>3.0.0</version>
     </dependency>
+
+    <!-- Journal & Habit Tracker dependencies -->
+    <dependency>
+      <groupId>com.itextpdf</groupId>
+      <artifactId>itextpdf</artifactId>
+      <version>5.5.13.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>core</artifactId>
+      <version>3.5.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>javase</artifactId>
+      <version>3.5.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-swing</artifactId>
+      <version>21</version>
+    </dependency>
   </dependencies>
 
   <build>

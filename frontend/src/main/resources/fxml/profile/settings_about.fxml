@@ -10,11 +10,11 @@
     </padding>
 
     <Label text="InnerTrack v1.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
-    <Label text="Solution de gestion et de suivi de santé mentale." styleClass="text-muted" />
+    <Label text="Mental health tracking and management solution." styleClass="text-muted" />
     
     <Separator maxWidth="300" />
     
-    <Label text="Développé par l'équipe InnerTrack" />
-    <Label text="© 2026 Tous droits réservés." styleClass="text-muted" />
+    <Label text="Developed by the InnerTrack team" />
+    <Label text="© 2026 All rights reserved." styleClass="text-muted" />
 
 </VBox>

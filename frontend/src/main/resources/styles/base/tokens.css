@@ -1,22 +1,33 @@
-/* tokens.css - Single Source of Truth for Design Variables */
+/* tokens.css - Primary Design Tokens */
 .root {
-    /* Colors */
-    -it-bg: #f5f7fa;
+    /* Colors - Higher saturation for a "punchy" look */
+    -it-bg: #f8fafc;
     -it-card: #ffffff;
-    -it-text: #2d3748;
-    -it-text-muted: #718096;
+    -it-text: #1e293b;
+    -it-text-muted: #64748b;
 
     -it-primary: #8b5cf6;
-    /* Vibrant Purple */
-    -it-primary-hover: #7c3aed;
-    -it-primary-active: #6d28d9;
+    /* Punchy Purple */
+    -it-primary-vibrant: #7c3aed;
+    -it-primary-soft: rgba(139, 92, 246, 0.1);
 
-    -it-secondary: #4299e1;
-    -it-secondary-hover: #3182ce;
-    -it-secondary-active: #2b6cb0;
+    -it-secondary: #0ea5e9;
+    /* Sky Blue */
+    -it-success: #10b981;
+    /* Emerald Green */
+    -it-warning: #f59e0b;
+    /* Amber */
+    -it-error: #ef4444;
+    /* Rose Red */
 
-    -it-success: #48bb78;
-    -it-warning: #f6ad55;
-    -it-error: #fc8181;
     -it-border: #e2e8f0;
+
+    /* Layout Tokens */
+    -it-radius-md: 12px;
+    -it-radius-lg: 20px;
+
+    /* Elevation - Punchy Shadows */
+    -it-shadow-sm: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 5, 0, 0, 2);
+    -it-shadow-md: dropshadow(three-pass-box, rgba(139, 92, 246, 0.15), 15, 0, 0, 6);
+    -it-shadow-lg: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 25, 0, 0, 10);
 }

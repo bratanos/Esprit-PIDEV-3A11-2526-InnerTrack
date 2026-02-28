@@ -1,0 +1,175 @@
+package com.innertrack.service;
+
+import com.innertrack.util.DBConnection;
+import com.innertrack.model.Habitude;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class HabitudeService implements ICrudService<Habitude> {
+    private Connection connection;
+
+    public HabitudeService() {
+        connection = DBConnection.getInstance().getConnection();
+    }
+
+    @Override
+    public void create(Habitude habitude) throws SQLException {
+        String sql = "INSERT INTO habittracker (nom_habitude, emotion_dominantes, note_textuelle, " +
+                "niveau_energie, niveau_stress, qualite_sommeil, date_creation, id, id_journal) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, habitude.getNomHabitude());
+            ps.setString(2, habitude.getEmotionDominantes());
+            ps.setString(3, habitude.getNoteTextuelle());
+            ps.setInt(4, habitude.getNiveauEnergie());
+            ps.setInt(5, habitude.getNiveauStress());
+            ps.setInt(6, habitude.getQualiteSommeil());
+            ps.setDate(7, java.sql.Date.valueOf(habitude.getDateCreation()));
+            ps.setInt(8, habitude.getIdUser());
+
+            if (habitude.getIdJournal() != null) {
+                ps.setInt(9, habitude.getIdJournal());
+            } else {
+                ps.setNull(9, java.sql.Types.INTEGER);
+            }
+
+            ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public Habitude read(int id) throws SQLException {
+        String sql = "SELECT * FROM habittracker WHERE Id_Habit = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void update(Habitude habitude) throws SQLException {
+        String sql = "UPDATE habittracker SET nom_habitude = ?, emotion_dominantes = ?, " +
+                "note_textuelle = ?, niveau_energie = ?, niveau_stress = ?, " +
+                "qualite_sommeil = ?, date_creation = ? WHERE Id_Habit = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, habitude.getNomHabitude());
+            ps.setString(2, habitude.getEmotionDominantes());
+            ps.setString(3, habitude.getNoteTextuelle());
+            ps.setInt(4, habitude.getNiveauEnergie());
+            ps.setInt(5, habitude.getNiveauStress());
+            ps.setInt(6, habitude.getQualiteSommeil());
+            ps.setDate(7, Date.valueOf(habitude.getDateCreation()));
+            ps.setInt(8, habitude.getIdHabit());
+            ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public void delete(int id) throws SQLException {
+        String sql = "DELETE FROM habittracker WHERE Id_Habit = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public List<Habitude> findAll() throws SQLException {
+        String sql = "SELECT * FROM habittracker";
+        try (Statement statement = connection.createStatement();
+                ResultSet rs = statement.executeQuery(sql)) {
+            List<Habitude> habitudes = new ArrayList<>();
+            while (rs.next()) {
+                habitudes.add(mapRow(rs));
+            }
+            return habitudes;
+        }
+    }
+
+    /** Returns only habits belonging to the specified user */
+    public List<Habitude> findByUserId(int userId) throws SQLException {
+        String sql = "SELECT * FROM habittracker WHERE id = ? ORDER BY date_creation DESC";
+        List<Habitude> habitudes = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    habitudes.add(mapRow(rs));
+                }
+            }
+        }
+        return habitudes;
+    }
+
+    /** Search habits by keyword, scoped to a user */
+    public List<Habitude> search(String keyword, int userId) throws SQLException {
+        String sql = "SELECT * FROM habittracker WHERE id = ? AND (nom_habitude LIKE ? " +
+                "OR emotion_dominantes LIKE ? " +
+                "OR note_textuelle LIKE ?) ORDER BY date_creation DESC";
+
+        List<Habitude> habitudes = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String pattern = "%" + keyword + "%";
+            ps.setInt(1, userId);
+            ps.setString(2, pattern);
+            ps.setString(3, pattern);
+            ps.setString(4, pattern);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                habitudes.add(mapRow(rs));
+            }
+        }
+        return habitudes;
+    }
+
+    /** Unscoped search (kept for backward compat) */
+    public List<Habitude> search(String keyword) throws SQLException {
+        String sql = "SELECT * FROM habittracker WHERE nom_habitude LIKE ? " +
+                "OR emotion_dominantes LIKE ? " +
+                "OR note_textuelle LIKE ?";
+
+        List<Habitude> habitudes = new ArrayList<>();
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String pattern = "%" + keyword + "%";
+            ps.setString(1, pattern);
+            ps.setString(2, pattern);
+            ps.setString(3, pattern);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                habitudes.add(mapRow(rs));
+            }
+        }
+        return habitudes;
+    }
+
+    private Habitude mapRow(ResultSet rs) throws SQLException {
+        Habitude h = new Habitude();
+        h.setIdHabit(rs.getInt("Id_Habit"));
+        h.setNomHabitude(rs.getString("nom_habitude"));
+        h.setEmotionDominantes(rs.getString("emotion_dominantes"));
+        h.setNoteTextuelle(rs.getString("note_textuelle"));
+        h.setNiveauEnergie(rs.getInt("niveau_energie"));
+        h.setNiveauStress(rs.getInt("niveau_stress"));
+        h.setQualiteSommeil(rs.getInt("qualite_sommeil"));
+        h.setDateCreation(rs.getDate("date_creation").toLocalDate());
+        h.setIdUser(rs.getInt("id"));
+
+        int idJournal = rs.getInt("id_journal");
+        if (!rs.wasNull()) {
+            h.setIdJournal(idJournal);
+        }
+
+        return h;
+    }
+}

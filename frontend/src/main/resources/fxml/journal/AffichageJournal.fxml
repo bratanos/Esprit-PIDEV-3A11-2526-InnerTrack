@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.innertrack.controller.journal.AffichageJournalController"
+            stylesheets="@../../styles/views/journal.css">
+
+    <!-- ============ EN-TETE ============ -->
+    <top>
+        <VBox spacing="0">
+            <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+                <padding><Insets top="20" right="30" bottom="20" left="30"/></padding>
+                <Button text="⬅ Dashboard" styleClass="cancel-button" onAction="#allerAuDashboard" style="-fx-border-color: transparent; -fx-padding: 8 15;"/>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="📓 Personal Journal" styleClass="title" style="-fx-font-size: 24px;"/>
+                    <Label text="View, add, and manage your journal entries" styleClass="subtitle" style="-fx-font-size: 13px;"/>
+                </VBox>
+                <Button text="+ New Entry" styleClass="add-test-btn"
+                        onAction="#ajouterNouveauJournal" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="15"
+                  style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
+                <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
+                <TextField fx:id="searchField"
+                           promptText="Search an entry..."
+                           prefWidth="300"
+                           styleClass="search-field"/>
+                <Button fx:id="clearButton" text="❌" styleClass="icon-button"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="📄 Export PDF" onAction="#exporterPDF" styleClass="export-button"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ============ CONTENU PRINCIPAL ============ -->
+    <center>
+        <VBox spacing="0" style="-fx-background-color: #f5f7fa;">
+
+            <!-- Barre de statistiques -->
+            <HBox spacing="15" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
+                <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
+                <HBox styleClass="stat-card" spacing="10" alignment="CENTER" prefWidth="150">
+                    <VBox alignment="CENTER" spacing="2">
+                        <Label fx:id="totalEntreesLabel" text="0" styleClass="stat-number" style="-fx-font-size: 28px;"/>
+                        <Label text="Entries" styleClass="stat-label"/>
+                    </VBox>
+                </HBox>
+                <HBox styleClass="stat-card" spacing="10" alignment="CENTER" prefWidth="150">
+                    <VBox alignment="CENTER" spacing="2">
+                        <Label fx:id="moyenneHumeurLabel" text="—" styleClass="stat-number" style="-fx-font-size: 28px;"/>
+                        <Label text="Average Mood" styleClass="stat-label"/>
+                    </VBox>
+                </HBox>
+            </HBox>
+
+            <!-- Tableau des entrees -->
+            <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS" style="-fx-padding: 20;">
+                <VBox spacing="10">
+                    <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
+
+                    <HBox styleClass="section-box" alignment="CENTER_LEFT" spacing="10">
+                        <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
+                        <Label text="📋  My Journal Entries" styleClass="section-title" style="-fx-font-size: 16px;" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+
+                    <TableView fx:id="journalTable" VBox.vgrow="ALWAYS" minHeight="150"
+                               style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 8, 0, 0, 2);">
+                        <columns>
+                            <TableColumn fx:id="humeurColumn" text="😊 Mood" prefWidth="150"/>
+                            <TableColumn fx:id="noteColumn" text="📝 Note" prefWidth="1200"/>
+                            <TableColumn fx:id="sonColumn" prefWidth="50"/>
+                            <TableColumn fx:id="dateColumn" text="📅 Date" prefWidth="150"/>
+                            <TableColumn fx:id="voirColumn" text="👁 See Details" prefWidth="100"/>
+                        </columns>
+                        <placeholder>
+                            <VBox alignment="CENTER" spacing="10">
+                                <Label text="📓" style="-fx-font-size: 48px; -fx-text-fill: #cbd5e0;"/>
+                                <Label text="No entries yet" styleClass="empty-title" style="-fx-font-size: 16px;"/>
+                                <Label text="Click on &quot;+ New Entry&quot; to begin" styleClass="empty-subtitle"/>
+                            </VBox>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <!-- ============ PIED DE PAGE ============ -->
+    <bottom>
+        <HBox styleClass="footer" alignment="CENTER_RIGHT" spacing="10">
+            <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+            <Label fx:id="statusLabel" text="" styleClass="status-label" HBox.hgrow="ALWAYS"/>
+            <Button text="✏️ Edit" styleClass="edit-btn-header" onAction="#modifierJournal"/>
+            <Button text="🗑️ Delete" styleClass="delete-btn-header" onAction="#supprimerJournal"/>
+            <Button text="🔄 Habits" styleClass="refresh-btn" onAction="#allerAuxHabitudes"/>
+        </HBox>
+    </bottom>
+</BorderPane>

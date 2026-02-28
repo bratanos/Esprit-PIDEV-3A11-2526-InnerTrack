@@ -4,24 +4,21 @@
 /* ─── Root & Scene Background ─────────────────────────────────────────────── */
 .root.dark-theme,
 .dark-theme {
-    -it-bg: #0f1117;
-    -it-card: #1c1f26;
-    -it-text: #e2e8f0;
+    -it-bg: #0b0d11;
+    -it-card: #151921;
+    -it-text: #f1f5f9;
     -it-text-muted: #94a3b8;
-    -it-primary: #8b5cf6;
-    -it-primary-hover: #7c3aed;
-    -it-primary-active: #6d28d9;
-    -it-secondary: #1e3a5f;
-    -it-secondary-hover: #2a4f7a;
-    -it-secondary-active: #152c47;
-    -it-success: #22c98a;
-    -it-error: #f87171;
-    -it-border: #2d3748;
+    -it-primary-vibrant: #a78bfa;
+    -it-primary-soft: rgba(139, 92, 246, 0.2);
+    -it-secondary: #0ea5e9;
+    -it-success: #10b981;
+    -it-error: #f43f5e;
+    -it-border: #1e293b;
 
-    -fx-background-color: #0f1117;
-    -fx-base: #1c1f26;
-    -fx-control-inner-background: #1a1d24;
-    -fx-text-fill: #ffffff;
+    -fx-background-color: #0b0d11;
+    -fx-base: #151921;
+    -fx-control-inner-background: #151921;
+    -fx-text-fill: #f1f5f9;
 }
 
 /* ─── Scene & Pane Backgrounds ────────────────────────────────────────────── */
@@ -417,4 +414,113 @@
 
 .dark-theme .input-field:focused {
     -fx-border-color: -it-primary;
+}
+
+   
+
+/* ─── Journal & Habits Dark Mode Fixes ─── */
+.dark-theme .header {
+    -fx-background-color: linear-gradient(to right, #4c1d95, #3b0764);
+}
+
+.dark-theme .stat-card,
+.dark-theme .section-box {
+    -fx-background-color: #1c1f26 !important;
+    -fx-border-color: #2d3748 !important;
+}
+
+.dark-theme .journalTable,
+.dark-theme .table-view,
+.dark-theme .table-view .column-header-background,
+.dark-theme .table-view .column-header {
+    -fx-background-color: #1c1f26 !important;
+}
+
+.dark-theme .footer {
+    -fx-background-color: #0f1117 !important;
+    -fx-border-color: #2d3748 !important;
+}
+
+.dark-theme .search-field {
+    -fx-background-color: #1a1d24 !important;
+    -fx-border-color: #2d3748 !important;
+    -fx-text-fill: #e2e8f0 !important;
+    -fx-prompt-text-fill: #4a5568 !important;
+}
+
+.dark-theme .search-field:focused {
+    -fx-border-color: #7c3aed !important;
+    -fx-background-color: #21252f !important;
+}
+
+.dark-theme .custom-text-field,
+.dark-theme .custom-text-area {
+    -fx-background-color: #1a1d24 !important;
+    -fx-border-color: #2d3748 !important;
+    -fx-text-fill: #e2e8f0 !important;
+}
+
+.dark-theme .custom-text-field:focused,
+.dark-theme .custom-text-area:focused {
+    -fx-border-color: #7c3aed !important;
+    -fx-background-color: #21252f !important;
+}
+
+.dark-theme .root>.vbox {
+    -fx-background-color: #1c1f26;
+}
+
+.dark-theme .scroll-pane {
+    -fx-background: #0f1117;
+    -fx-background-color: transparent;
+}
+
+/* --- Chat Dark Mode Fixes --- */
+.dark-theme .chat-header {
+    -fx-background-color: #1a1d24 !important;
+    -fx-effect: none !important;
+    -fx-border-color: #2d3748 !important;
+    -fx-border-width: 0 0 1 0 !important;
+}
+
+.dark-theme .chat-back-btn {
+    -fx-background-color: #2d3748 !important;
+}
+
+.dark-theme .chat-title-label {
+    -fx-text-fill: #f7fafc !important;
+}
+
+.dark-theme .chat-subtitle-label,
+.dark-theme .chat-left-title {
+    -fx-text-fill: #a0aec0 !important;
+}
+
+.dark-theme .chat-sidebar {
+    -fx-background-color: #1a1d24 !important;
+    -fx-border-color: #2d3748 !important;
+}
+
+.dark-theme .chat-scroll,
+.dark-theme .chat-scroll .viewport,
+.dark-theme .chat-messages-box {
+    -fx-background-color: #0f1117 !important;
+    -fx-background: #0f1117 !important;
+}
+
+.dark-theme .chat-input-bar {
+    -fx-background-color: #1a1d24 !important;
+    -fx-border-color: #2d3748 !important;
+}
+
+.dark-theme .chat-input-area {
+    -fx-background-color: #1a1d24 !important;
+    -fx-control-inner-background: #1a1d24 !important;
+    -fx-border-color: #2d3748 !important;
+    -fx-text-fill: white !important;
+    -fx-prompt-text-fill: #718096 !important;
+}
+
+.dark-theme .chat-input-area:focused {
+    -fx-border-color: #7c3aed !important;
 }

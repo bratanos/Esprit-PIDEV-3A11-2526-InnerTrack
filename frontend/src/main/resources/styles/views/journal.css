@@ -1,0 +1,341 @@
+/* ============================================
+   Journal & Habits CSS — InnerTrack
+   ============================================ */
+
+/* Couleurs principales */
+.root {
+    -fx-background-color: #f5f7fa;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ============================================
+   EN-TETE
+   ============================================ */
+.header {
+    -fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 100%);
+    -fx-background-radius: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0, 0, 2);
+}
+
+.title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.subtitle {
+    -fx-text-fill: rgba(255, 255, 255, 0.9);
+    -fx-padding: 5 0 0 0;
+}
+
+/* ============================================
+   BOUTON PRINCIPAL
+   ============================================ */
+.add-test-btn {
+    -fx-background-color: linear-gradient(to bottom, #48bb78, #38a169);
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 12px 25px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(72, 187, 120, 0.4), 10, 0, 0, 2);
+}
+
+.add-test-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #38a169, #2f855a);
+    -fx-scale-y: 1.03;
+    -fx-scale-x: 1.03;
+}
+
+/* ============================================
+   STATISTIQUES
+   ============================================ */
+.stat-card {
+    -fx-background-color: linear-gradient(to bottom, #f7fafc, #edf2f7);
+    -fx-background-radius: 10px;
+    -fx-padding: 15px;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0, 0, 1);
+}
+
+.stat-number {
+    -fx-text-fill: #667eea;
+    -fx-font-weight: bold;
+}
+
+.stat-label {
+    -fx-text-fill: #718096;
+    -fx-font-size: 12px;
+}
+
+/* ============================================
+   RECHERCHE
+   ============================================ */
+.search-field {
+    -fx-background-color: #f7fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 15px;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #a0aec0;
+}
+
+.search-field:focused {
+    -fx-border-color: #667eea;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 8, 0, 0, 0);
+}
+
+/* ============================================
+   SECTIONS
+   ============================================ */
+.section-box {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
+}
+
+.section-title {
+    -fx-text-fill: #2d3748;
+    -fx-font-weight: bold;
+}
+
+.field-label {
+    -fx-text-fill: #4a5568;
+    -fx-font-weight: bold;
+}
+
+/* ============================================
+   SCROLL PANES
+   ============================================ */
+.scroll-pane,
+.tests-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane>.viewport {
+    -fx-background-color: transparent;
+}
+
+/* ============================================
+   CHAMPS DE SAISIE
+   ============================================ */
+.custom-text-field {
+    -fx-background-color: #f7fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 15px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2d3748;
+}
+
+.custom-text-field:focused {
+    -fx-border-color: #667eea;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+}
+
+.custom-text-area {
+    -fx-background-color: #f7fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 15px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2d3748;
+}
+
+.custom-text-area:focused {
+    -fx-border-color: #667eea;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+}
+
+.custom-text-area .content {
+    -fx-background-color: transparent;
+}
+
+/* ============================================
+   COMBOBOX
+   ============================================ */
+.custom-combo-box {
+    -fx-background-color: #f7fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 14px;
+}
+
+.custom-combo-box:focused {
+    -fx-border-color: #667eea;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+}
+
+.custom-combo-box .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2d3748;
+    -fx-padding: 8px 12px;
+}
+
+.custom-combo-box .list-cell:hover {
+    -fx-background-color: #edf2f7;
+}
+
+/* ============================================
+   BOUTONS D'EN-TETE
+   ============================================ */
+.edit-btn-header {
+    -fx-background-color: linear-gradient(to bottom, #4299e1, #3182ce);
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.edit-btn-header:hover {
+    -fx-background-color: linear-gradient(to bottom, #3182ce, #2c5282);
+}
+
+.delete-btn-header {
+    -fx-background-color: linear-gradient(to bottom, #fc8181, #f56565);
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.delete-btn-header:hover {
+    -fx-background-color: linear-gradient(to bottom, #f56565, #e53e3e);
+}
+
+/* ============================================
+   BOUTONS PRINCIPAUX
+   ============================================ */
+.save-button {
+    -fx-background-color: linear-gradient(to bottom, #667eea, #5568d3);
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 12px 30px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 12, 0, 0, 3);
+}
+
+.save-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #5568d3, #4c51bf);
+    -fx-scale-y: 1.02;
+    -fx-scale-x: 1.02;
+}
+
+.cancel-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #cbd5e0;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-text-fill: #4a5568;
+    -fx-padding: 12px 30px;
+    -fx-cursor: hand;
+}
+
+.cancel-button:hover {
+    -fx-border-color: #a0aec0;
+    -fx-background-color: #f7fafc;
+}
+
+.return-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #667eea;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-text-fill: #667eea;
+    -fx-padding: 12px 30px;
+    -fx-cursor: hand;
+}
+
+.return-button:hover {
+    -fx-background-color: #667eea;
+    -fx-text-fill: white;
+}
+
+/* ============================================
+   EXPORT BUTTON
+   ============================================ */
+.export-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-background-radius: 25;
+    -fx-padding: 8 20 8 20;
+    -fx-cursor: hand;
+}
+
+.export-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* ============================================
+   ICON BUTTON (Clear)
+   ============================================ */
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-padding: 4 8 4 8;
+}
+
+/* ============================================
+   PIED DE PAGE
+   ============================================ */
+.footer {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1px 0 0 0;
+}
+
+.status-label {
+    -fx-text-fill: #718096;
+    -fx-font-size: 13px;
+}
+
+.refresh-btn {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #4a5568;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+
+.refresh-btn:hover {
+    -fx-background-color: #cbd5e0;
+}
+
+/* ============================================
+   SEPARATOR
+   ============================================ */
+.separator {
+    -fx-background-color: #e2e8f0;
+}
+
+.separator .line {
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/* ============================================
+   ETAT VIDE
+   ============================================ */
+.empty-title {
+    -fx-text-fill: #4a5568;
+}
+
+.empty-subtitle {
+    -fx-text-fill: #a0aec0;
+}

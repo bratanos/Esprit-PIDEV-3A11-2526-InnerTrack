@@ -2,11 +2,10 @@
    CSS pour les Recommandations IA (ML)
    Style premium, vibrant et aéré
    ============================================ */
-@import "../base/tokens.css";
+/* @import "../base/tokens.css"; */
+/* Rely on global style loading */
 
-.root {
-    -fx-background-color: -it-bg;
-}
+/* .root background handled by main theme */
 
 .header-banner {
     -fx-background-color: linear-gradient(to right, #8b5cf6 0%, #7c3aed 100%);
@@ -26,11 +25,12 @@
 }
 
 .rec-card {
-    -fx-background-color: -it-card;
+    /* Use derive to force JavaFX to recognize the lookup as a Paint/Color and avoid ClassCastException */
+    -fx-background-color: derive(-it-card, 0%);
     -fx-background-radius: 15px;
     -fx-padding: 20px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
-    -fx-border-color: -it-border;
+    -fx-border-color: derive(-it-border, 0%);
     -fx-border-width: 1px;
     -fx-border-radius: 15px;
 }
@@ -41,7 +41,7 @@
 }
 
 .rec-section-title {
-    -fx-text-fill: -it-text;
+    -fx-text-fill: derive(-it-text, 0%);
     -fx-font-weight: bold;
     -fx-font-size: 18px;
 }
