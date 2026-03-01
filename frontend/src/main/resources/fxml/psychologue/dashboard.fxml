@@ -121,10 +121,10 @@
                 <HBox spacing="20" alignment="CENTER_LEFT">
                     <VBox>
                         <Label fx:id="welcomeLabel"
-                               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+                               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"
                                text="%dashboard.psy.welcome"/>
                         <Label text="%dashboard.psy.title"
-                               style="-fx-text-fill: #7f8c8d;"/>
+                               style="-fx-text-fill: #475569; -fx-font-size: 15px;"/>
                     </VBox>
                     <Region HBox.hgrow="ALWAYS"/>
                     <!-- Pending requests quick alert -->
@@ -139,18 +139,17 @@
                     </HBox>
                 </HBox>
 
-                <!-- Stats Cards -->
+                <!-- Stats / Quick Access Cards -->
                 <HBox spacing="20">
-                    <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
-                        <FontIcon iconLiteral="fas-users" iconSize="24" iconColor="#1d7bed"/>
-                        <Label fx:id="totalPatientsLabel" styleClass="stat-value" text="0"/>
-                        <Label styleClass="stat-label" text="%dashboard.psy.patients"/>
+                    <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" onMouseClicked="#handleGoToArticles" style="-fx-cursor: hand;">
+                        <FontIcon iconLiteral="fas-newspaper" iconSize="24" iconColor="#8b5cf6"/>
+                        <Label styleClass="stat-value" text="Articles" style="-fx-font-size: 18px;"/>
+                        <Label styleClass="stat-label" text="Dernières publications"/>
                     </VBox>
-                    <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
-                        <FontIcon iconLiteral="fas-calendar-check" iconSize="24" iconColor="#27ae60"/>
-                        <Label fx:id="appointmentsTodayLabel" styleClass="stat-value" text="0"
-                               style="-fx-text-fill: #27ae60;"/>
-                        <Label styleClass="stat-label" text="%dashboard.psy.appointments"/>
+                    <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" onMouseClicked="#handleGoToEvents" style="-fx-cursor: hand;">
+                        <FontIcon iconLiteral="fas-calendar-day" iconSize="24" iconColor="#10b981"/>
+                        <Label styleClass="stat-value" text="Événements" style="-fx-font-size: 18px;"/>
+                        <Label styleClass="stat-label" text="Activités à venir"/>
                     </VBox>
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
                         <FontIcon iconLiteral="fas-envelope-open-text" iconSize="24" iconColor="#FF69B4"/>
@@ -186,15 +185,26 @@
                     </HBox>
                 </VBox>
 
-                <!-- Agenda Preview -->
-                <VBox styleClass="dashboard-card" spacing="15">
-                    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-                    <Label text="%dashboard.psy.agenda"
-                           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-                    <Separator/>
-                    <Label text="%dashboard.psy.agenda.empty"
-                           style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
-                </VBox>
+                <!-- Action Cards / Featured -->
+                <HBox spacing="20">
+                    <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="15" style="-fx-padding: 25; -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <FontIcon iconLiteral="fas-star" iconSize="20" iconColor="#f59e0b"/>
+                            <Label text="Voulez-vous organiser un événement ?" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                        </HBox>
+                        <Label text="Partagez vos connaissances avec la communauté en créant des sessions de groupe ou des ateliers." wrapText="true" style="-fx-text-fill: #64748b;"/>
+                        <Button text="Créer un événement" onAction="#handleGoToEvents" styleClass="btn-primary" style="-fx-font-size: 13px;"/>
+                    </VBox>
+                    
+                    <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="15" style="-fx-padding: 25; -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <FontIcon iconLiteral="fas-lightbulb" iconSize="20" iconColor="#0ea5e9"/>
+                            <Label text="Inspiration du jour" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                        </HBox>
+                        <Label text="Découvrez les derniers articles de psychologie pour rester à jour sur les meilleures pratiques." wrapText="true" style="-fx-text-fill: #64748b;"/>
+                        <Button text="Lire des articles" onAction="#handleGoToArticles" styleClass="btn-secondary" style="-fx-font-size: 13px;"/>
+                    </VBox>
+                </HBox>
 
             </VBox>
         </ScrollPane>

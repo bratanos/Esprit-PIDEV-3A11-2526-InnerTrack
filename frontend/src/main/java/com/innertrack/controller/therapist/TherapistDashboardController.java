@@ -19,10 +19,6 @@ public class TherapistDashboardController {
     @FXML
     private Label welcomeLabel;
     @FXML
-    private Label totalPatientsLabel;
-    @FXML
-    private Label appointmentsTodayLabel;
-    @FXML
     private Label totalConsultationsLabel;
     @FXML
     private Label pendingRequestsLabel;
@@ -53,8 +49,6 @@ public class TherapistDashboardController {
         MainLayoutController.getInstance().setFooterVisible(false);
 
         // Dummy fixed stats
-        totalPatientsLabel.setText("—");
-        appointmentsTodayLabel.setText("0");
         totalConsultationsLabel.setText("—");
 
         // Load real data in background

@@ -52,15 +52,26 @@ public class AuthService {
 
     public void sendNewOtp(User user) {
         String code = String.format("%06d", new Random().nextInt(1000000));
-        EmailVerificationCode evc = new EmailVerificationCode();
-        evc.setUser(user);
-        evc.setCode(code);
-        evc.setExpiresAt(LocalDateTime.now().plusMinutes(10));
-        evc.setLastSentAt(LocalDateTime.now());
-        evc.setResendAttempts(1);
-        evc.setVerifyAttempts(0);
+        EmailVerificationCode evc = otpDao.findByUserId(user.getId());
 
-        otpDao.create(evc);
+        if (evc == null) {
+            evc = new EmailVerificationCode();
+            evc.setUser(user);
+            evc.setCode(code);
+            evc.setExpiresAt(LocalDateTime.now().plusMinutes(10));
+            evc.setLastSentAt(LocalDateTime.now());
+            evc.setResendAttempts(1);
+            evc.setVerifyAttempts(0);
+            otpDao.create(evc);
+        } else {
+            evc.setCode(code);
+            evc.setExpiresAt(LocalDateTime.now().plusMinutes(10));
+            evc.setLastSentAt(LocalDateTime.now());
+            evc.setResendAttempts(evc.getResendAttempts() + 1);
+            evc.setVerifyAttempts(0);
+            otpDao.update(evc);
+        }
+
         // Send actual email
         EmailService.getInstance().sendVerificationEmail(user.getEmail(), code);
     }
@@ -143,8 +154,18 @@ public class AuthService {
             return "Invalid credentials.";
         }
 
-        if (!user.isVerified() || !"ACTIVE".equals(user.getStatus())) {
+        if (!user.isVerified()) {
+            sendNewOtp(user);
             return "Account not verified. Please verify your email.";
+        }
+
+        if (!"ACTIVE".equals(user.getStatus())) {
+            if ("BLOCKED".equals(user.getStatus())) {
+                return "Your account has been blocked. Please contact support.";
+            } else if ("PENDING".equals(user.getStatus())) {
+                return "Account not verified. Please verify your email.";
+            }
+            return "Account is not active (Status: " + user.getStatus() + ").";
         }
 
         String token = JwtUtil.generateToken(user.getEmail(), user.getRoles());
