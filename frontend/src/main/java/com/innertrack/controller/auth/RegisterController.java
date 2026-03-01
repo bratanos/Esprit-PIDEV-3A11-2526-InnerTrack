@@ -5,6 +5,8 @@ import com.innertrack.util.ViewManager;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
+import java.sql.SQLException;
 import java.util.Collections;
 
 public class RegisterController {
@@ -40,7 +42,7 @@ public class RegisterController {
     }
 
     @FXML
-    private void handleRegister() {
+    private void handleRegister() throws SQLException {
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
         String email = emailField.getText();

@@ -1,6 +1,6 @@
 /* sidebar.css - Premium Sidebar Styles */
 .sidebar {
-    -fx-background-color: linear-gradient(to bottom, derive(-it-primary, -20%), derive(-it-primary, -40%));
+    -fx-background-color: linear-gradient(to bottom, derive(#8b5cf6, -20%), derive(#8b5cf6, -40%));
     -fx-padding: 30 15;
     -fx-spacing: 15;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 30, 0, 0, 0);

@@ -14,7 +14,6 @@ import com.innertrack.model.EntreeJournal;
 import com.innertrack.model.Habitude;
 import com.innertrack.service.CitationService;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserDashboardController {
@@ -100,7 +99,7 @@ public class UserDashboardController {
 
             nombreHabitudesLabel.setText("Active habits: " + habits.size());
 
-        } catch (SQLException e) {
+        } catch (java.sql.SQLException e) {
             e.printStackTrace();
             journalEntriesLabel.setText("?");
             streakLabel.setText("?");
@@ -213,6 +212,16 @@ public class UserDashboardController {
     @FXML
     private void handleGoToArticles() {
         ViewManager.loadView("article/ArticleView");
+    }
+
+    @FXML
+    private void handleGoToChatbot() {
+        ViewManager.loadView("chatbot/ChatbotView");
+    }
+
+    @FXML
+    private void handleGoToEvents() {
+        ViewManager.loadView("event/AfficherEvenement");
     }
 
     @FXML

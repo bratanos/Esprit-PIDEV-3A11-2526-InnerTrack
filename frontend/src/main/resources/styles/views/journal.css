@@ -4,7 +4,7 @@
 
 /* Couleurs principales */
 .root {
-    -fx-background-color: #f5f7fa;
+    -fx-background-color: transparent;
     -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 

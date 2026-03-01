@@ -20,19 +20,19 @@
     <left>
         <VBox styleClass="sidebar" prefWidth="280">
             <VBox styleClass="sidebar-logo" alignment="CENTER">
-                <ImageView fitWidth="150" preserveRatio="true">
+                <ImageView fitWidth="100" preserveRatio="true">
                     <image><Image url="@../../images/innertracklogo1.png"/></image>
                 </ImageView>
             </VBox>
 
             <VBox styleClass="profile-section">
-                <javafx.scene.shape.Circle fx:id="profileCircle" radius="35" styleClass="profile-pic"/>
+                <javafx.scene.shape.Circle fx:id="profileCircle" radius="25" styleClass="profile-pic"/>
                 <Label fx:id="userFullNameLabel" text="Utilisateur" styleClass="profile-name"/>
             </VBox>
 
             <Separator opacity="0.1"/>
 
-            <VBox spacing="5">
+            <VBox spacing="2">
                 <Button text="%sidebar.user.dashboard"
                         styleClass="sidebar-button, sidebar-button-active" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-th-large" iconSize="18" iconColor="#ffffff"/></graphic>
@@ -65,6 +65,14 @@
                 <Button text="📰 Articles" onAction="#handleGoToArticles"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-newspaper" iconSize="18" iconColor="#ffffff"/></graphic>
+                </Button>
+                <Button text="📅 Events" onAction="#handleGoToEvents"
+                        styleClass="sidebar-button" maxWidth="Infinity">
+                    <graphic><FontIcon iconLiteral="far-calendar-alt" iconSize="18" iconColor="#ffffff"/></graphic>
+                </Button>
+                <Button text="🤖 Chatbot" onAction="#handleGoToChatbot"
+                        styleClass="sidebar-button" maxWidth="Infinity">
+                    <graphic><FontIcon iconLiteral="fas-robot" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
                 <Button text="%sidebar.profile" onAction="#handleGoToProfile"
                         styleClass="sidebar-button" maxWidth="Infinity">

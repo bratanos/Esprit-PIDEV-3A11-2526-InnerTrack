@@ -133,6 +133,16 @@ public class TherapistDashboardController {
     }
 
     @FXML
+    private void handleGoToEvents() {
+        ViewManager.loadView("event/AfficherEvenement");
+    }
+
+    @FXML
+    private void handleGoToChatbot() {
+        ViewManager.loadView("chatbot/ChatbotView");
+    }
+
+    @FXML
     private void handleLogout() {
         SessionManager.getInstance().cleanSession();
         ViewManager.loadView("login");

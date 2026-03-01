@@ -25,6 +25,7 @@ module com.innertrack {
     requires jbcrypt;
     requires jjwt.api;
     requires io.github.cdimascio.dotenv.java;
+    requires com.fasterxml.jackson.databind;
 
     // UI Libraries
     requires com.jfoenix;
@@ -49,6 +50,8 @@ module com.innertrack {
     opens com.innertrack.controller to javafx.fxml;
     opens com.innertrack.controller.journal to javafx.fxml;
     opens com.innertrack.controller.article to javafx.fxml;
+    opens com.innertrack.controller.chatbot to javafx.fxml;
+    opens com.innertrack.controller.event to javafx.fxml;
     opens com.innertrack.util to javafx.fxml;
 
     exports com.innertrack.app;

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="450.0"
+      prefWidth="640.0"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.innertrack.controller.event.AjouterEvenementController"
+      styleClass="main-container"
+      stylesheets="/styles/components/event-style.css">
+
+    <children>
+
+        <MenuBar VBox.vgrow="NEVER" styleClass="event-menubar"/>
+
+        <AnchorPane VBox.vgrow="ALWAYS" styleClass="event-form-canvas">
+            <children>
+
+                <!-- Title -->
+                <Label text="Ajouter Événement"
+                       styleClass="event-form-title"
+                       AnchorPane.topAnchor="18.0"
+                       AnchorPane.leftAnchor="18.0"/>
+
+                <!-- Form stack -->
+                <VBox styleClass="event-form-stack"
+                      AnchorPane.topAnchor="60.0"
+                      AnchorPane.leftAnchor="18.0"
+                      AnchorPane.rightAnchor="18.0"
+                      AnchorPane.bottomAnchor="18.0">
+
+                    <!-- Nom -->
+                    <VBox styleClass="event-field">
+                        <Label text="Nom de l'événement:" styleClass="event-field-label"/>
+                        <TextField fx:id="title_input"
+                                   prefWidth="400.0"
+                                   styleClass="event-input"/>
+                    </VBox>
+
+                    <!-- Description -->
+                    <VBox styleClass="event-field">
+                        <Label text="Description:" styleClass="event-field-label"/>
+                        <TextArea fx:id="description_input"
+                                  prefHeight="90.0"
+                                  wrapText="true"
+                                  styleClass="event-textarea"/>
+                    </VBox>
+
+                    <!-- Date -->
+                    <VBox styleClass="event-field">
+                        <Label text="Date:" styleClass="event-field-label"/>
+                        <DatePicker fx:id="date_input"
+                                    prefWidth="240.0"
+                                    styleClass="event-input"/>
+                    </VBox>
+
+                    <!-- Type -->
+                    <VBox styleClass="event-field">
+                        <Label text="Type d'événement:" styleClass="event-field-label"/>
+                        <ComboBox fx:id="type_combobox"
+                                  prefWidth="240.0"
+                                  styleClass="event-input"/>
+                    </VBox>
+
+                    <!-- Capacité -->
+                    <VBox styleClass="event-field">
+                        <Label text="Capacité:" styleClass="event-field-label"/>
+                        <TextField fx:id="capacity_input"
+                                   prefWidth="240.0"
+                                   styleClass="event-input"/>
+                    </VBox>
+
+                    <!-- Error -->
+                    <Label fx:id="error"
+                           visible="false"
+                           styleClass="event-error-label"/>
+
+                    <!-- Status -->
+                    <VBox styleClass="event-field">
+                        <Label text="Status:" styleClass="event-field-label"/>
+                        <HBox spacing="16" styleClass="event-status-box">
+                            <CheckBox mnemonicParsing="false"
+                                      text="En cours"
+                                      styleClass="event-checkbox"/>
+                            <CheckBox mnemonicParsing="false"
+                                      text="Terminé"
+                                      styleClass="event-checkbox"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Submit -->
+                    <HBox alignment="CENTER_RIGHT" styleClass="event-actions">
+                        <Button text="✅ Submit"
+                                onAction="#submit_event"
+                                prefWidth="180"
+                                prefHeight="38"
+                                styleClass="btn-primary"/>
+                        <Button text="Annuler"
+                                onAction="#back"
+                                prefWidth="140"
+                                prefHeight="38"
+                                styleClass="btn-ghost"/>
+                    </HBox>
+
+                </VBox>
+
+            </children>
+        </AnchorPane>
+
+    </children>
+</VBox>

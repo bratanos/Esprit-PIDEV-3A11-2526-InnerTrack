@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.innertrack.controller.event.AfficherInscriptionController"
+      prefWidth="1000.0"
+      prefHeight="650.0"
+      fillWidth="true"
+      styleClass="main-container"
+      stylesheets="/styles/components/event-style.css">
+
+    <children>
+
+        <!-- SAME HEADER AS EVENTS -->
+        <VBox spacing="12" styleClass="page-header">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="🧾" style="-fx-font-size: 34px;"/>
+                <VBox>
+                    <Label text="Gestion des Inscriptions" styleClass="page-title"/>
+                    <Label text="Consultez et gérez les inscriptions aux événements" styleClass="page-subtitle"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- SAME CONTENT AREA -->
+        <VBox spacing="14" styleClass="content-area" VBox.vgrow="ALWAYS">
+
+            <TableView fx:id="table_inscriptions"
+                       VBox.vgrow="ALWAYS"
+                       styleClass="event-table">
+                <columns>
+                    <TableColumn fx:id="col_titre" text="Event" />
+                    <TableColumn fx:id="col_nom" text="Nom" />
+                    <TableColumn fx:id="col_email" text="Email" />
+                    <TableColumn fx:id="col_date" text="Date Inscription" />
+                    <TableColumn fx:id="col_actions" text="Actions" prefWidth="120" />
+                </columns>
+
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <HBox alignment="CENTER_RIGHT">
+                <Button text="↩ Retour"
+                        onAction="#goBackToEvents"
+                        prefWidth="140"
+                        prefHeight="38"
+                        styleClass="btn-ghost"/>
+            </HBox>
+
+        </VBox>
+
+    </children>
+
+</VBox>

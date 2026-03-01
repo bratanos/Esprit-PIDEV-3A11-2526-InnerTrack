@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.innertrack.controller.event.ModifierTypeEventController"
+      prefWidth="700.0"
+      prefHeight="420.0"
+      fillWidth="true"
+      styleClass="main-container"
+      stylesheets="/styles/components/event-style.css">
+
+    <children>
+
+        <MenuBar VBox.vgrow="NEVER" styleClass="event-menubar"/>
+
+        <AnchorPane VBox.vgrow="ALWAYS" styleClass="event-form-canvas">
+            <children>
+
+                <!-- Title -->
+                <Label text="Modifier un Type d'Événement"
+                       styleClass="event-form-title"
+                       AnchorPane.topAnchor="18.0"
+                       AnchorPane.leftAnchor="18.0"/>
+
+                <!-- Form stack -->
+                <VBox styleClass="event-form-stack"
+                      AnchorPane.topAnchor="60.0"
+                      AnchorPane.leftAnchor="18.0"
+                      AnchorPane.rightAnchor="18.0"
+                      AnchorPane.bottomAnchor="18.0">
+
+                    <VBox styleClass="event-field">
+                        <Label text="Libellé:" styleClass="event-field-label"/>
+                        <TextField fx:id="libelle_input"
+                                   promptText="Ex: Conférence, Atelier, Meetup..."
+                                   styleClass="event-input"/>
+                    </VBox>
+
+                    <Label fx:id="error_label"
+                           visible="false"
+                           styleClass="event-error-label"/>
+
+                    <HBox spacing="10" alignment="CENTER_RIGHT" styleClass="event-actions">
+                        <Button text="✏️ Modifier"
+                                onAction="#submit"
+                                prefWidth="160"
+                                prefHeight="38"
+                                styleClass="btn-secondary"/>
+
+                        <Button text="Annuler"
+                                onAction="#back"
+                                prefWidth="140"
+                                prefHeight="38"
+                                styleClass="btn-ghost"/>
+                    </HBox>
+
+                </VBox>
+
+            </children>
+        </AnchorPane>
+
+    </children>
+</VBox>

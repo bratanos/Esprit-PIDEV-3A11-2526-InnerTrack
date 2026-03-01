@@ -6,7 +6,7 @@
 
 /* Couleurs principales */
 .root {
-    -fx-background-color: -it-bg;
+    -fx-background-color: #f8fafc;
     -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -47,23 +47,23 @@
    SECTIONS
    ============================================ */
 .section-box {
-    -fx-background-color: -it-card;
+    -fx-background-color: #ffffff;
     -fx-background-radius: 15px;
     -fx-padding: 25px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 12, 0, 0, 3);
-    -fx-border-color: -it-border;
+    -fx-border-color: #e2e8f0;
     -fx-border-width: 1px;
     -fx-border-radius: 15px;
 }
 
 .section-title {
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
     -fx-font-weight: bold;
     -fx-font-size: 18px;
 }
 
 .field-label {
-    -fx-text-fill: -it-text-muted;
+    -fx-text-fill: #64748b;
     -fx-font-weight: bold;
     -fx-font-size: 13px;
 }
@@ -72,36 +72,36 @@
    CHAMPS DE SAISIE
    ============================================ */
 .custom-text-field {
-    -fx-background-color: -it-bg;
-    -fx-border-color: -it-border;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
     -fx-padding: 12px 18px;
     -fx-font-size: 14px;
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
 }
 
 .custom-text-field:focused {
-    -fx-border-color: -it-primary;
+    -fx-border-color: #8b5cf6;
     -fx-border-width: 2px;
-    -fx-background-color: -it-card;
+    -fx-background-color: #ffffff;
     -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.2), 10, 0, 0, 0);
 }
 
 .custom-text-area {
-    -fx-background-color: -it-bg;
-    -fx-border-color: -it-border;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
     -fx-padding: 12px 18px;
     -fx-font-size: 14px;
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
 }
 
 .custom-text-area:focused {
-    -fx-border-color: -it-primary;
+    -fx-border-color: #8b5cf6;
     -fx-border-width: 2px;
-    -fx-background-color: -it-card;
+    -fx-background-color: #ffffff;
     -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.2), 8, 0, 0, 0);
 }
 
@@ -113,53 +113,53 @@
    COMBOBOX
    ============================================ */
 .custom-combo-box {
-    -fx-background-color: -it-bg;
-    -fx-border-color: -it-border;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
     -fx-font-size: 14px;
 }
 
 .custom-combo-box:focused {
-    -fx-border-color: -it-primary;
+    -fx-border-color: #8b5cf6;
     -fx-border-width: 2px;
-    -fx-background-color: -it-card;
+    -fx-background-color: #ffffff;
 }
 
 .custom-combo-box .list-cell {
     -fx-background-color: transparent;
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
     -fx-padding: 8px 12px;
 }
 
 .custom-combo-box .list-cell:hover {
-    -fx-background-color: -it-border;
+    -fx-background-color: #e2e8f0;
 }
 
 /* ============================================
    SPINNER
    ============================================ */
 .custom-spinner {
-    -fx-background-color: -it-bg;
-    -fx-border-color: -it-border;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
 }
 
 .custom-spinner:focused {
-    -fx-border-color: -it-primary;
+    -fx-border-color: #8b5cf6;
     -fx-border-width: 2px;
 }
 
 .custom-spinner .text-field {
     -fx-background-color: transparent;
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
     -fx-font-size: 14px;
 }
 
 .custom-spinner .increment-arrow-button,
 .custom-spinner .decrement-arrow-button {
-    -fx-background-color: -it-card;
+    -fx-background-color: #ffffff;
     -fx-background-radius: 0 8px 8px 0;
 }
 
@@ -207,8 +207,8 @@
 }
 
 .cancel-btn {
-    -fx-background-color: -it-card;
-    -fx-text-fill: -it-text;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #1e293b;
     -fx-background-radius: 8px;
     -fx-padding: 8px 20px;
     -fx-font-size: 13px;
@@ -216,7 +216,7 @@
 }
 
 .cancel-btn:hover {
-    -fx-background-color: -it-border;
+    -fx-background-color: #e2e8f0;
 }
 
 .save-button {
@@ -252,8 +252,8 @@
 }
 
 .cancel-button:hover {
-    -fx-border-color: -it-primary;
-    -fx-background-color: -it-bg;
+    -fx-border-color: #8b5cf6;
+    -fx-background-color: #f8fafc;
 }
 
 .return-button {
@@ -305,8 +305,8 @@
    CARTE DE QUESTION
    ============================================ */
 .question-card {
-    -fx-background-color: -it-bg;
-    -fx-border-color: -it-border;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
     -fx-border-width: 1px;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
@@ -314,8 +314,8 @@
 }
 
 .question-card:hover {
-    -fx-background-color: -it-card;
-    -fx-border-color: -it-primary;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #8b5cf6;
 }
 
 .question-number {
@@ -336,7 +336,7 @@
 }
 
 .question-input-box {
-    -fx-background-color: -it-card;
+    -fx-background-color: #ffffff;
     -fx-background-radius: 8px;
     -fx-padding: 15px;
 }
@@ -345,8 +345,8 @@
    PIED DE PAGE
    ============================================ */
 .footer {
-    -fx-background-color: -it-card;
-    -fx-border-color: -it-border;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
     -fx-border-width: 1px 0 0 0;
 }
 

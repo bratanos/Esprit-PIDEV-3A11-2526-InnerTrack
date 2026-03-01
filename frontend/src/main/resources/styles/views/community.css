@@ -1,8 +1,7 @@
 /* community.css - Modern Reddit-style UI */
 
 .community-view {
-    -fx-background-color: #dae0e6;
-    /* classic reddit gray background */
+    -fx-background-color: transparent;
 }
 
 /* Header */

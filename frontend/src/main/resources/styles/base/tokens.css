@@ -1,33 +1,5 @@
-/* tokens.css - Primary Design Tokens */
-.root {
-    /* Colors - Higher saturation for a "punchy" look */
-    -it-bg: #f8fafc;
-    -it-card: #ffffff;
-    -it-text: #1e293b;
-    -it-text-muted: #64748b;
-
-    -it-primary: #8b5cf6;
-    /* Punchy Purple */
-    -it-primary-vibrant: #7c3aed;
-    -it-primary-soft: rgba(139, 92, 246, 0.1);
-
-    -it-secondary: #0ea5e9;
-    /* Sky Blue */
-    -it-success: #10b981;
-    /* Emerald Green */
-    -it-warning: #f59e0b;
-    /* Amber */
-    -it-error: #ef4444;
-    /* Rose Red */
-
-    -it-border: #e2e8f0;
-
-    /* Layout Tokens */
-    -it-radius-md: 12px;
-    -it-radius-lg: 20px;
-
-    /* Elevation - Punchy Shadows */
-    -it-shadow-sm: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 5, 0, 0, 2);
-    -it-shadow-md: dropshadow(three-pass-box, rgba(139, 92, 246, 0.15), 15, 0, 0, 6);
-    -it-shadow-lg: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 25, 0, 0, 10);
-}
+/* tokens.css - Primary Design Tokens (Reference only, hardcoded in main CSS) */
+/* 
+   NOTE: JavaFX CSS does not support complex custom properties natively well.
+   All values are now hardcoded in the respective stylesheets (controls, sidebar, dashboard).
+*/

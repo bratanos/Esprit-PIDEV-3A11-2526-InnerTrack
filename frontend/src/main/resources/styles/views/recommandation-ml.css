@@ -25,12 +25,11 @@
 }
 
 .rec-card {
-    /* Use derive to force JavaFX to recognize the lookup as a Paint/Color and avoid ClassCastException */
-    -fx-background-color: derive(-it-card, 0%);
+    -fx-background-color: #ffffff;
     -fx-background-radius: 15px;
     -fx-padding: 20px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
-    -fx-border-color: derive(-it-border, 0%);
+    -fx-border-color: #e2e8f0;
     -fx-border-width: 1px;
     -fx-border-radius: 15px;
 }
@@ -41,7 +40,7 @@
 }
 
 .rec-section-title {
-    -fx-text-fill: derive(-it-text, 0%);
+    -fx-text-fill: #1e293b;
     -fx-font-weight: bold;
     -fx-font-size: 18px;
 }
@@ -65,7 +64,7 @@
 }
 
 .rec-value {
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
 }
 
 .action-button {

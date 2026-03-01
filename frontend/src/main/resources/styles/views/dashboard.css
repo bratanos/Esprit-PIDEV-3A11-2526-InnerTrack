@@ -3,17 +3,17 @@
 .dashboard-header-label {
     -fx-font-size: 28;
     -fx-font-weight: bold;
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
 }
 
 .dashboard-subtitle-label {
     -fx-font-size: 14;
-    -fx-text-fill: -it-text-muted;
+    -fx-text-fill: #64748b;
 }
 
 /* Quote Card with Punchy Gradient */
 .dashboard-quote-card {
-    -fx-background-color: linear-gradient(to right, -it-primary, -it-secondary);
+    -fx-background-color: linear-gradient(to right, #8b5cf6, #0ea5e9);
     -fx-background-radius: 20;
     -fx-padding: 30;
     -fx-effect: dropshadow(three-pass-box, rgba(139, 92, 246, 0.3), 20, 0, 0, 10);
@@ -45,12 +45,12 @@
 .dashboard-view .stat-value {
     -fx-font-size: 32;
     -fx-font-weight: bold;
-    -fx-text-fill: -it-primary;
+    -fx-text-fill: #8b5cf6;
 }
 
 /* Punchy Alerts */
 .alert-success-punchy {
-    -fx-background-color: -it-success;
+    -fx-background-color: #10b981;
     -fx-background-radius: 12;
     -fx-padding: 10 20;
     -fx-effect: dropshadow(three-pass-box, rgba(16, 185, 129, 0.4), 10, 0, 0, 4);
@@ -59,7 +59,7 @@
 
 /* Quick Action Styles */
 .action-card {
-    -fx-border-color: -it-primary;
+    -fx-border-color: #8b5cf6;
     -fx-border-width: 2;
     -fx-border-radius: 15;
 }
@@ -67,5 +67,5 @@
 .section-title {
     -fx-font-size: 18;
     -fx-font-weight: bold;
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
 }

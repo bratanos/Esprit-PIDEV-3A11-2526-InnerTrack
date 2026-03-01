@@ -1,13 +1,13 @@
 /* messaging.css - Punchy, modern chat UI */
 
 .chat-view {
-    -fx-background-color: -it-bg;
+    -fx-background-color: #f8fafc;
 }
 
 /* ─── Sidebar ─── */
 .chat-sidebar {
-    -fx-background-color: -it-card;
-    -fx-border-color: transparent -it-border transparent transparent;
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent #e2e8f0 transparent transparent;
     -fx-border-width: 0 1 0 0;
     -fx-padding: 20 0;
 }
@@ -15,7 +15,7 @@
 .chat-left-title {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
     -fx-padding: 0 20 15 20;
 }
 
@@ -28,16 +28,16 @@
 }
 
 .chat-conv-row:hover {
-    -fx-background-color: derive(-it-primary, 90%);
+    -fx-background-color: #f0f4ff;
 }
 
 .chat-conv-row-selected {
-    -fx-background-color: derive(-it-primary, 80%);
+    -fx-background-color: #e8f0fe;
     -fx-effect: dropshadow(three-pass-box, rgba(139, 92, 246, 0.1), 10, 0, 0, 4);
 }
 
 .chat-avatar {
-    -fx-background-color: -it-primary;
+    -fx-background-color: #8b5cf6;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 16px;
@@ -52,19 +52,19 @@
 
 .chat-conv-name {
     -fx-font-weight: bold;
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
     -fx-font-size: 14px;
 }
 
 .chat-conv-date {
-    -fx-text-fill: -it-text-muted;
+    -fx-text-fill: #64748b;
     -fx-font-size: 11px;
 }
 
 /* ─── Main Chat Area ─── */
 .chat-header {
-    -fx-background-color: -it-card;
-    -fx-border-color: transparent transparent -it-border transparent;
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
     -fx-border-width: 0 0 1 0;
     -fx-padding: 15 25;
 }
@@ -72,12 +72,12 @@
 .chat-title-label {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
 }
 
 .chat-subtitle-label {
     -fx-font-size: 12px;
-    -fx-text-fill: -it-success;
+    -fx-text-fill: #10b981;
     -fx-font-weight: bold;
 }
 
@@ -92,7 +92,7 @@
 
 /* ─── Message Bubbles ─── */
 .chat-bubble-me {
-    -fx-background-color: -it-primary;
+    -fx-background-color: #8b5cf6;
     -fx-text-fill: white;
     -fx-background-radius: 18 18 2 18;
     -fx-padding: 12 18;
@@ -101,19 +101,19 @@
 }
 
 .chat-bubble-them {
-    -fx-background-color: -it-card;
-    -fx-text-fill: -it-text;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #1e293b;
     -fx-background-radius: 18 18 18 2;
     -fx-padding: 12 18;
     -fx-font-size: 14px;
-    -fx-border-color: -it-border;
+    -fx-border-color: #e2e8f0;
     -fx-border-width: 1px;
     -fx-border-radius: 18 18 18 2;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 8, 0, 0, 2);
 }
 
 .chat-time-label {
-    -fx-text-fill: -it-text-muted;
+    -fx-text-fill: #64748b;
     -fx-font-size: 10px;
     -fx-padding: 4 2 0 2;
 }
@@ -122,37 +122,37 @@
     -fx-text-fill: white;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
-    -fx-background-color: -it-text-muted;
+    -fx-background-color: #64748b;
     -fx-background-radius: 20;
     -fx-padding: 4 12;
 }
 
 /* ─── Input Area ─── */
 .chat-input-bar {
-    -fx-background-color: -it-card;
+    -fx-background-color: #ffffff;
     -fx-padding: 20 25;
-    -fx-border-color: -it-border transparent transparent transparent;
+    -fx-border-color: #e2e8f0 transparent transparent transparent;
     -fx-border-width: 1 0 0 0;
 }
 
 .chat-input-area {
-    -fx-background-color: derive(-it-bg, -2%);
+    -fx-background-color: #f7fafc;
     -fx-background-radius: 25;
     -fx-border-radius: 25;
-    -fx-border-color: -it-border;
+    -fx-border-color: #e2e8f0;
     -fx-padding: 10 20;
     -fx-font-size: 14px;
-    -fx-text-fill: -it-text;
-    -fx-prompt-text-fill: -it-text-muted;
+    -fx-text-fill: #1e293b;
+    -fx-prompt-text-fill: #64748b;
 }
 
 .chat-input-area:focused {
-    -fx-border-color: -it-primary;
-    -fx-background-color: -it-card;
+    -fx-border-color: #8b5cf6;
+    -fx-background-color: #ffffff;
 }
 
 .chat-send-btn {
-    -fx-background-color: -it-primary;
+    -fx-background-color: #8b5cf6;
     -fx-background-radius: 50;
     -fx-padding: 14;
     -fx-cursor: hand;
@@ -160,7 +160,7 @@
 }
 
 .chat-send-btn:hover {
-    -fx-background-color: derive(-it-primary, -10%);
+    -fx-background-color: #7c3aed;
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }

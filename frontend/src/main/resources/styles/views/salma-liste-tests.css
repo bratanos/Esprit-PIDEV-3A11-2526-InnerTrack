@@ -6,7 +6,7 @@
 
 /* Couleurs principales */
 .root {
-    -fx-background-color: -it-bg;
+    -fx-background-color: #f8fafc;
     -fx-font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
@@ -59,9 +59,9 @@
 }
 
 .btn-secondary {
-    -fx-background-color: -it-card;
-    -fx-text-fill: -it-text;
-    -fx-border-color: -it-border;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #1e293b;
+    -fx-border-color: #e2e8f0;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
     -fx-padding: 10px 20px;
@@ -70,8 +70,8 @@
 }
 
 .btn-secondary:hover {
-    -fx-background-color: -it-bg;
-    -fx-border-color: -it-primary;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #8b5cf6;
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
 }
@@ -80,8 +80,8 @@
    CARTE DE TEST
    ============================================ */
 .test-card {
-    -fx-background-color: -it-card;
-    -fx-border-color: -it-border;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
     -fx-border-width: 1px;
     -fx-border-radius: 15px;
     -fx-background-radius: 15px;
@@ -91,21 +91,21 @@
 }
 
 .test-card:hover {
-    -fx-background-color: linear-gradient(to bottom right, -it-card, -it-bg);
-    -fx-border-color: -it-primary;
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);
+    -fx-border-color: #8b5cf6;
     -fx-translate-y: -3px;
     -fx-effect: dropshadow(gaussian, rgba(124, 58, 237, 0.15), 15, 0, 0, 5);
 }
 
 .test-card-selected {
-    -fx-background-color: linear-gradient(to right, rgba(139, 92, 246, 0.15), -it-card);
-    -fx-border-color: -it-primary;
+    -fx-background-color: linear-gradient(to right, rgba(139, 92, 246, 0.15), #ffffff);
+    -fx-border-color: #8b5cf6;
     -fx-border-width: 2px;
     -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.2), 12, 0, 0, 4);
 }
 
 .test-card-title {
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
     -fx-font-weight: bold;
     -fx-font-size: 16px;
 }
@@ -123,19 +123,19 @@
    SECTION DÉTAILS
    ============================================ */
 .details-section {
-    -fx-background-color: -it-card;
+    -fx-background-color: #ffffff;
 }
 
 .test-title-large {
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
     -fx-font-weight: bold;
 }
 
 .info-box {
-    -fx-background-color: -it-bg;
+    -fx-background-color: #f8fafc;
     -fx-padding: 15px;
     -fx-background-radius: 8px;
-    -fx-border-color: -it-border;
+    -fx-border-color: #e2e8f0;
     -fx-border-width: 1px;
     -fx-border-radius: 8px;
 }
@@ -195,8 +195,8 @@
    CARTE DE QUESTION
    ============================================ */
 .question-card {
-    -fx-background-color: -it-card;
-    -fx-border-color: -it-border;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
     -fx-border-width: 1px;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
@@ -205,8 +205,8 @@
 }
 
 .question-card:hover {
-    -fx-background-color: -it-bg;
-    -fx-border-color: -it-primary;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #8b5cf6;
 }
 
 .question-number {
@@ -221,7 +221,7 @@
 }
 
 .question-text {
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
     -fx-font-size: 14px;
     -fx-wrap-text: true;
 }
@@ -240,7 +240,7 @@
 }
 
 .reponse-btn:hover {
-    -fx-background-color: -it-border;
+    -fx-background-color: #e2e8f0;
 }
 
 .reponse-btn-oui {
@@ -303,32 +303,32 @@
    ÉTAT VIDE (Aucun test sélectionné)
    ============================================ */
 .empty-state {
-    -fx-background-color: -it-card;
+    -fx-background-color: #ffffff;
 }
 
 .empty-icon {
-    -fx-text-fill: -it-border;
+    -fx-text-fill: #e2e8f0;
 }
 
 .empty-title {
-    -fx-text-fill: -it-text;
+    -fx-text-fill: #1e293b;
 }
 
 .empty-subtitle {
-    -fx-text-fill: -it-text-muted;
+    -fx-text-fill: #64748b;
 }
 
 /* ============================================
    PIED DE PAGE
    ============================================ */
 .footer {
-    -fx-background-color: -it-card;
-    -fx-border-color: -it-border;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
     -fx-border-width: 1px 0 0 0;
 }
 
 .status-label {
-    -fx-text-fill: -it-text-muted;
+    -fx-text-fill: #64748b;
     -fx-font-size: 13px;
 }
 
@@ -342,7 +342,7 @@
 }
 
 .refresh-btn:hover {
-    -fx-background-color: -it-border;
+    -fx-background-color: #e2e8f0;
 }
 
 /* ============================================
@@ -365,13 +365,13 @@
 }
 
 .split-pane>.split-pane-divider {
-    -fx-background-color: -it-border;
+    -fx-background-color: #e2e8f0;
     -fx-padding: 0 1 0 0;
 }
 
 .btn-retry-quick {
     -fx-background-color: transparent;
-    -fx-text-fill: -it-primary;
+    -fx-text-fill: #8b5cf6;
     -fx-font-size: 18px;
     -fx-padding: 5;
     -fx-cursor: hand;
