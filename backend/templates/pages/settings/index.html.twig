@@ -1,0 +1,85 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}Paramètres (Settings){% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8">
+
+    {% for message in app.flashes('success') %}
+        <div class="p-4 rounded-xl bg-emerald-50 text-emerald-700 text-sm font-medium border border-emerald-100 flex items-center gap-3">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <form method="POST" class="bg-white rounded-[2rem] p-8 shadow-sm border border-[#e5f7f6]">
+        
+        <!-- Apparence & Thème -->
+        <div class="mb-10">
+            <h3 class="text-xl font-bold text-[#0e1e1e] mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                Thème et Apparence
+            </h3>
+            <p class="text-sm text-slate-500 mb-6">Personnalisez l'apparence de votre interface pour plus de confort. (Remarque : Le dark mode est en phase bêta pour la version web).</p>
+            
+            <div class="grid grid-cols-2 flex-wrap gap-4">
+                <label class="cursor-pointer">
+                    <input type="radio" name="theme" value="LIGHT" class="peer sr-only" {% if settings.theme == 'LIGHT' %}checked{% endif %}>
+                    <div class="flex items-center gap-3 p-4 rounded-2xl border-2 border-slate-100 peer-checked:border-cyan-400 peer-checked:bg-cyan-50 hover:bg-slate-50 transition">
+                        <div class="p-2 bg-white rounded-full shadow-sm"><svg class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></div>
+                        <span class="font-medium text-slate-800">Mode Clair</span>
+                    </div>
+                </label>
+                <label class="cursor-pointer">
+                    <input type="radio" name="theme" value="DARK" class="peer sr-only" {% if settings.theme == 'DARK' %}checked{% endif %}>
+                    <div class="flex items-center gap-3 p-4 rounded-2xl border-2 border-slate-100 peer-checked:border-cyan-400 peer-checked:bg-cyan-50 hover:bg-slate-50 transition">
+                        <div class="p-2 bg-slate-800 rounded-full shadow-sm"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></div>
+                        <span class="font-medium text-slate-800">Mode Sombre</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Accessibilité: Taille de police -->
+        <div class="mb-10 pl-2">
+            <h3 class="text-xl font-bold text-[#0e1e1e] mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                Taille du texte
+            </h3>
+            
+            <div class="flex gap-4">
+                <label class="cursor-pointer flex-1">
+                    <input type="radio" name="fontSize" value="SMALL" class="peer sr-only" {% if settings.fontSize == 'SMALL' %}checked{% endif %}>
+                    <div class="text-center p-3 rounded-xl border-2 border-slate-100 peer-checked:border-emerald-400 peer-checked:bg-emerald-50 hover:bg-slate-50 font-medium text-sm transition">A- Petit</div>
+                </label>
+                <label class="cursor-pointer flex-1">
+                    <input type="radio" name="fontSize" value="NORMAL" class="peer sr-only" {% if settings.fontSize == 'NORMAL' %}checked{% endif %}>
+                    <div class="text-center p-3 rounded-xl border-2 border-slate-100 peer-checked:border-emerald-400 peer-checked:bg-emerald-50 hover:bg-slate-50 font-medium transition">A Normal</div>
+                </label>
+                <label class="cursor-pointer flex-1">
+                    <input type="radio" name="fontSize" value="LARGE" class="peer sr-only" {% if settings.fontSize == 'LARGE' %}checked{% endif %}>
+                    <div class="text-center p-3 rounded-xl border-2 border-slate-100 peer-checked:border-emerald-400 peer-checked:bg-emerald-50 hover:bg-slate-50 font-medium text-lg transition">A+ Grand</div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Langue -->
+        <div class="mb-8 pl-2">
+            <h3 class="text-xl font-bold text-[#0e1e1e] mb-4 flex items-center gap-2">
+                 🌍 Langue (Language)
+            </h3>
+            <select name="language" class="w-full md:w-1/2 h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-slate-800 focus:ring-2 focus:ring-cyan-400 outline-none transition">
+                <option value="FR" {% if settings.language == 'FR' %}selected{% endif %}>🇫🇷 Français</option>
+                <option value="EN" {% if settings.language == 'EN' %}selected{% endif %}>🇬🇧 English</option>
+            </select>
+            <p class="text-xs text-slate-400 mt-2">Ce paramètre est synchronisé et appliqué également sur l'application de bureau.</p>
+        </div>
+
+        <div class="flex justify-end pt-6 border-t border-slate-100">
+            <button type="submit" class="px-8 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-semibold shadow-[0_8px_24px_-8px_rgba(0,188,212,0.5)] transition-all">
+                Enregistrer les paramètres
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

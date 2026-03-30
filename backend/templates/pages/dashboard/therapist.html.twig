@@ -1,0 +1,66 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}Espace Praticien{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-8">
+    
+    {% if not profileComplete %}
+    <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-2xl shadow-sm flex items-start sm:items-center justify-between flex-col sm:flex-row gap-4">
+        <div>
+            <h3 class="text-amber-800 font-bold text-lg">Votre profil est incomplet</h3>
+            <p class="text-amber-700 mt-1">Les patients ne pourront pas vous trouver sur la carte tant que votre position et votre spécialisation ne sont pas définies.</p>
+        </div>
+        <a href="{{ path('app_profile') }}" class="px-5 py-2.5 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 transition">Compléter le profil</a>
+    </div>
+    {% endif %}
+
+    <!-- Welcome section -->
+    <div class="bg-white rounded-[2rem] p-8 lg:p-12 shadow-[0_32px_64px_-16px_rgba(0,104,118,0.08)] border border-white relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-[#e5f7f6] to-transparent opacity-50"></div>
+        <div class="relative z-10 w-full md:w-2/3">
+            <h2 class="text-4xl font-bold text-[#0e1e1e] mb-2 tracking-tight">Dr. {{ app.user.lastName }}</h2>
+            <p class="text-lg text-[#3c494c] mb-8 font-medium">Gérez vos patients, répondez aux demandes aux consultez votre planning d'un seul coup d'œil.</p>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Pending Requests -->
+        <div class="bg-white rounded-[1.5rem] p-6 shadow-sm border border-[#e5f7f6] relative overflow-hidden">
+            <div class="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-[#f19640] to-[#8f4e00]"></div>
+            <div class="pl-4">
+                <h3 class="text-[#3c494c] text-sm font-semibold uppercase tracking-wider mb-2">Nouvelles demandes de contact</h3>
+                <div class="flex items-end gap-3">
+                    <span class="text-4xl font-bold text-[#0e1e1e]">{{ pendingRequests|length }}</span>
+                </div>
+            </div>
+            
+            {% if pendingRequests|length > 0 %}
+            <div class="mt-6 space-y-3 pl-4">
+                {% for req in pendingRequests|slice(0, 3) %}
+                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-800 font-bold text-xs">{{ req.client.firstName|first }}{{ req.client.lastName|first }}</div>
+                        <span class="font-medium text-slate-700">{{ req.client.fullName }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Active Patients -->
+        <div class="bg-white rounded-[1.5rem] p-6 shadow-sm border border-[#e5f7f6] relative overflow-hidden">
+            <div class="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-[#00bcd4] to-[#006876]"></div>
+            <div class="pl-4">
+                <h3 class="text-[#3c494c] text-sm font-semibold uppercase tracking-wider mb-2">Patients Actifs</h3>
+                <div class="flex items-end gap-3">
+                    <span class="text-4xl font-bold text-[#0e1e1e]">{{ activePatients|length }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

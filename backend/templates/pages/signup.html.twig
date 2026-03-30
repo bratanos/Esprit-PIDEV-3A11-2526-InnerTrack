@@ -1,98 +1,116 @@
 {% extends 'layouts/auth.html.twig' %}
 
-{% block title %} Inscription {% endblock %}
+{% block title %}Créer un compte - InnerTrack{% endblock %}
 
-{% block body %} 
-<!-- SIGNUP FORM CONTAINER WITH ROLE SELECTION PSYCHOLOGUE/CLIENT ALSO TYPE IN NOM ET PRENOM SEPERATE TABS AND HORIZONTALLY NEXT TO EACH OTHER AND AT THE BOTTOM SPACER THAT SAYS "Already have an account?" and a button to login -->
-<div class="w-full max-w-md bg-white rounded-3xl shadow-xl px-8 py-10">
+{% block body %}
+<div class="relative w-full max-w-xl">
+    <!-- Ambient Background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-400/20 to-cyan-400/20 blur-3xl opacity-50 rounded-[3rem]"></div>
+    
+    <div class="relative bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,104,118,0.08)] p-10 border border-white/50">
+        
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-semibold text-slate-800 tracking-tight mb-2 font-['Inter']">Rejoignez-nous</h1>
+            <p class="text-slate-500 text-sm font-medium">Commencez votre voyage vers le bien-être.</p>
+        </div>
 
-<!-- LOGO -->
-  <div class="mx-auto w-20 h-20 rounded-2xl  flex items-center justify-center mb-6">
-   <img src="{{ asset('images/innertracklogo1.png') }}" alt="InnerTrack Logo" class="w-16 h-16"/>
-  </div>
-<h2 class="text-center text-2xl font-semibold text-gray-800 mb-2">
-    Rejoignez InnerTrack
-</h2>
-     <div class="text-center text-sm text-gray-500 mb-8">
-        Créez votre compte pour accéder à votre espace bien-être
-    </div>
-    <form method="POST" class="space-y-6">
+        {% if errors is defined and errors|length > 0 %}
+            <div class="mb-6 p-4 rounded-2xl bg-red-50 text-red-600 text-sm font-medium border border-red-100 space-y-1">
+                {% for error in errors %}
+                    <p class="flex items-center gap-2">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-    <!-- Problem here when i added this div the form became cramped together and messed up the layouyt.. fix this -->
-    <div class="flex space-x-4">
-        <div class="space-y-1 flex-1">
-            <label class="text-sm text-gray-600"> Prénom </label>
-            <input
-                type="text"
-                name="first_name"
-                required
-                class="w-full h-11 rounded-xl border border-emerald-200 px-4 bg-emerald-50 focus :outline-none focus:ring-2 focus:ring-cyan-400"
-            />
-        </div>
-        <div class="space-y-1 flex-1">
-            <label class="text-sm text-gray-600"> Nom </label>
-            <input
-                type="text"
-                name="last_name"
-                required
-                class="w-full h-11 rounded-xl border border-emerald-200 px-4 bg-emerald-50 focus :outline-none focus:ring-2 focus:ring-cyan-400"
-            />
-        </div>
-    </div>
+        <form method="post" action="{{ path('app_register') }}" class="space-y-5">
+            <div class="grid grid-cols-2 gap-5">
+                <div class="space-y-2">
+                    <label for="first_name" class="block text-sm font-medium text-slate-700 ml-1">Prénom</label>
+                    <div class="relative group">
+                        <input type="text" value="{{ first_name|default('') }}" name="first_name" id="first_name" required
+                               class="w-full h-12 bg-slate-50 border-0 rounded-2xl px-5 text-slate-800 placeholder-slate-400 focus:ring-0 focus:bg-white transition-all duration-300 peer"
+                               style="outline: none;">
+                        <div class="absolute inset-0 rounded-2xl border border-slate-200 pointer-events-none peer-focus:border-cyan-400 transition-colors duration-300"></div>
+                    </div>
+                </div>
 
-        <div class="space-y-1">
-            <label class="text-sm text-gray-600">Email </label>
-            <input
-                type="email"
-                name="email"
-                required
-                class="w-full h-11 rounded-xl border border-emerald-200 px-4 bg-emerald-50 focus :outline-none focus:ring-2 focus:ring-cyan-400"
-            />  
-        </div>
-        <div class="space-y-1">
-            <label class="text-sm text-gray-600">Mot de passe </label>
-            <input
-                type="password"
-                name="password"
-                required
-                class="w-full h-11 rounded-xl border border-emerald-200 px-4 bg-emerald-50 focus :outline-none focus:ring-2 focus:ring-cyan-400"
-            />
-        </div>
-        <div class="space-y-1">
-            <label class="text-sm text-gray-600"> Confirmer le mot de passe </label>
-            <input 
-                type="password"
-                name="confirm_password"
-                required
-                class="w-full h-11 rounded-xl border border-emerald-200 px-4 bg-emerald-50 focus :outline-none focus:ring-2 focus:ring-cyan-400"
-            />
-        </div>
-        <div class="space-y-1">
-            <label clas="text-sm text-gray-600"> Je suis un(e) </label>
-            <select
-                name="role"
-                required
-                class="w-full h-11 rounded-xl border border-emerald-200 px-4 bg-emerald-50 focus :outline-none focus:ring-2 focus:ring-cyan-400"
-            >
-                <option value="client"> Client </option>
-                <option value="psychologue"> Psychologue </option>
-            </select>
-        </div>
-        <button
-            type="submit"
-            class="w-full h-11 rounded-xl bg-cyan-600 hover:bg-cyan-700 transition-colors text-white font-medium"
-        >
-            S'inscrire
-        </button>
-    </form>
-    <div class="text-center mt-6 text-sm text-gray-500">
-        Déjà un compte ?
-        <a href="/login" class="text-cyan-500 hover:text-cyan-600 transition">
-            Se connecter
-        </a>
+                <div class="space-y-2">
+                    <label for="last_name" class="block text-sm font-medium text-slate-700 ml-1">Nom</label>
+                    <div class="relative group">
+                        <input type="text" value="{{ last_name|default('') }}" name="last_name" id="last_name" required
+                               class="w-full h-12 bg-slate-50 border-0 rounded-2xl px-5 text-slate-800 placeholder-slate-400 focus:ring-0 focus:bg-white transition-all duration-300 peer"
+                               style="outline: none;">
+                        <div class="absolute inset-0 rounded-2xl border border-slate-200 pointer-events-none peer-focus:border-cyan-400 transition-colors duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label for="email" class="block text-sm font-medium text-slate-700 ml-1">Adresse Email</label>
+                <div class="relative group">
+                    <input type="email" value="{{ email|default('') }}" name="email" id="email" required
+                           class="w-full h-12 bg-slate-50 border-0 rounded-2xl px-5 text-slate-800 placeholder-slate-400 focus:ring-0 focus:bg-white transition-all duration-300 peer"
+                           style="outline: none;">
+                    <div class="absolute inset-0 rounded-2xl border border-slate-200 pointer-events-none peer-focus:border-cyan-400 transition-colors duration-300"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-5">
+                <div class="space-y-2">
+                    <label for="password" class="block text-sm font-medium text-slate-700 ml-1">Mot de passe</label>
+                    <div class="relative group">
+                        <input type="password" name="password" id="password" required
+                               class="w-full h-12 bg-slate-50 border-0 rounded-2xl px-5 text-slate-800 placeholder-slate-400 focus:ring-0 focus:bg-white transition-all duration-300 peer"
+                               style="outline: none;">
+                        <div class="absolute inset-0 rounded-2xl border border-slate-200 pointer-events-none peer-focus:border-cyan-400 transition-colors duration-300"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label for="confirm_password" class="block text-sm font-medium text-slate-700 ml-1">Confirmer</label>
+                    <div class="relative group">
+                        <input type="password" name="confirm_password" id="confirm_password" required
+                               class="w-full h-12 bg-slate-50 border-0 rounded-2xl px-5 text-slate-800 placeholder-slate-400 focus:ring-0 focus:bg-white transition-all duration-300 peer"
+                               style="outline: none;">
+                        <div class="absolute inset-0 rounded-2xl border border-slate-200 pointer-events-none peer-focus:border-cyan-400 transition-colors duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-2 pt-2">
+                <label class="block text-sm font-medium text-slate-700 mb-3 text-center">Je suis un...</label>
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="relative flex flex-col items-center justify-center p-4 cursor-pointer rounded-2xl border-2 border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition-colors has-[:checked]:border-cyan-400 has-[:checked]:bg-cyan-50/50">
+                        <input type="radio" name="role" value="ROLE_USER" class="peer sr-only" {% if (role|default('ROLE_USER')) == 'ROLE_USER' %}checked{% endif %}>
+                        <div class="text-2xl mb-1">👤</div>
+                        <div class="text-sm font-semibold text-slate-700 peer-checked:text-cyan-700">Utilisateur</div>
+                        <div class="text-xs text-slate-500 mt-1">Pour mon bien-être</div>
+                    </label>
+
+                    <label class="relative flex flex-col items-center justify-center p-4 cursor-pointer rounded-2xl border-2 border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition-colors has-[:checked]:border-emerald-400 has-[:checked]:bg-emerald-50/50">
+                        <input type="radio" name="role" value="ROLE_PSYCHOLOGUE" class="peer sr-only" {% if (role|default('')) == 'ROLE_PSYCHOLOGUE' %}checked{% endif %}>
+                        <div class="text-2xl mb-1">🩺</div>
+                        <div class="text-sm font-semibold text-slate-700 peer-checked:text-emerald-700">Praticien</div>
+                        <div class="text-xs text-slate-500 mt-1">Pour accompagner</div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="pt-6">
+                <button type="submit" class="w-full h-14 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-lg max-w-full hover:shadow-[0_8px_24px_-8px_rgba(16,185,129,0.5)] outline outline-0 transition-all duration-300">
+                    Créer mon compte
+                </button>
+            </div>
+            
+            <div class="text-center pt-2">
+                <a href="{{ path('app_login') }}" class="text-sm font-medium text-slate-500 hover:text-cyan-600 transition">
+                    Déjà un compte ? <span class="text-cyan-600 underline decoration-cyan-400/30 underline-offset-4">Connectez-vous</span>
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}
-
-
-    

@@ -1,0 +1,218 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}Messagerie{% endblock %}
+
+{% block content %}
+<div class="h-[calc(100vh-140px)] bg-white rounded-[2rem] shadow-sm border border-[#e5f7f6] flex overflow-hidden">
+    
+    <!-- Conversations List -->
+    <div class="w-1/3 border-r border-slate-100 flex flex-col bg-slate-50/50">
+        <div class="p-4 border-b border-slate-100 bg-white">
+            <h2 class="text-xl font-bold text-[#0e1e1e]">Discussions</h2>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto">
+            {% for conv in conversations %}
+                {% set other = conv.getOtherUser(app.user) %}
+                <button type="button" onclick="loadConversation({{ conv.id }}, '{{ other.fullName|escape('js') }}', {{ other.id }})"
+                        class="w-full p-4 flex items-center gap-4 hover:bg-slate-50 transition-colors border-b border-slate-100/50 text-left focus:bg-[#e5f7f6] group">
+                    
+                    <div class="relative">
+                        {% if other.profilePictureUrl %}
+                            <img src="{{ other.profilePictureUrl }}" class="w-12 h-12 rounded-full object-cover shadow-sm">
+                        {% else %}
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#00bcd4] to-[#006876] flex items-center justify-center text-white font-bold shadow-sm">
+                                {{ other.firstName|first|upper }}{{ other.lastName|first|upper }}
+                            </div>
+                        {% endif %}
+                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-white rounded-full"></div>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-[0.95rem] font-bold text-slate-800 truncate group-focus:text-[#006876]">{{ other.fullName }}</h4>
+                        <!-- Preview would go here, omitting for simplicity since SSE populates it -->
+                        <p class="text-xs font-medium text-slate-400 truncate">Cliquez pour voir les messages</p>
+                    </div>
+                </button>
+            {% else %}
+                <div class="p-8 text-center text-slate-500">
+                    <svg class="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    <p>Aucune conversation pour l'instant.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Active Chat Area -->
+    <div class="flex-1 flex flex-col bg-white">
+        
+        <!-- Empty State -->
+        <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center p-8">
+            <div class="w-24 h-24 rounded-full bg-cyan-50 flex items-center justify-center mb-6 border-4 border-white shadow-[0_8px_24px_-8px_rgba(0,188,212,0.15)]">
+                <svg class="w-10 h-10 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 mb-2">Vos messages</h3>
+            <p class="text-slate-500 font-medium">Sélectionnez une conversation pour commencer à échanger.</p>
+        </div>
+
+        <!-- Chat Header & Content (Hidden exactly when empty state is shown) -->
+        <div id="chat-container" class="hidden flex-col h-full">
+            <!-- Header -->
+            <div class="h-20 border-b border-slate-100 flex items-center justify-between px-6 bg-white/50 backdrop-blur-sm z-10 shrink-0">
+                <div class="flex items-center gap-4">
+                    <div id="chat-avatar" class="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-800 font-bold"></div>
+                    <div>
+                        <h3 id="chat-title" class="text-lg font-bold text-slate-800"></h3>
+                        <p class="text-xs text-emerald-500 font-semibold my-0.5 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> En ligne</p>
+                    </div>
+                </div>
+
+                <!-- Dropdown Menu -->
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" class="p-2 rounded-full hover:bg-slate-50 text-slate-400 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+                    </button>
+                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50">
+                        <button onclick="reportUser()" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            Signaler
+                        </button>
+                        <button onclick="blockUser()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 border-t border-slate-100/50">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                            Bloquer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Stream -->
+            <div id="messages-list" class="flex-1 overflow-y-auto p-6 space-y-6 flex flex-col bg-slate-50/30">
+                <!-- Messages appended dynamically -->
+            </div>
+
+            <!-- Input area -->
+            <div class="px-6 py-4 border-t border-slate-100 bg-white shrink-0">
+                <form id="sendMessageForm" class="flex items-end gap-3" onsubmit="sendMessage(event)">
+                    <div class="flex-1 bg-slate-50 rounded-2xl border border-slate-200 focus-within:border-cyan-400 focus-within:ring-2 focus-within:ring-cyan-50/50 transition-all p-1 flex">
+                        <textarea id="messageInputArea" rows="1" class="w-full bg-transparent border-0 px-4 py-3 text-slate-800 focus:ring-0 resize-none min-h-[50px] max-h-[150px]" placeholder="Écrivez un message ici..."></textarea>
+                    </div>
+                    <button type="submit" class="w-14 h-14 rounded-2xl bg-cyan-600 hover:bg-cyan-700 text-white flex flex-col items-center justify-center shrink-0 shadow-[0_8px_24px_-8px_rgba(0,188,212,0.4)] transition-all">
+                        <svg class="w-6 h-6 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentConvId = null;
+    let currentOtherId = null;
+    let eventSource = null;
+    const currentUserId = {{ app.user.id }};
+
+    function loadConversation(convId, otherName, otherId) {
+        currentConvId = convId;
+        currentOtherId = otherId;
+
+        document.getElementById('empty-state').classList.add('hidden');
+        document.getElementById('chat-container').classList.remove('hidden');
+        document.getElementById('chat-title').innerText = otherName;
+        document.getElementById('chat-avatar').innerText = otherName.charAt(0);
+        document.getElementById('messages-list').innerHTML = ''; // reset
+        
+        // Mark as read
+        fetch(`/messages/${convId}/read`, { method: 'POST' });
+
+        // Fetch history
+        fetch(`/messages/${convId}`)
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(msg => appendMessage(msg));
+                scrollToBottom();
+            });
+
+        // Setup SSE for real-time
+        if (eventSource) eventSource.close();
+        eventSource = new EventSource(`/messages/sse/${convId}`);
+        eventSource.onmessage = function(e) {
+            const msg = JSON.parse(e.data);
+            appendMessage(msg);
+            scrollToBottom();
+            fetch(`/messages/${convId}/read`, { method: 'POST' }); // mark read
+        };
+    }
+
+    function sendMessage(e) {
+        e.preventDefault();
+        const input = document.getElementById('messageInputArea');
+        const content = input.value.trim();
+        if (!content || !currentConvId) return;
+
+        input.value = ''; // clear instantly
+        
+        fetch(`/messages/${currentConvId}/send`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ content })
+        }).then(res => res.json()).then(data => {
+            if (data.error) alert(data.error);
+        });
+    }
+
+    // Auto-resize textarea
+    const textarea = document.getElementById('messageInputArea');
+    textarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+    textarea.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage(e);
+        }
+    });
+
+    function appendMessage(msg) {
+        const list = document.getElementById('messages-list');
+        const isMe = msg.isMe || msg.senderId === currentUserId;
+        
+        const alignClass = isMe ? 'self-end items-end' : 'self-start items-start';
+        const bubbleClass = isMe 
+            ? 'bg-gradient-to-br from-[#00bcd4] to-[#006876] text-white rounded-l-2xl rounded-tr-2xl'
+            : 'bg-white border border-[#e5f7f6] shadow-sm text-slate-800 rounded-r-2xl rounded-tl-2xl';
+
+        const html = `
+            <div class="flex flex-col ${alignClass} max-w-[70%]">
+                <div class="px-5 py-3 ${bubbleClass}">
+                    <p class="whitespace-pre-wrap font-medium break-words">${msg.content}</p>
+                </div>
+                <span class="text-[0.65rem] text-slate-400 mt-1 font-semibold">${new Date(msg.sentAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            </div>
+        `;
+        list.insertAdjacentHTML('beforeend', html);
+    }
+
+    function scrollToBottom() {
+        const list = document.getElementById('messages-list');
+        list.scrollTop = list.scrollHeight;
+    }
+
+    function blockUser() {
+        if (!confirm('Voulez-vous vraiment bloquer cet utilisateur ?')) return;
+        fetch('/api/block', {
+            method: 'POST',
+            body: JSON.stringify({ userId: currentOtherId })
+        }).then(() => location.reload());
+    }
+
+    function reportUser() {
+        const reason = prompt("Raison (SPAM, HARASSMENT, INAPPROPRIATE) :");
+        if (!reason) return;
+        fetch('/api/report', {
+            method: 'POST',
+            body: JSON.stringify({ reportedId: currentOtherId, reason })
+        }).then(() => alert('Signalement envoyé.'));
+    }
+</script>
+{% endblock %}

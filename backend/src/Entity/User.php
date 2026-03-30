@@ -8,7 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Repository\UserRepository::class)]
+#[ORM\Table(name: 'user')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -28,8 +29,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'is_verified')]
     private bool $isVerified = false;
+
+    #[ORM\Column(name: 'first_name', length: 255)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(name: 'last_name', length: 255)]
+    private ?string $lastName = null;
+
+    #[ORM\Column(name: 'profile_picture', length: 255, nullable: true)]
+    private ?string $profilePicture = null;
+
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(name: 'last_login', type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $lastLogin = null;
+
+    #[ORM\Column(name: 'phone_number', length: 20, nullable: true)]
+    private ?string $phoneNumber = null;
 
     /**
      * @var Collection<int, EmailVerificationCode>
@@ -37,148 +56,96 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: EmailVerificationCode::class, mappedBy: 'user')]
     private Collection $code;
 
-    #[ORM\Column(length: 255)]
-    private ?string $firstName = null;
+    #[ORM\OneToOne(targetEntity: ClientProfile::class, mappedBy: 'user')]
+    private ?ClientProfile $clientProfile = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $lastName = null;
+    #[ORM\OneToOne(targetEntity: TherapistProfile::class, mappedBy: 'user')]
+    private ?TherapistProfile $therapistProfile = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $profilePicture = null;
+    #[ORM\OneToOne(targetEntity: UserSettings::class, mappedBy: 'user')]
+    private ?UserSettings $settings = null;
 
     public function __construct()
     {
         $this->code = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getUserIdentifier(): string
-    {
-        return $this->email;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-        return $this;
-    }
+    public function getId(): ?int { return $this->id; }
+    public function getUserIdentifier(): string { return $this->email; }
+    public function getEmail(): string { return $this->email; }
+    public function setEmail(string $email): self { $this->email = $email; return $this; }
 
     public function getRoles(): array
     {
         return array_unique(array_merge(['ROLE_USER'], $this->roles));
     }
+    public function setRoles(array $roles): self { $this->roles = $roles; return $this; }
 
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-        return $this;
-    }
-    public function getStatus(): string
-    {
-        return $this->status;
-    }
+    public function getRawRoles(): array { return $this->roles; }
 
-    public function setStatus(string $status): self
+    public function getPrimaryRole(): string
     {
-        $this->status = $status;
-        return $this;
+        foreach ($this->roles as $role) {
+            if ($role !== 'ROLE_USER') return $role;
+        }
+        return 'ROLE_USER';
     }
 
-    public function getPassword(): string
+    public function getStatus(): string { return $this->status; }
+    public function setStatus(string $status): self { $this->status = $status; return $this; }
+
+    public function getPassword(): string { return $this->password; }
+    public function setPassword(string $password): self { $this->password = $password; return $this; }
+
+    public function eraseCredentials(): void {}
+
+    public function isVerified(): bool { return $this->isVerified; }
+    public function setIsVerified(bool $verified): self { $this->isVerified = $verified; return $this; }
+
+    public function getFirstName(): ?string { return $this->firstName; }
+    public function setFirstName(?string $firstName): self { $this->firstName = $firstName; return $this; }
+
+    public function getLastName(): ?string { return $this->lastName; }
+    public function setLastName(?string $lastName): self { $this->lastName = $lastName; return $this; }
+
+    public function getFullName(): string
     {
-        return $this->password;
+        return trim(($this->firstName ?? '') . ' ' . ($this->lastName ?? ''));
     }
 
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-        return $this;
-    }
+    public function getProfilePicture(): ?string { return $this->profilePicture; }
+    public function setProfilePicture(?string $profilePicture): self { $this->profilePicture = $profilePicture; return $this; }
 
-    public function eraseCredentials()
-    {
-    }
+    public function getCreatedAt(): ?\DateTimeInterface { return $this->createdAt; }
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self { $this->createdAt = $createdAt; return $this; }
 
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
+    public function getLastLogin(): ?\DateTimeInterface { return $this->lastLogin; }
+    public function setLastLogin(?\DateTimeInterface $lastLogin): self { $this->lastLogin = $lastLogin; return $this; }
 
-    public function setIsVerified(bool $verified): self
-    {
-        $this->isVerified = $verified;
-        return $this;
-    }
+    public function getPhoneNumber(): ?string { return $this->phoneNumber; }
+    public function setPhoneNumber(?string $phoneNumber): self { $this->phoneNumber = $phoneNumber; return $this; }
+
+    public function getCode(): Collection { return $this->code; }
+    public function getClientProfile(): ?ClientProfile { return $this->clientProfile; }
+    public function getTherapistProfile(): ?TherapistProfile { return $this->therapistProfile; }
+    public function getSettings(): ?UserSettings { return $this->settings; }
 
     /**
-     * @return Collection<int, EmailVerificationCode>
+     * Returns web-accessible profile picture URL, handling both absolute desktop paths
+     * and relative web paths stored in the DB.
      */
-    public function getCode(): Collection
+    public function getProfilePictureUrl(): ?string
     {
-        return $this->code;
-    }
+        if (!$this->profilePicture) return null;
 
-    public function addCode(EmailVerificationCode $code): static
-    {
-        if (!$this->code->contains($code)) {
-            $this->code->add($code);
-            $code->setUser($this);
+        // If it's already a relative web path
+        if (str_starts_with($this->profilePicture, '/uploads/')) {
+            return $this->profilePicture;
         }
 
-        return $this;
-    }
-
-    public function removeCode(EmailVerificationCode $code): static
-    {
-        if ($this->code->removeElement($code)) {
-            // set the owning side to null (unless already changed)
-            if ($code->getUser() === $this) {
-                $code->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getFirstName(): ?string
-    {
-        return $this->firstName;
-    }
-
-    public function setFirstName(string $firstName): self
-    {
-        $this->firstName = $firstName;
-        return $this;
-    }
-
-    public function getLastName(): ?string
-    {
-        return $this->lastName;
-    }
-
-    public function setLastName(string $lastName): self
-    {
-        $this->lastName = $lastName;
-        return $this;
-    }
-
-    public function getProfilePicture(): ?string
-    {
-        return $this->profilePicture;
-    }
-
-    public function setProfilePicture(?string $profilePicture): self
-    {
-        $this->profilePicture = $profilePicture;
-        return $this;
+        // If it's an absolute desktop path, try to extract the filename
+        $filename = basename($this->profilePicture);
+        return '/uploads/profiles/' . $filename;
     }
 }

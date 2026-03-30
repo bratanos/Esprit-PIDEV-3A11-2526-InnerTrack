@@ -1,0 +1,70 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+    <div class="flex justify-between items-center bg-white rounded-2xl p-6 shadow-sm border border-[#e5f7f6]">
+        <div>
+            <h2 class="text-xl font-bold text-[#0e1e1e]">Vos alertes récentes</h2>
+            <p class="text-slate-500 text-sm mt-1">Gérez vos demandes et messages importants.</p>
+        </div>
+        <button onclick="fetch('/api/notifications/read-all', {method:'POST'}).then(() => location.reload())" 
+                class="px-4 py-2 text-sm font-semibold text-cyan-700 bg-cyan-50 hover:bg-cyan-100 rounded-xl transition">
+            Tout marquer comme lu
+        </button>
+    </div>
+
+    <div class="space-y-4">
+        {% for notif in notifications %}
+            <div class="flex gap-4 p-5 rounded-2xl shadow-sm border transaction-colors {{ notif.isRead ? 'bg-white border-[#e5f7f6]' : 'bg-cyan-50/30 border-cyan-100' }}">
+                <div class="w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-xl bg-gradient-to-br from-cyan-100 to-emerald-100 shadow-inner">
+                    {{ notif.icon }}
+                </div>
+                
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-start justify-between">
+                        <h4 class="text-[0.95rem] font-bold {{ notif.isRead ? 'text-slate-700' : 'text-[#006876]' }}">
+                            {{ notif.title }}
+                            {% if not notif.isRead %}
+                                <span class="ml-2 w-2 h-2 inline-block rounded-full bg-red-400"></span>
+                            {% endif %}
+                        </h4>
+                        <span class="text-xs font-semibold text-slate-400 shrink-0">{{ notif.createdAt|date('d M Y - H:i') }}</span>
+                    </div>
+                    <p class="text-slate-600 mt-1 text-sm font-medium">{{ notif.body }}</p>
+                    
+                    {% if not notif.isRead %}
+                        <div class="mt-4 flex gap-3">
+                            {% if notif.type == 'CONTACT_REQUEST' %}
+                                <a href="{{ path('app_dashboard') }}" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 font-semibold text-white text-xs rounded-lg transition shadow-sm">
+                                    Voir la demande sur le tableau de bord
+                                </a>
+                            {% elseif notif.type == 'MESSAGE' %}
+                                <a href="{{ path('app_messages') }}" class="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-700 font-semibold text-white text-xs rounded-lg transition shadow-sm">
+                                    Ouvrir la messagerie
+                                </a>
+                            {% endif %}
+                            
+                            <button onclick="fetch('/api/notifications/{{ notif.id }}/read', {method:'POST'}).then(() => location.reload())" 
+                                    class="px-4 py-1.5 border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold text-xs rounded-lg transition">
+                                Marquer comme lu
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <div class="p-12 text-center bg-white rounded-3xl border border-[#e5f7f6] shadow-sm">
+                <div class="w-20 h-20 mx-auto rounded-full bg-slate-50 flex items-center justify-center mb-4">
+                    <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold text-slate-700 mb-1">Aucune notification</h3>
+                <p class="text-slate-500 font-medium">Vous êtes à jour !</p>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
