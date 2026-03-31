@@ -25,7 +25,7 @@ class MapController extends AbstractController
         return $this->render('pages/map/map.html.twig');
     }
 
-    #[Route('/api/web/therapists', name: 'api_web_therapists', methods: ['GET'])]
+    #[Route('/map/api/therapists', name: 'api_web_therapists', methods: ['GET'])]
     public function getTherapists(): JsonResponse
     {
         /** @var TherapistProfile[] $profiles */
@@ -52,7 +52,7 @@ class MapController extends AbstractController
         return new JsonResponse($data);
     }
 
-    #[Route('/api/web/map/setup', name: 'api_web_map_setup', methods: ['POST'])]
+    #[Route('/map/api/setup', name: 'api_web_map_setup', methods: ['POST'])]
     public function setupLocation(Request $request): JsonResponse
     {
         /** @var User $user */

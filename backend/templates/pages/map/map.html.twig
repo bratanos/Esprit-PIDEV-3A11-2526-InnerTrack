@@ -1,185 +1,208 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
-{% block header_title %}Carte des thérapeutes{% endblock %}
+{% block header_title %}Carte des thérapeutes
+{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<div class="h-[calc(100vh-140px)] flex gap-6">
+	<div
+		class="h-[calc(100vh-140px)] flex gap-6">
 
-    <!-- Leaflet Map Container -->
-    <div id="map" class="flex-1 rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,104,118,0.08)] border-4 border-white z-0 overflow-hidden relative group">
-        {% if 'ROLE_PSYCHOLOGUE' in app.user.roles %}
-        <div class="absolute top-4 right-4 z-[400]">
-            <button onclick="enableLocationSetup()" class="px-5 py-2.5 bg-cyan-600/90 backdrop-blur-md text-white font-semibold rounded-xl shadow-lg hover:bg-cyan-700 flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                Définir ma position de cabinet
-            </button>
-        </div>
-        <div id="setup-banner" class="hidden absolute top-0 left-0 w-full bg-emerald-500/90 backdrop-blur-md text-white py-3 text-center z-[400] font-semibold flex justify-center items-center gap-4">
-            Cliquez n'importe où sur la carte pour placer votre cabinet.
-            <button onclick="cancelLocationSetup()" class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg text-sm">Annuler</button>
-        </div>
-        {% endif %}
-    </div>
+		<!-- Leaflet Map Container -->
+		<div id="map" class="flex-1 rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,104,118,0.08)] border-4 border-white z-0 overflow-hidden relative group">
+			{% if 'ROLE_PSYCHOLOGUE' in app.user.roles %}
+				<div class="absolute top-4 right-4 z-[1000]">
+					<button onclick="enableLocationSetup()" class="px-5 py-2.5 bg-cyan-600/90 backdrop-blur-md text-white font-semibold rounded-xl shadow-lg hover:bg-cyan-700 flex items-center gap-2">
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+						</svg>
+						Définir ma position de cabinet
+					</button>
+				</div>
+				<div id="setup-banner" class="hidden absolute top-0 left-0 w-full bg-emerald-500/90 backdrop-blur-md text-white py-3 text-center z-[1000] font-semibold flex justify-center items-center gap-4">
+					Cliquez n'importe où sur la carte pour placer votre cabinet.
+					<button onclick="cancelLocationSetup()" class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg text-sm">Annuler</button>
+				</div>
+			{% endif %}
+		</div>
 
-    <!-- Info Panel -->
-    <div class="w-96 bg-white rounded-[2rem] shadow-sm border border-[#e5f7f6] p-8 flex flex-col shrink-0 overflow-y-auto">
-        <h2 class="text-2xl font-bold text-[#0e1e1e] mb-2 tracking-tight">Détails</h2>
-        <p class="text-slate-500 text-sm font-medium mb-6">Sélectionnez un marqueur pour voir les informations du thérapeute.</p>
-        
-        <div id="therapist-info" class="hidden flex-1 flex flex-col">
-            <div class="flex items-center gap-4 mb-6">
-                <div id="t-avatar" class="w-16 h-16 rounded-full bg-gradient-to-br from-[#00bcd4] to-[#006876] flex items-center justify-center text-white text-2xl font-bold shadow-md">
-                </div>
-                <div>
-                    <h3 id="t-name" class="text-xl font-bold text-[#0e1e1e]"></h3>
-                    <p id="t-spec" class="text-sm text-[#006876] font-semibold bg-cyan-50 inline-block px-2 py-0.5 rounded-full mt-1"></p>
-                </div>
-            </div>
-            
-            <div class="space-y-4 flex-1">
-                <div>
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Adresse</h4>
-                    <p id="t-address" class="text-slate-700 font-medium"></p>
-                </div>
-                <div>
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">À propos</h4>
-                    <p id="t-bio" class="text-slate-600 text-sm leading-relaxed max-h-32 overflow-y-auto pr-2 custom-scrollbar"></p>
-                </div>
-            </div>
+		<!-- Info Panel -->
+		<div class="w-96 bg-white rounded-[2rem] shadow-sm border border-[#e5f7f6] p-8 flex flex-col shrink-0 overflow-y-auto">
+			<h2 class="text-2xl font-bold text-[#0e1e1e] mb-2 tracking-tight">Détails</h2>
+			<p class="text-slate-500 text-sm font-medium mb-6">Sélectionnez un marqueur pour voir les informations du thérapeute.</p>
 
-            <div class="mt-8 pt-6 border-t border-slate-100">
-                <button id="btn-contact" onclick="contactTherapist()" class="w-full h-14 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-lg shadow-[0_8px_24px_-8px_rgba(16,185,129,0.5)] transition-all">
-                    Prendre contact
-                </button>
-            </div>
-        </div>
+			<div id="therapist-info" class="hidden flex-1 flex flex-col">
+				<div class="flex items-center gap-4 mb-6">
+					<div id="t-avatar" class="w-16 h-16 rounded-full bg-gradient-to-br from-[#00bcd4] to-[#006876] flex items-center justify-center text-white text-2xl font-bold shadow-md"></div>
+					<div>
+						<h3 id="t-name" class="text-xl font-bold text-[#0e1e1e]"></h3>
+						<p id="t-spec" class="text-sm text-[#006876] font-semibold bg-cyan-50 inline-block px-2 py-0.5 rounded-full mt-1"></p>
+					</div>
+				</div>
 
-        <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center opacity-50 mt-10">
-            <svg class="w-16 h-16 text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-            <p>La carte est à votre disposition.</p>
-        </div>
-    </div>
-</div>
+				<div class="space-y-4 flex-1">
+					<div>
+						<h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Adresse</h4>
+						<p id="t-address" class="text-slate-700 font-medium"></p>
+					</div>
+					<div>
+						<h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">À propos</h4>
+						<p id="t-bio" class="text-slate-600 text-sm leading-relaxed max-h-32 overflow-y-auto pr-2 custom-scrollbar"></p>
+					</div>
+				</div>
 
-<script>
-    // Initialize Map
-    const map = L.map('map').setView([48.8566, 2.3522], 12); // Default Paris
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap InnerTrack'
-    }).addTo(map);
+				<div class="mt-8 pt-6 border-t border-slate-100">
+					<button id="btn-contact" onclick="contactTherapist()" class="w-full h-14 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-lg shadow-[0_8px_24px_-8px_rgba(16,185,129,0.5)] transition-all">
+						Prendre contact
+					</button>
+				</div>
+			</div>
 
-    let therapists = [];
-    let currentSelectedId = null;
-    let setupMode = false;
+			<div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center opacity-50 mt-10">
+				<svg class="w-16 h-16 text-slate-300 mb-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+				</svg>
+				<p>La carte est à votre disposition.</p>
+			</div>
+		</div>
+	</div>
 
-    // Load markers
-    fetch('/api/web/therapists')
-        .then(res => res.json())
-        .then(data => {
-            therapists = data;
-            data.forEach(t => {
-                const marker = L.marker([t.lat, t.lng]).addTo(map);
-                marker.on('click', () => showInfo(t));
-                
-                // If it's me
-                if (t.id === {{ app.user.id }}) {
-                    map.setView([t.lat, t.lng], 14);
-                }
-            });
-            
-            // Auto fit bounds if many
-            if (data.length > 0 && !{{ app.user.therapistProfile ? 'true' : 'false' }}) {
-                const group = new L.featureGroup(data.map(t => L.marker([t.lat, t.lng])));
-                map.fitBounds(group.getBounds().pad(0.1));
-            }
-        });
+	<script>
+		// Fix missing Leaflet marker icons
+		delete L.Icon.Default.prototype._getIconUrl;
+		L.Icon.Default.mergeOptions({
+			iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+			iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+			shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+		});
 
-    function showInfo(t) {
-        currentSelectedId = t.id;
-        document.getElementById('empty-state').classList.add('hidden');
-        document.getElementById('therapist-info').classList.remove('hidden');
-        
-        document.getElementById('t-name').innerText = 'Dr. ' + t.name.split(' ').pop();
-        document.getElementById('t-avatar').innerText = t.name.charAt(0);
-        document.getElementById('t-spec').innerText = t.specialization || 'Généraliste';
-        document.getElementById('t-address').innerText = t.address || 'Adresse non communiquée';
-        document.getElementById('t-bio').innerText = t.bio || 'Aucune description fournie.';
-        
-        const btn = document.getElementById('btn-contact');
-        if (t.id === {{ app.user.id }}) {
-            btn.classList.add('hidden');
-        } else {
-            btn.classList.remove('hidden');
-        }
-    }
+		// Initialize Map
+const map = L.map('map').setView([
+36.781678, 10.188344
+], 12); // Default TUNIS
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+maxZoom: 19,
+attribution: '© OpenStreetMap InnerTrack'
+}).addTo(map);
 
-    function contactTherapist() {
-        if (!currentSelectedId) return;
-        
-        fetch(`/map/contact/${currentSelectedId}`, {
-            method: 'POST',
-            body: JSON.stringify({ message: "Bonjour, je souhaite prendre contact avec vous via la carte InnerTrack." })
-        }).then(res => res.json()).then(data => {
-            if (data.success) {
-                alert("Demande envoyée au thérapeute.");
-            } else {
-                alert(data.message || "Erreur lors de l'envoi.");
-            }
-        });
-    }
+let therapists = [];
+let currentSelectedId = null;
+let setupMode = false;
 
-    // Interactive placement for therapists
-    function enableLocationSetup() {
-        setupMode = true;
-        document.getElementById('setup-banner').classList.remove('hidden');
-        document.getElementById('map').style.cursor = 'crosshair';
-    }
+// Load markers
+fetch('/map/api/therapists').then(res => res.json()).then(data => {
+therapists = data;
+data.forEach(t => {
+const marker = L.marker([t.lat, t.lng]).addTo(map);
+marker.on('click', () => showInfo(t));
 
-    function cancelLocationSetup() {
-        setupMode = false;
-        document.getElementById('setup-banner').classList.add('hidden');
-        document.getElementById('map').style.cursor = '';
-    }
+// If it's me
+if (t.id === {{ app.user.id }}) {
+map.setView([
+t.lat, t.lng
+], 14);
+}
+});
 
-    map.on('click', function(e) {
-        if (!setupMode) return;
-        
-        const address = prompt("Voulez-vous préciser l'adresse textuelle de ce repère ? (Optionnel)");
-        
-        fetch('/api/web/map/setup', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                lat: e.latlng.lat,
-                lng: e.latlng.lng,
-                address: address
-            })
-        }).then(res => res.json()).then(data => {
-            if (data.success) {
-                alert("Position de cabinet enregistrée avec succès.");
-                location.reload();
-            }
-        });
-        
-        cancelLocationSetup();
-    });
-</script>
+// Auto fit bounds if many
+if (data.length > 0 && !{{ app.user.therapistProfile ? 'true' : 'false' }}) {
+const group = new L.featureGroup(data.map(t => L.marker([t.lat, t.lng])));
+map.fitBounds(group.getBounds().pad(0.1));
+}
+});
 
-<style>
-    /* Styling scrollbar in bio */
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 4px;
-    }
-</style>
+function showInfo(t) {
+currentSelectedId = t.id;
+document.getElementById('empty-state').classList.add('hidden');
+document.getElementById('therapist-info').classList.remove('hidden');
+
+document.getElementById('t-name').innerText = 'Dr. ' + t.name.split(' ').pop();
+document.getElementById('t-avatar').innerText = t.name.charAt(0);
+document.getElementById('t-spec').innerText = t.specialization || 'Généraliste';
+document.getElementById('t-address').innerText = t.address || 'Adresse non communiquée';
+document.getElementById('t-bio').innerText = t.bio || 'Aucune description fournie.';
+
+const btn = document.getElementById('btn-contact');
+if (t.id === {{ app.user.id }}) {
+btn.classList.add('hidden');
+} else {
+btn.classList.remove('hidden');
+}
+}
+
+function contactTherapist() {
+if (! currentSelectedId) 
+return;
+
+
+
+fetch (`/map/contact/${currentSelectedId}`, {
+method: 'POST',
+body: JSON.stringify(
+{message: "Bonjour, je souhaite prendre contact avec vous via la carte InnerTrack."}
+)
+}).then(res => res.json()).then(data => {
+if (data.success) {
+alert("Demande envoyée au thérapeute.");
+} else {
+alert(data.message || "Erreur lors de l'envoi.");
+}
+});
+}
+
+// Interactive placement for therapists
+function enableLocationSetup() {
+setupMode = true;
+document.getElementById('setup-banner').classList.remove('hidden');
+document.getElementById('map').style.cursor = 'crosshair';
+}
+
+function cancelLocationSetup() {
+setupMode = false;
+document.getElementById('setup-banner').classList.add('hidden');
+document.getElementById('map').style.cursor = '';
+}
+
+map.on('click', function (e) {
+if (! setupMode) 
+return;
+
+
+
+const address = prompt("Voulez-vous préciser l'adresse textuelle de ce repère ? (Optionnel)");
+
+fetch('/map/api/setup', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify(
+{lat: e.latlng.lat, lng: e.latlng.lng, address: address}
+)
+}).then(res => res.json()).then(data => {
+if (data.success) {
+alert("Position de cabinet enregistrée avec succès.");
+location.reload();
+}
+});
+
+cancelLocationSetup();
+});
+	</script>
+
+	<style>
+		/* Styling scrollbar in bio */
+		.custom-scrollbar::-webkit-scrollbar {
+			width: 4px;
+		}
+		.custom-scrollbar::-webkit-scrollbar-track {
+			background: transparent;
+		}
+		.custom-scrollbar::-webkit-scrollbar-thumb {
+			background: #cbd5e1;
+			border-radius: 4px;
+		}
+	</style>
 {% endblock %}
