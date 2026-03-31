@@ -1,66 +1,207 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
-{% block header_title %}Espace Praticien{% endblock %}
+{% block title %}Therapist Portal - InnerTrack{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto space-y-8">
-    
-    {% if not profileComplete %}
-    <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-2xl shadow-sm flex items-start sm:items-center justify-between flex-col sm:flex-row gap-4">
-        <div>
-            <h3 class="text-amber-800 font-bold text-lg">Votre profil est incomplet</h3>
-            <p class="text-amber-700 mt-1">Les patients ne pourront pas vous trouver sur la carte tant que votre position et votre spécialisation ne sont pas définies.</p>
-        </div>
-        <a href="{{ path('app_profile') }}" class="px-5 py-2.5 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 transition">Compléter le profil</a>
-    </div>
-    {% endif %}
-
-    <!-- Welcome section -->
-    <div class="bg-white rounded-[2rem] p-8 lg:p-12 shadow-[0_32px_64px_-16px_rgba(0,104,118,0.08)] border border-white relative overflow-hidden">
-        <div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-[#e5f7f6] to-transparent opacity-50"></div>
-        <div class="relative z-10 w-full md:w-2/3">
-            <h2 class="text-4xl font-bold text-[#0e1e1e] mb-2 tracking-tight">Dr. {{ app.user.lastName }}</h2>
-            <p class="text-lg text-[#3c494c] mb-8 font-medium">Gérez vos patients, répondez aux demandes aux consultez votre planning d'un seul coup d'œil.</p>
-        </div>
-    </div>
+<div class="space-y-12">
+    <!-- Hero Welcome -->
+    <section class="space-y-2">
+        <h2 class="font-headline text-4xl lg:text-5xl text-on-surface font-extrabold tracking-tight">Welcome back, Dr. {{ app.user.lastName|default(app.user.firstName) }} 👩‍⚕️</h2>
+        <p class="text-on-surface-variant text-lg">Your sanctuary for patient care and therapeutic management.</p>
+    </section>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Pending Requests -->
-        <div class="bg-white rounded-[1.5rem] p-6 shadow-sm border border-[#e5f7f6] relative overflow-hidden">
-            <div class="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-[#f19640] to-[#8f4e00]"></div>
-            <div class="pl-4">
-                <h3 class="text-[#3c494c] text-sm font-semibold uppercase tracking-wider mb-2">Nouvelles demandes de contact</h3>
-                <div class="flex items-end gap-3">
-                    <span class="text-4xl font-bold text-[#0e1e1e]">{{ pendingRequests|length }}</span>
-                </div>
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="sanctuary-gradient bg-gradient-to-br from-primary to-indigo-800 p-8 rounded-xl shadow-xl shadow-primary/10 flex justify-between items-center text-white overflow-hidden relative group">
+            <div class="relative z-10">
+                <p class="text-sm font-medium opacity-80 uppercase tracking-widest">Active Patients</p>
+                <h3 class="text-5xl font-extrabold mt-1">{{ activePatients|length }}</h3>
             </div>
-            
-            {% if pendingRequests|length > 0 %}
-            <div class="mt-6 space-y-3 pl-4">
-                {% for req in pendingRequests|slice(0, 3) %}
-                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-800 font-bold text-xs">{{ req.client.firstName|first }}{{ req.client.lastName|first }}</div>
-                        <span class="font-medium text-slate-700">{{ req.client.fullName }}</span>
+            <span class="material-symbols-outlined text-7xl opacity-20 group-hover:scale-110 transition-transform duration-500" data-icon="group">group</span>
+        </div>
+        
+        <div class="bg-surface-container-low p-8 rounded-xl flex justify-between items-center text-on-surface border-l-4 border-secondary overflow-hidden relative group shadow-sm">
+            <div class="relative z-10">
+                <p class="text-sm font-medium text-on-surface-variant uppercase tracking-widest">Pending Requests</p>
+                <h3 class="text-5xl font-extrabold mt-1 text-secondary">{{ pendingRequests|length }}</h3>
+            </div>
+            <span class="material-symbols-outlined text-7xl text-secondary opacity-10 group-hover:scale-110 transition-transform duration-500" data-icon="person_add">person_add</span>
+        </div>
+        
+        <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm flex justify-between items-center text-on-surface border border-outline-variant/10 overflow-hidden relative group">
+            <div class="relative z-10">
+                <p class="text-sm font-medium text-on-surface-variant uppercase tracking-widest">Unread Notifications</p>
+                <h3 class="text-5xl font-extrabold mt-1 text-primary">{{ unreadNotifs }}</h3>
+            </div>
+            <span class="material-symbols-outlined text-7xl text-primary opacity-10 group-hover:scale-110 transition-transform duration-500" data-icon="notifications">notifications</span>
+        </div>
+    </section>
+
+    <!-- Main Workspace Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <!-- Left: Transactions & Feeds -->
+        <div class="lg:col-span-8 space-y-12">
+            <!-- Pending Requests Table -->
+            <section>
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="font-headline text-2xl font-bold">Pending Contact Requests</h3>
+                    <a href="#" class="text-primary font-semibold text-sm hover:underline">View all</a>
+                </div>
+                
+                <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl overflow-hidden shadow-sm">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-surface-container-low text-on-surface-variant text-xs uppercase tracking-widest">
+                                    <th class="px-6 py-4 font-semibold">Patient Name</th>
+                                    <th class="px-6 py-4 font-semibold">Message</th>
+                                    <th class="px-6 py-4 font-semibold">Date</th>
+                                    <th class="px-6 py-4 font-semibold text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-outline-variant/10">
+                            {% for req in pendingRequests|slice(0, 3) %}
+                                <tr class="hover:bg-surface-container transition-colors">
+                                    <td class="px-6 py-5">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold text-xs uppercase">
+                                                {{ req.patient.firstName|first }}{{ req.patient.lastName|first }}
+                                            </div>
+                                            <span class="font-semibold text-sm">{{ req.patient.fullName }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-5 text-sm text-on-surface-variant max-w-xs truncate">
+                                        {{ req.message|default('No specific message provided...') }}
+                                    </td>
+                                    <td class="px-6 py-5 text-sm">{{ req.createdAt|date('M d, Y') }}</td>
+                                    <td class="px-6 py-5 text-right space-x-2">
+                                        <form method="post" action="{{ path('contact_request_accept', {'id': req.id}) }}" class="inline">
+                                            <button class="bg-secondary text-white px-4 py-1.5 rounded-xl shadow-sm text-xs font-bold hover:shadow-md transition-shadow">Accept</button>
+                                        </form>
+                                        <form method="post" action="{{ path('contact_request_reject', {'id': req.id}) }}" class="inline">
+                                            <button class="border border-red-500 text-red-600 px-4 py-1.5 rounded-xl text-xs font-bold hover:bg-red-50 transition-colors">Decline</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="px-6 py-12 text-center text-on-surface-variant text-sm bg-white">
+                                        <div class="flex flex-col items-center justify-center opacity-60">
+                                            <span class="material-symbols-outlined text-4xl mb-2" data-icon="inbox">inbox</span>
+                                            <p>No pending contact requests. You're all caught up!</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
-            {% endif %}
+            </section>
+
+            <!-- Recent Conversations -->
+            <section>
+                <h3 class="font-headline text-2xl font-bold mb-6">Recent Conversations</h3>
+                <div class="space-y-4">
+                    {% for conversation in activePatients|slice(0, 3) %}
+                        {% set otherUser = conversation.client %}
+                        {% set lastMsg = conversation.messages|last %}
+                        <a href="{{ path('app_messages_show', {'id': conversation.id}) }}" class="block bg-surface-container-lowest border border-outline-variant/10 p-6 rounded-2xl flex items-center justify-between group cursor-pointer hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 transition-all">
+                            <div class="flex items-center gap-5">
+                                <div class="relative">
+                                    <div class="w-12 h-12 rounded-full bg-primary-container text-primary flex items-center justify-center font-extrabold text-lg">
+                                        {{ otherUser.firstName|first }}{{ otherUser.lastName|first }}
+                                    </div>
+                                    <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white"></div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-on-surface">{{ otherUser.fullName }}</h4>
+                                    <p class="text-sm text-on-surface-variant truncate max-w-[200px] sm:max-w-xs mt-0.5">
+                                        {% if lastMsg %}
+                                            "{{ lastMsg.content }}"
+                                        {% else %}
+                                            <i>Started a new conversation</i>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-slate-400 font-bold tracking-wide whitespace-nowrap bg-gray-50 px-3 py-1 rounded-md">
+                                {% if lastMsg %}
+                                    {{ lastMsg.createdAt|date('M d') }}
+                                {% else %}
+                                    {{ conversation.createdAt|date('M d') }}
+                                {% endif %}
+                            </span>
+                        </a>
+                    {% else %}
+                        <div class="bg-surface-container-lowest border border-outline-variant/10 p-10 rounded-2xl text-center text-on-surface-variant flex flex-col items-center gap-3">
+                            <span class="material-symbols-outlined text-4xl opacity-50" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+                            <p class="font-medium">You have no active conversations yet.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
         </div>
 
-        <!-- Active Patients -->
-        <div class="bg-white rounded-[1.5rem] p-6 shadow-sm border border-[#e5f7f6] relative overflow-hidden">
-            <div class="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-[#00bcd4] to-[#006876]"></div>
-            <div class="pl-4">
-                <h3 class="text-[#3c494c] text-sm font-semibold uppercase tracking-wider mb-2">Patients Actifs</h3>
-                <div class="flex items-end gap-3">
-                    <span class="text-4xl font-bold text-[#0e1e1e]">{{ activePatients|length }}</span>
+        <!-- Right Sidebar: Profile & Quick Info -->
+        <aside class="lg:col-span-4 space-y-8">
+            <div class="bg-surface-container-highest p-8 rounded-[2rem] relative overflow-hidden flex flex-col justify-center">
+                <!-- Abstract Background Decoration -->
+                <div class="absolute -top-12 -right-12 w-40 h-40 bg-secondary opacity-10 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-primary opacity-10 rounded-full blur-3xl"></div>
+                <div class="relative z-10 flex flex-col items-center text-center">
+                    <img alt="Dr. {{ app.user.lastName|default(app.user.firstName) }}" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl mb-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8MRs2oiBTK5y1ODRgJ7OGNh2ww3HCMLjSqPShNWKw01IArpYtIFL7PeeZZ7nQcfw90C1wla8vKYNxLDzRs1D_0eFSb4YXzgnDB0I4PVYZ7aOklLTr24t5k4W694eiUhwQhK_69Gx_IGZY0-O8DAH34DQcaROOAUBpYhFaco2MJRPB9K1wUKUo_1PNEI4NwLEgAKUTe2j1UbEd06bAmobbjtEJIb5XgtdrrA4_96agdlKPtoe4guF1NI4ErWQ1FnZCCT1Trdxsfg"/>
+                    <h4 class="font-headline text-2xl font-bold text-on-surface">Dr. {{ app.user.lastName|default(app.user.firstName) }}</h4>
+                    <p class="text-xs text-primary font-bold uppercase tracking-widest mb-8 mt-1">Clinical Psychologist</p>
+                    
+                    <div class="w-full space-y-3 text-left">
+                        <div class="flex items-center justify-between bg-white/60 backdrop-blur-md p-4 rounded-xl border border-white">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-secondary" data-icon="calendar_today">calendar_today</span>
+                                <span class="text-sm font-semibold">Available</span>
+                            </div>
+                            <span class="text-sm font-extrabold text-on-surface">Mon - Fri</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-white/60 backdrop-blur-md p-4 rounded-xl border border-white">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-secondary" data-icon="payments">payments</span>
+                                <span class="text-sm font-semibold">Session Rate</span>
+                            </div>
+                            <span class="text-sm font-extrabold text-on-surface bg-primary/10 text-primary px-3 py-1 rounded-lg">Premium</span>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ path('app_profile') }}" class="mt-8 text-primary font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all group px-6 py-2 bg-white rounded-full shadow-sm hover:shadow-md border border-outline/10">
+                        Edit Profile Details
+                        <span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+                    </a>
                 </div>
             </div>
-        </div>
-    </div>
 
+            <!-- Journey Path Bespoke Component -->
+            <div class="bg-surface-container-low p-8 rounded-[2rem] border border-outline/20">
+                <h5 class="font-extrabold text-xs mb-8 uppercase tracking-[0.2em] text-on-surface-variant flex items-center justify-between">
+                    Global Patient Progress
+                    <span class="material-symbols-outlined text-[18px]">trending_up</span>
+                </h5>
+                <div class="relative flex flex-col gap-8 h-48 items-center justify-center">
+                    <!-- Soft Curved Progress Mockup -->
+                    <svg class="absolute inset-0 w-full h-full text-secondary/10 fill-none stroke-current" style="stroke-width: 4; stroke-linecap: round;" viewbox="0 0 100 100">
+                        <path d="M 10 90 C 20 60, 40 40, 50 50 S 80 40, 90 10"></path>
+                    </svg>
+                    <svg class="absolute inset-0 w-full h-full text-secondary fill-none stroke-current" style="stroke-width: 4; stroke-linecap: round; stroke-dasharray: 200; stroke-dashoffset: 60;" viewbox="0 0 100 100">
+                        <path d="M 10 90 C 20 60, 40 40, 50 50 S 80 40, 90 10"></path>
+                    </svg>
+                    <div class="z-10 bg-white shadow-xl shadow-secondary/10 p-5 rounded-2xl text-center border border-secondary/20 min-w-[100px]">
+                        <p class="text-3xl font-black text-secondary">72%</p>
+                        <p class="text-[9px] font-bold uppercase tracking-widest opacity-60 mt-1">Goal Reached</p>
+                    </div>
+                </div>
+                <p class="text-xs text-center text-on-surface-variant mt-6 italic font-medium">
+                    "The journey of recovery is organic, not clinical."
+                </p>
+            </div>
+        </aside>
+    </div>
 </div>
 {% endblock %}

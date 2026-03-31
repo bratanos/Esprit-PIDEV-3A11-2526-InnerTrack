@@ -1,45 +1,76 @@
 {% extends 'layouts/auth.html.twig' %}
 
-{% block title %}Vérification - InnerTrack{% endblock %}
+{% block title %}Verify Email | InnerTrack{% endblock %}
 
 {% block body %}
-<div class="relative w-full max-w-lg">
-    <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400/20 to-emerald-400/20 blur-3xl opacity-50 rounded-[3rem]"></div>
-    
-    <div class="relative bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,104,118,0.08)] p-10 lg:p-14 border border-white/50 text-center">
-        
-        <div class="mx-auto w-20 h-20 rounded-full bg-cyan-50 flex items-center justify-center mb-6 border-4 border-white shadow-sm">
-            <svg class="w-10 h-10 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
+<main class="min-h-screen flex items-center justify-center px-6 pt-24 pb-12">
+    <div class="w-full max-w-xl">
+        <div class="bg-surface-container-low rounded-[2rem] p-1 md:p-2 shadow-[0px_20px_40px_rgba(13,28,46,0.04)]">
+            <div class="bg-surface-container-lowest rounded-[1.8rem] p-8 md:p-12 flex flex-col items-center text-center">
+                
+                <div class="relative w-48 h-48 mb-10 group">
+                    <div class="absolute inset-0 sanctuary-gradient opacity-10 blur-3xl rounded-full scale-125 transition-transform duration-700"></div>
+                    <div class="relative flex items-center justify-center w-full h-full rounded-full bg-surface-container-low overflow-hidden">
+                        <img alt="Serene morning sun shining through soft clouds" class="w-full h-full object-cover mix-blend-multiply opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzyd3U7IcCLR2Me5DwR0nDaXcDm77YlUam3A7G3_6oIyHMxJZW6d6GPLlW7cyfX5Isg7a4Sm5dxwjO1MzXWyySx6ZVcP-uVOyV9R5dHHdN-gjPhRNcWHYozE7xN0ALcfxBl_v2XkPMJ6Uw1IAKklG3IfvwLZvRhICCPk2ua5G-EdF58co0NZNQKkkUbOr2mM2Vf0Xj6HKeOJq70l5ud5R_GsmzlrnRLpRp4I7sPQpHKJoJiljqNwSsDB0Qu8NQWD3XA2ZRzILw4g"/>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-7xl text-primary" data-icon="wb_sunny" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h1 class="font-headline text-3xl md:text-4xl font-extrabold text-on-surface tracking-tight mb-4">
+                    Check your inbox
+                </h1>
+                <p class="text-on-surface-variant text-lg leading-relaxed max-w-sm mb-10">
+                    We've sent a 6-digit verification code to <br><strong class="text-on-surface">{{ email }}</strong>.
+                </p>
+
+                {% for message in app.flashes('error') %}
+                    <div class="mb-8 w-full p-4 rounded-xl bg-error-container text-on-error-container text-sm font-medium flex items-center justify-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]" data-icon="error">error</span>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('success') %}
+                    <div class="mb-8 w-full p-4 rounded-xl bg-secondary-container text-on-secondary-container text-sm font-medium flex items-center justify-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]" data-icon="check_circle">check_circle</span>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                <form class="w-full space-y-6" method="post" action="{{ path('app_verify_email') }}">
+                    <input type="hidden" name="email" value="{{ email }}">
+                    
+                    <div class="space-y-2">
+                        <input type="text" name="code" id="code" required autofocus placeholder="000000" maxlength="6"
+                               class="w-full h-14 bg-surface-container-highest border-none focus:ring-2 focus:ring-primary/20 rounded-xl px-4 text-center text-3xl tracking-[0.5em] font-mono text-on-surface placeholder:text-outline transition-all duration-300 outline-none">
+                    </div>
+
+                    <button type="submit" class="w-full sanctuary-gradient text-on-primary font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95 duration-200">
+                        Verify Account
+                    </button>
+                </form>
+
+                <form class="mt-6 flex flex-col items-center gap-3" method="post" action="{{ path('app_verify_resend') }}">
+                    <input type="hidden" name="email" value="{{ email }}">
+                    <button type="submit" class="text-primary font-medium hover:text-on-primary-fixed-variant transition-colors inline-flex items-center justify-center gap-2 outline-none">
+                        <span class="material-symbols-outlined text-[20px]" data-icon="refresh">refresh</span>
+                        Resend Code
+                    </button>
+                    <p class="text-xs text-on-surface-variant/60 font-medium">
+                        Didn't receive anything? Check your spam folder.
+                    </p>
+                </form>
+
+            </div>
         </div>
 
-        <h1 class="text-3xl font-semibold text-slate-800 tracking-tight mb-3 font-['Inter']">Vérifiez votre email</h1>
-        <p class="text-slate-500 text-sm font-medium mb-8">Nous avons envoyé un code à <strong>{{ email }}</strong></p>
-
-        {% for message in app.flashes('error') %}
-            <div class="mb-6 p-4 rounded-2xl bg-red-50 text-red-600 text-sm font-medium border border-red-100 flex items-center gap-3">
-                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                {{ message }}
+        <div class="mt-12 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-surface-container-low rounded-full">
+                <span class="material-symbols-outlined text-secondary text-sm" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+                <span class="text-xs font-label text-on-surface-variant font-medium tracking-wide">SECURE VERIFICATION GATEWAY</span>
             </div>
-        {% endfor %}
-
-        <form method="post" action="{{ path('app_verify_email') }}" class="space-y-6">
-            <input type="hidden" name="email" value="{{ email }}">
-            
-            <div class="space-y-2">
-                <div class="relative group">
-                    <input type="text" name="code" id="code" required autofocus placeholder="Code à 6 chiffres" maxlength="6"
-                           class="w-full h-16 bg-slate-50 border-0 rounded-2xl px-5 text-center text-3xl tracking-[1em] font-semibold text-slate-800 placeholder-slate-300 focus:ring-0 focus:bg-white transition-all duration-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] focus:shadow-[0_8px_24px_-8px_rgba(0,188,212,0.15)] peer"
-                           style="outline: none;">
-                    <div class="absolute inset-0 rounded-2xl border border-slate-200 pointer-events-none peer-focus:border-cyan-400 transition-colors duration-300"></div>
-                </div>
-            </div>
-
-            <button type="submit" class="w-full h-14 rounded-2xl bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-lg hover:shadow-[0_8px_24px_-8px_rgba(0,188,212,0.5)] transition-all duration-300">
-                Vérifier mon compte
-            </button>
-        </form>
+        </div>
     </div>
-</div>
+</main>
 {% endblock %}

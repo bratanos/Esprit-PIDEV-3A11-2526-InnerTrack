@@ -23,4 +23,19 @@ class EmailSender
 
         $this->mailer->send($email);
     }
+
+    public function sendPasswordResetEmail(string $to, string $code): void
+    {
+        $email = (new Email())
+            ->from('no-reply@innertrack.tn')
+            ->to($to)
+            ->subject('Réinitialisation de votre mot de passe - InnerTrack')
+            ->html("
+                <p>Votre code de réinitialisation :</p>
+                <h2>$code</h2>
+                <p>Ce code expire dans 30 minutes.</p>
+            ");
+
+        $this->mailer->send($email);
+    }
 }

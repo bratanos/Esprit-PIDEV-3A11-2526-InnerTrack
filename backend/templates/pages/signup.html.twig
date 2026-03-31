@@ -1,116 +1,113 @@
 {% extends 'layouts/auth.html.twig' %}
 
-{% block title %}Créer un compte - InnerTrack{% endblock %}
+{% block title %}Join Us | InnerTrack{% endblock %}
 
 {% block body %}
-<div class="relative w-full max-w-xl">
-    <!-- Ambient Background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-emerald-400/20 to-cyan-400/20 blur-3xl opacity-50 rounded-[3rem]"></div>
-    
-    <div class="relative bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,104,118,0.08)] p-10 border border-white/50">
+<main class="min-h-screen pt-24 pb-12 flex items-center justify-center px-4 md:px-8">
+    <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 bg-surface-container-lowest rounded-[2rem] overflow-hidden shadow-[0px_40px_80px_rgba(13,28,46,0.08)]">
         
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-semibold text-slate-800 tracking-tight mb-2 font-['Inter']">Rejoignez-nous</h1>
-            <p class="text-slate-500 text-sm font-medium">Commencez votre voyage vers le bien-être.</p>
+        <!-- Visual Brand Side (Editorial) -->
+        <div class="relative hidden lg:block p-12 overflow-hidden bg-primary-container h-[700px]">
+            <div class="absolute inset-0 opacity-40">
+                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA8aRxnn3WUD0sdqvkzjmYGKqoRkraGN-rQbfpvhKn4682NvlDCn8nb0qrt1zJz1geumxgb66oUiVB5CwZ9hDZhOpStKGoTVT4drpB5PgVoI8ZJ2mS36chQ5ow_toF1lpn0esr42HoMW6ko16NceBuTtD85E3Oh_QmrYKI7_kp1Dopq-wRIOX8CAm3jWeQmUokboxbH3-KZ2jPjGL7UAvwNIsD8I20Q82kfKUZxf1axZMZ124LVW_GysM8OoRCDAuUGGVO3ecosg"/>
+            </div>
+            <div class="relative h-full flex flex-col justify-between z-10">
+                <div>
+                    <h1 class="text-white font-headline text-5xl font-extrabold leading-tight tracking-tight">
+                        Begin your<br/>journey to<br/>inner peace.
+                    </h1>
+                    <p class="mt-6 text-on-primary-container text-xl font-body leading-relaxed max-w-sm">
+                        Join our community of mindful individuals finding clarity in the digital age.
+                    </p>
+                </div>
+                <div class="bg-surface/10 backdrop-blur-md p-6 rounded-xl border border-white/10">
+                    <p class="text-white italic text-lg leading-relaxed">
+                        "The first step towards mindfulness is simply deciding to show up for yourself."
+                    </p>
+                    <div class="mt-4 flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+                            <span class="material-symbols-outlined" data-icon="spa" style="font-variation-settings: 'FILL' 1;">spa</span>
+                        </div>
+                        <span class="text-white font-semibold">Sanctuary Guide</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        {% if errors is defined and errors|length > 0 %}
-            <div class="mb-6 p-4 rounded-2xl bg-red-50 text-red-600 text-sm font-medium border border-red-100 space-y-1">
-                {% for error in errors %}
-                    <p class="flex items-center gap-2">
-                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        {{ error }}
-                    </p>
-                {% endfor %}
-            </div>
-        {% endif %}
+        <!-- Form Side -->
+        <div class="p-8 md:p-12 lg:p-16 flex flex-col justify-center bg-surface-container-lowest">
+            <div class="max-w-md mx-auto w-full">
+                <div class="mb-10">
+                    <h2 class="font-headline text-3xl font-bold text-on-surface">Create Account</h2>
+                    <p class="text-on-surface-variant mt-2">Start your sanctuary experience.</p>
+                </div>
 
-        <form method="post" action="{{ path('app_register') }}" class="space-y-5">
-            <div class="grid grid-cols-2 gap-5">
-                <div class="space-y-2">
-                    <label for="first_name" class="block text-sm font-medium text-slate-700 ml-1">Prénom</label>
-                    <div class="relative group">
-                        <input type="text" value="{{ first_name|default('') }}" name="first_name" id="first_name" required
-                               class="w-full h-12 bg-slate-50 border-0 rounded-2xl px-5 text-slate-800 placeholder-slate-400 focus:ring-0 focus:bg-white transition-all duration-300 peer"
-                               style="outline: none;">
-                        <div class="absolute inset-0 rounded-2xl border border-slate-200 pointer-events-none peer-focus:border-cyan-400 transition-colors duration-300"></div>
+                {% if errors is defined and errors|length > 0 %}
+                    <div class="mb-6 p-4 rounded-xl bg-error-container text-on-error-container text-sm font-medium flex flex-col gap-1">
+                        {% for error in errors %}
+                            <p class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[16px]" data-icon="error">error</span>
+                                {{ error }}
+                            </p>
+                        {% endfor %}
                     </div>
-                </div>
+                {% endif %}
 
-                <div class="space-y-2">
-                    <label for="last_name" class="block text-sm font-medium text-slate-700 ml-1">Nom</label>
-                    <div class="relative group">
-                        <input type="text" value="{{ last_name|default('') }}" name="last_name" id="last_name" required
-                               class="w-full h-12 bg-slate-50 border-0 rounded-2xl px-5 text-slate-800 placeholder-slate-400 focus:ring-0 focus:bg-white transition-all duration-300 peer"
-                               style="outline: none;">
-                        <div class="absolute inset-0 rounded-2xl border border-slate-200 pointer-events-none peer-focus:border-cyan-400 transition-colors duration-300"></div>
+                <form class="space-y-5" method="post" action="{{ path('app_register') }}">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label for="first_name" class="block text-sm font-label font-medium text-on-surface-variant ml-1">First Name</label>
+                            <input class="w-full h-12 px-4 rounded-xl bg-surface-container-highest border-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline-variant" placeholder="Alex" name="first_name" id="first_name" required value="{{ first_name|default('') }}" type="text"/>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="last_name" class="block text-sm font-label font-medium text-on-surface-variant ml-1">Last Name</label>
+                            <input class="w-full h-12 px-4 rounded-xl bg-surface-container-highest border-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline-variant" placeholder="Rivers" name="last_name" id="last_name" required value="{{ last_name|default('') }}" type="text"/>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="space-y-2">
-                <label for="email" class="block text-sm font-medium text-slate-700 ml-1">Adresse Email</label>
-                <div class="relative group">
-                    <input type="email" value="{{ email|default('') }}" name="email" id="email" required
-                           class="w-full h-12 bg-slate-50 border-0 rounded-2xl px-5 text-slate-800 placeholder-slate-400 focus:ring-0 focus:bg-white transition-all duration-300 peer"
-                           style="outline: none;">
-                    <div class="absolute inset-0 rounded-2xl border border-slate-200 pointer-events-none peer-focus:border-cyan-400 transition-colors duration-300"></div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-5">
-                <div class="space-y-2">
-                    <label for="password" class="block text-sm font-medium text-slate-700 ml-1">Mot de passe</label>
-                    <div class="relative group">
-                        <input type="password" name="password" id="password" required
-                               class="w-full h-12 bg-slate-50 border-0 rounded-2xl px-5 text-slate-800 placeholder-slate-400 focus:ring-0 focus:bg-white transition-all duration-300 peer"
-                               style="outline: none;">
-                        <div class="absolute inset-0 rounded-2xl border border-slate-200 pointer-events-none peer-focus:border-cyan-400 transition-colors duration-300"></div>
+                    <div class="space-y-2">
+                        <label for="email" class="block text-sm font-label font-medium text-on-surface-variant ml-1">Email Address</label>
+                        <input class="w-full h-12 px-4 rounded-xl bg-surface-container-highest border-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline-variant" placeholder="alex@sanctuary.com" name="email" id="email" required value="{{ email|default('') }}" type="email"/>
                     </div>
-                </div>
 
-                <div class="space-y-2">
-                    <label for="confirm_password" class="block text-sm font-medium text-slate-700 ml-1">Confirmer</label>
-                    <div class="relative group">
-                        <input type="password" name="confirm_password" id="confirm_password" required
-                               class="w-full h-12 bg-slate-50 border-0 rounded-2xl px-5 text-slate-800 placeholder-slate-400 focus:ring-0 focus:bg-white transition-all duration-300 peer"
-                               style="outline: none;">
-                        <div class="absolute inset-0 rounded-2xl border border-slate-200 pointer-events-none peer-focus:border-cyan-400 transition-colors duration-300"></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label for="password" class="block text-sm font-label font-medium text-on-surface-variant ml-1">Password</label>
+                            <input class="w-full h-12 px-4 rounded-xl bg-surface-container-highest border-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline-variant" placeholder="••••••••" name="password" id="password" required type="password"/>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="confirm_password" class="block text-sm font-label font-medium text-on-surface-variant ml-1">Confirm</label>
+                            <input class="w-full h-12 px-4 rounded-xl bg-surface-container-highest border-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline-variant" placeholder="••••••••" name="confirm_password" id="confirm_password" required type="password"/>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="space-y-2 pt-2">
-                <label class="block text-sm font-medium text-slate-700 mb-3 text-center">Je suis un...</label>
-                <div class="grid grid-cols-2 gap-4">
-                    <label class="relative flex flex-col items-center justify-center p-4 cursor-pointer rounded-2xl border-2 border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition-colors has-[:checked]:border-cyan-400 has-[:checked]:bg-cyan-50/50">
-                        <input type="radio" name="role" value="ROLE_USER" class="peer sr-only" {% if (role|default('ROLE_USER')) == 'ROLE_USER' %}checked{% endif %}>
-                        <div class="text-2xl mb-1">👤</div>
-                        <div class="text-sm font-semibold text-slate-700 peer-checked:text-cyan-700">Utilisateur</div>
-                        <div class="text-xs text-slate-500 mt-1">Pour mon bien-être</div>
-                    </label>
+                    <div class="pt-2">
+                        <label class="block text-sm font-label font-medium text-on-surface-variant ml-1 mb-2">Account Type</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="relative flex items-center p-3 cursor-pointer rounded-xl bg-surface-container-highest transition-colors hover:bg-surface-variant has-[:checked]:bg-primary-container has-[:checked]:text-on-primary-container group">
+                                <input type="radio" name="role" value="ROLE_USER" class="peer sr-only" {% if (role|default('ROLE_USER')) == 'ROLE_USER' %}checked{% endif %}>
+                                <div class="font-medium text-[13px] w-full text-center group-has-[:checked]:text-white">User</div>
+                            </label>
+                            <label class="relative flex items-center p-3 cursor-pointer rounded-xl bg-surface-container-highest transition-colors hover:bg-surface-variant has-[:checked]:bg-secondary-container has-[:checked]:text-on-secondary-container group">
+                                <input type="radio" name="role" value="ROLE_PSYCHOLOGUE" class="peer sr-only" {% if (role|default('')) == 'ROLE_PSYCHOLOGUE' %}checked{% endif %}>
+                                <div class="font-medium text-[13px] w-full text-center group-has-[:checked]:text-on-secondary-fixed-variant">Psychologist</div>
+                            </label>
+                        </div>
+                    </div>
 
-                    <label class="relative flex flex-col items-center justify-center p-4 cursor-pointer rounded-2xl border-2 border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition-colors has-[:checked]:border-emerald-400 has-[:checked]:bg-emerald-50/50">
-                        <input type="radio" name="role" value="ROLE_PSYCHOLOGUE" class="peer sr-only" {% if (role|default('')) == 'ROLE_PSYCHOLOGUE' %}checked{% endif %}>
-                        <div class="text-2xl mb-1">🩺</div>
-                        <div class="text-sm font-semibold text-slate-700 peer-checked:text-emerald-700">Praticien</div>
-                        <div class="text-xs text-slate-500 mt-1">Pour accompagner</div>
-                    </label>
-                </div>
+                    <div class="pt-4 space-y-6">
+                        <button class="w-full py-4 sanctuary-gradient text-white font-bold rounded-xl shadow-[0px_10px_20px_rgba(79,70,229,0.2)] hover:opacity-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
+                            Sign Up
+                            <span class="material-symbols-outlined text-[1.2rem]" data-icon="arrow_forward">arrow_forward</span>
+                        </button>
+                        <div class="flex items-center justify-center gap-2 text-sm text-on-surface-variant">
+                            Already have an account?
+                            <a class="text-primary font-bold hover:underline" href="{{ path('app_login') }}">Back to Login</a>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <div class="pt-6">
-                <button type="submit" class="w-full h-14 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-lg max-w-full hover:shadow-[0_8px_24px_-8px_rgba(16,185,129,0.5)] outline outline-0 transition-all duration-300">
-                    Créer mon compte
-                </button>
-            </div>
-            
-            <div class="text-center pt-2">
-                <a href="{{ path('app_login') }}" class="text-sm font-medium text-slate-500 hover:text-cyan-600 transition">
-                    Déjà un compte ? <span class="text-cyan-600 underline decoration-cyan-400/30 underline-offset-4">Connectez-vous</span>
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</main>
 {% endblock %}

@@ -17,8 +17,9 @@
     {% block head %}{% endblock %}
 </head>
 
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col pointer-events-auto">
 
+{% block layout %}
     {{ ui.navbar(active = 'home') }}
 
     {# Flash messages #}
@@ -30,15 +31,16 @@
         {% endfor %}
     </div>
 
-    <main class="flex-1 flex justify-center">
-        <div class="w-full max-w-[1050px] mx-auto px-8 py-6">
-            <div class="bg-white rounded-2xl shadow-lg p-6">
+    <main class="flex-1 flex justify-center bg-gradient-to-b from-[#ebfdfc] to-[#ffffff]">
+        <div class="w-full max-w-[1050px] mx-auto px-8 py-12">
+            <div class="bg-white/70 backdrop-blur-[24px] rounded-[1.5rem] shadow-[0_32px_64px_rgba(0,104,118,0.06)] border border-[#bbc9cc]/15 p-8">
                 {% block body %}{% endblock %}
             </div>
         </div>
     </main>
 
     {{ ui.footer() }}
+{% endblock %}
 
 </body>
 </html>

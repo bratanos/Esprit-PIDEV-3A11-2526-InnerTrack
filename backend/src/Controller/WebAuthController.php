@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use App\Service\EmailSender;
 
 class WebAuthController extends AbstractController
 {
@@ -20,6 +21,12 @@ class WebAuthController extends AbstractController
         private EntityManagerInterface $em,
         private UserPasswordHasherInterface $passwordHasher,
     ) {}
+
+    #[Route('/', name: 'app_home')]
+    public function home(): Response
+    {
+        return $this->redirectToRoute('app_login');
+    }
 
     #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authUtils): Response
@@ -42,7 +49,7 @@ class WebAuthController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
-    public function register(Request $request): Response
+    public function register(Request $request, EmailSender $emailSender): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_dashboard');
@@ -108,6 +115,9 @@ class WebAuthController extends AbstractController
             $verificationCode->setUser($user);
             $verificationCode->setCode($code);
             $verificationCode->setExpiresAt(new \DateTimeImmutable('+15 minutes'));
+            $verificationCode->setLastSentAt(new \DateTimeImmutable());
+            $verificationCode->setVerifyAttempts(0);
+            $verificationCode->setResendAttempts(1);
 
             $this->em->persist($verificationCode);
 
@@ -118,7 +128,9 @@ class WebAuthController extends AbstractController
 
             $this->em->flush();
 
-            $this->addFlash('success', 'Compte créé ! Code de vérification : ' . $code);
+            $emailSender->sendVerificationEmail($user->getEmail(), $code);
+
+            $this->addFlash('success', 'Compte créé ! Un code de vérification a été envoyé à votre adresse email.');
             return $this->redirectToRoute('app_verify_email', ['email' => $email]);
         }
 
@@ -170,8 +182,36 @@ class WebAuthController extends AbstractController
         return $this->render('pages/verifyEmail.html.twig', ['email' => $email]);
     }
 
+    #[Route('/verify-resend', name: 'app_verify_resend', methods: ['POST'])]
+    public function verifyResend(Request $request, EmailSender $emailSender): Response
+    {
+        $email = trim($request->request->get('email', ''));
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
+        
+        if ($user) {
+            $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $verificationCode = new EmailVerificationCode();
+            $verificationCode->setUser($user);
+            $verificationCode->setCode($code);
+            $verificationCode->setExpiresAt(new \DateTimeImmutable('+15 minutes'));
+            $verificationCode->setLastSentAt(new \DateTimeImmutable());
+            $verificationCode->setVerifyAttempts(0);
+            $verificationCode->setResendAttempts(1);
+
+            $this->em->persist($verificationCode);
+            $this->em->flush();
+
+            $emailSender->sendVerificationEmail($user->getEmail(), $code);
+            $this->addFlash('success', 'Nouveau code envoyé !');
+        } else {
+            $this->addFlash('error', 'Utilisateur introuvable.');
+        }
+
+        return $this->redirectToRoute('app_verify_email', ['email' => $email]);
+    }
+
     #[Route('/forgot-password', name: 'app_forgot_password', methods: ['GET', 'POST'])]
-    public function forgotPassword(Request $request): Response
+    public function forgotPassword(Request $request, EmailSender $emailSender): Response
     {
         if ($request->isMethod('POST')) {
             $email = trim($request->request->get('email', ''));
@@ -186,9 +226,11 @@ class WebAuthController extends AbstractController
                 $this->em->persist($resetCode);
                 $this->em->flush();
 
-                $this->addFlash('success', 'Code de réinitialisation envoyé. Code : ' . $code);
+                $emailSender->sendPasswordResetEmail($user->getEmail(), $code);
+
+                $this->addFlash('success', 'Un code de réinitialisation a été envoyé à votre adresse email.');
             } else {
-                $this->addFlash('success', 'Si un compte existe, un code a été envoyé.');
+                $this->addFlash('success', 'Si un compte existe à cette adresse, un code a été envoyé.');
             }
 
             return $this->redirectToRoute('app_reset_password', ['email' => $email]);

@@ -1,70 +1,168 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
-{% block header_title %}Tableau de bord Client{% endblock %}
+{% block title %}Dashboard - InnerTrack{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto space-y-8">
-    
-    <!-- Welcome section -->
-    <div class="bg-white rounded-[2rem] p-8 lg:p-12 shadow-[0_32px_64px_-16px_rgba(0,104,118,0.08)] border border-white relative overflow-hidden">
-        <div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-[#e5f7f6] to-transparent opacity-50"></div>
-        <div class="relative z-10 w-full md:w-2/3">
-            <h2 class="text-4xl font-bold text-[#0e1e1e] mb-4 tracking-tight">Bonjour, {{ app.user.firstName }} !</h2>
-            <p class="text-lg text-[#3c494c] mb-8 font-medium">Prêt à continuer votre voyage vers le bien-être aujourd'hui ? La régularité est la clé de la sérénité.</p>
+<div class="space-y-12 lg:space-y-16">
+    <!-- Hero Header Section -->
+    <section>
+        <div class="flex items-baseline gap-3">
+            <h2 class="text-4xl md:text-5xl lg:text-7xl font-headline font-extrabold text-on-surface tracking-tight leading-tight">Good morning, {{ app.user.firstName|default('Guest') }}</h2>
+            <span class="text-4xl lg:text-5xl">👋</span>
+        </div>
+        <div class="mt-6 flex flex-wrap items-center gap-4 lg:gap-6">
+            <p class="text-on-surface-variant font-medium flex items-center gap-2.5 px-4 py-2 bg-gray-100 rounded-full text-sm shadow-sm">
+                <span class="material-symbols-outlined text-primary text-lg" data-icon="calendar_today">calendar_today</span>
+                {{ 'now'|date('l, F jS, Y') }}
+            </p>
+            <p class="text-secondary font-bold text-xs uppercase tracking-widest px-4 py-2 bg-secondary-container text-on-secondary-container rounded-full shadow-sm">
+                Daily goal: 12m Meditation
+            </p>
+        </div>
+    </section>
+
+    <!-- Dashboard Bento Grid -->
+    <div class="grid grid-cols-12 gap-8 lg:gap-10">
+        <!-- Primary Stats and Activity -->
+        <div class="col-span-12 lg:col-span-8 space-y-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Active Conversations -->
+                <div class="serene-gradient p-10 text-white relative overflow-hidden rounded-[2rem] soft-elevation group h-48 lg:h-56 flex flex-col justify-between">
+                    <div class="relative z-10">
+                        <p class="text-white/70 font-bold uppercase tracking-widest text-[11px] mb-2">Active Conversations</p>
+                        <h3 class="text-5xl lg:text-6xl font-headline font-extrabold">04</h3>
+                    </div>
+                    <a href="{{ path('app_messages') }}" class="relative z-10 flex items-center text-sm font-bold opacity-90 hover:opacity-100 group-hover:translate-x-1 transition-all">
+                        View all messages <span class="material-symbols-outlined ml-2 text-lg" data-icon="arrow_forward">arrow_forward</span>
+                    </a>
+                    <div class="absolute -right-12 -bottom-12 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
+                </div>
+                
+                <!-- Unread Notifications -->
+                <div class="bg-primary/5 border border-primary/10 p-10 rounded-[2rem] text-on-surface relative overflow-hidden h-48 lg:h-56 flex flex-col justify-between group">
+                    <div class="relative z-10">
+                        <p class="text-primary font-bold uppercase tracking-widest text-[11px] mb-2">Unread Notifications</p>
+                        <h3 class="text-5xl lg:text-6xl font-headline font-extrabold text-primary">12</h3>
+                    </div>
+                    <a href="{{ path('app_notifications') }}" class="relative z-10 inline-flex items-center text-sm font-bold text-primary group-hover:translate-x-1 transition-all">
+                        Catch up now <span class="material-symbols-outlined ml-2 text-lg" data-icon="bolt">bolt</span>
+                    </a>
+                    <div class="absolute -right-8 -top-8 w-32 h-32 bg-primary/5 rounded-full blur-2xl"></div>
+                </div>
+            </div>
             
-            <div class="flex gap-4">
-                <a href="{{ path('app_map') }}" class="px-6 py-3 rounded-xl bg-gradient-to-r from-[#006876] to-[#00BCD4] text-white font-semibold shadow-[0_8px_24px_-8px_rgba(0,188,212,0.5)] hover:shadow-[0_12px_28px_-6px_rgba(0,188,212,0.6)] transition-all">
-                    Trouver un Thérapeute
-                </a>
-                <a href="{{ path('app_messages') }}" class="px-6 py-3 rounded-xl bg-[#e5f7f6] text-[#006876] font-semibold hover:bg-[#dff1f0] transition-colors">
-                    Mes Messages
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Conversations Card -->
-        <div class="bg-white rounded-[1.5rem] p-6 shadow-sm border border-[#e5f7f6] relative overflow-hidden group">
-            <div class="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-[#00bcd4] to-[#006876]"></div>
-            <div class="pl-4">
-                <h3 class="text-[#3c494c] text-sm font-semibold uppercase tracking-wider mb-2">Thérapeutes Actifs</h3>
-                <div class="flex items-end gap-3">
-                    <span class="text-4xl font-bold text-[#0e1e1e]">{{ conversationCount }}</span>
+            <!-- Therapists Carousel/Grid -->
+            <div class="space-y-8">
+                <div class="flex justify-between items-end border-b border-outline pb-6">
+                    <div>
+                        <h4 class="text-3xl font-headline font-bold tracking-tight">Your Care Team</h4>
+                        <p class="text-on-surface-variant text-sm mt-1">Direct access to your primary therapists</p>
+                    </div>
+                    <a href="{{ path('app_map') }}" class="text-primary text-sm font-bold hover:underline underline-offset-8 flex items-center gap-1">
+                        Explore new matches <span class="material-symbols-outlined text-sm" data-icon="open_in_new">open_in_new</span>
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    <!-- Therapist Card 1 -->
+                    <div class="bg-white border border-outline p-8 rounded-[2rem] hover:border-primary/30 hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center space-y-6">
+                        <div class="relative">
+                            <img alt="Dr. Elena Rossi" class="w-24 h-24 rounded-[2rem] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcpuTIvCMMKzCl5vwaX0Osn_Y3BAThXvNlSVD6V-qAPHK6q3Y9YwcP8mRsCtW0GPyRw2P2ZFcoh1_PY5U_V7Uv4GMSOvXL5syBQd5ZC_P_wFe-pdmkd98CXNqKvRRqq_Qv-zckN-yS6wldkf7PUlCxP78xtYyQAO8mkq246paAf58tEzQyp4yXtk5B9zsdWTaRiTIQElrcAn6xDVEV1W9oFR8XsPinkAUkwFkOua66e8XsJO7qsmpRxjaKiMJQ3ML8HNrK2mC4dA"/>
+                            <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-4 border-white rounded-full"></div>
+                        </div>
+                        <div>
+                            <h5 class="font-headline font-extrabold text-xl text-on-surface">Dr. Elena Rossi</h5>
+                            <p class="text-on-surface-variant text-sm font-medium mt-1">Cognitive Behavioral Therapy</p>
+                        </div>
+                        <button class="w-full bg-secondary-container text-secondary py-3.5 rounded-xl font-bold text-sm hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-lg" data-icon="chat">chat</span> Send Message
+                        </button>
+                    </div>
+                    <!-- Therapist Card 2 -->
+                    <div class="bg-white border border-outline p-8 rounded-[2rem] hover:border-primary/30 hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center space-y-6">
+                        <div class="relative">
+                            <img alt="Mark Henderson" class="w-24 h-24 rounded-[2rem] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRipJZa2jNguFhVhamxPrV7hC97ANUFN58h9sWvGVI1719Ulit0zJ1LP0GzdYtJjmoRQol7wu-4R22_h2tfFC5Z9IGHN8YcFiI_CW1Bw7M02S3X8BhRl0agk-0gERYS8e6ni8EC3yoozMdz8NCqSqzRsO1QkRFILHbujBenQPTBEq6mmPsXx-kAXJblwP34cTmjkCb8T9yWrSKEVQDkRkoQc0Hl1aNsguPhk2CHE-FQnIWzMebga7wmUN0OE2IpXSOdTw1CU4zrw"/>
+                            <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-gray-300 border-4 border-white rounded-full"></div>
+                        </div>
+                        <div>
+                            <h5 class="font-headline font-extrabold text-xl text-on-surface">Mark Henderson</h5>
+                            <p class="text-on-surface-variant text-sm font-medium mt-1">Mindfulness & Stress Relief</p>
+                        </div>
+                        <button class="w-full bg-secondary-container text-secondary py-3.5 rounded-xl font-bold text-sm hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-lg" data-icon="chat">chat</span> Send Message
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Notifications Card -->
-        <div class="bg-white rounded-[1.5rem] p-6 shadow-sm border border-[#e5f7f6] relative overflow-hidden group">
-            <div class="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-[#f19640] to-[#8f4e00]"></div>
-            <div class="pl-4">
-                <h3 class="text-[#3c494c] text-sm font-semibold uppercase tracking-wider mb-2">Notifications Non Lues</h3>
-                <div class="flex items-end gap-3">
-                    <span class="text-4xl font-bold text-[#0e1e1e]">{{ unreadNotifs }}</span>
+        <!-- Sidebar Activity Feed -->
+        <aside class="col-span-12 lg:col-span-4 space-y-10">
+            <div class="bg-white border border-outline p-8 lg:p-10 rounded-[2.5rem] soft-elevation lg:sticky lg:top-8">
+                <div class="flex items-center justify-between mb-10">
+                    <h4 class="text-xl font-headline font-extrabold tracking-tight">Recent Activity</h4>
+                    <span class="bg-gray-100 text-on-surface-variant text-[10px] font-bold px-2 py-1 rounded-md">TODAY</span>
                 </div>
-            </div>
-        </div>
-
-        <!-- Messages Card -->
-        <div class="bg-white rounded-[1.5rem] p-6 shadow-sm border border-[#e5f7f6] relative overflow-hidden group">
-            <div class="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-[#10B981] to-[#006c49]"></div>
-            <div class="pl-4">
-                <h3 class="text-[#3c494c] text-sm font-semibold uppercase tracking-wider mb-2">Messages en attente</h3>
-                <div class="flex items-end gap-3">
-                    <span class="text-4xl font-bold text-[#0e1e1e]">{{ unreadMessages }}</span>
+                <div class="space-y-10">
+                    <div class="flex gap-5 group cursor-pointer">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                            <span class="material-symbols-outlined text-2xl" data-icon="history_edu">history_edu</span>
+                        </div>
+                        <div class="space-y-1.5 pt-1">
+                            <p class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Therapy Plan Update</p>
+                            <p class="text-xs text-on-surface-variant leading-relaxed">Dr. Rossi added the "Morning Reflection" module to your pathway.</p>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">2 hours ago</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-5 group cursor-pointer">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-all duration-300">
+                            <span class="material-symbols-outlined text-2xl" data-icon="event_available">event_available</span>
+                        </div>
+                        <div class="space-y-1.5 pt-1">
+                            <p class="text-sm font-bold text-on-surface group-hover:text-secondary transition-colors">Session Confirmed</p>
+                            <p class="text-xs text-on-surface-variant leading-relaxed">Your video call with Mark Henderson is set for Thursday at 4:00 PM.</p>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">5 hours ago</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-5 group cursor-pointer">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-all duration-300">
+                            <span class="material-symbols-outlined text-2xl" data-icon="emoji_events">emoji_events</span>
+                        </div>
+                        <div class="space-y-1.5 pt-1">
+                            <p class="text-sm font-bold text-on-surface group-hover:text-amber-700 transition-colors">New Milestone!</p>
+                            <p class="text-xs text-on-surface-variant leading-relaxed">You've completed your daily check-in for 7 consecutive days.</p>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Yesterday</p>
+                        </div>
+                    </div>
                 </div>
+                <button class="w-full mt-12 py-3 text-center border border-outline rounded-xl text-xs font-bold text-on-surface-variant hover:bg-gray-50 transition-all">
+                    View Activity History
+                </button>
             </div>
-        </div>
+        </aside>
     </div>
 
-    <!-- Daily Inspiration -->
-    <div class="bg-gradient-to-br from-[#d4e6e5] to-[#ebfdfc] rounded-[2rem] p-8 shadow-sm">
-        <h3 class="text-[#006876] font-bold text-xl mb-4">La pensée du jour</h3>
-        <p class="text-[#0e1e1e] text-2xl font-serif italic mb-6">"Prenez le temps d'apprécier ce qui vous rend différent, car c'est là que réside votre véritable force."</p>
-        <p class="text-[#3c494c] font-medium">— Une note de l'équipe InnerTrack</p>
-    </div>
-
+    <!-- Featured Editorial Card -->
+    <section class="max-w-none pt-4">
+        <div class="bg-gray-900 rounded-[3rem] p-12 lg:p-16 text-white flex flex-col lg:flex-row items-center gap-12 lg:gap-16 relative overflow-hidden shadow-2xl">
+            <div class="relative z-10 flex-1 space-y-8">
+                <div>
+                    <span class="bg-primary/20 text-indigo-300 border border-primary/30 px-4 py-1.5 rounded-full text-xs font-bold tracking-[0.15em] uppercase">Weekly Focus</span>
+                </div>
+                <h3 class="text-5xl lg:text-5xl xl:text-6xl font-headline font-extrabold leading-tight">Mastering Emotional <br/>Equilibrium</h3>
+                <p class="text-gray-400 leading-relaxed text-lg max-w-xl">Dive into this week's curated exercise designed by our top neuroscientists to help you navigate stressful transitions with ease and intentionality.</p>
+                <div class="pt-4">
+                    <button class="bg-white text-gray-900 px-10 py-4 rounded-2xl font-extrabold hover:bg-primary hover:text-white hover:scale-[1.02] transition-all duration-300">
+                        Start Your Journey
+                    </button>
+                </div>
+            </div>
+            <div class="relative z-10 w-full lg:w-[450px] aspect-square rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 -rotate-2 hover:rotate-0 transition-transform duration-700">
+                <img alt="Equilibrium Zen" class="w-full h-full object-cover scale-110 hover:scale-100 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDx9UezEqZsQZhDT65ewQJFJTlevUspfJlaDzCW3uRb_pu8f79WZudap2AxaUL8sRysaaoPg1g1lugkpkHvcY6LAaIcUdgJeiBW_h1M3CGiWENMiBrTAYaEwjdr380EJdEwK9eNM8kJ4NLFEVY5uLqoLuzUrhgb4y2H-uV9-q0bO0LwZ0BAAzA428cQ5w4iiztlLz_3UwKdiqCFpKDXKyAonUfGGRYuaOW8U6LPt-NDZTgDvBNHqXNF_6RI6VrpES9xkJWWuYrTHg"/>
+            </div>
+            <!-- Ambient Background Effects -->
+            <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-[100px]"></div>
+            <div class="absolute bottom-0 left-1/4 w-1/2 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+        </div>
+    </section>
 </div>
 {% endblock %}

@@ -24,7 +24,7 @@ class NotificationController extends AbstractController
             ['createdAt' => 'DESC']
         );
 
-        return $this->render('pages/notifications/index.html.twig', [
+        return $this->render('pages/notifications/notifications.html.twig', [
             'notifications' => $notifications,
         ]);
     }

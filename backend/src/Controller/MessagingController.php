@@ -34,7 +34,7 @@ class MessagingController extends AbstractController
              ORDER BY c.createdAt DESC'
         )->setParameter('u', $user)->setParameter('status', 'ACTIVE')->getResult();
 
-        return $this->render('pages/messages/index.html.twig', [
+        return $this->render('pages/messages/messages.html.twig', [
             'conversations' => $conversations,
         ]);
     }

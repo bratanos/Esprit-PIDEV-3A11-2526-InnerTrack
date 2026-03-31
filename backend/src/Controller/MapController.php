@@ -22,7 +22,7 @@ class MapController extends AbstractController
     #[Route('/map', name: 'app_map', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('pages/map/index.html.twig');
+        return $this->render('pages/map/map.html.twig');
     }
 
     #[Route('/api/web/therapists', name: 'api_web_therapists', methods: ['GET'])]

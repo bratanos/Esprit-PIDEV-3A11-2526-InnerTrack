@@ -60,6 +60,8 @@ class AdminController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
+    
+
     #[Route('/chat-lock', name: 'chat_lock_add', methods: ['POST'])]
     public function addChatLock(Request $request): JsonResponse
     {
