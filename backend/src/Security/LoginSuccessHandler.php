@@ -10,15 +10,13 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
-/**
- * Redirects users to the correct dashboard after web login based on their role.
- */
 class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     public function __construct(
         private RouterInterface $router,
         private EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): RedirectResponse
     {
@@ -31,4 +29,6 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
 
         return new RedirectResponse($this->router->generate('app_dashboard'));
     }
+
+
 }

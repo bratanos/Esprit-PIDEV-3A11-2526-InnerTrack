@@ -65,10 +65,11 @@
                                     <td class="px-6 py-5">
                                         <div class="flex items-center gap-3">
                                             <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold text-xs uppercase">
-                                                {{ req.patient.firstName|first }}{{ req.patient.lastName|first }}
+                                                {{ req.client.firstName|first }}{{ req.client.lastName|first }}
                                             </div>
-                                            <span class="font-semibold text-sm">{{ req.patient.fullName }}</span>
+                                            <span class="font-semibold text-sm">{{ req.client.fullName }}</span>
                                         </div>
+                                        <span class="text-xs test-on-surface-variant">{{ req.client.email }}</span>
                                     </td>
                                     <td class="px-6 py-5 text-sm text-on-surface-variant max-w-xs truncate">
                                         {{ req.message|default('No specific message provided...') }}
