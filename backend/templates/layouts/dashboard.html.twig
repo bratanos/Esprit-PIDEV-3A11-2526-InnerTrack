@@ -159,8 +159,12 @@
                         {% set role_label = 'dashboard.' ~ app.user.primaryRole|replace({'ROLE_': ''})|lower %}
                         <p class="text-[10px] text-secondary font-bold uppercase tracking-wider mt-1">{{ role_label|trans }}</p>
                     </div>
-                    <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-primary text-white flex items-center justify-center font-bold text-lg ring-2 ring-offset-2 ring-transparent group-hover:ring-primary/20 transition-all">
-                        {{ app.user.firstName|first|default('U')|upper }}{{ app.user.lastName|first|default('')|upper }}
+                    <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-primary text-white flex items-center justify-center font-bold text-lg ring-2 ring-offset-2 ring-transparent group-hover:ring-primary/20 transition-all overflow-hidden">
+                        {% if app.user.profilePictureUrl %}
+                            <img src="{{ app.user.profilePictureUrl }}" alt="{{ app.user.firstName }}" class="w-full h-full object-cover">
+                        {% else %}
+                            {{ app.user.firstName|first|default('U')|upper }}{{ app.user.lastName|first|default('')|upper }}
+                        {% endif %}
                     </div>
                 </a>
             </div>
