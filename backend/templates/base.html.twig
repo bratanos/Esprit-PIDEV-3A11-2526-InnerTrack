@@ -17,7 +17,7 @@
     {% block head %}{% endblock %}
 </head>
 
-<body class="min-h-screen flex flex-col pointer-events-auto">
+<body class="{% block body_class %}min-h-screen flex flex-col pointer-events-auto{% endblock %}">
 
 {% block layout %}
     {{ ui.navbar(active = 'home') }}

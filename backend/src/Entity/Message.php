@@ -13,7 +13,7 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Conversation::class)]
+    #[ORM\ManyToOne(targetEntity: Conversation::class, inversedBy: 'messages')]
     #[ORM\JoinColumn(name: 'conversation_id', referencedColumnName: 'id', nullable: false)]
     private Conversation $conversation;
 

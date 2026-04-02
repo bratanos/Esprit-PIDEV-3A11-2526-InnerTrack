@@ -139,12 +139,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->profilePicture) return null;
 
+        // Task 2.1: Support absolute remote URLs (e.g. ImgBB)
+        if (str_starts_with($this->profilePicture, 'http')) {
+            return $this->profilePicture;
+        }
+
         // If it's already a relative web path
         if (str_starts_with($this->profilePicture, '/uploads/')) {
             return $this->profilePicture;
         }
 
-        // If it's an absolute desktop path, try to extract the filename
+        // If it's an absolute desktop path (legacy JavaFX), try to extract the filename
         $filename = basename($this->profilePicture);
         return '/uploads/profiles/' . $filename;
     }

@@ -18,6 +18,7 @@ class UserProfileController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $em,
+        private \Symfony\Contracts\HttpClient\HttpClientInterface $httpClient,
     ) {}
 
     #[Route('/profile', name: 'app_profile', methods: ['GET', 'POST'])]
@@ -68,33 +69,42 @@ class UserProfileController extends AbstractController
     }
 
     #[Route('/profile/picture', name: 'app_profile_picture', methods: ['POST'])]
-    public function uploadPicture(Request $request, SluggerInterface $slugger): Response
+    public function uploadPicture(Request $request): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         $file = $request->files->get('profilePicture');
 
         if ($file) {
-            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $slugger->slug($originalFilename);
-            $newFilename = $user->getId() . '_' . time() . '_' . $safeFilename . '.' . $file->guessExtension();
-
             try {
-                // Ensure directory exists
-                $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads/profiles';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0777, true);
+                $apiKey = $this->getParameter('imgbb_api_key');
+                if (!$apiKey) {
+                    throw new \Exception("Clé API ImgBB manquante dans la configuration.");
                 }
 
-                $file->move($uploadDir, $newFilename);
+                // Send as multipart/form-data (recommended for larger files)
+                $response = $this->httpClient->request('POST', 'https://api.imgbb.com/1/upload', [
+                    'query' => ['key' => $apiKey],
+                    'body' => [
+                        'image' => fopen($file->getPathname(), 'r'),
+                    ]
+                ]);
 
-                // Save relative path for web, JavaFX will see it and handle accordingly
-                $user->setProfilePicture('/uploads/profiles/' . $newFilename);
-                $this->em->flush();
-                
-                $this->addFlash('success', 'Photo de profil mise à jour.');
-            } catch (FileException $e) {
-                $this->addFlash('error', 'Erreur lors de l\'upload de la photo.');
+                if ($response->getStatusCode() === 200) {
+                    $data = $response->toArray();
+                    $imageUrl = $data['data']['url'];
+
+                    $user->setProfilePicture($imageUrl);
+                    $this->em->flush();
+                    
+                    $this->addFlash('success', 'Photo de profil mise à jour via ImgBB.');
+                } else {
+                    $errorData = $response->toArray(false);
+                    $errorMsg = $errorData['error']['message'] ?? 'Erreur inconnue (Code ' . $response->getStatusCode() . ')';
+                    $this->addFlash('error', 'Échec ImgBB : ' . $errorMsg);
+                }
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erreur critique : ' . $e->getMessage());
             }
         }
 

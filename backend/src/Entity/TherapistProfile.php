@@ -41,12 +41,6 @@ class TherapistProfile
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column(name: 'session_rate', nullable: true)]
-    private ?int $sessionRate = null;
-
-    #[ORM\Column(name: 'available_days', length: 50, nullable: true)]
-    private ?string $availableDays = null;
-
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -70,19 +64,9 @@ class TherapistProfile
     public function setLongitude(?float $longitude): self { $this->longitude = $longitude; return $this; }
     public function getPhone(): ?string { return $this->phone; }
     public function setPhone(?string $phone): self { $this->phone = $phone; return $this; }
-    public function getSessionRate(): ?int { return $this->sessionRate; }
-    public function setSessionRate(?int $sessionRate): self { $this->sessionRate = $sessionRate; return $this; }
-    public function getAvailableDays(): ?string { return $this->availableDays; }
-    public function setAvailableDays(?string $availableDays): self { $this->availableDays = $availableDays; return $this; }
 
     public function hasLocation(): bool
     {
         return $this->latitude !== null && $this->longitude !== null;
-    }
-
-    public function getAvailableDaysArray(): array
-    {
-        if (!$this->availableDays) return [];
-        return array_map('trim', explode(',', $this->availableDays));
     }
 }

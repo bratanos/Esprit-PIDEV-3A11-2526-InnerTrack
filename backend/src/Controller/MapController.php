@@ -45,7 +45,6 @@ class MapController extends AbstractController
                 'address' => $p->getAddress(),
                 'lat' => $p->getLatitude(),
                 'lng' => $p->getLongitude(),
-                'sessionRate' => $p->getSessionRate(),
             ];
         }
 

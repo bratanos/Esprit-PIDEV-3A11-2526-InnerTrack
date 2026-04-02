@@ -51,13 +51,22 @@ class ContactRequestController extends AbstractController
         $request->setStatus('ACCEPTED');
         $request->setRespondedAt(new \DateTime());
 
-        // Create new conversation
-        $conversation = new Conversation();
-        $conversation->setClient($request->getClient());
-        $conversation->setTherapist($therapist);
-        $conversation->setStatus('ACTIVE');
+        // Check for existing conversation to avoid duplicate constraint error
+        $existing = $this->em->getRepository(Conversation::class)->findOneBy([
+            'client' => $request->getClient(),
+            'therapist' => $therapist
+        ]);
 
-        $this->em->persist($conversation);
+        if (!$existing) {
+            $conversation = new Conversation();
+            $conversation->setClient($request->getClient());
+            $conversation->setTherapist($therapist);
+            $conversation->setStatus('ACTIVE');
+            $this->em->persist($conversation);
+        } else {
+            // Re-activate if it was previously closed
+            $existing->setStatus('ACTIVE');
+        }
 
         // Notify client
         $notif = new Notification();

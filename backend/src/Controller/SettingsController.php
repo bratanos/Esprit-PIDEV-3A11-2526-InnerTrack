@@ -43,18 +43,42 @@ class SettingsController extends AbstractController
             }
             if (in_array($language, ['FR', 'EN'])) {
                 $settings->setLanguage($language);
+                $request->getSession()->set('_locale', strtolower($language));
             }
 
             $this->em->flush();
             $this->addFlash('success', 'Paramètres mis à jour.');
-            
-            // Note: For immediately applying theme changes to Tailwind without page reload, 
-            // we will also use localStorage/Alpine in the twig template to toggle dark mode
             return $this->redirectToRoute('app_settings');
         }
 
         return $this->render('pages/settings/settings.html.twig', [
             'settings' => $settings
         ]);
+    }
+
+    #[Route('/_internal/settings/theme', name: 'api_settings_theme', methods: ['POST'])]
+    public function updateTheme(Request $request): \Symfony\Component\HttpFoundation\JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) return new \Symfony\Component\HttpFoundation\JsonResponse(['error' => 'Not logged in'], 401);
+
+        $data = json_decode($request->getContent(), true);
+        $theme = strtoupper($data['theme'] ?? 'LIGHT');
+
+        if (!in_array($theme, ['LIGHT', 'DARK'])) {
+            return new \Symfony\Component\HttpFoundation\JsonResponse(['error' => 'Invalid theme'], 400);
+        }
+
+        $settings = $user->getSettings();
+        if (!$settings) {
+            $settings = new \App\Entity\UserSettings();
+            $settings->setUser($user);
+            $this->em->persist($settings);
+        }
+        $settings->setTheme($theme);
+        $this->em->flush();
+
+        return new \Symfony\Component\HttpFoundation\JsonResponse(['success' => true]);
     }
 }

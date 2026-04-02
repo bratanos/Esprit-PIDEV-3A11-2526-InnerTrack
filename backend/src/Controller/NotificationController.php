@@ -29,7 +29,7 @@ class NotificationController extends AbstractController
         ]);
     }
 
-    #[Route('/api/notifications/count', name: 'api_notifications_count', methods: ['GET'])]
+    #[Route('/_internal/notifications/count', name: 'api_notifications_count', methods: ['GET'])]
     public function unreadCount(): JsonResponse
     {
         $count = $this->em->createQuery(
@@ -39,7 +39,7 @@ class NotificationController extends AbstractController
         return new JsonResponse(['count' => $count]);
     }
 
-    #[Route('/api/notifications/{id}/read', name: 'api_notifications_read', methods: ['POST'])]
+    #[Route('/_internal/notifications/{id}/read', name: 'api_notifications_read', methods: ['POST'])]
     public function markAsRead(Notification $notification): JsonResponse
     {
         if ($notification->getUser() !== $this->getUser()) {
@@ -52,12 +52,13 @@ class NotificationController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
-    #[Route('/api/notifications/read-all', name: 'api_notifications_read_all', methods: ['POST'])]
+    #[Route('/_internal/notifications/read-all', name: 'api_notifications_read_all', methods: ['POST'])]
     public function markAllAsRead(): JsonResponse
     {
         $this->em->createQuery(
             'UPDATE App\Entity\Notification n SET n.isRead = true WHERE n.user = :u AND n.isRead = false'
         )->setParameter('u', $this->getUser())->execute();
+        $this->em->flush();
 
         return new JsonResponse(['success' => true]);
     }

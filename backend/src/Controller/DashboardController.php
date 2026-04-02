@@ -99,13 +99,18 @@ class DashboardController extends AbstractController
         $conn = $this->em->getConnection();
 
         // Analytics
-        $totalUsers = $conn->executeQuery('SELECT COUNT(*) FROM user')->fetchOne();
-        $totalClients = $conn->executeQuery("SELECT COUNT(*) FROM user WHERE roles LIKE '%ROLE_USER%' AND roles NOT LIKE '%ROLE_ADMIN%' AND roles NOT LIKE '%ROLE_PSYCHOLOGUE%'")->fetchOne();
-        $totalTherapists = $conn->executeQuery("SELECT COUNT(*) FROM user WHERE roles LIKE '%ROLE_PSYCHOLOGUE%'")->fetchOne();
-        $newThisMonth = $conn->executeQuery('SELECT COUNT(*) FROM user WHERE MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())')->fetchOne();
-        $blockedCount = $conn->executeQuery("SELECT COUNT(*) FROM user WHERE status = 'BLOCKED'")->fetchOne();
-        $activeCount = $conn->executeQuery("SELECT COUNT(*) FROM user WHERE status = 'ACTIVE'")->fetchOne();
-        $pendingCount = $conn->executeQuery("SELECT COUNT(*) FROM user WHERE status = 'PENDING'")->fetchOne();
+        // Analytics - Consolidated single query for high performance
+        $stats = $conn->executeQuery("
+            SELECT 
+                (SELECT COUNT(*) FROM user) as totalUsers,
+                (SELECT COUNT(*) FROM user WHERE roles LIKE '%ROLE_USER%' AND roles NOT LIKE '%ROLE_ADMIN%' AND roles NOT LIKE '%ROLE_PSYCHOLOGUE%') as totalClients,
+                (SELECT COUNT(*) FROM user WHERE roles LIKE '%ROLE_PSYCHOLOGUE%') as totalTherapists,
+                (SELECT COUNT(*) FROM user WHERE MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())) as newThisMonth,
+                (SELECT COUNT(*) FROM user WHERE status = 'BLOCKED') as blockedCount,
+                (SELECT COUNT(*) FROM user WHERE status = 'ACTIVE') as activeCount,
+                (SELECT COUNT(*) FROM user WHERE status = 'PENDING') as pendingCount,
+                (SELECT COUNT(*) FROM report WHERE status = 'PENDING') as pendingReports
+        ")->fetchAssociative();
 
         // Monthly registrations for chart
         $monthly = $conn->executeQuery(
@@ -115,19 +120,39 @@ class DashboardController extends AbstractController
              ORDER BY YEAR(created_at), MONTH(created_at)"
         )->fetchAllAssociative();
 
-        // Pending reports
-        $pendingReports = $conn->executeQuery("SELECT COUNT(*) FROM report WHERE status = 'PENDING'")->fetchOne();
+        // Users list for management
+        $users = $conn->executeQuery("
+            SELECT id, first_name, last_name, email, roles, status, created_at 
+            FROM user 
+            ORDER BY created_at DESC 
+            LIMIT 10
+        ")->fetchAllAssociative();
+
+        // Recent reports with context
+        $reports = $conn->executeQuery("
+            SELECT r.id, r.status, r.created_at, r.reason, r.context, r.details,
+                   u1.first_name as reporter_first, u1.last_name as reporter_last,
+                   u2.first_name as reported_first, u2.last_name as reported_last
+            FROM report r
+            JOIN user u1 ON r.reporter_id = u1.id
+            JOIN user u2 ON r.reported_id = u2.id
+            WHERE r.status = 'PENDING'
+            ORDER BY r.created_at DESC
+            LIMIT 20
+        ")->fetchAllAssociative();
 
         return $this->render('pages/dashboard/admin.html.twig', [
-            'totalUsers' => $totalUsers,
-            'totalClients' => $totalClients,
-            'totalTherapists' => $totalTherapists,
-            'newThisMonth' => $newThisMonth,
-            'blockedCount' => $blockedCount,
-            'activeCount' => $activeCount,
-            'pendingCount' => $pendingCount,
+            'totalUsers' => $stats['totalUsers'],
+            'totalClients' => $stats['totalClients'],
+            'totalTherapists' => $stats['totalTherapists'],
+            'newThisMonth' => $stats['newThisMonth'],
+            'blockedCount' => $stats['blockedCount'],
+            'activeCount' => $stats['activeCount'],
+            'pendingCount' => $stats['pendingCount'],
             'monthly' => $monthly,
-            'pendingReports' => $pendingReports,
+            'pendingReports' => $stats['pendingReports'],
+            'users' => $users,
+            'reports' => $reports,
         ]);
     }
 }

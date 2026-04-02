@@ -1,0 +1,22 @@
+nav:
+  dashboard: Dashboard
+  map: Find Therapist
+  messages: Messages
+  notifications: Notifications
+  profile: Profile
+  settings: Settings
+  logout: Log Out
+common:
+  search: Search resources...
+  privacy: Privacy
+  support: Support
+  welcome: Welcome
+  status: Global Status
+  active: Systems Active
+dashboard:
+  therapist: Therapist
+  patient: Patient
+  admin: Administrator
+notifications:
+  empty: No notifications yet.
+  mark_all_read: Mark all as read

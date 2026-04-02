@@ -128,7 +128,7 @@
                             </div>
                             <span class="text-xs text-slate-400 font-bold tracking-wide whitespace-nowrap bg-gray-50 px-3 py-1 rounded-md">
                                 {% if lastMsg %}
-                                    {{ lastMsg.createdAt|date('M d') }}
+                                    {{ lastMsg.sentAt|date('M d') }}
                                 {% else %}
                                     {{ conversation.createdAt|date('M d') }}
                                 {% endif %}
@@ -151,25 +151,11 @@
                 <div class="absolute -top-12 -right-12 w-40 h-40 bg-secondary opacity-10 rounded-full blur-3xl"></div>
                 <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-primary opacity-10 rounded-full blur-3xl"></div>
                 <div class="relative z-10 flex flex-col items-center text-center">
-                    <img alt="Dr. {{ app.user.lastName|default(app.user.firstName) }}" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl mb-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8MRs2oiBTK5y1ODRgJ7OGNh2ww3HCMLjSqPShNWKw01IArpYtIFL7PeeZZ7nQcfw90C1wla8vKYNxLDzRs1D_0eFSb4YXzgnDB0I4PVYZ7aOklLTr24t5k4W694eiUhwQhK_69Gx_IGZY0-O8DAH34DQcaROOAUBpYhFaco2MJRPB9K1wUKUo_1PNEI4NwLEgAKUTe2j1UbEd06bAmobbjtEJIb5XgtdrrA4_96agdlKPtoe4guF1NI4ErWQ1FnZCCT1Trdxsfg"/>
+                    <img alt="Dr. {{ app.user.lastName|default(app.user.firstName) }}" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl mb-6" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8MRs2oiBTK5y1ODRgJ7OGNh2ww3HCMLjSqPShNWKw01IArpYtIFL7PeeZZ7nQcfw90C1wla8vKYNxLDzRs1D_0eFSb4YXzgnDB0I4PVYZ7aOklLTr24t5k4W694eiUhwQhK_69Gx_IGZY0-O8DAH34DQcaROOAUBpYhFaco2MJRPB9K1wUKUo_1PNEI4NwLEgAKUTe2j1UbEd06bAmobbjtEJIb5XgtdrrA4_96agdlKPtoe4guF1NI4ErWQ1FnZCCT1Trdxsfg"/>
                     <h4 class="font-headline text-2xl font-bold text-on-surface">Dr. {{ app.user.lastName|default(app.user.firstName) }}</h4>
                     <p class="text-xs text-primary font-bold uppercase tracking-widest mb-8 mt-1">Clinical Psychologist</p>
                     
                     <div class="w-full space-y-3 text-left">
-                        <div class="flex items-center justify-between bg-white/60 backdrop-blur-md p-4 rounded-xl border border-white">
-                            <div class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-secondary" data-icon="calendar_today">calendar_today</span>
-                                <span class="text-sm font-semibold">Available</span>
-                            </div>
-                            <span class="text-sm font-extrabold text-on-surface">Mon - Fri</span>
-                        </div>
-                        <div class="flex items-center justify-between bg-white/60 backdrop-blur-md p-4 rounded-xl border border-white">
-                            <div class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-secondary" data-icon="payments">payments</span>
-                                <span class="text-sm font-semibold">Session Rate</span>
-                            </div>
-                            <span class="text-sm font-extrabold text-on-surface bg-primary/10 text-primary px-3 py-1 rounded-lg">Premium</span>
-                        </div>
                     </div>
                     
                     <a href="{{ path('app_profile') }}" class="mt-8 text-primary font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all group px-6 py-2 bg-white rounded-full shadow-sm hover:shadow-md border border-outline/10">

@@ -22,8 +22,9 @@ class MessagingController extends AbstractController
         private EntityManagerInterface $em,
     ) {}
 
-    #[Route('/messages', name: 'app_messages')]
-    public function index(): Response
+    #[Route('/messages/{id}', name: 'app_messages_show', methods: ['GET'])]
+    #[Route('/messages', name: 'app_messages', methods: ['GET'])]
+    public function index(?int $id = null): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -36,23 +37,35 @@ class MessagingController extends AbstractController
 
         return $this->render('pages/messages/messages.html.twig', [
             'conversations' => $conversations,
+            'openId' => $id,
         ]);
     }
 
-    #[Route('/messages/{id}', name: 'api_messages_get', methods: ['GET'])]
-    public function getMessages(Conversation $conversation): JsonResponse
+    #[Route('/_messaging/api/{id}', name: 'api_messages_get', methods: ['GET'])]
+    public function getMessages(Conversation $conversation, Request $request): JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();
         
-        if ($conversation->getClient() !== $user && $conversation->getTherapist() !== $user) {
+        if ($conversation->getClient()->getId() !== $user->getId() && $conversation->getTherapist()->getId() !== $user->getId()) {
             return new JsonResponse(['error' => 'Non autorisé'], 403);
         }
 
-        $messages = $this->em->getRepository(Message::class)->findBy(
-            ['conversation' => $conversation],
-            ['sentAt' => 'ASC']
-        );
+        $lastId = $request->query->get('lastId');
+        
+        $qb = $this->em->createQueryBuilder()
+            ->select('m')
+            ->from(Message::class, 'm')
+            ->where('m.conversation = :conv')
+            ->setParameter('conv', $conversation)
+            ->orderBy('m.id', 'ASC');
+
+        if ($lastId) {
+            $qb->andWhere('m.id > :lastId')
+               ->setParameter('lastId', $lastId);
+        }
+
+        $messages = $qb->getQuery()->getResult();
 
         $data = [];
         foreach ($messages as $msg) {
@@ -62,20 +75,20 @@ class MessagingController extends AbstractController
                 'senderId' => $msg->getSender()->getId(),
                 'senderName' => $msg->getSender()->getFullName(),
                 'sentAt' => $msg->getSentAt()->format('Y-m-d H:i:s'),
-                'isMe' => $msg->getSender() === $user,
+                'isMe' => $msg->getSender()->getId() === $user->getId(),
             ];
         }
 
         return new JsonResponse($data);
     }
 
-    #[Route('/messages/{id}/send', name: 'api_messages_send', methods: ['POST'])]
+    #[Route('/_messaging/api/{id}/send', name: 'api_messages_send', methods: ['POST'])]
     public function sendMessage(Conversation $conversation, Request $request): JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();
         
-        if ($conversation->getClient() !== $user && $conversation->getTherapist() !== $user) {
+        if ($conversation->getClient()->getId() !== $user->getId() && $conversation->getTherapist()->getId() !== $user->getId()) {
             return new JsonResponse(['error' => 'Non autorisé'], 403);
         }
 
@@ -126,7 +139,7 @@ class MessagingController extends AbstractController
         ]);
     }
 
-    #[Route('/messages/{id}/read', name: 'api_messages_read', methods: ['POST'])]
+    #[Route('/_messaging/api/{id}/read', name: 'api_messages_read', methods: ['POST'])]
     public function markAsRead(Conversation $conversation): JsonResponse
     {
         /** @var User $user */
@@ -140,70 +153,9 @@ class MessagingController extends AbstractController
         ->setParameter('user', $user)
         ->execute();
 
+        $this->em->flush();
+
         return new JsonResponse(['success' => true]);
-    }
-
-    #[Route('/messages/sse/{id}', name: 'api_messages_sse', methods: ['GET'])]
-    public function sse(Conversation $conversation): StreamedResponse
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-        
-        $response = new StreamedResponse(function () use ($conversation, $user) {
-            $lastId = $this->em->createQuery(
-                'SELECT MAX(m.id) FROM App\Entity\Message m WHERE m.conversation = :conv'
-            )->setParameter('conv', $conversation)->getSingleScalarResult();
-
-            while (true) {
-                // Check for new messages every 3 seconds
-                $newMessages = $this->em->createQuery(
-                    'SELECT m FROM App\Entity\Message m 
-                     WHERE m.conversation = :conv AND m.id > :lastId
-                     ORDER BY m.id ASC'
-                )
-                ->setParameter('conv', $conversation)
-                ->setParameter('lastId', $lastId ?? 0)
-                ->getResult();
-
-                if (!empty($newMessages)) {
-                    foreach ($newMessages as $msg) {
-                        $lastId = $msg->getId();
-                        $data = [
-                            'id' => $msg->getId(),
-                            'content' => $msg->getContent(),
-                            'senderId' => $msg->getSender()->getId(),
-                            'senderName' => $msg->getSender()->getFullName(),
-                            'sentAt' => $msg->getSentAt()->format('Y-m-d H:i:s'),
-                            'isMe' => $msg->getSender() === $user,
-                        ];
-
-                        echo "data: " . json_encode($data) . "\n\n";
-                        ob_flush();
-                        flush();
-                    }
-                } else {
-                    // Send a keep-alive comment
-                    echo ": keepalive\n\n";
-                    ob_flush();
-                    flush();
-                }
-
-                // Check for connection termination.
-                if (connection_aborted()) {
-                    break;
-                }
-
-                sleep(3);
-                $this->em->clear(); // Clear entity manager to avoid memory leaks
-            }
-        });
-
-        $response->headers->set('Content-Type', 'text/event-stream');
-        $response->headers->set('Cache-Control', 'no-cache');
-        $response->headers->set('Connection', 'keep-alive');
-        $response->headers->set('X-Accel-Buffering', 'no'); // Disable proxy buffering
-
-        return $response;
     }
 
     #[Route('/api/report', name: 'api_report_user', methods: ['POST'])]
