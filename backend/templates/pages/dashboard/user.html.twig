@@ -30,7 +30,7 @@
                 <div class="serene-gradient p-10 text-white relative overflow-hidden rounded-[2rem] soft-elevation group h-48 lg:h-56 flex flex-col justify-between">
                     <div class="relative z-10">
                         <p class="text-white/70 font-bold uppercase tracking-widest text-[11px] mb-2">Active Conversations</p>
-                        <h3 class="text-5xl lg:text-6xl font-headline font-extrabold">04</h3>
+                        <h3 class="text-5xl lg:text-6xl font-headline font-extrabold">{{ "%02d"|format(conversationCount) }}</h3>
                     </div>
                     <a href="{{ path('app_messages') }}" class="relative z-10 flex items-center text-sm font-bold opacity-90 hover:opacity-100 group-hover:translate-x-1 transition-all">
                         View all messages <span class="material-symbols-outlined ml-2 text-lg" data-icon="arrow_forward">arrow_forward</span>
@@ -42,7 +42,7 @@
                 <div class="bg-primary/5 border border-primary/10 p-10 rounded-[2rem] text-on-surface relative overflow-hidden h-48 lg:h-56 flex flex-col justify-between group">
                     <div class="relative z-10">
                         <p class="text-primary font-bold uppercase tracking-widest text-[11px] mb-2">Unread Notifications</p>
-                        <h3 class="text-5xl lg:text-6xl font-headline font-extrabold text-primary">12</h3>
+                        <h3 class="text-5xl lg:text-6xl font-headline font-extrabold text-primary">{{ "%02d"|format(unreadNotifs) }}</h3>
                     </div>
                     <a href="{{ path('app_notifications') }}" class="relative z-10 inline-flex items-center text-sm font-bold text-primary group-hover:translate-x-1 transition-all">
                         Catch up now <span class="material-symbols-outlined ml-2 text-lg" data-icon="bolt">bolt</span>
@@ -63,34 +63,35 @@
                     </a>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                    <!-- Therapist Card 1 -->
-                    <div class="bg-white border border-outline p-8 rounded-[2rem] hover:border-primary/30 hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center space-y-6">
-                        <div class="relative">
-                            <img alt="Dr. Elena Rossi" class="w-24 h-24 rounded-[2rem] object-cover" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcpuTIvCMMKzCl5vwaX0Osn_Y3BAThXvNlSVD6V-qAPHK6q3Y9YwcP8mRsCtW0GPyRw2P2ZFcoh1_PY5U_V7Uv4GMSOvXL5syBQd5ZC_P_wFe-pdmkd98CXNqKvRRqq_Qv-zckN-yS6wldkf7PUlCxP78xtYyQAO8mkq246paAf58tEzQyp4yXtk5B9zsdWTaRiTIQElrcAn6xDVEV1W9oFR8XsPinkAUkwFkOua66e8XsJO7qsmpRxjaKiMJQ3ML8HNrK2mC4dA"/>
-                            <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-4 border-white rounded-full"></div>
+                    {% for therapist in therapists %}
+                        <div class="bg-white border border-outline p-8 rounded-[2rem] hover:border-primary/30 hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center space-y-6">
+                            <div class="relative">
+                                <div class="w-24 h-24 rounded-[2rem] bg-primary text-white flex items-center justify-center font-bold text-3xl overflow-hidden shadow-lg">
+                                    {% if therapist.profilePictureUrl %}
+                                        <img src="{{ therapist.profilePictureUrl }}" alt="{{ therapist.fullName }}" class="w-full h-full object-cover">
+                                    {% else %}
+                                        {{ therapist.firstName|first }}{{ therapist.lastName|first }}
+                                    {% endif %}
+                                </div>
+                                <div class="absolute -bottom-1 -right-1 w-6 h-6 {{ therapist.status == 'ACTIVE' ? 'bg-green-500' : 'bg-gray-300' }} border-4 border-white rounded-full"></div>
+                            </div>
+                            <div>
+                                <h5 class="font-headline font-extrabold text-xl text-on-surface">{{ therapist.fullName }}</h5>
+                                <p class="text-on-surface-variant text-sm font-medium mt-1">
+                                    {{ therapist.therapistProfile.specialization|default('Clinical Psychologist') }}
+                                </p>
+                            </div>
+                            <button class="w-full bg-secondary-container text-secondary py-3.5 rounded-xl font-bold text-sm hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-lg" data-icon="chat">chat</span> Send Message
+                            </button>
                         </div>
-                        <div>
-                            <h5 class="font-headline font-extrabold text-xl text-on-surface">Dr. Elena Rossi</h5>
-                            <p class="text-on-surface-variant text-sm font-medium mt-1">Cognitive Behavioral Therapy</p>
+                    {% else %}
+                        <div class="col-span-full py-16 bg-gray-50/50 rounded-[3rem] border border-dashed border-outline/50 flex flex-col items-center justify-center text-center">
+                            <span class="material-symbols-outlined text-5xl text-gray-300 mb-4" data-icon="clinical_notes">clinical_notes</span>
+                            <h5 class="font-headline font-bold text-lg text-gray-400">No active therapists yet</h5>
+                            <a href="{{ path('app_map') }}" class="mt-4 text-primary font-bold text-sm hover:underline">Find a therapist on the map</a>
                         </div>
-                        <button class="w-full bg-secondary-container text-secondary py-3.5 rounded-xl font-bold text-sm hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined text-lg" data-icon="chat">chat</span> Send Message
-                        </button>
-                    </div>
-                    <!-- Therapist Card 2 -->
-                    <div class="bg-white border border-outline p-8 rounded-[2rem] hover:border-primary/30 hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center space-y-6">
-                        <div class="relative">
-                            <img alt="Mark Henderson" class="w-24 h-24 rounded-[2rem] object-cover" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRipJZa2jNguFhVhamxPrV7hC97ANUFN58h9sWvGVI1719Ulit0zJ1LP0GzdYtJjmoRQol7wu-4R22_h2tfFC5Z9IGHN8YcFiI_CW1Bw7M02S3X8BhRl0agk-0gERYS8e6ni8EC3yoozMdz8NCqSqzRsO1QkRFILHbujBenQPTBEq6mmPsXx-kAXJblwP34cTmjkCb8T9yWrSKEVQDkRkoQc0Hl1aNsguPhk2CHE-FQnIWzMebga7wmUN0OE2IpXSOdTw1CU4zrw"/>
-                            <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-gray-300 border-4 border-white rounded-full"></div>
-                        </div>
-                        <div>
-                            <h5 class="font-headline font-extrabold text-xl text-on-surface">Mark Henderson</h5>
-                            <p class="text-on-surface-variant text-sm font-medium mt-1">Mindfulness & Stress Relief</p>
-                        </div>
-                        <button class="w-full bg-secondary-container text-secondary py-3.5 rounded-xl font-bold text-sm hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined text-lg" data-icon="chat">chat</span> Send Message
-                        </button>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

@@ -95,8 +95,24 @@
                 {% for user in users %}
                 <div class="flex flex-col p-8 rounded-[2.2rem] hover:bg-gray-50 group transition-all duration-300 border border-transparent hover:border-outline/50">
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="w-16 h-16 rounded-[1.25rem] bg-indigo-50 text-primary flex items-center justify-center font-bold text-xl group-hover:scale-105 transition-transform">
-                            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                        {% set pfp = user.profile_picture %}
+                        {% set pfp_url = null %}
+                        {% if pfp %}
+                            {% if pfp starts with 'http' %}
+                                {% set pfp_url = pfp %}
+                            {% elseif pfp starts with '/uploads/' %}
+                                {% set pfp_url = pfp %}
+                            {% else %}
+                                {% set pfp_url = '/uploads/profiles/' ~ pfp|split('\\')|last|split('/')|last %}
+                            {% endif %}
+                        {% endif %}
+
+                        <div class="w-16 h-16 rounded-[1.25rem] bg-indigo-50 text-primary flex items-center justify-center font-bold text-xl group-hover:scale-105 transition-transform overflow-hidden">
+                            {% if pfp_url %}
+                                <img src="{{ pfp_url }}" alt="{{ user.first_name }}" class="w-full h-full object-cover">
+                            {% else %}
+                                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                            {% endif %}
                         </div>
                         <div>
                             <div class="text-lg font-extrabold text-on-surface leading-tight">{{ user.first_name }} {{ user.last_name }}</div>
@@ -155,11 +171,37 @@
                 <div class="grid grid-cols-2 gap-6 mb-8 p-4 bg-gray-50/50 rounded-2xl border border-outline/10">
                     <div>
                         <div class="text-[9px] font-bold text-gray-400 uppercase mb-1">Plaignant</div>
-                        <div class="text-sm font-extrabold">{{ report.reporter_first }} {{ report.reporter_last }}</div>
+                        <div class="flex items-center gap-2">
+                            {% set rep_pfp = report.reporter_pfp %}
+                            {% set rep_url = null %}
+                            {% if rep_pfp %}
+                                {% if rep_pfp starts with 'http' %}{% set rep_url = rep_pfp %}
+                                {% elseif rep_pfp starts with '/uploads/' %}{% set rep_url = rep_pfp %}
+                                {% else %}{% set rep_url = '/uploads/profiles/' ~ rep_pfp|split('\\')|last|split('/')|last %}{% endif %}
+                            {% endif %}
+                            <div class="w-5 h-5 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center text-[8px] font-bold">
+                                {% if rep_url %}<img src="{{ rep_url }}" class="w-full h-full object-cover">
+                                {% else %}{{ report.reporter_first|first }}{{ report.reporter_last|first }}{% endif %}
+                            </div>
+                            <div class="text-sm font-extrabold">{{ report.reporter_first }} {{ report.reporter_last }}</div>
+                        </div>
                     </div>
                     <div>
                         <div class="text-[9px] font-bold text-gray-400 uppercase mb-1">Cible</div>
-                        <div class="text-sm font-extrabold">{{ report.reported_first }} {{ report.reported_last }}</div>
+                        <div class="flex items-center gap-2">
+                            {% set trg_pfp = report.reported_pfp %}
+                            {% set trg_url = null %}
+                            {% if trg_pfp %}
+                                {% if trg_pfp starts with 'http' %}{% set trg_url = trg_pfp %}
+                                {% elseif trg_pfp starts with '/uploads/' %}{% set trg_url = trg_pfp %}
+                                {% else %}{% set trg_url = '/uploads/profiles/' ~ trg_pfp|split('\\')|last|split('/')|last %}{% endif %}
+                            {% endif %}
+                            <div class="w-5 h-5 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center text-[8px] font-bold">
+                                {% if trg_url %}<img src="{{ trg_url }}" class="w-full h-full object-cover">
+                                {% else %}{{ report.reported_first|first }}{{ report.reported_last|first }}{% endif %}
+                            </div>
+                            <div class="text-sm font-extrabold">{{ report.reported_first }} {{ report.reported_last }}</div>
+                        </div>
                     </div>
                 </div>
                 

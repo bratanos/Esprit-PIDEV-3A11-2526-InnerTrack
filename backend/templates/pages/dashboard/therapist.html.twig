@@ -64,8 +64,12 @@
                                 <tr class="hover:bg-surface-container transition-colors">
                                     <td class="px-6 py-5">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold text-xs uppercase">
-                                                {{ req.client.firstName|first }}{{ req.client.lastName|first }}
+                                            <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold text-xs uppercase overflow-hidden">
+                                                {% if req.client.profilePictureUrl %}
+                                                    <img src="{{ req.client.profilePictureUrl }}" alt="{{ req.client.firstName }}" class="w-full h-full object-cover">
+                                                {% else %}
+                                                    {{ req.client.firstName|first }}{{ req.client.lastName|first }}
+                                                {% endif %}
                                             </div>
                                             <span class="font-semibold text-sm">{{ req.client.fullName }}</span>
                                         </div>
@@ -110,8 +114,12 @@
                         <a href="{{ path('app_messages_show', {'id': conversation.id}) }}" class="block bg-surface-container-lowest border border-outline-variant/10 p-6 rounded-2xl flex items-center justify-between group cursor-pointer hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 transition-all">
                             <div class="flex items-center gap-5">
                                 <div class="relative">
-                                    <div class="w-12 h-12 rounded-full bg-primary-container text-primary flex items-center justify-center font-extrabold text-lg">
-                                        {{ otherUser.firstName|first }}{{ otherUser.lastName|first }}
+                                    <div class="w-12 h-12 rounded-full bg-primary-container text-primary flex items-center justify-center font-extrabold text-lg overflow-hidden">
+                                        {% if otherUser.profilePictureUrl %}
+                                            <img src="{{ otherUser.profilePictureUrl }}" alt="{{ otherUser.firstName }}" class="w-full h-full object-cover">
+                                        {% else %}
+                                            {{ otherUser.firstName|first }}{{ otherUser.lastName|first }}
+                                        {% endif %}
                                     </div>
                                     <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white"></div>
                                 </div>
@@ -151,7 +159,13 @@
                 <div class="absolute -top-12 -right-12 w-40 h-40 bg-secondary opacity-10 rounded-full blur-3xl"></div>
                 <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-primary opacity-10 rounded-full blur-3xl"></div>
                 <div class="relative z-10 flex flex-col items-center text-center">
-                    <img alt="Dr. {{ app.user.lastName|default(app.user.firstName) }}" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl mb-6" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8MRs2oiBTK5y1ODRgJ7OGNh2ww3HCMLjSqPShNWKw01IArpYtIFL7PeeZZ7nQcfw90C1wla8vKYNxLDzRs1D_0eFSb4YXzgnDB0I4PVYZ7aOklLTr24t5k4W694eiUhwQhK_69Gx_IGZY0-O8DAH34DQcaROOAUBpYhFaco2MJRPB9K1wUKUo_1PNEI4NwLEgAKUTe2j1UbEd06bAmobbjtEJIb5XgtdrrA4_96agdlKPtoe4guF1NI4ErWQ1FnZCCT1Trdxsfg"/>
+                    {% if app.user.profilePictureUrl %}
+                        <img alt="Dr. {{ app.user.lastName|default(app.user.firstName) }}" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl mb-6" loading="lazy" src="{{ app.user.profilePictureUrl }}"/>
+                    {% else %}
+                        <div class="w-24 h-24 rounded-full bg-primary-container text-primary flex items-center justify-center font-extrabold text-3xl border-4 border-white shadow-xl mb-6">
+                            {{ app.user.firstName|first }}{{ app.user.lastName|first }}
+                        </div>
+                    {% endif %}
                     <h4 class="font-headline text-2xl font-bold text-on-surface">Dr. {{ app.user.lastName|default(app.user.firstName) }}</h4>
                     <p class="text-xs text-primary font-bold uppercase tracking-widest mb-8 mt-1">Clinical Psychologist</p>
                     

@@ -55,10 +55,18 @@ class DashboardController extends AbstractController
             [$userId, $userId, $userId]
         )->fetchOne();
 
+        // Fetch therapists this user is interacting with
+        $therapists = $this->em->createQuery(
+            'SELECT DISTINCT u FROM App\Entity\User u
+             JOIN App\Entity\Conversation c WITH (c.therapist = u)
+             WHERE c.client = :uid AND c.status = :status'
+        )->setParameter('uid', $userId)->setParameter('status', 'ACTIVE')->getResult();
+
         return $this->render('pages/dashboard/user.html.twig', [
             'conversationCount' => $conversationCount,
             'unreadNotifs' => $unreadNotifs,
             'unreadMessages' => $unreadMessages,
+            'therapists' => $therapists,
         ]);
     }
 
@@ -122,7 +130,7 @@ class DashboardController extends AbstractController
 
         // Users list for management
         $users = $conn->executeQuery("
-            SELECT id, first_name, last_name, email, roles, status, created_at 
+            SELECT id, first_name, last_name, email, roles, status, created_at, profile_picture 
             FROM user 
             ORDER BY created_at DESC 
             LIMIT 10
@@ -131,8 +139,8 @@ class DashboardController extends AbstractController
         // Recent reports with context
         $reports = $conn->executeQuery("
             SELECT r.id, r.status, r.created_at, r.reason, r.context, r.details,
-                   u1.first_name as reporter_first, u1.last_name as reporter_last,
-                   u2.first_name as reported_first, u2.last_name as reported_last
+                   u1.first_name as reporter_first, u1.last_name as reporter_last, u1.profile_picture as reporter_pfp,
+                   u2.first_name as reported_first, u2.last_name as reported_last, u2.profile_picture as reported_pfp
             FROM report r
             JOIN user u1 ON r.reporter_id = u1.id
             JOIN user u2 ON r.reported_id = u2.id
