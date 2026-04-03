@@ -30,7 +30,7 @@
                 <div class="serene-gradient p-10 text-white relative overflow-hidden rounded-[2rem] soft-elevation group h-48 lg:h-56 flex flex-col justify-between">
                     <div class="relative z-10">
                         <p class="text-white/70 font-bold uppercase tracking-widest text-[11px] mb-2">Active Conversations</p>
-                        <h3 class="text-5xl lg:text-6xl font-headline font-extrabold">04</h3>
+                        <h3 class="text-5xl lg:text-6xl font-headline font-extrabold">{{ "%02d"|format(conversationCount) }}</h3>
                     </div>
                     <a href="{{ path('app_messages') }}" class="relative z-10 flex items-center text-sm font-bold opacity-90 hover:opacity-100 group-hover:translate-x-1 transition-all">
                         View all messages <span class="material-symbols-outlined ml-2 text-lg" data-icon="arrow_forward">arrow_forward</span>
@@ -42,7 +42,7 @@
                 <div class="bg-primary/5 border border-primary/10 p-10 rounded-[2rem] text-on-surface relative overflow-hidden h-48 lg:h-56 flex flex-col justify-between group">
                     <div class="relative z-10">
                         <p class="text-primary font-bold uppercase tracking-widest text-[11px] mb-2">Unread Notifications</p>
-                        <h3 class="text-5xl lg:text-6xl font-headline font-extrabold text-primary">12</h3>
+                        <h3 class="text-5xl lg:text-6xl font-headline font-extrabold text-primary">{{ "%02d"|format(unreadNotifs) }}</h3>
                     </div>
                     <a href="{{ path('app_notifications') }}" class="relative z-10 inline-flex items-center text-sm font-bold text-primary group-hover:translate-x-1 transition-all">
                         Catch up now <span class="material-symbols-outlined ml-2 text-lg" data-icon="bolt">bolt</span>
