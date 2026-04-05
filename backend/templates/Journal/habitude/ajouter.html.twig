@@ -1,0 +1,198 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block head %}
+{{ parent() }}
+<style>
+input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+    background: linear-gradient(to right, #48bb78, #ff4444);
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #ccc;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+    border-color: #006876;
+}
+
+.slider-stress {
+    background: linear-gradient(to right, #63b3ed, #ff4444) !important;
+}
+
+.slider-sommeil {
+    background: linear-gradient(to right, #a0aec0, #b794f4) !important;
+}
+</style>
+
+<script>
+function updateSlider(slider, spanId, colorStart, colorEnd) {
+    const val = slider.value;
+    const max = slider.max || 10;
+    const pct = (val / max) * 100;
+    
+    // Dégradé dynamique selon la valeur
+    slider.style.background = `linear-gradient(to right, ${colorStart} 0%, ${colorEnd} ${pct}%, #e2e8f0 ${pct}%)`;
+    
+    // Mise à jour du span
+    const span = document.getElementById(spanId);
+    span.textContent = val;
+    span.style.color = interpolateColor(colorStart, colorEnd, pct / 100);
+}
+
+function interpolateColor(c1, c2, t) {
+    const hex = h => parseInt(h, 16);
+    const r1 = hex(c1.slice(1,3)), g1 = hex(c1.slice(3,5)), b1 = hex(c1.slice(5,7));
+    const r2 = hex(c2.slice(1,3)), g2 = hex(c2.slice(3,5)), b2 = hex(c2.slice(5,7));
+    const r = Math.round(r1 + (r2-r1)*t);
+    const g = Math.round(g1 + (g2-g1)*t);
+    const b = Math.round(b1 + (b2-b1)*t);
+    return `rgb(${r},${g},${b})`;
+}
+
+// Init au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    const sliders = [
+        { el: document.querySelector('.slider-energie'), span: 'val_energie', c1: '#48bb78', c2: '#ff4444' },
+        { el: document.querySelector('.slider-stress'),  span: 'val_stress',  c1: '#63b3ed', c2: '#ff4444' },
+        { el: document.querySelector('.slider-sommeil'), span: 'val_sommeil', c1: '#a0aec0', c2: '#b794f4' },
+    ];
+    sliders.forEach(s => {
+        if (s.el) updateSlider(s.el, s.span, s.c1, s.c2);
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+
+    {# EN-TÊTE #}
+    <div class="rounded-2xl overflow-hidden mb-6"
+         style="background: linear-gradient(to right, #5a3ea1, #7c5cbf)">
+        <div class="px-8 py-6">
+            <h1 class="text-2xl font-bold text-white">✨ Nouvelle Habitude</h1>
+            <p class="text-[#d8ccf5] text-sm mt-1">Enregistrez votre habitude du jour</p>
+        </div>
+    </div>
+
+    {{ form_start(form, {attr: {class: 'space-y-4', novalidate: 'novalidate'}}) }}
+
+    {% if not form.vars.valid and form.vars.submitted %}
+    <div class="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm">
+        ⚠️ Champs Obligatoire! 
+    </div>
+{% endif %}
+
+        {# NOM + ÉMOTION #}
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+            <div>
+    {{ form_label(form.nomHabitude, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+    {{ form_widget(form.nomHabitude, {attr: {
+        class: 'w-full rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 ' ~
+               (form.nomHabitude.vars.errors|length > 0 ? 'border-red-400 focus:ring-red-300 bg-red-50' : 'border-gray-200 focus:ring-[#006876]')
+    }}) }}
+    {% if form.nomHabitude.vars.errors|length > 0 %}
+        <p class="text-red-500 text-xs mt-1 font-medium flex items-center gap-1">
+            ⚠️ {{ form.nomHabitude.vars.errors[0].message }}
+        </p>
+    {% endif %}
+</div>
+            <div>
+                {{ form_label(form.emotionDominantes, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+                {{ form_widget(form.emotionDominantes) }}
+            </div>
+        </div>
+
+        {# NIVEAUX #}
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+            <h2 class="text-sm font-bold text-gray-500">📊 Niveaux du jour</h2>
+
+            {# Énergie #}
+    <div>
+        {{ form_label(form.niveauEnergie, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-2'}}) }}
+        <div class="flex items-center gap-4">
+            {{ form_widget(form.niveauEnergie, {attr: {
+                class: 'slider-energie',
+                oninput: "updateSlider(this, 'val_energie', '#48bb78', '#ff4444')"
+            }}) }}
+            <span id="val_energie" class="text-sm font-bold w-8 text-center">5</span>
+        </div>
+        <div class="flex justify-between text-xs text-gray-400 mt-1">
+            <span>0 — Vide</span><span>10 — Vitalité</span>
+        </div>
+    </div>
+
+            {# Stress #}
+    <div>
+        {{ form_label(form.niveauStress, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-2'}}) }}
+        <div class="flex items-center gap-4">
+            {{ form_widget(form.niveauStress, {attr: {
+                class: 'slider-stress',
+                oninput: "updateSlider(this, 'val_stress', '#63b3ed', '#ff4444')"
+            }}) }}
+            <span id="val_stress" class="text-sm font-bold w-8 text-center">5</span>
+        </div>
+        <div class="flex justify-between text-xs text-gray-400 mt-1">
+            <span>0 — Zen</span><span>10 — Alarme</span>
+        </div>
+    </div>
+
+            {# Sommeil #}
+    <div>
+        {{ form_label(form.qualiteSommeil, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-2'}}) }}
+        <div class="flex items-center gap-4">
+            {{ form_widget(form.qualiteSommeil, {attr: {
+                class: 'slider-sommeil',
+                oninput: "updateSlider(this, 'val_sommeil', '#a0aec0', '#b794f4')"
+            }}) }}
+            <span id="val_sommeil" class="text-sm font-bold w-8 text-center">5</span>
+        </div>
+        <div class="flex justify-between text-xs text-gray-400 mt-1">
+            <span>0 — Fatigué</span><span>10 — Récupéré</span>
+        </div>
+    </div>
+</div>
+
+        {# NOTE + DATE #}
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+            <div>
+                {{ form_label(form.noteTextuelle, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+                {{ form_widget(form.noteTextuelle) }}
+            </div>
+            <div>
+                {{ form_label(form.dateCreation, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+                {{ form_widget(form.dateCreation) }}
+            </div>
+        </div>
+
+        {# BOUTONS #}
+        <div class="flex gap-3">
+            <a href="{{ path('habitude_index') }}"
+               class="flex-1 text-center bg-gray-100 text-gray-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">
+                ✕ Annuler
+            </a>
+            <button type="submit"
+                    class="flex-1 bg-[#006876] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
+                ✅ Enregistrer
+            </button>
+        </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

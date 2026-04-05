@@ -1,0 +1,110 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block content %}
+
+{# ── EN-TÊTE ── #}
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <h1 class="text-2xl font-bold text-[#006876]">📓 Mon Journal</h1>
+        <p class="text-sm text-gray-500 mt-1">Vos entrées quotidiennes</p>
+    </div>
+    <a href="{{ path('entree_ajouter') }}"
+       class="inline-flex items-center gap-2 bg-[#006876] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
+        ＋ Nouvelle entrée
+    </a>
+</div>
+
+{# ── STATS ── #}
+{% if stats.total > 0 %}
+<div class="grid grid-cols-2 gap-4 mb-8">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+        <div class="text-2xl mb-1">📋</div>
+        <div class="text-xl font-bold text-[#006876]">{{ stats.total }}</div>
+        <div class="text-xs text-gray-400 mt-1">Total entrées</div>
+    </div>
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+        <div class="text-2xl mb-1">😊</div>
+        <div class="text-xl font-bold text-[#48bb78]">{{ stats.avgHumeur|number_format(1) }}</div>
+        <div class="text-xs text-gray-400 mt-1">Humeur moyenne</div>
+    </div>
+</div>
+{% endif %}
+
+{# ── RECHERCHE ── #}
+<form method="GET" class="mb-6 flex gap-3">
+    <input type="text" name="q" value="{{ keyword }}"
+           placeholder="🔍 Rechercher dans vos notes..."
+           class="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#006876]">
+    <button type="submit"
+            class="bg-[#006876] text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
+        Rechercher
+    </button>
+    {% if keyword %}
+    <a href="{{ path('entree_index') }}"
+       class="bg-gray-100 text-gray-600 px-4 py-2 rounded-xl text-sm hover:bg-gray-200 transition">
+        ✕ Effacer
+    </a>
+    {% endif %}
+</form>
+
+{# ── LISTE DES ENTRÉES ── #}
+{% if entrees is empty %}
+<div class="text-center py-16 text-gray-400">
+    <div class="text-5xl mb-4">📭</div>
+    <p class="text-lg font-medium">Aucune entrée trouvée</p>
+    <p class="text-sm mt-1">Commencez à écrire votre journal !</p>
+</div>
+{% else %}
+<div class="space-y-4">
+    {% for e in entrees %}
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition">
+        <div class="flex items-start justify-between gap-4">
+
+            {# Humeur badge #}
+            <div class="flex items-center gap-3 flex-1">
+                <span class="text-3xl">{{ e.emojiHumeur }}</span>
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold"
+                              style="background-color: {{ e.couleurHumeur }}22; color: {{ e.couleurHumeur }}">
+                            {{ e.labelHumeur }} — {{ e.humeur }}/10
+                        </span>
+                        <span class="text-xs text-gray-400">
+                            📅 {{ e.dateSaisie|date('d/m/Y') }}
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-600 line-clamp-2">
+                        {{ e.noteTextuelle ?: 'Aucune note.' }}
+                    </p>
+                </div>
+            </div>
+
+            {# Actions #}
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="{{ path('entree_voir', {id: e.idJournal}) }}"
+                   class="bg-[#006876] text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-[#005562] transition">
+                    👁 Voir
+                </a>
+                <a href="{{ path('entree_modifier', {id: e.idJournal}) }}"
+                   class="bg-amber-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-amber-500 transition">
+                    ✏️
+                </a>
+                <form method="POST"
+                      action="{{ path('entree_supprimer', {id: e.idJournal}) }}"
+                      onsubmit="return confirm('Supprimer cette entrée ?')">
+                    <input type="hidden" name="_token"
+                           value="{{ csrf_token('delete-entree-' ~ e.idJournal) }}">
+                    <button type="submit"
+                            class="bg-red-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-500 transition">
+                        🗑
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}
