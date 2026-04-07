@@ -1,7 +1,7 @@
 /* header.css */
 .header {
     -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
-    -fx-padding: 15 20;
+    -fx-padding: 12 16;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 5, 0, 0, 2);
 }
 

@@ -15,23 +15,23 @@
 
     <!-- Sidebar -->
     <left>
-        <VBox styleClass="sidebar" prefWidth="280">
+        <VBox styleClass="sidebar" prefWidth="224">
             <VBox styleClass="sidebar-logo" alignment="CENTER">
-                <ImageView fitWidth="130" preserveRatio="true">
+                <ImageView fitWidth="104" preserveRatio="true">
                     <image><Image url="@../../images/innertracklogo1.png"/></image>
                 </ImageView>
             </VBox>
 
             <VBox styleClass="profile-section">
-                <javafx.scene.shape.Circle fx:id="profileCircle" radius="35" styleClass="profile-pic"/>
+                <javafx.scene.shape.Circle fx:id="profileCircle" radius="28" styleClass="profile-pic"/>
                 <Label fx:id="userFullNameLabel" text="Admin" styleClass="profile-name"/>
                 <Label text="Administrator"
-                       style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                       style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 8.8px;"/>
             </VBox>
 
             <Separator opacity="0.1"/>
 
-            <VBox spacing="4">
+            <VBox spacing="3.2">
                 <Button fx:id="btnDashboard" text="%sidebar.user.dashboard"
                         styleClass="sidebar-button, sidebar-button-active"
                         maxWidth="Infinity" onAction="#showDashboard">
@@ -58,8 +58,8 @@
                     <Label fx:id="reportsBadge" text="0"
                            visible="false" managed="false"
                            style="-fx-background-color: #fc8181; -fx-text-fill: white;
-                                  -fx-font-size: 10px; -fx-font-weight: bold;
-                                  -fx-background-radius: 50; -fx-padding: 2 6;"
+                                  -fx-font-size: 8px; -fx-font-weight: bold;
+                                  -fx-background-radius: 50; -fx-padding: 1.6 4.8;"
                            StackPane.alignment="TOP_RIGHT"/>
                 </StackPane>
 
@@ -89,75 +89,75 @@
             <!-- ── DASHBOARD PANE ── -->
             <ScrollPane fx:id="dashPane" fitToWidth="true"
                         style="-fx-background-color: #f4f7f6; -fx-background: #f4f7f6;">
-                <VBox spacing="28" style="-fx-padding: 32 40;">
+                <VBox spacing="22.4" style="-fx-padding: 25.6 32;">
 
-                    <HBox alignment="CENTER_LEFT" spacing="12">
+                    <HBox alignment="CENTER_LEFT" spacing="9.6">
                         <VBox>
                             <Label fx:id="welcomeLabel"
-                                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                                   style="-fx-font-size: 19.2px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                             <Label text="%dashboard.admin.welcome" style="-fx-text-fill: #7f8c8d;"/>
                         </VBox>
                     </HBox>
 
-                    <HBox spacing="16">
-                        <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" spacing="8">
-                            <HBox spacing="10" alignment="CENTER_LEFT">
+                    <HBox spacing="12.8">
+                        <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" spacing="6.4">
+                            <HBox spacing="8" alignment="CENTER_LEFT">
                                 <FontIcon iconLiteral="fas-users" iconSize="22" iconColor="#1d7bed"/>
-                                <Label text="%dashboard.admin.total" style="-fx-text-fill:#7f8c8d; -fx-font-size:13px;"/>
+                                <Label text="%dashboard.admin.total" style="-fx-text-fill:#7f8c8d; -fx-font-size:10.4px;"/>
                             </HBox>
                             <Label fx:id="totalUsersLabel" styleClass="stat-value" text="—"/>
                         </VBox>
-                        <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" spacing="8">
-                            <HBox spacing="10" alignment="CENTER_LEFT">
+                        <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" spacing="6.4">
+                            <HBox spacing="8" alignment="CENTER_LEFT">
                                 <FontIcon iconLiteral="fas-user-injured" iconSize="22" iconColor="#27ae60"/>
-                                <Label text="%dashboard.admin.clients" style="-fx-text-fill:#7f8c8d; -fx-font-size:13px;"/>
+                                <Label text="%dashboard.admin.clients" style="-fx-text-fill:#7f8c8d; -fx-font-size:10.4px;"/>
                             </HBox>
                             <Label fx:id="totalClientsLabel" styleClass="stat-value" text="—"
                                    style="-fx-text-fill:#27ae60;"/>
                         </VBox>
-                        <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" spacing="8">
-                            <HBox spacing="10" alignment="CENTER_LEFT">
+                        <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" spacing="6.4">
+                            <HBox spacing="8" alignment="CENTER_LEFT">
                                 <FontIcon iconLiteral="fas-user-md" iconSize="22" iconColor="#9b59b6"/>
-                                <Label text="%dashboard.admin.therapists" style="-fx-text-fill:#7f8c8d; -fx-font-size:13px;"/>
+                                <Label text="%dashboard.admin.therapists" style="-fx-text-fill:#7f8c8d; -fx-font-size:10.4px;"/>
                             </HBox>
                             <Label fx:id="totalTherapistsLabel" styleClass="stat-value" text="—"
                                    style="-fx-text-fill:#9b59b6;"/>
                         </VBox>
-                        <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" spacing="8">
-                            <HBox spacing="10" alignment="CENTER_LEFT">
+                        <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" spacing="6.4">
+                            <HBox spacing="8" alignment="CENTER_LEFT">
                                 <FontIcon iconLiteral="fas-user-plus" iconSize="22" iconColor="#e67e22"/>
-                                <Label text="%dashboard.admin.newMonth" style="-fx-text-fill:#7f8c8d; -fx-font-size:13px;"/>
+                                <Label text="%dashboard.admin.newMonth" style="-fx-text-fill:#7f8c8d; -fx-font-size:10.4px;"/>
                             </HBox>
                             <Label fx:id="newThisMonthLabel" styleClass="stat-value" text="—"
                                    style="-fx-text-fill:#e67e22;"/>
                         </VBox>
-                        <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" spacing="8">
-                            <HBox spacing="10" alignment="CENTER_LEFT">
+                        <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" spacing="6.4">
+                            <HBox spacing="8" alignment="CENTER_LEFT">
                                 <FontIcon iconLiteral="fas-ban" iconSize="22" iconColor="#e74c3c"/>
-                                <Label text="%dashboard.admin.blocked" style="-fx-text-fill:#7f8c8d; -fx-font-size:13px;"/>
+                                <Label text="%dashboard.admin.blocked" style="-fx-text-fill:#7f8c8d; -fx-font-size:10.4px;"/>
                             </HBox>
                             <Label fx:id="blockedLabel" styleClass="stat-value" text="—"
                                    style="-fx-text-fill:#e74c3c;"/>
                         </VBox>
                     </HBox>
 
-                    <VBox styleClass="dashboard-card" spacing="12" style="-fx-padding: 24;">
+                    <VBox styleClass="dashboard-card" spacing="9.6" style="-fx-padding: 19.2;">
                         <Label text="%dashboard.admin.chart"
-                               style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
-                        <BarChart fx:id="registrationsChart" prefHeight="250"
+                               style="-fx-font-size:12.8px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                        <BarChart fx:id="registrationsChart" prefHeight="200"
                                   style="-fx-background-color: transparent;">
                             <xAxis><CategoryAxis label="Month"/></xAxis>
                             <yAxis><NumberAxis label="Registrations"/></yAxis>
                         </BarChart>
                     </VBox>
 
-                    <HBox spacing="16">
-                        <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="10"
-                              style="-fx-padding:20;">
+                    <HBox spacing="12.8">
+                        <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="8"
+                              style="-fx-padding:16;">
                             <Label text="%dashboard.admin.status"
-                                   style="-fx-font-size:15px; -fx-font-weight:bold;"/>
+                                   style="-fx-font-size:12px; -fx-font-weight:bold;"/>
                             <Separator/>
-                            <HBox alignment="CENTER_LEFT" spacing="12">
+                            <HBox alignment="CENTER_LEFT" spacing="9.6">
                                 <Label text="%dashboard.admin.active" style="-fx-text-fill:#27ae60;"/>
                                 <Label fx:id="activeCountLabel" style="-fx-font-weight:bold;"/>
                                 <Region HBox.hgrow="ALWAYS"/>
@@ -175,62 +175,62 @@
 
             <!-- ── USER MANAGEMENT PANE ── -->
             <VBox fx:id="usersPane" visible="false"
-                  style="-fx-background-color: #f4f7f6; -fx-padding: 32 40;" spacing="20">
+                  style="-fx-background-color: #f4f7f6; -fx-padding: 25.6 32;" spacing="16">
 
-                <HBox spacing="12" alignment="CENTER_LEFT">
+                <HBox spacing="9.6" alignment="CENTER_LEFT">
                     <Label text="%admin.users.title"
-                           style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                           style="-fx-font-size:17.6px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
                     <Region HBox.hgrow="ALWAYS"/>
                     <TextField fx:id="searchField" promptText="%admin.users.search"
-                               prefWidth="220" onAction="#handleSearch"/>
+                               prefWidth="176" onAction="#handleSearch"/>
                     <Button text="🔍" onAction="#handleSearch"
                             style="-fx-background-color: #1d7bed; -fx-text-fill:white;
-                                   -fx-background-radius:5; -fx-padding:8 14; -fx-cursor:hand;"/>
+                                   -fx-background-radius:5; -fx-padding:6.4 11.2; -fx-cursor:hand;"/>
                     <ComboBox fx:id="roleFilterCombo" promptText="%admin.users.role"
-                              prefWidth="140" onAction="#handleSearch"/>
+                              prefWidth="112" onAction="#handleSearch"/>
                     <ComboBox fx:id="statusFilterCombo" promptText="%admin.users.status"
-                              prefWidth="120" onAction="#handleSearch"/>
+                              prefWidth="96" onAction="#handleSearch"/>
                     <Button text="%admin.users.reset" onAction="#handleResetFilters"
                             style="-fx-background-color:#f1f1f1; -fx-text-fill:#2c3e50;
-                                   -fx-background-radius:5; -fx-padding:8 14; -fx-cursor:hand;"/>
+                                   -fx-background-radius:5; -fx-padding:6.4 11.2; -fx-cursor:hand;"/>
                 </HBox>
 
                 <TableView fx:id="usersTable" VBox.vgrow="ALWAYS"
                            style="-fx-background-color:white; -fx-background-radius:10;">
                     <columns>
-                        <TableColumn fx:id="colId"      text="%admin.users.colId"      prefWidth="50"/>
-                        <TableColumn fx:id="colName"    text="%admin.users.colName"    prefWidth="160"/>
-                        <TableColumn fx:id="colEmail"   text="%admin.users.colEmail"   prefWidth="220"/>
-                        <TableColumn fx:id="colRole"    text="%admin.users.colRole"    prefWidth="130"/>
-                        <TableColumn fx:id="colStatus"  text="%admin.users.colStatus"  prefWidth="100"/>
-                        <TableColumn fx:id="colJoined"  text="%admin.users.colJoined"  prefWidth="130"/>
-                        <TableColumn fx:id="colActions" text="%admin.users.colActions" prefWidth="200"/>
+                        <TableColumn fx:id="colId"      text="%admin.users.colId"      prefWidth="40"/>
+                        <TableColumn fx:id="colName"    text="%admin.users.colName"    prefWidth="128"/>
+                        <TableColumn fx:id="colEmail"   text="%admin.users.colEmail"   prefWidth="176"/>
+                        <TableColumn fx:id="colRole"    text="%admin.users.colRole"    prefWidth="104"/>
+                        <TableColumn fx:id="colStatus"  text="%admin.users.colStatus"  prefWidth="80"/>
+                        <TableColumn fx:id="colJoined"  text="%admin.users.colJoined"  prefWidth="104"/>
+                        <TableColumn fx:id="colActions" text="%admin.users.colActions" prefWidth="160"/>
                     </columns>
                 </TableView>
 
-                <HBox spacing="12" alignment="CENTER">
+                <HBox spacing="9.6" alignment="CENTER">
                     <Button text="◀" onAction="#handlePrevPage"
-                            style="-fx-background-color:#f1f1f1; -fx-padding:6 12; -fx-cursor:hand;"/>
+                            style="-fx-background-color:#f1f1f1; -fx-padding:4.8 9.6; -fx-cursor:hand;"/>
                     <Label fx:id="pageLabel" text="Page 1" style="-fx-text-fill:#7f8c8d;"/>
                     <Button text="▶" onAction="#handleNextPage"
-                            style="-fx-background-color:#f1f1f1; -fx-padding:6 12; -fx-cursor:hand;"/>
+                            style="-fx-background-color:#f1f1f1; -fx-padding:4.8 9.6; -fx-cursor:hand;"/>
                     <Label fx:id="totalLabel" text="" style="-fx-text-fill:#7f8c8d;"/>
                 </HBox>
             </VBox>
 
             <!-- ── REPORTS PANE ── -->
             <VBox fx:id="reportsPane" visible="false" style="-fx-background-color: transparent;">
-                <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 32 40 10 40;">
+                <HBox alignment="CENTER_LEFT" spacing="9.6" style="-fx-padding: 25.6 32 8 32;">
                     <VBox>
                         <Label text="Reports &amp; Moderation"
-                               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                               style="-fx-font-size: 19.2px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                         <Label fx:id="reportsSummaryLabel" text=""
                                style="-fx-text-fill: #7f8c8d;"/>
                     </VBox>
                     <Region HBox.hgrow="ALWAYS"/>
                     <Button text="↻ Refresh" onAction="#refreshReports"
                             style="-fx-background-color: #667eea; -fx-text-fill: white;
-                                   -fx-background-radius: 8; -fx-padding: 8 18; -fx-cursor: hand;
+                                   -fx-background-radius: 8; -fx-padding: 6.4 14.4; -fx-cursor: hand;
                                    -fx-font-weight: bold;"/>
                 </HBox>
                 
@@ -239,12 +239,12 @@
                         <Tab text="Signalements (Reports)">
                             <content>
                                 <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f4f7f6;">
-                                    <VBox spacing="20" style="-fx-padding: 20 40 40 40;">
+                                    <VBox spacing="16" style="-fx-padding: 16 32 32 32;">
                                         <Label fx:id="reportsEmptyLabel"
                                                text="No reports at the moment."
-                                               style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"
+                                               style="-fx-font-size: 12.8px; -fx-text-fill: #7f8c8d;"
                                                visible="false" managed="false"/>
-                                        <VBox fx:id="reportsListBox" spacing="14"/>
+                                        <VBox fx:id="reportsListBox" spacing="11.2"/>
                                     </VBox>
                                 </ScrollPane>
                             </content>
@@ -252,12 +252,12 @@
                         <Tab text="Punitions Actives (Active Locks)" onSelectionChanged="#loadActiveLocksTab">
                             <content>
                                 <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f4f7f6;">
-                                    <VBox spacing="20" style="-fx-padding: 20 40 40 40;">
+                                    <VBox spacing="16" style="-fx-padding: 16 32 32 32;">
                                         <Label fx:id="emptyLocksLabel"
                                                text="No active punishments."
-                                               style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"
+                                               style="-fx-font-size: 12.8px; -fx-text-fill: #7f8c8d;"
                                                visible="false" managed="false"/>
-                                        <VBox fx:id="locksListBox" spacing="14"/>
+                                        <VBox fx:id="locksListBox" spacing="11.2"/>
                                     </VBox>
                                 </ScrollPane>
                             </content>
