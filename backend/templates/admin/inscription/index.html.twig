@@ -1,0 +1,80 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto pb-24 space-y-8">
+
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-3xl font-extrabold font-headline tracking-tighter">Inscriptions</h2>
+            <p class="text-xs text-on-surface-variant mt-1">Toutes les inscriptions aux événements.</p>
+        </div>
+        <a href="{{ path('admin_inscription_new') }}"
+           class="flex items-center gap-2 px-6 py-3 rounded-2xl bg-secondary text-white text-sm font-bold shadow-lg shadow-secondary/20 hover:bg-teal-700 active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-xl">person_add</span> Nouvelle inscription
+        </a>
+    </div>
+
+    <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm overflow-hidden">
+        {% if inscriptions|length > 0 %}
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="border-b border-outline/20 text-[10px] font-bold uppercase tracking-[0.12em] text-on-surface-variant">
+                    <th class="text-left px-8 py-5">Participant</th>
+                    <th class="text-left px-4 py-5 hidden md:table-cell">Email</th>
+                    <th class="text-left px-4 py-5 hidden lg:table-cell">Événement</th>
+                    <th class="text-left px-4 py-5 hidden lg:table-cell">Date</th>
+                    <th class="text-right px-8 py-5">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for insc in inscriptions %}
+                <tr class="border-b border-outline/10 hover:bg-gray-50 transition-colors group">
+                    <td class="px-8 py-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-sm shrink-0">
+                                {{ insc.nomParticipant|first|upper }}
+                            </div>
+                            <div class="font-bold text-on-surface">{{ insc.nomParticipant }}</div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-5 text-on-surface-variant hidden md:table-cell text-xs">{{ insc.emailParticipant }}</td>
+                    <td class="px-4 py-5 hidden lg:table-cell">
+                        <span class="px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-indigo-50 text-indigo-600">
+                            {{ insc.evenement.titre }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-5 text-on-surface-variant hidden lg:table-cell text-xs">{{ insc.dateInscription|date('d/m/Y') }}</td>
+                    <td class="px-8 py-5">
+                        <div class="flex justify-end gap-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <a href="{{ path('admin_inscription_show', {id: insc.id}) }}"
+                               title="Voir" class="p-2.5 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors active:scale-90">
+                                <span class="material-symbols-outlined text-[18px]">visibility</span>
+                            </a>
+                            <a href="{{ path('admin_inscription_edit', {id: insc.id}) }}"
+                               title="Modifier" class="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors active:scale-90">
+                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                            </a>
+                            <form method="post" action="{{ path('admin_inscription_delete', {id: insc.id}) }}"
+                                  onsubmit="return confirm('Supprimer cette inscription ?');" style="display:inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_inscription_' ~ insc.id) }}">
+                                <button type="submit" title="Supprimer"
+                                        class="p-2.5 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 transition-colors active:scale-90">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="py-20 flex flex-col items-center justify-center text-center">
+            <span class="material-symbols-outlined text-6xl text-gray-200 mb-4">how_to_reg</span>
+            <h3 class="font-headline font-extrabold text-xl text-gray-400">Aucune inscription</h3>
+            <p class="text-xs text-gray-400 mt-2">Les inscriptions apparaîtront ici.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
