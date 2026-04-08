@@ -14,14 +14,14 @@
     <top>
         <VBox>
             <!-- Main top bar -->
-            <HBox spacing="15" alignment="CENTER_LEFT" styleClass="chat-header">
+            <HBox spacing="12" alignment="CENTER_LEFT" styleClass="chat-header">
                 <Button onAction="#handleBack" styleClass="chat-back-btn">
                     <graphic>
                         <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#718096"/>
                     </graphic>
                 </Button>
 
-                <VBox spacing="1" HBox.hgrow="ALWAYS">
+                <VBox spacing="0.8" HBox.hgrow="ALWAYS">
                     <Label fx:id="conversationTitleLabel" text="%chat.title" styleClass="chat-title-label"/>
                     <Label fx:id="conversationSubLabel" text="%chat.subtitle" styleClass="chat-subtitle-label"/>
                 </VBox>
@@ -31,7 +31,7 @@
                         visible="false" managed="false"
                         text="⋮"
                         styleClass="btn-icon-only"
-                        style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: -it-text-muted;"/>
+                        style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -it-text-muted;"/>
 
             </HBox>
 
@@ -40,29 +40,29 @@
                    text=""
                    visible="false" managed="false"
                    style="-fx-background-color: -it-primary; -fx-text-fill: white;
-                          -fx-font-weight: bold; -fx-font-size: 13px;
-                          -fx-padding: 8 22; -fx-max-width: Infinity;"/>
+                          -fx-font-weight: bold; -fx-font-size: 10.4px;
+                          -fx-padding: 6.4 17.6; -fx-max-width: Infinity;"/>
         </VBox>
     </top>
 
     <center>
         <HBox>
             <!-- Left panel: conversation list -->
-            <VBox prefWidth="300" minWidth="260" styleClass="chat-sidebar">
+            <VBox prefWidth="240" minWidth="208" styleClass="chat-sidebar">
                 <Label text="%chat.conversations" styleClass="chat-left-title"/>
                 <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="chat-scroll">
-                    <VBox fx:id="conversationsList" spacing="2"/>
+                    <VBox fx:id="conversationsList" spacing="1.6"/>
                 </ScrollPane>
             </VBox>
 
             <!-- Right panel: message area -->
             <VBox HBox.hgrow="ALWAYS" styleClass="chat-main-area">
                 <ScrollPane fx:id="messagesScroll" fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="chat-scroll">
-                    <VBox fx:id="messagesBox" spacing="8" styleClass="chat-messages-box"/>
+                    <VBox fx:id="messagesBox" spacing="6.4" styleClass="chat-messages-box"/>
                 </ScrollPane>
 
                 <!-- Input bar -->
-                <HBox spacing="15" alignment="CENTER" styleClass="chat-input-bar">
+                <HBox spacing="12" alignment="CENTER" styleClass="chat-input-bar">
                     <TextArea fx:id="messageInput"
                                promptText="%chat.inputPrompt"
                                prefRowCount="1" wrapText="true"

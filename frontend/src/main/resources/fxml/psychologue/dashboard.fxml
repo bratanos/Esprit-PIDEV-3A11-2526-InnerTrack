@@ -19,21 +19,21 @@
 
     <!-- Sidebar -->
     <left>
-        <VBox styleClass="sidebar" prefWidth="280">
+        <VBox styleClass="sidebar" prefWidth="224">
             <VBox styleClass="sidebar-logo" alignment="CENTER">
-                <ImageView fitWidth="100" preserveRatio="true">
+                <ImageView fitWidth="80" preserveRatio="true">
                     <image><Image url="@../../images/innertracklogo1.png"/></image>
                 </ImageView>
             </VBox>
 
             <VBox styleClass="profile-section">
-                <javafx.scene.shape.Circle fx:id="profileCircle" radius="25" styleClass="profile-pic"/>
+                <javafx.scene.shape.Circle fx:id="profileCircle" radius="20" styleClass="profile-pic"/>
                 <Label fx:id="userFullNameLabel" text="Psychologue" styleClass="profile-name"/>
             </VBox>
 
             <Separator opacity="0.1"/>
 
-            <VBox spacing="2">
+            <VBox spacing="1.6">
                 <Button text="%sidebar.psy.resume" styleClass="sidebar-button, sidebar-button-active" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-home" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
@@ -59,9 +59,9 @@
                     <Label fx:id="notifBadge" text="!"
                            visible="false"
                            style="-fx-background-color: #e74c3c; -fx-text-fill: white;
-                                  -fx-font-size: 10px; -fx-font-weight: bold;
-                                  -fx-background-radius: 50; -fx-padding: 2 6;
-                                  -fx-min-width: 18;"
+                                  -fx-font-size: 8px; -fx-font-weight: bold;
+                                  -fx-background-radius: 50; -fx-padding: 1.6 4.8;
+                                  -fx-min-width: 14.4;"
                            StackPane.alignment="TOP_RIGHT"/>
                 </StackPane>
 
@@ -114,41 +114,41 @@
     <center>
         <ScrollPane fitToHeight="true" fitToWidth="true"
                     style="-fx-background-color: transparent; -fx-background: transparent;">
-            <VBox spacing="30" styleClass="dashboard-container" VBox.vgrow="ALWAYS">
+            <VBox spacing="24" styleClass="dashboard-container" VBox.vgrow="ALWAYS">
                 <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
 
                 <!-- Header -->
-                <HBox spacing="20" alignment="CENTER_LEFT">
+                <HBox spacing="16" alignment="CENTER_LEFT">
                     <VBox>
                         <Label fx:id="welcomeLabel"
-                               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"
+                               style="-fx-font-size: 22.4px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"
                                text="%dashboard.psy.welcome"/>
                         <Label text="%dashboard.psy.title"
-                               style="-fx-text-fill: #475569; -fx-font-size: 15px;"/>
+                               style="-fx-text-fill: #475569; -fx-font-size: 12px;"/>
                     </VBox>
                     <Region HBox.hgrow="ALWAYS"/>
                     <!-- Pending requests quick alert -->
-                    <HBox fx:id="pendingAlert" spacing="8" alignment="CENTER"
+                    <HBox fx:id="pendingAlert" spacing="6.4" alignment="CENTER"
                           visible="false" managed="false"
                           style="-fx-background-color: #FFF3CD; -fx-background-radius: 10;
-                                 -fx-padding: 8 16; -fx-cursor: hand;"
+                                 -fx-padding: 6.4 12.8; -fx-cursor: hand;"
                           onMouseClicked="#handleGoToNotifications">
                         <FontIcon iconLiteral="fas-bell" iconSize="16" iconColor="#856404"/>
                         <Label fx:id="pendingAlertLabel" text=""
-                               style="-fx-text-fill: #856404; -fx-font-size: 13px;"/>
+                               style="-fx-text-fill: #856404; -fx-font-size: 10.4px;"/>
                     </HBox>
                 </HBox>
 
                 <!-- Stats / Quick Access Cards -->
-                <HBox spacing="20">
+                <HBox spacing="16">
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" onMouseClicked="#handleGoToArticles" style="-fx-cursor: hand;">
                         <FontIcon iconLiteral="fas-newspaper" iconSize="24" iconColor="#8b5cf6"/>
-                        <Label styleClass="stat-value" text="Articles" style="-fx-font-size: 18px;"/>
+                        <Label styleClass="stat-value" text="Articles" style="-fx-font-size: 14.4px;"/>
                         <Label styleClass="stat-label" text="Dernières publications"/>
                     </VBox>
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS" onMouseClicked="#handleGoToEvents" style="-fx-cursor: hand;">
                         <FontIcon iconLiteral="fas-calendar-day" iconSize="24" iconColor="#10b981"/>
-                        <Label styleClass="stat-value" text="Événements" style="-fx-font-size: 18px;"/>
+                        <Label styleClass="stat-value" text="Événements" style="-fx-font-size: 14.4px;"/>
                         <Label styleClass="stat-label" text="Activités à venir"/>
                     </VBox>
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
@@ -166,43 +166,43 @@
                 </HBox>
 
                 <!-- Profile completeness card -->
-                <VBox fx:id="profileIncompleteCard" styleClass="dashboard-card" spacing="12"
-                      style="-fx-padding: 20; -fx-background-color: linear-gradient(to right, #FF69B4, #ff8fab);"
+                <VBox fx:id="profileIncompleteCard" styleClass="dashboard-card" spacing="9.6"
+                      style="-fx-padding: 16; -fx-background-color: linear-gradient(to right, #FF69B4, #ff8fab);"
                       visible="false" managed="false">
-                    <HBox spacing="15" alignment="CENTER_LEFT">
+                    <HBox spacing="12" alignment="CENTER_LEFT">
                         <FontIcon iconLiteral="fas-exclamation-circle" iconSize="22" iconColor="white"/>
-                        <VBox spacing="2">
+                        <VBox spacing="1.6">
                             <Label text="%dashboard.psy.incomplete.title"
-                                   style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: white;"/>
+                                   style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: white;"/>
                             <Label text="%dashboard.psy.incomplete.desc"
-                                   style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 12px;" wrapText="true"/>
+                                   style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 9.6px;" wrapText="true"/>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS"/>
                         <Button text="%dashboard.psy.incomplete.btn" onAction="#handleGoToProfile"
                                 style="-fx-background-color: white; -fx-text-fill: #FF69B4;
                                        -fx-font-weight: bold; -fx-background-radius: 8;
-                                       -fx-padding: 8 20; -fx-cursor: hand;"/>
+                                       -fx-padding: 6.4 16; -fx-cursor: hand;"/>
                     </HBox>
                 </VBox>
 
                 <!-- Action Cards / Featured -->
-                <HBox spacing="20">
-                    <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="15" style="-fx-padding: 25; -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);">
-                        <HBox spacing="10" alignment="CENTER_LEFT">
+                <HBox spacing="16">
+                    <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="12" style="-fx-padding: 20; -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+                        <HBox spacing="8" alignment="CENTER_LEFT">
                             <FontIcon iconLiteral="fas-star" iconSize="20" iconColor="#f59e0b"/>
-                            <Label text="Voulez-vous organiser un événement ?" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                            <Label text="Voulez-vous organiser un événement ?" style="-fx-font-weight: bold; -fx-font-size: 12.8px;"/>
                         </HBox>
                         <Label text="Partagez vos connaissances avec la communauté en créant des sessions de groupe ou des ateliers." wrapText="true" style="-fx-text-fill: #64748b;"/>
-                        <Button text="Créer un événement" onAction="#handleGoToEvents" styleClass="btn-primary" style="-fx-font-size: 13px;"/>
+                        <Button text="Créer un événement" onAction="#handleGoToEvents" styleClass="btn-primary" style="-fx-font-size: 10.4px;"/>
                     </VBox>
                     
-                    <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="15" style="-fx-padding: 25; -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);">
-                        <HBox spacing="10" alignment="CENTER_LEFT">
+                    <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="12" style="-fx-padding: 20; -fx-background-color: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+                        <HBox spacing="8" alignment="CENTER_LEFT">
                             <FontIcon iconLiteral="fas-lightbulb" iconSize="20" iconColor="#0ea5e9"/>
-                            <Label text="Inspiration du jour" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                            <Label text="Inspiration du jour" style="-fx-font-weight: bold; -fx-font-size: 12.8px;"/>
                         </HBox>
                         <Label text="Découvrez les derniers articles de psychologie pour rester à jour sur les meilleures pratiques." wrapText="true" style="-fx-text-fill: #64748b;"/>
-                        <Button text="Lire des articles" onAction="#handleGoToArticles" styleClass="btn-secondary" style="-fx-font-size: 13px;"/>
+                        <Button text="Lire des articles" onAction="#handleGoToArticles" styleClass="btn-secondary" style="-fx-font-size: 10.4px;"/>
                     </VBox>
                 </HBox>
 

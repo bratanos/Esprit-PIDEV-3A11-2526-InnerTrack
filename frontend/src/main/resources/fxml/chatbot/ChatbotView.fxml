@@ -10,18 +10,18 @@
       spacing="0" style="-fx-background-color: #f8fafc;">
 
     <!-- Header -->
-    <HBox alignment="CENTER_LEFT" spacing="12" 
-          style="-fx-background-color: white; -fx-padding: 15 20; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
+    <HBox alignment="CENTER_LEFT" spacing="9.6" 
+          style="-fx-background-color: white; -fx-padding: 12 16; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
         <Button onAction="#handleBack" style="-fx-background-color: transparent; -fx-cursor: hand;">
             <graphic>
                 <FontIcon iconLiteral="fas-arrow-left" iconSize="16" iconColor="#64748b" />
             </graphic>
         </Button>
-        <VBox spacing="2">
+        <VBox spacing="1.6">
             <Label text="Assistant InnerTrack" 
-                   style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" />
+                   style="-fx-font-size: 13.6px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" />
             <Label fx:id="statusLabel" text="Connexion..." 
-                   style="-fx-text-fill: #94a3b8; -fx-font-size: 11px;" />
+                   style="-fx-text-fill: #94a3b8; -fx-font-size: 8.8px;" />
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
         <FontIcon iconLiteral="fas-robot" iconSize="28" iconColor="#8b5cf6" />
@@ -30,19 +30,19 @@
     <!-- Chat Messages Area -->
     <ScrollPane fx:id="chatScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS"
                 style="-fx-background: #f8fafc; -fx-background-color: #f8fafc; -fx-border-width: 0;">
-        <VBox fx:id="chatMessages" spacing="6" style="-fx-padding: 15;">
+        <VBox fx:id="chatMessages" spacing="4.8" style="-fx-padding: 12;">
             <!-- Messages are added dynamically by the controller -->
         </VBox>
     </ScrollPane>
 
     <!-- Input Bar -->
-    <HBox spacing="10" alignment="CENTER" 
-          style="-fx-background-color: white; -fx-padding: 12 20; -fx-border-color: #e2e8f0; -fx-border-width: 1 0 0 0;">
+    <HBox spacing="8" alignment="CENTER" 
+          style="-fx-background-color: white; -fx-padding: 9.6 16; -fx-border-color: #e2e8f0; -fx-border-width: 1 0 0 0;">
         <TextField fx:id="messageField" promptText="Tapez votre message..." 
                    HBox.hgrow="ALWAYS"
-                   style="-fx-background-color: #f1f5f9; -fx-background-radius: 20; -fx-padding: 10 16; -fx-font-size: 13px; -fx-border-width: 0;" />
+                   style="-fx-background-color: #f1f5f9; -fx-background-radius: 20; -fx-padding: 8 12.8; -fx-font-size: 10.4px; -fx-border-width: 0;" />
         <Button fx:id="sendButton" onAction="#handleSend" 
-                style="-fx-background-color: #8b5cf6; -fx-background-radius: 20; -fx-padding: 10 16; -fx-cursor: hand;">
+                style="-fx-background-color: #8b5cf6; -fx-background-radius: 20; -fx-padding: 8 12.8; -fx-cursor: hand;">
             <graphic>
                 <FontIcon iconLiteral="fas-paper-plane" iconSize="16" iconColor="white" />
             </graphic>

@@ -7,7 +7,7 @@
 .root {
     -fx-background-color: transparent;
     -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    -fx-font-size: 14px;
+    -fx-font-size: 11.2px;
 }
 
 /* ============================================================================
@@ -24,21 +24,21 @@
 
 .page-header {
     -fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 50%, #f093fb 100%);
-    -fx-padding: 24 28;
+    -fx-padding: 19.2 22.4;
     -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 15, 0, 0, 4);
 }
 
 .page-title {
-    -fx-font-size: 32px;
+    -fx-font-size: 25.6px;
     -fx-font-weight: bold;
     -fx-text-fill: white;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0, 0, 2);
 }
 
 .page-subtitle {
-    -fx-font-size: 15px;
+    -fx-font-size: 12px;
     -fx-text-fill: rgba(255, 255, 255, 0.95);
-    -fx-padding: 5 0 0 0;
+    -fx-padding: 4 0 0 0;
 }
 
 /* ============================================================================
@@ -48,7 +48,7 @@
 .card {
     -fx-background-color: white;
     -fx-background-radius: 12px;
-    -fx-padding: 18px;
+    -fx-padding: 14.4px;
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-cursor: hand;
@@ -69,13 +69,13 @@
 }
 
 .card-title {
-    -fx-font-size: 16px;
+    -fx-font-size: 12.8px;
     -fx-font-weight: bold;
     -fx-text-fill: #4c51bf;
 }
 
 .card-subtitle {
-    -fx-font-size: 13px;
+    -fx-font-size: 10.4px;
     -fx-text-fill: #5a67d8;
 }
 
@@ -83,8 +83,8 @@
     -fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);
     -fx-text-fill: white;
     -fx-background-radius: 16px;
-    -fx-padding: 5 12;
-    -fx-font-size: 11px;
+    -fx-padding: 4 9.6;
+    -fx-font-size: 8.8px;
     -fx-font-weight: bold;
     -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 6, 0, 0, 2);
 }
@@ -95,17 +95,17 @@
 
 .sidebar {
     -fx-background-color: white;
-    -fx-padding: 20;
-    -fx-spacing: 14;
+    -fx-padding: 16;
+    -fx-spacing: 11.2;
     -fx-border-color: #e0e7ff;
     -fx-border-width: 0 2 0 0;
 }
 
 .sidebar-header {
-    -fx-font-size: 20px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-text-fill: #4c51bf;
-    -fx-padding: 0 0 10 0;
+    -fx-padding: 0 0 8 0;
 }
 
 /* ============================================================================
@@ -115,7 +115,7 @@
 .detail-panel {
     -fx-background-color: white;
     -fx-background-radius: 16px;
-    -fx-padding: 28;
+    -fx-padding: 22.4;
     -fx-border-color: #e0e7ff;
     -fx-border-width: 2px;
     -fx-border-radius: 16px;
@@ -123,22 +123,22 @@
 }
 
 .detail-title {
-    -fx-font-size: 26px;
+    -fx-font-size: 20.8px;
     -fx-font-weight: bold;
     -fx-text-fill: #4c51bf;
 }
 
 .detail-label {
-    -fx-font-size: 13px;
+    -fx-font-size: 10.4px;
     -fx-font-weight: bold;
     -fx-text-fill: #5a67d8;
-    -fx-padding: 0 0 6 0;
+    -fx-padding: 0 0 4.8 0;
 }
 
 .detail-value {
-    -fx-font-size: 15px;
+    -fx-font-size: 12px;
     -fx-text-fill: #2d3748;
-    -fx-padding: 0 0 18 0;
+    -fx-padding: 0 0 14.4 0;
 }
 
 /* ============================================================================
@@ -151,9 +151,9 @@
     -fx-border-color: #cbd5e0;
     -fx-border-radius: 24px;
     -fx-border-width: 2px;
-    -fx-padding: 14 20;
-    -fx-font-size: 14px;
-    -fx-pref-height: 48px;
+    -fx-padding: 11.2 16;
+    -fx-font-size: 11.2px;
+    -fx-pref-height: 38.4px;
     -fx-prompt-text-fill: #a0aec0;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
 }
@@ -172,8 +172,8 @@
 .button {
     -fx-background-radius: 10px;
     -fx-cursor: hand;
-    -fx-padding: 12 24;
-    -fx-font-size: 14px;
+    -fx-padding: 9.6 19.2;
+    -fx-font-size: 11.2px;
     -fx-font-weight: bold;
 }
 
@@ -257,8 +257,8 @@
     -fx-background-color: #edf2f7;
     -fx-background-radius: 20px;
     -fx-text-fill: #4a5568;
-    -fx-font-size: 11px;
-    -fx-padding: 4 12;
+    -fx-font-size: 8.8px;
+    -fx-padding: 3.2 9.6;
     -fx-cursor: hand;
 }
 
@@ -280,8 +280,8 @@
     -fx-border-color: #cbd5e0;
     -fx-border-radius: 10px;
     -fx-border-width: 2px;
-    -fx-padding: 12 16;
-    -fx-font-size: 14px;
+    -fx-padding: 9.6 12.8;
+    -fx-font-size: 11.2px;
     -fx-text-fill: #2d3748;
 }
 

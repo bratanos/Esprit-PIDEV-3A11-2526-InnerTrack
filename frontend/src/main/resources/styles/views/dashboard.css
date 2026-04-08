@@ -1,13 +1,13 @@
 /* dashboard.css - Punchy View Specifics */
 
 .dashboard-header-label {
-    -fx-font-size: 28;
+    -fx-font-size: 22.4;
     -fx-font-weight: bold;
     -fx-text-fill: #1e293b;
 }
 
 .dashboard-subtitle-label {
-    -fx-font-size: 14;
+    -fx-font-size: 11.2;
     -fx-text-fill: #64748b;
 }
 
@@ -15,35 +15,35 @@
 .dashboard-quote-card {
     -fx-background-color: linear-gradient(to right, #8b5cf6, #0ea5e9);
     -fx-background-radius: 20;
-    -fx-padding: 30;
+    -fx-padding: 24;
     -fx-effect: dropshadow(three-pass-box, rgba(139, 92, 246, 0.3), 20, 0, 0, 10);
 }
 
 .quote-header {
-    -fx-font-size: 20;
+    -fx-font-size: 16;
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
 
 .quote-text {
-    -fx-font-size: 16;
+    -fx-font-size: 12.8;
     -fx-font-style: italic;
     -fx-text-fill: white;
 }
 
 .quote-author {
-    -fx-font-size: 13;
+    -fx-font-size: 10.4;
     -fx-text-fill: rgba(255, 255, 255, 0.8);
 }
 
 /* Stat Cards Overrides */
 .dashboard-view .stat-card {
     -fx-alignment: center;
-    -fx-spacing: 12;
+    -fx-spacing: 9.6;
 }
 
 .dashboard-view .stat-value {
-    -fx-font-size: 32;
+    -fx-font-size: 25.6;
     -fx-font-weight: bold;
     -fx-text-fill: #8b5cf6;
 }
@@ -52,7 +52,7 @@
 .alert-success-punchy {
     -fx-background-color: #10b981;
     -fx-background-radius: 12;
-    -fx-padding: 10 20;
+    -fx-padding: 8 16;
     -fx-effect: dropshadow(three-pass-box, rgba(16, 185, 129, 0.4), 10, 0, 0, 4);
     -fx-cursor: hand;
 }
@@ -65,7 +65,7 @@
 }
 
 .section-title {
-    -fx-font-size: 18;
+    -fx-font-size: 14.4;
     -fx-font-weight: bold;
     -fx-text-fill: #1e293b;
 }

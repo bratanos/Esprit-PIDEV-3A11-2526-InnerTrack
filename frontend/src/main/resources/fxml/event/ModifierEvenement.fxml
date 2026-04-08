@@ -4,8 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="450.0"
-      prefWidth="640.0"
+<VBox prefHeight="360"
+      prefWidth="512"
       xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.innertrack.controller.event.ModifierEvenementController"
@@ -22,15 +22,15 @@
                 <!-- Title -->
                 <Label text="Modifier Événement"
                        styleClass="event-form-title"
-                       AnchorPane.topAnchor="18.0"
-                       AnchorPane.leftAnchor="18.0"/>
+                       AnchorPane.topAnchor="14.4"
+                       AnchorPane.leftAnchor="14.4"/>
 
                 <!-- Form stack (spacing comes from CSS) -->
                 <VBox styleClass="event-form-stack"
-                      AnchorPane.topAnchor="60.0"
-                      AnchorPane.leftAnchor="18.0"
-                      AnchorPane.rightAnchor="18.0"
-                      AnchorPane.bottomAnchor="18.0">
+                      AnchorPane.topAnchor="48"
+                      AnchorPane.leftAnchor="14.4"
+                      AnchorPane.rightAnchor="14.4"
+                      AnchorPane.bottomAnchor="14.4">
 
                     <!-- Nom -->
                     <VBox styleClass="event-field">
@@ -42,7 +42,7 @@
                     <VBox styleClass="event-field">
                         <Label text="Description:" styleClass="event-field-label"/>
                         <TextArea fx:id="description_input"
-                                  prefHeight="90.0"
+                                  prefHeight="72"
                                   wrapText="true"
                                   styleClass="event-textarea"/>
                     </VBox>
@@ -50,25 +50,25 @@
                     <!-- Date -->
                     <VBox styleClass="event-field">
                         <Label text="Date:" styleClass="event-field-label"/>
-                        <DatePicker fx:id="date_input" prefWidth="240.0" styleClass="event-input"/>
+                        <DatePicker fx:id="date_input" prefWidth="192" styleClass="event-input"/>
                     </VBox>
 
                     <!-- Type -->
                     <VBox styleClass="event-field">
                         <Label text="Type d'événement:" styleClass="event-field-label"/>
-                        <ComboBox fx:id="type_combobox" prefWidth="240.0" styleClass="event-input"/>
+                        <ComboBox fx:id="type_combobox" prefWidth="192" styleClass="event-input"/>
                     </VBox>
 
                     <!-- Capacité -->
                     <VBox styleClass="event-field">
                         <Label text="Capacité:" styleClass="event-field-label"/>
-                        <TextField fx:id="capacity_input" prefWidth="240.0" styleClass="event-input"/>
+                        <TextField fx:id="capacity_input" prefWidth="192" styleClass="event-input"/>
                     </VBox>
 
                     <!-- Status -->
                     <VBox styleClass="event-field">
                         <Label text="Status:" styleClass="event-field-label"/>
-                        <HBox spacing="16" styleClass="event-status-box">
+                        <HBox spacing="12.8" styleClass="event-status-box">
                             <CheckBox mnemonicParsing="false" text="En cours" styleClass="event-checkbox"/>
                             <CheckBox mnemonicParsing="false" text="Terminé" styleClass="event-checkbox"/>
                         </HBox>
@@ -78,13 +78,13 @@
                     <HBox alignment="CENTER_RIGHT" styleClass="event-actions">
                         <Button text="🔄 Update Event"
                                 onAction="#modifier_event"
-                                prefWidth="180"
-                                prefHeight="38"
+                                prefWidth="144"
+                                prefHeight="30.4"
                                 styleClass="btn-secondary"/>
                         <Button text="Annuler"
                                 onAction="#back"
-                                prefWidth="140"
-                                prefHeight="38"
+                                prefWidth="112"
+                                prefHeight="30.4"
                                 styleClass="btn-ghost"/>
                     </HBox>
 

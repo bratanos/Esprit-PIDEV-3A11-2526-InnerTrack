@@ -6,8 +6,8 @@
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.innertrack.controller.event.AfficherTypeEventController"
-      prefWidth="1000.0"
-      prefHeight="650.0"
+      prefWidth="800"
+      prefHeight="520"
       fillWidth="true"
       styleClass="main-container"
       stylesheets="/styles/components/event-style.css">
@@ -15,16 +15,16 @@
     <children>
 
         <!-- Header (same as Events) -->
-        <VBox spacing="12" styleClass="page-header">
-            <HBox alignment="CENTER_LEFT" spacing="15">
+        <VBox spacing="9.6" styleClass="page-header">
+            <HBox alignment="CENTER_LEFT" spacing="12">
                 <!-- Bouton Retour -->
                 <Button text="⬅ Retour"
                         onAction="#handleRetour"
-                        prefWidth="120"
-                        prefHeight="35"
+                        prefWidth="96"
+                        prefHeight="28"
                         styleClass="btn-secondary"/>
 
-                <Label text="🏷️" style="-fx-font-size: 34px;"/>
+                <Label text="🏷️" style="-fx-font-size: 27.2px;"/>
 
                 <VBox>
                     <Label text="Gestion des Types d'Événements" styleClass="page-title"/>
@@ -35,7 +35,7 @@
         </VBox>
 
         <!-- Content -->
-        <VBox spacing="14" styleClass="content-area" VBox.vgrow="ALWAYS">
+        <VBox spacing="11.2" styleClass="content-area" VBox.vgrow="ALWAYS">
 
             <TableView fx:id="table_types"
                        VBox.vgrow="ALWAYS"
@@ -43,8 +43,8 @@
 
                 <columns>
                     <!-- Hidden safely (NO managed attribute) -->
-                    <TableColumn fx:id="col_id" text="ID" prefWidth="80" visible="false"/>
-                    <TableColumn fx:id="col_libelle" text="Libellé" prefWidth="520"/>
+                    <TableColumn fx:id="col_id" text="ID" prefWidth="64" visible="false"/>
+                    <TableColumn fx:id="col_libelle" text="Libellé" prefWidth="416"/>
                 </columns>
 
                 <columnResizePolicy>
@@ -53,31 +53,31 @@
             </TableView>
 
             <!-- Buttons row -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
+            <HBox spacing="8" alignment="CENTER_LEFT">
                 <Button text="➕ Ajouter"
                         onAction="#handleAjouter"
-                        prefWidth="160"
-                        prefHeight="38"
+                        prefWidth="128"
+                        prefHeight="30.4"
                         styleClass="btn-primary"/>
 
                 <Button text="✏️ Modifier"
                         onAction="#handleModifier"
-                        prefWidth="160"
-                        prefHeight="38"
+                        prefWidth="128"
+                        prefHeight="30.4"
                         styleClass="btn-secondary"/>
 
                 <Button text="🗑️ Supprimer"
                         onAction="#handleSupprimer"
-                        prefWidth="160"
-                        prefHeight="38"
+                        prefWidth="128"
+                        prefHeight="30.4"
                         styleClass="btn-danger"/>
 
                 <Pane HBox.hgrow="ALWAYS"/>
 
                 <Button text="🔄 Refresh"
                         onAction="#refresh"
-                        prefWidth="160"
-                        prefHeight="38"
+                        prefWidth="128"
+                        prefHeight="30.4"
                         styleClass="btn-success"/>
             </HBox>
 
