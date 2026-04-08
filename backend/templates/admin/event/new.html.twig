@@ -11,12 +11,12 @@
     </div>
 
     <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm p-8 lg:p-10">
-        <form method="post" action="{{ path('admin_event_new') }}" class="space-y-6">
+        <form method="post" action="{{ path('admin_event_new') }}" class="space-y-6" id="eventForm" novalidate onsubmit="return validateEventForm(event)">
 
             {# Titre #}
             <div>
                 <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Titre *</label>
-                <input type="text" name="titre" value="{{ event.titre }}" required minlength="2"
+                <input type="text" name="titre" id="event_titre" value="{{ event.titre }}"
                        class="w-full px-4 py-3 rounded-xl border {{ errors.titre is defined ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-primary' }} bg-gray-50 text-sm focus:outline-none focus:ring-2 transition"
                        placeholder="Nom de l'événement">
                 {% if errors.titre is defined %}
@@ -27,7 +27,7 @@
             {# Description #}
             <div>
                 <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Description</label>
-                <textarea name="description" rows="4"
+                <textarea name="description" id="event_description" rows="4"
                           class="w-full px-4 py-3 rounded-xl border border-outline/30 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition"
                           placeholder="Décrivez l'événement…">{{ event.description }}</textarea>
             </div>
@@ -36,7 +36,7 @@
                 {# Date #}
                 <div>
                     <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Date *</label>
-                    <input type="date" name="date" value="{{ event.date ? event.date|date('Y-m-d') : '' }}" required
+                    <input type="date" name="date" id="event_date" value="{{ event.date ? event.date|date('Y-m-d') : '' }}"
                            class="w-full px-4 py-3 rounded-xl border {{ errors.date is defined ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-primary' }} bg-gray-50 text-sm focus:outline-none focus:ring-2 transition">
                     {% if errors.date is defined %}
                         <div class="text-[10px] text-red-500 mt-1 font-semibold">{{ errors.date }}</div>
@@ -46,7 +46,7 @@
                 {# Type #}
                 <div>
                     <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Type *</label>
-                    <select name="type" required
+                    <select name="type" id="event_type"
                             class="w-full px-4 py-3 rounded-xl border {{ errors.type is defined ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-primary' }} bg-gray-50 text-sm focus:outline-none focus:ring-2 transition">
                         <option value="">-- Choisir --</option>
                         {% for t in types %}
@@ -63,7 +63,7 @@
                 {# Capacité #}
                 <div>
                     <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Capacité *</label>
-                    <input type="number" name="capacite" value="{{ event.capacite }}" min="1" required
+                    <input type="number" name="capacite" id="event_capacite" value="{{ event.capacite }}"
                            class="w-full px-4 py-3 rounded-xl border {{ errors.capacite is defined ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-primary' }} bg-gray-50 text-sm focus:outline-none focus:ring-2 transition"
                            placeholder="Nombre de places">
                     {% if errors.capacite is defined %}
@@ -94,4 +94,61 @@
         </form>
     </div>
 </div>
+
+<script>
+function validateEventForm(e) {
+    // Clear previous errors
+    document.querySelectorAll('.js-error-msg').forEach(el => el.remove());
+    document.querySelectorAll('.border-red-400').forEach(el => el.classList.remove('border-red-400', 'ring-1', 'ring-red-300'));
+    
+    let isValid = true;
+
+    function showError(inputId, message) {
+        const input = document.getElementById(inputId);
+        input.classList.add('border-red-400', 'ring-1', 'ring-red-300');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'js-error-msg text-[10px] text-red-500 mt-1 font-semibold';
+        errorDiv.innerText = message;
+        input.parentNode.appendChild(errorDiv);
+        isValid = false;
+    }
+
+    const titre = document.getElementById('event_titre').value.trim();
+    if (titre.length < 2) {
+        showError('event_titre', 'Le titre est obligatoire et doit faire au moins 2 caractères.');
+    }
+
+    const description = document.getElementById('event_description').value.trim();
+    if (description.length > 0 && description.length < 10) {
+        showError('event_description', 'La description doit faire au moins 10 caractères.');
+    }
+
+    const dateStr = document.getElementById('event_date').value;
+    if (!dateStr) {
+        showError('event_date', 'La date de l\'événement est obligatoire.');
+    } else {
+        const selectedDate = new Date(dateStr);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selectedDate < today) {
+            showError('event_date', 'La date ne peut pas être dans le passé.');
+        }
+    }
+
+    const type = document.getElementById('event_type').value;
+    if (!type) {
+        showError('event_type', 'Veuillez sélectionner un type d\'événement.');
+    }
+
+    const capacite = document.getElementById('event_capacite').value;
+    if (!capacite || parseInt(capacite) < 1) {
+        showError('event_capacite', 'La capacité doit être un nombre positif (1 ou plus).');
+    }
+
+    if (!isValid) {
+        e.preventDefault();
+    }
+    return isValid;
+}
+</script>
 {% endblock %}

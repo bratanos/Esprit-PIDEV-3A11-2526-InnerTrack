@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\InscriptionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: InscriptionRepository::class)]
 #[ORM\Table(name: 'inscription')]
@@ -20,9 +21,11 @@ class Inscription
     private ?Event $evenement = null;
 
     #[ORM\Column(name: 'nom_participant', type: Types::STRING, length: 255)]
+    #[Assert\Length(min: 2, max: 255, minMessage: 'Le nom doit faire au moins 2 caractères')]
     private ?string $nomParticipant = null;
 
     #[ORM\Column(name: 'email_participant', type: Types::STRING, length: 255)]
+    #[Assert\Email(message: "L'adresse email '{{ value }}' n'est pas valide")]
     private ?string $emailParticipant = null;
 
     #[ORM\Column(name: 'date_inscription', type: Types::DATE_MUTABLE)]

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ORM\Table(name: 'event')]
@@ -18,12 +19,15 @@ class Event
     private ?int $id = null;
 
     #[ORM\Column(name: 'titre', type: Types::STRING, length: 255)]
+    #[Assert\Length(min: 2, max: 255, minMessage: 'Le titre doit faire au moins 2 caractères', maxMessage: 'Le titre ne peut pas dépasser 255 caractères')]
     private ?string $titre = null;
 
     #[ORM\Column(name: 'description', type: Types::TEXT, nullable: true)]
+    #[Assert\Length(min: 10, minMessage: 'La description doit faire au moins 10 caractères si elle est renseignée')]
     private ?string $description = null;
 
     #[ORM\Column(name: 'date_event', type: Types::DATE_MUTABLE)]
+    #[Assert\GreaterThanOrEqual("today", message: "La date de l'événement ne peut pas être dans le passé")]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(name: 'id_type_event', type: Types::INTEGER, enumType: TypeEvent::class)]
@@ -33,6 +37,7 @@ class Event
     private ?\DateTimeInterface $dateCreation = null;
 
     #[ORM\Column(name: 'capacite', type: Types::INTEGER)]
+    #[Assert\Positive(message: "La capacité doit être un nombre positif (1 ou plus)")]
     private ?int $capacite = null;
 
     #[ORM\Column(name: 'statut', type: Types::BOOLEAN)]
