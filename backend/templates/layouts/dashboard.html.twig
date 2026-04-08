@@ -148,6 +148,7 @@ min-h-screen flex flex-col pointer-events-auto{% endblock %}{% block layout %}
 				{{ _self.nav_link(path('app_dashboard'), 'nav.dashboard'|trans, 'dashboard', app.request.get('_route') == 'app_dashboard') }}
 				{{ _self.nav_link(path('app_map'), 'nav.map'|trans, 'psychology', app.request.get('_route') == 'app_map') }}
 				{{ _self.nav_link(path('app_messages'), 'nav.messages'|trans, 'chat_bubble', app.request.get('_route') == 'app_messages', unread_messages_count) }}
+				{{ _self.nav_link(path('testpsy_index'), 'Tests Psy', 'self_improvement', app.request.get('_route') starts with 'testpsy') }}
 			{% endif %}
 			{{ _self.nav_link(path('app_notifications'), 'nav.notifications'|trans, 'notifications', app.request.get('_route') == 'app_notifications', unread_notifications_count) }}
 			{{ _self.nav_link(path('app_profile'), 'nav.profile'|trans, 'person', app.request.get('_route') == 'app_profile') }}
@@ -217,7 +218,6 @@ min-h-screen flex flex-col pointer-events-auto{% endblock %}{% block layout %}
 
 			<!-- Footer -->
 			<footer class="px-8 lg:px-12 py-8 border-t border-outline flex flex-col md:flex-row justify-between items-center gap-6 bg-white shrink-0">
-
 				<div class="flex items-center gap-6">
 					<a href="#" class="text-xs font-bold text-gray-400 hover:text-primary transition-colors">Privacy</a>
 					<a href="#" class="text-xs font-bold text-gray-400 hover:text-primary transition-colors">Support</a>
@@ -233,16 +233,12 @@ min-h-screen flex flex-col pointer-events-auto{% endblock %}{% block layout %}
 const toggle = document.getElementById('theme-toggle');
 const body = document.body;
 
-// Local preference overrides DB (for guest or multi-device)
 const localTheme = localStorage.getItem('theme');
 if (localTheme) {
 if (localTheme === 'dark') 
 body.classList.add('dark');
  else 
 body.classList.remove('dark');
-
-
-
 }
 
 if (toggle) {
@@ -251,7 +247,6 @@ body.classList.toggle('dark');
 const theme = body.classList.contains('dark') ? 'DARK' : 'LIGHT';
 localStorage.setItem('theme', theme.toLowerCase());
 
-// Persistence to DB
 fetch('/_internal/settings/theme', {
 method: 'POST',
 headers: {
