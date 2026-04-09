@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Attestation de Participation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            color: #333;
+        }
+        .header {
+            margin-bottom: 50px;
+        }
+        .header h1 {
+            font-size: 40px;
+            color: #4f46e5; /* Primary */
+            margin-bottom: 10px;
+        }
+        .content {
+            font-size: 20px;
+            line-height: 1.6;
+        }
+        .participant-name {
+            font-size: 30px;
+            font-weight: bold;
+            color: #111;
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
+        .event-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4f46e5;
+            margin: 20px 0;
+        }
+        .footer {
+            margin-top: 80px;
+            font-size: 16px;
+            color: #666;
+        }
+        .date {
+            margin-top: 50px;
+            font-weight: bold;
+        }
+        .signature {
+            margin-top: 40px;
+            border-top: 1px solid #ccc;
+            width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ATTESTATION DE PARTICIPATION</h1>
+        <p>Décernée par InnerTrack</p>
+    </div>
+
+    <div class="content">
+        <p>Nous certifions par la présente que</p>
+        
+        <div class="participant-name">
+            {{ inscription.nomParticipant }}
+        </div>
+
+        <p>a participé avec succès à l'événement :</p>
+        
+        <div class="event-title">
+            "{{ event.titre }}"
+        </div>
+
+        <p>
+            Tenu le <strong>{{ event.date|date('d/m/Y') }}</strong> <br>
+            Type : {{ event.type.label() }}
+        </p>
+    </div>
+
+    <div class="footer">
+        <div class="date">
+            Fait le {{ 'now'|date('d/m/Y') }}
+        </div>
+        <div class="signature">
+            Signature de l'Organisation
+        </div>
+    </div>
+
+</body>
+</html>

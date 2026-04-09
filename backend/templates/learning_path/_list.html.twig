@@ -1,0 +1,72 @@
+{% if paths is empty %}
+    {# Show message when no learning paths exist #}
+    <div class="bg-white rounded-[2rem] border border-outline/30 py-16 flex flex-col items-center gap-3
+                text-on-surface-variant soft-elevation">
+        <span class="material-symbols-outlined text-5xl opacity-30">route</span>
+        <p class="font-semibold">No learning paths available</p>
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PSYCHOLOGUE') %}
+            <a href="{{ path('app_learning_path_new') }}"
+               class="text-primary text-sm font-bold hover:underline">
+                Create the first path
+            </a>
+        {% endif %}
+    </div>
+{% else %}
+    {# Display learning paths in a grid #}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {% for lp in paths %}
+            <div class="group bg-white rounded-[2rem] border border-outline/30 p-6 soft-elevation
+                        hover:border-primary/30 hover:shadow-lg transition-all duration-300 flex flex-col gap-4">
+
+                <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary text-[20px]">route</span>
+                </div>
+
+                <div class="flex-1">
+                    <h2 class="font-extrabold text-on-surface text-base group-hover:text-primary transition-colors">
+                        {{ lp.titre }}
+                    </h2>
+                    <p class="text-xs text-on-surface-variant mt-1 line-clamp-2 leading-relaxed">
+                        {{ lp.description ?: 'No description.' }}
+                    </p>
+                </div>
+
+                <div class="flex items-center justify-between pt-3 border-t border-outline/20">
+                    <span class="text-xs font-bold text-on-surface-variant">
+                        {{ lp.pathArticles|length }} step{{ lp.pathArticles|length != 1 ? 's' : '' }}
+                    </span>
+                    {% if lp.createdBy %}
+                        <span class="text-xs text-on-surface-variant">
+                            {{ lp.createdBy.firstName }} {{ lp.createdBy.lastName }}
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <a href="{{ path('app_learning_path_show', {id: lp.id}) }}"
+                       class="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold
+                              bg-primary text-white hover:bg-primary/90 transition-all">
+                        <span class="material-symbols-outlined text-[15px]">play_arrow</span>
+                        View path
+                    </a>
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PSYCHOLOGUE') %}
+                        <a href="{{ path('app_learning_path_edit', {id: lp.id}) }}"
+                           class="p-2.5 rounded-xl border border-outline text-on-surface-variant
+                                  hover:bg-amber-50 hover:text-amber-600 transition-all">
+                            <span class="material-symbols-outlined text-[16px]">edit</span>
+                        </a>
+                        <form method="POST" action="{{ path('app_learning_path_delete', {id: lp.id}) }}"
+                              onsubmit="return confirm('Delete this learning path?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_lp_' ~ lp.id) }}">
+                            <button class="p-2.5 rounded-xl border border-outline text-on-surface-variant
+                                           hover:bg-red-50 hover:text-red-500 transition-all">
+                                <span class="material-symbols-outlined text-[16px]">delete</span>
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

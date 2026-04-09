@@ -68,5 +68,7 @@ security:
         - { path: ^/reset-password, roles: PUBLIC_ACCESS }
 
         # Web routes - protected
+        - { path: ^/admin/events, roles: ROLE_PSYCHOLOGUE }
+        - { path: ^/admin/inscriptions, roles: ROLE_PSYCHOLOGUE }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

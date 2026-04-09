@@ -1,0 +1,28 @@
+{% if tags is empty %}
+    {# Show message when no tags exist #}
+    <div class="bg-white rounded-[2rem] border border-outline/30 py-16 flex flex-col items-center gap-3
+                text-on-surface-variant soft-elevation">
+        <span class="material-symbols-outlined text-5xl opacity-30">label</span>
+        <p class="font-semibold">No tags available</p>
+    </div>
+{% else %}
+    {# Display tags as clickable links with article count #}
+    <div class="flex flex-wrap gap-3">
+        {% for row in tags %}
+            {% set tag   = row[0] is defined ? row[0] : row %}
+            {% set count = row['articleCount'] is defined ? row['articleCount'] : 0 %}
+            <a href="{{ path('app_article_by_tag', {tagName: tag.nom}) }}"
+               class="group flex items-center gap-2 bg-white border border-outline/30 px-4 py-2.5 rounded-2xl
+                      hover:border-primary/40 hover:bg-primary/5 transition-all soft-elevation">
+                <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary
+                             text-[16px] transition-colors">label</span>
+                <span class="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">
+                    #{{ tag.nom }}
+                </span>
+                <span class="text-[10px] font-bold bg-gray-100 text-on-surface-variant px-2 py-0.5 rounded-full">
+                    {{ count }}
+                </span>
+            </a>
+        {% endfor %}
+    </div>
+{% endif %}

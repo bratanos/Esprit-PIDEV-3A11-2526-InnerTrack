@@ -1,0 +1,79 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block content %}
+<div class="max-w-2xl space-y-6">
+
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a href="{{ path('app_categorie_index') }}"
+               class="flex items-center gap-2 text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                Back
+            </a>
+            <div>
+                <h1 class="text-3xl font-extrabold text-on-surface tracking-tight">{{ categorie.nom }}</h1>
+                <p class="text-on-surface-variant text-sm mt-1">
+                    {{ categorie.articles|length }} article{{ categorie.articles|length != 1 ? 's' : '' }}
+                </p>
+            </div>
+        </div>
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PSYCHOLOGUE') %}
+            <a href="{{ path('app_categorie_edit', {id: categorie.id}) }}"
+               class="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-outline text-sm font-semibold hover:bg-gray-50 transition">
+                <span class="material-symbols-outlined text-[16px]">edit</span> Edit
+            </a>
+        {% endif %}
+    </div>
+
+    {# Category info card #}
+    <div class="bg-white rounded-[2rem] border border-outline/30 p-8 soft-elevation space-y-4">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-primary text-[24px]">folder</span>
+            </div>
+            <div>
+                <h2 class="text-xl font-extrabold text-on-surface">{{ categorie.nom }}</h2>
+                <p class="text-sm text-on-surface-variant mt-0.5">
+                    {{ categorie.articles|length }} article{{ categorie.articles|length != 1 ? 's' : '' }}
+                </p>
+            </div>
+        </div>
+        {% if categorie.description %}
+            <div class="h-px bg-outline/20"></div>
+            <p class="text-sm text-on-surface leading-relaxed">{{ categorie.description }}</p>
+        {% endif %}
+    </div>
+
+    {# Articles in this category #}
+    {% if categorie.articles is not empty %}
+        <div class="space-y-3">
+            <h2 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                Articles in this category
+            </h2>
+            {% for article in categorie.articles %}
+                <a href="{{ path('app_article_show', {id: article.id}) }}"
+                   class="flex items-center justify-between gap-4 bg-white rounded-2xl border border-outline/30 px-5 py-4
+                          hover:border-primary/30 hover:shadow-md transition-all group">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <span class="material-symbols-outlined text-on-surface-variant text-[18px] shrink-0">article</span>
+                        <p class="font-semibold text-sm text-on-surface truncate group-hover:text-primary transition-colors">
+                            {{ article.titre }}
+                        </p>
+                    </div>
+                    <span class="text-xs text-on-surface-variant shrink-0">
+                        {{ article.datePublication ? article.datePublication|date('d/m/Y') : '—' }}
+                    </span>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="flex items-center justify-between pt-4 border-t border-outline/20">
+        <a href="{{ path('app_article_index', {categorie: categorie.id}) }}"
+           class="flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline transition">
+            View all articles in this category →
+        </a>
+    </div>
+
+</div>
+{% endblock %}

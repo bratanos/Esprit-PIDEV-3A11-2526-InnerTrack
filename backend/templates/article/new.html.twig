@@ -1,0 +1,23 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block content %}
+<div class="max-w-2xl space-y-6">
+
+    <div class="flex items-center gap-4">
+        <a href="{{ path('app_article_index') }}"
+           class="flex items-center gap-2 text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Back
+        </a>
+        <div>
+            <h1 class="text-3xl font-extrabold text-on-surface tracking-tight">New Article</h1>
+            <p class="text-on-surface-variant text-sm mt-1">Fill in the information below</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-[2rem] border border-outline/30 p-8 soft-elevation">
+        {{ include('article/_form.html.twig') }}
+    </div>
+
+</div>
+{% endblock %}

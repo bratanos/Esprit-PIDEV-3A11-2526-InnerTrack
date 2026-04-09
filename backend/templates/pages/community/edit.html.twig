@@ -1,0 +1,83 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}Forum
+{% endblock %}
+
+{% block content %}
+
+<div class="community-wrapper">
+    <div class="community-header">
+        <h1 class="community-title">
+            <!--<span class="material-icons">edit</span>-->
+            Edit {{ comment.title ? 'Post' : 'Reply' }}
+        </h1>
+    </div>
+
+    <div class="thread-card">
+        <form method="post">
+            {% if not comment.parent %}
+            <div class="edit-field">
+                <label class="edit-label">Title <span class="edit-optional">(optional)</span></label>
+                <input type="text" name="title" class="edit-input"
+                       value="{{ comment.title }}"
+                       placeholder="Post title...">
+            </div>
+            {% endif %}
+
+            <div class="edit-field">
+                <label class="edit-label">Content</label>
+                <textarea name="content" class="edit-textarea" required
+                          placeholder="What's on your mind?">{{ comment.content }}</textarea>
+            </div>
+
+            <div class="edit-actions">
+                <a href="{{ path('app_community_index') }}" class="btn-cancel">Cancel</a>
+                <button type="submit" class="send-btn">
+                    <span class="material-icons">save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.community-wrapper { max-width: 780px; margin: 2rem auto; padding: 0 1rem; }
+.community-header { display: flex; align-items: center; margin-bottom: 1.5rem; }
+.community-title { display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; font-weight: 700; margin: 0; }
+
+.thread-card {
+    background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px; padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.edit-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
+.edit-label { font-size: 0.85rem; font-weight: 600; color: #374151; }
+.edit-optional { font-weight: 400; color: #9ca3af; }
+.edit-input {
+    border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.6rem 0.9rem;
+    font-size: 1rem; outline: none; transition: border-color 0.2s; background: var(--card-bg, #fff);
+}
+.edit-input:focus { border-color: var(--primary, #6c63ff); }
+.edit-textarea {
+    border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.6rem 0.9rem;
+    font-size: 0.95rem; outline: none; min-height: 120px; resize: vertical;
+    transition: border-color 0.2s; background: var(--card-bg, #fff);
+    font-family: inherit; line-height: 1.6;
+}
+.edit-textarea:focus { border-color: var(--primary, #6c63ff); }
+.edit-actions { display: flex; align-items: center; justify-content: flex-end; gap: 0.75rem; }
+.btn-cancel {
+    color: #6b7280; text-decoration: none; font-size: 0.9rem;
+    padding: 0.4rem 0.9rem; border-radius: 8px; transition: background 0.15s;
+}
+.btn-cancel:hover { background: #f3f4f6; }
+.send-btn {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    background: var(--primary, #6c63ff); color: #fff; border: none;
+    border-radius: 8px; padding: 0.4rem 0.9rem; font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: opacity 0.2s;
+}
+.send-btn:hover { opacity: 0.85; }
+.send-btn .material-icons { font-size: 1rem; }
+</style>
+{% endblock %}

@@ -1,0 +1,756 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* pages/messages/messages.html.twig */
+class __TwigTemplate_e214ba8f36c079b3e1183b67fa46446f extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->blocks = [
+            'header_title' => [$this, 'block_header_title'],
+            'content' => [$this, 'block_content'],
+        ];
+    }
+
+    protected function doGetParent(array $context): bool|string|Template|TemplateWrapper
+    {
+        // line 1
+        return "layouts/dashboard.html.twig";
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "pages/messages/messages.html.twig"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "pages/messages/messages.html.twig"));
+
+        $this->parent = $this->load("layouts/dashboard.html.twig", 1);
+        yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+    }
+
+    // line 3
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_header_title(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "header_title"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "header_title"));
+
+        yield "Messagerie";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    // line 5
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_content(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "content"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "content"));
+
+        // line 6
+        yield "<div class=\"h-[calc(100vh-140px)] bg-white rounded-[2rem] shadow-sm border border-[#e5f7f6] flex overflow-hidden\">
+    
+    <!-- Conversations List -->
+    <div class=\"w-1/3 border-r border-slate-100 flex flex-col bg-slate-50/50\">
+        <div class=\"p-6 border-b border-slate-100 bg-white\">
+            <h2 class=\"text-2xl font-extrabold text-[#0e1e1e] tracking-tight\">Discussions</h2>
+        </div>
+        
+        <div class=\"flex-1 overflow-y-auto\">
+            ";
+        // line 15
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["conversations"]) || array_key_exists("conversations", $context) ? $context["conversations"] : (function () { throw new RuntimeError('Variable "conversations" does not exist.', 15, $this->source); })()));
+        $context['_iterated'] = false;
+        foreach ($context['_seq'] as $context["_key"] => $context["conv"]) {
+            // line 16
+            yield "                ";
+            $context["other"] = CoreExtension::getAttribute($this->env, $this->source, $context["conv"], "getOtherUser", [CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 16, $this->source); })()), "user", [], "any", false, false, false, 16)], "method", false, false, false, 16);
+            // line 17
+            yield "                <button type=\"button\" onclick=\"loadConversation(";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["conv"], "id", [], "any", false, false, false, 17), "html", null, true);
+            yield ", '";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["other"]) || array_key_exists("other", $context) ? $context["other"] : (function () { throw new RuntimeError('Variable "other" does not exist.', 17, $this->source); })()), "fullName", [], "any", false, false, false, 17), "js"), "html", null, true);
+            yield "', ";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["other"]) || array_key_exists("other", $context) ? $context["other"] : (function () { throw new RuntimeError('Variable "other" does not exist.', 17, $this->source); })()), "id", [], "any", false, false, false, 17), "html", null, true);
+            yield ")\"
+                        class=\"w-full p-6 flex items-center gap-5 hover:bg-slate-50 transition-colors border-b border-slate-100/50 text-left focus:bg-[#e5f7f6] group\">
+                    
+                    <div class=\"relative\">
+                        ";
+            // line 21
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["other"]) || array_key_exists("other", $context) ? $context["other"] : (function () { throw new RuntimeError('Variable "other" does not exist.', 21, $this->source); })()), "profilePictureUrl", [], "any", false, false, false, 21)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 22
+                yield "                            <img src=\"";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["other"]) || array_key_exists("other", $context) ? $context["other"] : (function () { throw new RuntimeError('Variable "other" does not exist.', 22, $this->source); })()), "profilePictureUrl", [], "any", false, false, false, 22), "html", null, true);
+                yield "\" class=\"w-14 h-14 rounded-full object-cover shadow-md\">
+                        ";
+            } else {
+                // line 24
+                yield "                            <div class=\"w-14 h-14 rounded-full bg-gradient-to-br from-[#00bcd4] to-[#006876] flex items-center justify-center text-white font-bold shadow-md text-xl\">
+                                ";
+                // line 25
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["other"]) || array_key_exists("other", $context) ? $context["other"] : (function () { throw new RuntimeError('Variable "other" does not exist.', 25, $this->source); })()), "firstName", [], "any", false, false, false, 25))), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["other"]) || array_key_exists("other", $context) ? $context["other"] : (function () { throw new RuntimeError('Variable "other" does not exist.', 25, $this->source); })()), "lastName", [], "any", false, false, false, 25))), "html", null, true);
+                yield "
+                            </div>
+                        ";
+            }
+            // line 28
+            yield "                        <div class=\"absolute bottom-0.5 right-0.5 w-4 h-4 bg-emerald-400 border-2 border-white rounded-full shadow-sm\"></div>
+                    </div>
+                    
+                    <div class=\"flex-1 min-w-0\">
+                        <div class=\"flex justify-between items-baseline mb-1\">
+                            <h4 class=\"text-[1.05rem] font-extrabold text-slate-800 truncate group-focus:text-[#006876]\">";
+            // line 33
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["other"]) || array_key_exists("other", $context) ? $context["other"] : (function () { throw new RuntimeError('Variable "other" does not exist.', 33, $this->source); })()), "fullName", [], "any", false, false, false, 33), "html", null, true);
+            yield "</h4>
+                        </div>
+                        <p class=\"text-[0.8rem] font-medium text-slate-400 truncate tracking-wide\">Cliquez pour voir les messages</p>
+                    </div>
+                </button>
+            ";
+            $context['_iterated'] = true;
+        }
+        // line 38
+        if (!$context['_iterated']) {
+            // line 39
+            yield "                <div class=\"p-12 text-center text-slate-500\">
+                    <svg class=\"w-16 h-16 mx-auto mb-4 text-slate-300\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\" d=\"M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z\"></path></svg>
+                    <p class=\"font-medium\">Aucune conversation pour l'instant.</p>
+                </div>
+            ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['conv'], $context['_parent'], $context['_iterated']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 44
+        yield "        </div>
+    </div>
+
+    <!-- Active Chat Area -->
+    <div class=\"flex-1 flex flex-col bg-white\">
+        
+        <!-- Empty State -->
+        <div id=\"empty-state\" class=\"flex-1 flex flex-col items-center justify-center text-center p-12\">
+            <div class=\"w-32 h-32 rounded-full bg-cyan-50 flex items-center justify-center mb-8 border-8 border-white shadow-[0_12px_32px_-12px_rgba(0,188,212,0.25)]\">
+                <svg class=\"w-14 h-14 text-cyan-400\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1.5\" d=\"M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z\"></path></svg>
+            </div>
+            <h3 class=\"text-2xl font-extrabold text-slate-800 mb-3 tracking-tight\">Vos messages privés</h3>
+            <p class=\"text-slate-500 font-semibold max-w-sm mx-auto leading-relaxed\">Sélectionnez une conversation dans la liste de gauche pour commencer à échanger avec votre thérapeute.</p>
+        </div>
+
+        <!-- Chat Header & Content -->
+        <div id=\"chat-container\" class=\"hidden flex-col h-full\">
+            <!-- Header -->
+            <div class=\"h-24 border-b border-slate-100 flex items-center justify-between px-8 bg-white/50 backdrop-blur-sm z-10 shrink-0\">
+                <div class=\"flex items-center gap-5\">
+                    <div id=\"chat-avatar\" class=\"w-12 h-12 rounded-2xl bg-cyan-100 flex items-center justify-center text-cyan-800 font-extrabold text-lg shadow-sm\"></div>
+                    <div>
+                        <h3 id=\"chat-title\" class=\"text-xl font-extrabold text-slate-800 tracking-tight\"></h3>
+                        <p class=\"text-[0.7rem] text-emerald-500 font-bold uppercase tracking-widest mt-1 flex items-center gap-1.5\"><span class=\"w-2 h-2 rounded-full bg-emerald-500 animate-pulse\"></span> En ligne</p>
+                    </div>
+                </div>
+
+                <!-- Dropdown Menu -->
+                <div class=\"relative\" x-data=\"{ open: false }\">
+                    <button @click=\"open = !open\" class=\"p-3 rounded-2xl hover:bg-slate-50 text-slate-400 transition-all border border-transparent hover:border-slate-200\">
+                        <svg class=\"w-6 h-6\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z\"></path></svg>
+                    </button>
+                    <div x-show=\"open\" @click.away=\"open = false\" x-transition:enter=\"transition ease-out duration-100\" x-transition:enter-start=\"opacity-0 scale-95\" x-transition:enter-end=\"opacity-100 scale-100\" class=\"absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50\">
+                        <button onclick=\"reportUser()\" class=\"w-full text-left px-5 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-3\">
+                            <svg class=\"w-5 h-5 text-slate-400\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z\"></path></svg>
+                            Signaler l'utilisateur
+                        </button>
+                        <button onclick=\"blockUser()\" class=\"w-full text-left px-5 py-3 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-3 border-t border-slate-100/50\">
+                            <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636\"></path></svg>
+                            Bloquer le contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Stream -->
+            <div id=\"messages-list\" class=\"flex-1 overflow-y-auto p-12 space-y-12 flex flex-col bg-slate-50/20\">
+                <!-- Messages appended dynamically -->
+            </div>
+
+            <!-- Input area -->
+            <div class=\"px-10 py-8 border-t border-slate-100 bg-white shrink-0\">
+                <form id=\"sendMessageForm\" class=\"flex items-end gap-6\" onsubmit=\"sendMessage(event)\">
+                    <div class=\"flex-1 bg-slate-50 rounded-[2rem] border border-slate-200 focus-within:border-cyan-400 focus-within:ring-8 focus-within:ring-cyan-500/5 transition-all p-2 flex\">
+                        <textarea id=\"messageInputArea\" rows=\"1\" class=\"w-full bg-transparent border-0 px-6 py-5 text-slate-800 font-medium focus:ring-0 resize-none min-h-[64px] max-h-[200px]\" placeholder=\"Commencez à écrire votre message...\"></textarea>
+                    </div>
+                    <button type=\"submit\" class=\"w-20 h-16 rounded-[1.5rem] bg-[#006876] hover:bg-[#008394] text-white flex flex-col items-center justify-center shrink-0 shadow-lg shadow-cyan-900/10 hover:shadow-cyan-900/20 hover:-translate-y-0.5 transition-all active:scale-95\">
+                        <svg class=\"w-8 h-8 ml-1\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"M12 19l9 2-9-18-9 18 9-2zm0 0v-8\"></path></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Task 2.3: Use a more stable management for SSE to avoid leaks
+    (function() {
+        let currentConvId = null;
+        let currentOtherId = null;
+        let lastMessageId = 0;
+        let pollTimer = null;
+        const currentUserId = ";
+        // line 116
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 116, $this->source); })()), "user", [], "any", false, false, false, 116), "id", [], "any", false, false, false, 116), "html", null, true);
+        yield ";
+
+        window.loadConversation = function(convId, otherName, otherId) {
+            currentConvId = convId;
+            currentOtherId = otherId;
+            lastMessageId = 0;
+
+            document.getElementById('empty-state').classList.add('hidden');
+            document.getElementById('chat-container').classList.remove('hidden');
+            document.getElementById('chat-container').classList.add('flex');
+            document.getElementById('chat-title').innerText = otherName;
+            document.getElementById('chat-avatar').innerText = otherName.charAt(0);
+            document.getElementById('messages-list').innerHTML = ''; 
+            
+            fetch(`/_messaging/api/\${convId}/read`, { method: 'POST' });
+
+            // Initial full load
+            fetch(`/_messaging/api/\${convId}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(msg => {
+                        appendMessage(msg);
+                        if (msg.id > lastMessageId) lastMessageId = msg.id;
+                    });
+                    scrollToBottom();
+                });
+
+            // Start Polling (Classic fallback)
+            if (pollTimer) clearInterval(pollTimer);
+            pollTimer = setInterval(() => {
+                if (!currentConvId) return;
+                
+                fetch(`/_messaging/api/\${currentConvId}?lastId=\${lastMessageId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            data.forEach(msg => {
+                                appendMessage(msg);
+                                if (msg.id > lastMessageId) lastMessageId = msg.id;
+                            });
+                            scrollToBottom();
+                            fetch(`/_messaging/api/\${currentConvId}/read`, { method: 'POST' });
+                        }
+                    });
+            }, 4000); // Poll every 4 seconds for stability
+        };
+
+        window.sendMessage = function(e) {
+            e.preventDefault();
+            const input = document.getElementById('messageInputArea');
+            const content = input.value.trim();
+            if (!content || !currentConvId) return;
+
+            input.value = '';
+            input.style.height = 'auto'; 
+            
+            // Optimistic UI
+            const localId = 'temp-' + Date.now();
+            const localMsg = {
+                id: localId,
+                content: content,
+                isMe: true,
+                sentAt: new Date().toISOString(),
+                senderId: currentUserId
+            };
+            appendMessage(localMsg);
+            scrollToBottom();
+
+            fetch(`/_messaging/api/\${currentConvId}/send`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ content })
+            }).then(res => res.json()).then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    // Update lastMessageId with returned ID to prevent deduplication issues
+                    if (data.id > lastMessageId) lastMessageId = data.id;
+                }
+            });
+        };
+
+        function appendMessage(msg) {
+            // Prevent duplicate display of optimistically added messages if they come back in poll
+            if (document.getElementById(`msg-\${msg.id}`)) return;
+
+            const list = document.getElementById('messages-list');
+            const isMe = msg.isMe || parseInt(msg.senderId) === parseInt(currentUserId);
+            
+            const alignClass = isMe ? 'self-end items-end' : 'self-start items-start';
+            const bubbleClass = isMe 
+                ? 'bg-gradient-to-br from-[#10a37f] to-[#0d9488] text-white rounded-l-3xl rounded-tr-3xl shadow-lg shadow-emerald-900/5'
+                : 'bg-white border border-slate-100 shadow-xl shadow-slate-200/20 text-slate-800 rounded-r-3xl rounded-tl-3xl';
+
+            const html = `
+                <div id=\"msg-\${msg.id}\" class=\"flex flex-col \${alignClass} max-w-[85%] transition-all duration-500 animate-in fade-in slide-in-from-bottom-4\">
+                    <div class=\"px-8 py-5 \${bubbleClass}\">
+                        <p class=\"whitespace-pre-wrap font-medium break-words leading-[1.6] text-[1rem]\">\${msg.content}</p>
+                    </div>
+                    <span class=\"text-[0.65rem] text-slate-400 mt-3 font-bold tracking-widest px-2 uppercase opacity-80\">\${new Date(msg.sentAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                </div>
+            `;
+            list.insertAdjacentHTML('beforeend', html);
+        }
+
+        function scrollToBottom() {
+            const list = document.getElementById('messages-list');
+            list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' });
+        }
+
+        const cleanupPolling = () => {
+            if (pollTimer) {
+                console.log(\"Cleaning up Polling...\");
+                clearInterval(pollTimer);
+                pollTimer = null;
+            }
+        };
+
+        document.addEventListener('turbo:before-visit', cleanupPolling);
+        document.addEventListener('turbo:before-cache', cleanupPolling);
+        window.addEventListener('beforeunload', cleanupPolling);
+
+        // Task 2.6: Auto-load conversation if ID is provided by controller
+        ";
+        // line 239
+        if ((($tmp = (isset($context["openId"]) || array_key_exists("openId", $context) ? $context["openId"] : (function () { throw new RuntimeError('Variable "openId" does not exist.', 239, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 240
+            yield "            const openId = ";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["openId"]) || array_key_exists("openId", $context) ? $context["openId"] : (function () { throw new RuntimeError('Variable "openId" does not exist.', 240, $this->source); })()), "html", null, true);
+            yield ";
+            // Search for the conversation data in the list to trigger a click/load
+            const triggerAutoLoad = () => {
+                const btn = document.querySelector(`button[onclick*=\"loadConversation(\${openId},\"]`);
+                if (btn) btn.click();
+            };
+            
+            document.addEventListener('turbo:load', triggerAutoLoad);
+            // Also try immediately if DOM already loaded (initial entry)
+            if (document.readyState !== 'loading') triggerAutoLoad();
+        ";
+        }
+        // line 251
+        yield "
+    })();
+
+    // Shared actions (move out of closure if needed, but keeping for compatibility)
+    function blockUser() {
+        if (!confirm('Voulez-vous vraiment bloquer cet utilisateur ?')) return;
+        fetch('/api/block', {
+            method: 'POST',
+            body: JSON.stringify({ userId: currentOtherId })
+        }).then(() => location.reload());
+    }
+
+    function reportUser() {
+        const reason = prompt(\"Raison (SPAM, HARASSMENT, INAPPROPRIATE) :\");
+        if (!reason) return;
+        fetch('/api/report', {
+            method: 'POST',
+            body: JSON.stringify({ reportedId: currentOtherId, reason })
+        }).then(() => alert('Signalement envoyé.'));
+    }
+
+    // Auto-resize textarea logic
+    const textarea = document.getElementById('messageInputArea');
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(e);
+            }
+        });
+    }
+</script>
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "pages/messages/messages.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isTraitable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  395 => 251,  380 => 240,  378 => 239,  252 => 116,  178 => 44,  168 => 39,  166 => 38,  156 => 33,  149 => 28,  142 => 25,  139 => 24,  133 => 22,  131 => 21,  119 => 17,  116 => 16,  111 => 15,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}Messagerie{% endblock %}
+
+{% block content %}
+<div class=\"h-[calc(100vh-140px)] bg-white rounded-[2rem] shadow-sm border border-[#e5f7f6] flex overflow-hidden\">
+    
+    <!-- Conversations List -->
+    <div class=\"w-1/3 border-r border-slate-100 flex flex-col bg-slate-50/50\">
+        <div class=\"p-6 border-b border-slate-100 bg-white\">
+            <h2 class=\"text-2xl font-extrabold text-[#0e1e1e] tracking-tight\">Discussions</h2>
+        </div>
+        
+        <div class=\"flex-1 overflow-y-auto\">
+            {% for conv in conversations %}
+                {% set other = conv.getOtherUser(app.user) %}
+                <button type=\"button\" onclick=\"loadConversation({{ conv.id }}, '{{ other.fullName|escape('js') }}', {{ other.id }})\"
+                        class=\"w-full p-6 flex items-center gap-5 hover:bg-slate-50 transition-colors border-b border-slate-100/50 text-left focus:bg-[#e5f7f6] group\">
+                    
+                    <div class=\"relative\">
+                        {% if other.profilePictureUrl %}
+                            <img src=\"{{ other.profilePictureUrl }}\" class=\"w-14 h-14 rounded-full object-cover shadow-md\">
+                        {% else %}
+                            <div class=\"w-14 h-14 rounded-full bg-gradient-to-br from-[#00bcd4] to-[#006876] flex items-center justify-center text-white font-bold shadow-md text-xl\">
+                                {{ other.firstName|first|upper }}{{ other.lastName|first|upper }}
+                            </div>
+                        {% endif %}
+                        <div class=\"absolute bottom-0.5 right-0.5 w-4 h-4 bg-emerald-400 border-2 border-white rounded-full shadow-sm\"></div>
+                    </div>
+                    
+                    <div class=\"flex-1 min-w-0\">
+                        <div class=\"flex justify-between items-baseline mb-1\">
+                            <h4 class=\"text-[1.05rem] font-extrabold text-slate-800 truncate group-focus:text-[#006876]\">{{ other.fullName }}</h4>
+                        </div>
+                        <p class=\"text-[0.8rem] font-medium text-slate-400 truncate tracking-wide\">Cliquez pour voir les messages</p>
+                    </div>
+                </button>
+            {% else %}
+                <div class=\"p-12 text-center text-slate-500\">
+                    <svg class=\"w-16 h-16 mx-auto mb-4 text-slate-300\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\" d=\"M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z\"></path></svg>
+                    <p class=\"font-medium\">Aucune conversation pour l'instant.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Active Chat Area -->
+    <div class=\"flex-1 flex flex-col bg-white\">
+        
+        <!-- Empty State -->
+        <div id=\"empty-state\" class=\"flex-1 flex flex-col items-center justify-center text-center p-12\">
+            <div class=\"w-32 h-32 rounded-full bg-cyan-50 flex items-center justify-center mb-8 border-8 border-white shadow-[0_12px_32px_-12px_rgba(0,188,212,0.25)]\">
+                <svg class=\"w-14 h-14 text-cyan-400\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1.5\" d=\"M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z\"></path></svg>
+            </div>
+            <h3 class=\"text-2xl font-extrabold text-slate-800 mb-3 tracking-tight\">Vos messages privés</h3>
+            <p class=\"text-slate-500 font-semibold max-w-sm mx-auto leading-relaxed\">Sélectionnez une conversation dans la liste de gauche pour commencer à échanger avec votre thérapeute.</p>
+        </div>
+
+        <!-- Chat Header & Content -->
+        <div id=\"chat-container\" class=\"hidden flex-col h-full\">
+            <!-- Header -->
+            <div class=\"h-24 border-b border-slate-100 flex items-center justify-between px-8 bg-white/50 backdrop-blur-sm z-10 shrink-0\">
+                <div class=\"flex items-center gap-5\">
+                    <div id=\"chat-avatar\" class=\"w-12 h-12 rounded-2xl bg-cyan-100 flex items-center justify-center text-cyan-800 font-extrabold text-lg shadow-sm\"></div>
+                    <div>
+                        <h3 id=\"chat-title\" class=\"text-xl font-extrabold text-slate-800 tracking-tight\"></h3>
+                        <p class=\"text-[0.7rem] text-emerald-500 font-bold uppercase tracking-widest mt-1 flex items-center gap-1.5\"><span class=\"w-2 h-2 rounded-full bg-emerald-500 animate-pulse\"></span> En ligne</p>
+                    </div>
+                </div>
+
+                <!-- Dropdown Menu -->
+                <div class=\"relative\" x-data=\"{ open: false }\">
+                    <button @click=\"open = !open\" class=\"p-3 rounded-2xl hover:bg-slate-50 text-slate-400 transition-all border border-transparent hover:border-slate-200\">
+                        <svg class=\"w-6 h-6\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z\"></path></svg>
+                    </button>
+                    <div x-show=\"open\" @click.away=\"open = false\" x-transition:enter=\"transition ease-out duration-100\" x-transition:enter-start=\"opacity-0 scale-95\" x-transition:enter-end=\"opacity-100 scale-100\" class=\"absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50\">
+                        <button onclick=\"reportUser()\" class=\"w-full text-left px-5 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-3\">
+                            <svg class=\"w-5 h-5 text-slate-400\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z\"></path></svg>
+                            Signaler l'utilisateur
+                        </button>
+                        <button onclick=\"blockUser()\" class=\"w-full text-left px-5 py-3 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-3 border-t border-slate-100/50\">
+                            <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636\"></path></svg>
+                            Bloquer le contact
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Stream -->
+            <div id=\"messages-list\" class=\"flex-1 overflow-y-auto p-12 space-y-12 flex flex-col bg-slate-50/20\">
+                <!-- Messages appended dynamically -->
+            </div>
+
+            <!-- Input area -->
+            <div class=\"px-10 py-8 border-t border-slate-100 bg-white shrink-0\">
+                <form id=\"sendMessageForm\" class=\"flex items-end gap-6\" onsubmit=\"sendMessage(event)\">
+                    <div class=\"flex-1 bg-slate-50 rounded-[2rem] border border-slate-200 focus-within:border-cyan-400 focus-within:ring-8 focus-within:ring-cyan-500/5 transition-all p-2 flex\">
+                        <textarea id=\"messageInputArea\" rows=\"1\" class=\"w-full bg-transparent border-0 px-6 py-5 text-slate-800 font-medium focus:ring-0 resize-none min-h-[64px] max-h-[200px]\" placeholder=\"Commencez à écrire votre message...\"></textarea>
+                    </div>
+                    <button type=\"submit\" class=\"w-20 h-16 rounded-[1.5rem] bg-[#006876] hover:bg-[#008394] text-white flex flex-col items-center justify-center shrink-0 shadow-lg shadow-cyan-900/10 hover:shadow-cyan-900/20 hover:-translate-y-0.5 transition-all active:scale-95\">
+                        <svg class=\"w-8 h-8 ml-1\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"M12 19l9 2-9-18-9 18 9-2zm0 0v-8\"></path></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Task 2.3: Use a more stable management for SSE to avoid leaks
+    (function() {
+        let currentConvId = null;
+        let currentOtherId = null;
+        let lastMessageId = 0;
+        let pollTimer = null;
+        const currentUserId = {{ app.user.id }};
+
+        window.loadConversation = function(convId, otherName, otherId) {
+            currentConvId = convId;
+            currentOtherId = otherId;
+            lastMessageId = 0;
+
+            document.getElementById('empty-state').classList.add('hidden');
+            document.getElementById('chat-container').classList.remove('hidden');
+            document.getElementById('chat-container').classList.add('flex');
+            document.getElementById('chat-title').innerText = otherName;
+            document.getElementById('chat-avatar').innerText = otherName.charAt(0);
+            document.getElementById('messages-list').innerHTML = ''; 
+            
+            fetch(`/_messaging/api/\${convId}/read`, { method: 'POST' });
+
+            // Initial full load
+            fetch(`/_messaging/api/\${convId}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(msg => {
+                        appendMessage(msg);
+                        if (msg.id > lastMessageId) lastMessageId = msg.id;
+                    });
+                    scrollToBottom();
+                });
+
+            // Start Polling (Classic fallback)
+            if (pollTimer) clearInterval(pollTimer);
+            pollTimer = setInterval(() => {
+                if (!currentConvId) return;
+                
+                fetch(`/_messaging/api/\${currentConvId}?lastId=\${lastMessageId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            data.forEach(msg => {
+                                appendMessage(msg);
+                                if (msg.id > lastMessageId) lastMessageId = msg.id;
+                            });
+                            scrollToBottom();
+                            fetch(`/_messaging/api/\${currentConvId}/read`, { method: 'POST' });
+                        }
+                    });
+            }, 4000); // Poll every 4 seconds for stability
+        };
+
+        window.sendMessage = function(e) {
+            e.preventDefault();
+            const input = document.getElementById('messageInputArea');
+            const content = input.value.trim();
+            if (!content || !currentConvId) return;
+
+            input.value = '';
+            input.style.height = 'auto'; 
+            
+            // Optimistic UI
+            const localId = 'temp-' + Date.now();
+            const localMsg = {
+                id: localId,
+                content: content,
+                isMe: true,
+                sentAt: new Date().toISOString(),
+                senderId: currentUserId
+            };
+            appendMessage(localMsg);
+            scrollToBottom();
+
+            fetch(`/_messaging/api/\${currentConvId}/send`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ content })
+            }).then(res => res.json()).then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    // Update lastMessageId with returned ID to prevent deduplication issues
+                    if (data.id > lastMessageId) lastMessageId = data.id;
+                }
+            });
+        };
+
+        function appendMessage(msg) {
+            // Prevent duplicate display of optimistically added messages if they come back in poll
+            if (document.getElementById(`msg-\${msg.id}`)) return;
+
+            const list = document.getElementById('messages-list');
+            const isMe = msg.isMe || parseInt(msg.senderId) === parseInt(currentUserId);
+            
+            const alignClass = isMe ? 'self-end items-end' : 'self-start items-start';
+            const bubbleClass = isMe 
+                ? 'bg-gradient-to-br from-[#10a37f] to-[#0d9488] text-white rounded-l-3xl rounded-tr-3xl shadow-lg shadow-emerald-900/5'
+                : 'bg-white border border-slate-100 shadow-xl shadow-slate-200/20 text-slate-800 rounded-r-3xl rounded-tl-3xl';
+
+            const html = `
+                <div id=\"msg-\${msg.id}\" class=\"flex flex-col \${alignClass} max-w-[85%] transition-all duration-500 animate-in fade-in slide-in-from-bottom-4\">
+                    <div class=\"px-8 py-5 \${bubbleClass}\">
+                        <p class=\"whitespace-pre-wrap font-medium break-words leading-[1.6] text-[1rem]\">\${msg.content}</p>
+                    </div>
+                    <span class=\"text-[0.65rem] text-slate-400 mt-3 font-bold tracking-widest px-2 uppercase opacity-80\">\${new Date(msg.sentAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                </div>
+            `;
+            list.insertAdjacentHTML('beforeend', html);
+        }
+
+        function scrollToBottom() {
+            const list = document.getElementById('messages-list');
+            list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' });
+        }
+
+        const cleanupPolling = () => {
+            if (pollTimer) {
+                console.log(\"Cleaning up Polling...\");
+                clearInterval(pollTimer);
+                pollTimer = null;
+            }
+        };
+
+        document.addEventListener('turbo:before-visit', cleanupPolling);
+        document.addEventListener('turbo:before-cache', cleanupPolling);
+        window.addEventListener('beforeunload', cleanupPolling);
+
+        // Task 2.6: Auto-load conversation if ID is provided by controller
+        {% if openId %}
+            const openId = {{ openId }};
+            // Search for the conversation data in the list to trigger a click/load
+            const triggerAutoLoad = () => {
+                const btn = document.querySelector(`button[onclick*=\"loadConversation(\${openId},\"]`);
+                if (btn) btn.click();
+            };
+            
+            document.addEventListener('turbo:load', triggerAutoLoad);
+            // Also try immediately if DOM already loaded (initial entry)
+            if (document.readyState !== 'loading') triggerAutoLoad();
+        {% endif %}
+
+    })();
+
+    // Shared actions (move out of closure if needed, but keeping for compatibility)
+    function blockUser() {
+        if (!confirm('Voulez-vous vraiment bloquer cet utilisateur ?')) return;
+        fetch('/api/block', {
+            method: 'POST',
+            body: JSON.stringify({ userId: currentOtherId })
+        }).then(() => location.reload());
+    }
+
+    function reportUser() {
+        const reason = prompt(\"Raison (SPAM, HARASSMENT, INAPPROPRIATE) :\");
+        if (!reason) return;
+        fetch('/api/report', {
+            method: 'POST',
+            body: JSON.stringify({ reportedId: currentOtherId, reason })
+        }).then(() => alert('Signalement envoyé.'));
+    }
+
+    // Auto-resize textarea logic
+    const textarea = document.getElementById('messageInputArea');
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(e);
+            }
+        });
+    }
+</script>
+{% endblock %}
+", "pages/messages/messages.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\messages\\messages.html.twig");
+    }
+}

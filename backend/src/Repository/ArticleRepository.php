@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Article;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+class ArticleRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Article::class);
+    }
+
+    public function findAllWithCategory(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->leftJoin('a.categorie', 'c')
+            ->addSelect('c')
+            ->orderBy('a.datePublication', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+     public function findByTagName(string $tagName): array
+    {
+        return $this->createQueryBuilder('a')
+            ->join('a.tags', 't')
+            ->leftJoin('a.categorie', 'c')
+            ->addSelect('c')
+            ->where('LOWER(t.nom) = LOWER(:nom)')
+            ->setParameter('nom', $tagName)
+            ->orderBy('a.datePublication', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function search(string $q): array
+    {
+        return $this->createQueryBuilder('a')
+            ->leftJoin('a.categorie', 'c')
+            ->addSelect('c')
+            ->where('LOWER(a.titre) LIKE LOWER(:q)')
+            ->orWhere('LOWER(a.contenu) LIKE LOWER(:q)')
+            ->orWhere('LOWER(c.nom) LIKE LOWER(:q)')
+            ->setParameter('q', '%' . $q . '%')
+            ->orderBy('a.datePublication', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByCategorieId(int $id): array
+    {
+        return $this->createQueryBuilder('a')
+            ->leftJoin('a.categorie', 'c')
+            ->addSelect('c')
+            ->where('c.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('a.datePublication', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+}

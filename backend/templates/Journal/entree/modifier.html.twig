@@ -1,0 +1,145 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block head %}
+{{ parent() }}
+<style>
+input[type=range].slider-humeur {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+    background: #e2e8f0;
+}
+input[type=range].slider-humeur::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #ccc;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+input[type=range].slider-humeur::-webkit-slider-thumb:hover {
+    border-color: #006876;
+}
+</style>
+
+<script>
+function getColorHumeur(val) {
+    return val >= 8 ? '#48bb78' : val >= 6 ? '#68d391' : val >= 4 ? '#f6ad55' : val >= 2 ? '#fc8181' : '#ff4444';
+}
+
+function updateHumeur(slider) {
+    const val = parseInt(slider.value);
+    const min = parseInt(slider.min) || 1;
+    const max = parseInt(slider.max) || 10;
+    const pct = ((val - min) / (max - min)) * 100;
+    const color = getColorHumeur(val);
+    slider.setAttribute('style',
+        `background: linear-gradient(to right, ${color} ${pct}%, #e2e8f0 ${pct}%) !important`
+    );
+    const span = document.getElementById('val_humeur');
+    if (span) {
+        span.textContent = val;
+        span.style.color = color;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.querySelector('.slider-humeur');
+    if (slider) updateHumeur(slider);
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+
+    {# EN-TÊTE #}
+    <div class="rounded-2xl overflow-hidden mb-6"
+         style="background: linear-gradient(to right, #006876, #008a9a)">
+        <div class="px-8 py-6">
+            <h1 class="text-2xl font-bold text-white">✏️ Modifier l'entrée</h1>
+            <p class="text-[#b2e8ed] text-sm mt-1">
+                📅 {{ entree.dateSaisie|date('d/m/Y') }}
+            </p>
+        </div>
+    </div>
+
+    {{ form_start(form, {attr: {class: 'space-y-4', novalidate: 'novalidate'}}) }}
+
+{% if not form.vars.valid and form.vars.submitted %}
+    <div class="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm">
+        ⚠️ Champs Obligatoire!
+    </div>
+{% endif %}
+
+    {{ form_start(form, {attr: {class: 'space-y-4'}}) }}
+
+        {# 1. HUMEUR #}
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+            <h2 class="text-sm font-bold text-gray-500 mb-4">😊 Humeur du jour</h2>
+            <div class="flex items-center gap-4">
+                {{ form_widget(form.humeur, {attr: {
+                    class: 'slider-humeur',
+                    oninput: 'updateHumeur(this)'
+                }}) }}
+                <span id="val_humeur" class="text-sm font-bold w-8 text-center">
+                    {{ form.humeur.vars.value ?? 5 }}
+                </span>
+            </div>
+            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                <span>1 — Très difficile</span>
+                <span>10 — Excellent</span>
+            </div>
+        </div>
+
+        {# 2. NOTE + DATE #}
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+    <div>
+        {{ form_label(form.noteTextuelle, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+        {{ form_widget(form.noteTextuelle, {attr: {
+            class: 'w-full rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 ' ~
+                   (form.noteTextuelle.vars.errors|length > 0 ? 'border-red-400 focus:ring-red-300 bg-red-50' : 'border-gray-200 focus:ring-[#006876]')
+        }}) }}
+        {% if form.noteTextuelle.vars.errors|length > 0 %}
+            <p class="text-red-500 text-xs mt-1 font-medium flex items-center gap-1">
+                ⚠️ {{ form.noteTextuelle.vars.errors[0].message }}
+            </p>
+        {% endif %}
+    </div>
+    <div>
+        {{ form_label(form.dateSaisie, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+        {{ form_widget(form.dateSaisie, {attr: {
+            class: 'w-full rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 ' ~
+                   (form.dateSaisie.vars.errors|length > 0 ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:ring-[#006876]')
+        }}) }}
+        {% if form.dateSaisie.vars.errors|length > 0 %}
+            <p class="text-red-500 text-xs mt-1 font-medium">
+                ⚠️ {{ form.dateSaisie.vars.errors[0].message }}
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+        {# 3. BOUTONS #}
+        <div class="flex gap-3">
+            <a href="{{ path('entree_index') }}"
+               class="flex-1 text-center bg-gray-100 text-gray-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">
+                ✕ Annuler
+            </a>
+            <button type="submit"
+                    class="flex-1 bg-[#006876] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
+                ✅ Sauvegarder
+            </button>
+        </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

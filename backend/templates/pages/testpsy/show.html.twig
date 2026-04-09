@@ -1,0 +1,38 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}{{ test.titre }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto pb-24">
+
+    <a href="{{ path('testpsy_index') }}" class="inline-flex items-center gap-2 text-sm font-bold text-on-surface-variant hover:text-primary mb-8 transition-colors">
+        <span class="material-symbols-outlined">arrow_back</span> Retour aux tests
+    </a>
+
+    <div class="bg-white rounded-[3rem] p-12 shadow-sm border border-outline/20">
+        <div class="w-16 h-16 rounded-[1.5rem] bg-primary/10 text-primary flex items-center justify-center mb-8">
+            <span class="material-symbols-outlined text-4xl">psychology_alt</span>
+        </div>
+
+        <h1 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface mb-4">{{ test.titre }}</h1>
+        <p class="text-base text-on-surface-variant leading-relaxed mb-10">{{ test.description }}</p>
+
+        <div class="grid grid-cols-2 gap-4 mb-10">
+            <div class="bg-gray-50/50 rounded-[1.5rem] p-6 border border-outline/10">
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-[0.2em] uppercase mb-1">Questions</div>
+                <div class="text-3xl font-extrabold text-primary font-headline">{{ test.nombreQuestions }}</div>
+            </div>
+            <div class="bg-gray-50/50 rounded-[1.5rem] p-6 border border-outline/10">
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-[0.2em] uppercase mb-1">Durée estimée</div>
+                <div class="text-3xl font-extrabold text-on-surface font-headline">~{{ (test.nombreQuestions * 0.5)|round }} min</div>
+            </div>
+        </div>
+
+        <a href="{{ path('testpsy_passer', {id: test.idTest}) }}"
+           class="w-full py-4 text-center block text-base font-bold text-white bg-primary rounded-2xl hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20">
+            Commencer le test
+        </a>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block content %}
+<div class="max-w-xl space-y-6">
+
+    <div class="flex items-center gap-4">
+        <a href="{{ path('app_categorie_index') }}"
+           class="flex items-center gap-2 text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Back
+        </a>
+        <div>
+            <h1 class="text-3xl font-extrabold text-on-surface tracking-tight">Edit Category</h1>
+            <p class="text-on-surface-variant text-sm mt-1">{{ categorie.nom }}</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-[2rem] border border-outline/30 p-8 soft-elevation">
+        {{ include('categorie/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
+
+    {# Danger zone #}
+    <div class="bg-white rounded-[2rem] border border-red-100 p-6">
+        <p class="text-sm font-bold text-red-600 mb-1">⚠️ Danger Zone</p>
+        <p class="text-xs text-on-surface-variant mb-4">You cannot delete a category that still has articles.</p>
+        <form method="post" action="{{ path('app_categorie_delete', {'id': categorie.id}) }}"
+              onsubmit="return confirm('Permanently delete this category?')">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie.id) }}">
+            <button type="submit"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-all">
+                <span class="material-symbols-outlined text-[16px]">delete</span>
+                Delete this category
+            </button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

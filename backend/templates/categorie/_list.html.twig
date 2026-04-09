@@ -1,0 +1,99 @@
+{# Search bar for filtering categories #}
+<div class="relative w-full">
+    <span class="material-symbols-outlined text-[20px] text-on-surface-variant pointer-events-none"
+          style="position:absolute; left:1rem; top:50%; transform:translateY(-50%);">search</span>
+    <input type="text" id="cat-search" placeholder="Filter categories…"
+           style="padding-left:2.75rem;"
+           class="w-full pr-4 py-3 rounded-xl border border-outline/40 bg-white text-sm
+                  focus:outline-none focus:ring-2 focus:ring-primary/30 transition shadow-sm">
+</div>
+
+{# Grid of categories #}
+{% if categories is empty %}
+    <div class="flex flex-col items-center justify-center py-20 text-on-surface-variant">
+        <span class="material-symbols-outlined text-5xl opacity-30 mb-3">folder_off</span>
+        <p class="font-semibold">No categories found</p>
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PSYCHOLOGUE') %}
+            <a href="{{ path('app_categorie_new') }}"
+               class="text-primary text-sm font-bold hover:underline mt-2">
+                Create a category
+            </a>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" id="cat-grid">
+        {% for categorie in categories %}
+            <div class="cat-card group relative bg-white rounded-2xl border border-outline/20 p-5
+                        hover:shadow-xl hover:-translate-y-1 transition-all duration-300
+                        flex flex-col overflow-hidden"
+                 data-name="{{ categorie.nom|lower }}">
+
+                {# Hover top accent line #}
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 to-primary/10
+                            opacity-0 group-hover:opacity-100 transition"></div>
+
+                {# Header #}
+                <div class="flex items-start justify-between gap-2 mb-4">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5
+                                    flex items-center justify-center shadow-inner shrink-0">
+                            <span class="material-symbols-outlined text-primary text-[22px]">folder</span>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="font-semibold text-sm text-on-surface truncate">{{ categorie.nom }}</p>
+                            <p class="text-xs text-on-surface-variant">
+                                {{ categorie.articles|length }} article{{ categorie.articles|length != 1 ? 's' : '' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PSYCHOLOGUE') %}
+                        <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
+                            <a href="{{ path('app_categorie_edit', {id: categorie.id}) }}"
+                               class="p-1.5 rounded-lg text-on-surface-variant hover:bg-amber-50 hover:text-amber-600 transition">
+                                <span class="material-symbols-outlined text-[16px]">edit</span>
+                            </a>
+                            <form method="post" action="{{ path('app_categorie_delete', {id: categorie.id}) }}"
+                                  onsubmit="return confirm('Delete category « {{ categorie.nom }} »?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie.id) }}">
+                                <button type="submit"
+                                        class="p-1.5 rounded-lg text-on-surface-variant hover:bg-red-50 hover:text-red-500 transition">
+                                    <span class="material-symbols-outlined text-[16px]">delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Description #}
+                <p class="text-sm text-on-surface-variant mb-5 leading-relaxed line-clamp-3 flex-1">
+                    {{ categorie.description ?: 'No description available.' }}
+                </p>
+
+                {# Footer link #}
+                <a href="{{ path('app_article_index', {categorie: categorie.id}) }}"
+                   class="mt-auto flex items-center justify-between text-sm font-semibold text-primary">
+                    <span>View articles</span>
+                    <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition">
+                        arrow_forward
+                    </span>
+                </a>
+
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script>
+{# JavaScript for search filtering #}
+(function () {
+    const input = document.getElementById('cat-search');
+    if (!input) return;
+    input.addEventListener('input', function () {
+        const q = this.value.toLowerCase();
+        document.querySelectorAll('.cat-card').forEach(el => {
+            el.style.display = el.dataset.name.includes(q) ? '' : 'none';
+        });
+    });
+})();
+</script>

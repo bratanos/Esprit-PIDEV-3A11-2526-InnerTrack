@@ -1,0 +1,433 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}Tests Psychologiques{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto pb-24">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-10">
+        <div>
+            <h1 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface">Tests Psychologiques</h1>
+            <p class="text-sm text-on-surface-variant mt-1">Évaluez votre bien-être mental</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ path('testpsy_statistiques') }}"
+               class="px-5 py-3 bg-white border border-outline/30 text-on-surface-variant text-sm font-bold rounded-2xl shadow-sm hover:text-primary hover:border-primary/30 hover:bg-gray-50 transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined text-xl">insights</span> Statistiques Globales
+            </a>
+            {% if is_granted('ROLE_PSYCHOLOGUE') %}
+            <a href="{{ path('testpsy_create') }}"
+               class="px-5 py-3 bg-primary text-white text-sm font-bold rounded-2xl shadow-md shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined text-xl">add</span> Nouveau test
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Flash messages -->
+    {% for message in app.flashes('success') %}
+        <div class="mb-6 bg-green-50 border border-green-200 text-green-700 text-sm font-bold px-6 py-4 rounded-2xl flex items-center gap-3">
+            <span class="material-symbols-outlined">check_circle</span> {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 text-sm font-bold px-6 py-4 rounded-2xl flex items-center gap-3">
+            <span class="material-symbols-outlined">error</span> {{ message }}
+        </div>
+    {% endfor %}
+
+    <!-- Bien Être Global -->
+    {% if bien_etre is defined and bien_etre is not null %}
+    <div class="mb-10 bg-[#4f46e5] text-white rounded-[2rem] p-8 shadow-lg shadow-indigo-200/50 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden" style="background-color: #4f46e5;">
+        <div class="absolute -right-8 -top-8 opacity-10 pointer-events-none">
+            <span class="material-symbols-outlined text-[12rem] md:text-[18rem]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+        </div>
+        <div class="z-10 text-center md:text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-[10px] font-bold uppercase tracking-wider mb-4 border border-white/20">
+                <span class="material-symbols-outlined text-[14px]">psychology</span> Indicateur de Santé Mentale
+            </div>
+            <h2 class="text-3xl lg:text-4xl font-headline font-extrabold mb-2 tracking-tight">Score Global de Bien-Être</h2>
+            <p class="text-indigo-100 text-sm max-w-lg leading-relaxed">
+                Calculé automatiquement et intelligemment à partir des résultats de l'ensemble de vos tests psychologiques, en inversant les scores de détresse pour créer une jauge unifiée de votre santé mentale.
+            </p>
+        </div>
+        <div class="z-10 flex items-center shrink-0 mt-4 md:mt-0">
+            <div class="relative w-28 h-28 rounded-full flex items-center justify-center bg-transparent">
+                <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="44" fill="transparent" stroke="rgba(255,255,255,0.2)" stroke-width="8"></circle>
+                    <circle cx="50" cy="50" r="44" fill="transparent" stroke="white" stroke-width="8" stroke-dasharray="276.46" stroke-dashoffset="{{ 276.46 - (276.46 * bien_etre / 100) }}" stroke-linecap="round" class="transition-all duration-[1500ms] ease-out"></circle>
+                </svg>
+                <div class="absolute inset-2 bg-white/10 rounded-full backdrop-blur-md flex flex-col items-center justify-center shadow-inner border border-white/20">
+                    <span class="text-3xl font-extrabold font-headline leading-none">{{ bien_etre }}<span class="text-base opacity-70">%</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Statistiques par type -->
+    {% if stats_par_type is defined and stats_par_type is not empty %}
+    <div class="mb-10">
+        <h2 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Répartition par type</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {% for stat in stats_par_type %}
+            <div class="bg-white rounded-[2rem] px-6 py-5 border border-outline/20 shadow-sm flex items-center gap-4 filter-category cursor-pointer hover:border-primary/50 transition-all" data-filter="{{ stat.libelle|lower }}">
+                <div class="w-10 h-10 rounded-[1rem] bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-primary text-xl">category</span>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider truncate">{{ stat.libelle }}</p>
+                    <p class="text-2xl font-extrabold text-on-surface font-headline leading-tight">{{ stat.total }}</p>
+                    <p class="text-[10px] text-on-surface-variant">test{{ stat.total > 1 ? 's' : '' }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recherche et Favoris centrés -->
+    <div class="mb-4 flex justify-center">
+        <div class="flex items-center gap-4 bg-white px-6 py-4 rounded-2xl border border-outline/30 shadow-sm w-full max-w-lg">
+            <span class="material-symbols-outlined text-on-surface-variant">search</span>
+            <input type="text" id="search-input"
+                   placeholder="Rechercher un test par nom..."
+                   class="flex-1 bg-transparent text-sm font-medium text-on-surface placeholder-on-surface-variant/50 focus:outline-none">
+            <button id="search-clear" class="hidden text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-lg">close</span>
+            </button>
+        </div>
+    </div>
+    <div class="mb-8 flex justify-center">
+        <button id="toggle-favorites-btn" class="px-5 py-2 bg-white text-sm font-bold text-on-surface-variant border border-outline/30 rounded-full shadow-sm hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">favorite</span> <span id="fav-btn-text">Afficher mes favoris</span>
+        </button>
+    </div>
+
+    {% if tests is empty %}
+        <div class="py-20 bg-gray-50/30 rounded-[3rem] border-2 border-dashed border-outline/40 flex flex-col items-center justify-center text-center">
+            <span class="material-symbols-outlined text-6xl text-gray-200 mb-4">psychology</span>
+            <h3 class="font-headline font-extrabold text-xl text-gray-400">Aucun test disponible</h3>
+            {% if is_granted('ROLE_PSYCHOLOGUE') %}
+            <p class="text-xs text-gray-400 mt-2 uppercase tracking-widest">Créez votre premier test psychologique</p>
+            <a href="{{ path('testpsy_create') }}"
+               class="mt-8 px-8 py-3 bg-primary text-white text-sm font-bold rounded-2xl shadow-md shadow-primary/20 hover:bg-primary/90 transition-all">
+                Créer un test
+            </a>
+            {% endif %}
+        </div>
+
+    {% else %}
+        <div id="no-results" class="hidden py-16 text-center">
+            <span class="material-symbols-outlined text-5xl text-gray-200 mb-3 block">search_off</span>
+            <p class="text-sm font-bold text-gray-400">Aucun test ne correspond à votre recherche.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="tests-grid">
+            {% for test in tests %}
+
+            {% set resultat = resultats_map[test.idTest] is defined ? resultats_map[test.idTest] : null %}
+            {% set dejaPasse = resultat is not null %}
+
+            <div class="test-card relative bg-white rounded-[2.5rem] p-8 shadow-sm border transition-all duration-300 flex flex-col
+                        {{ dejaPasse ? 'border-green-200 hover:border-green-300' : 'border-outline/20 hover:border-primary/20' }} hover:shadow-md"
+                 data-titre="{{ test.titre|lower }}" data-type="{{ types_map[test.idType]|default('')|lower }}" data-testid="{{ test.idTest }}">
+
+                <!-- Icon + badges -->
+                <div class="flex items-start justify-between mb-6">
+                    <div class="w-14 h-14 rounded-[1.25rem] flex items-center justify-center {{ dejaPasse ? 'bg-green-100 text-green-600' : 'bg-primary/10 text-primary' }}">
+                        <span class="material-symbols-outlined text-3xl">{{ dejaPasse ? 'task_alt' : 'psychology_alt' }}</span>
+                    </div>
+                    <div class="flex flex-col items-end gap-2">
+                        <div class="flex items-center gap-2">
+                            <button class="fav-btn flex items-center justify-center w-8 h-8 rounded-full border border-outline/30 text-gray-300 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all focus:outline-none" data-id="{{ test.idTest }}" title="Ajouter aux favoris">
+                                <span class="material-symbols-outlined text-[16px] fav-icon">favorite</span>
+                            </button>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold uppercase tracking-widest rounded-full">
+                                #{{ test.idTest }}
+                            </span>
+                        </div>
+                        {% if dejaPasse %}
+                            <span class="px-3 py-1 bg-green-100 text-green-600 text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[12px]">check_circle</span> Déjà passé
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Title & description -->
+                <h3 class="text-lg font-extrabold text-on-surface font-headline leading-tight mb-2">
+                    {{ test.titre }}
+                </h3>
+                <p class="text-sm text-on-surface-variant leading-relaxed flex-1 mb-4">
+                    {{ test.description|slice(0, 100) }}{% if test.description|length > 100 %}…{% endif %}
+                </p>
+
+                <!-- Dernier résultat si déjà passé -->
+                {% if dejaPasse %}
+                    {% set pct = resultat.pourcentage %}
+                    {% set titre_lower = test.titre|lower %}
+                    
+                    {% set raw_res = resultat.resultat ?? ('Score : ' ~ resultat.scoreTotal) %}
+                    {% set clean_res = raw_res|replace({'0':'','1':'','2':'','3':'','4':'','5':'','6':'','7':'','8':'','9':''})|trim %}
+                    {% set res_lower = clean_res|lower %}
+
+                    {% set isPositive = false %}
+                    {% if 'estime' in titre_lower or 'resilience' in titre_lower or 'résilience' in titre_lower or 'emotionn' in titre_lower or 'émotionn' in titre_lower %}
+                        {% set isPositive = true %}
+                    {% endif %}
+
+                    {% set isMBTI = false %}
+                    {% if 'mbti' in titre_lower or 'mbti' in res_lower %}
+                        {% set isMBTI = true %}
+                    {% endif %}
+
+                    {% if isMBTI %}
+                        {% set r_theme = 'text-indigo-700 bg-indigo-50 border-indigo-200' %}
+                        {% set r_icon_bg = 'bg-indigo-100 text-indigo-600' %}
+                        {% set r_bar = 'bg-indigo-400' %}
+                        {% set r_icon = 'psychology' %}
+                    {% else %}
+                        {# Fallback using string keywords #}
+                        {% set severity = 'neutral' %}
+                        {% if 'faible' in res_lower or 'léger' in res_lower or 'leger' in res_lower or 'normal' in res_lower %}
+                            {% set severity = 'low' %}
+                        {% elseif 'modéré' in res_lower or 'moyen' in res_lower or 'modere' in res_lower %}
+                            {% set severity = 'medium' %}
+                        {% elseif 'élevé' in res_lower or 'eleve' in res_lower or 'critique' in res_lower or 'sévère' in res_lower or 'severe' in res_lower or 'grave' in res_lower %}
+                            {% set severity = 'high' %}
+                        {% else %}
+                            {# Fallback to pct #}
+                            {% if pct < 30 %} {% set severity = 'low' %}
+                            {% elseif pct < 60 %} {% set severity = 'medium' %}
+                            {% else %} {% set severity = 'high' %}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if severity == 'low' %}
+                            {% set r_theme = isPositive ? 'text-red-700 bg-red-50 border-red-200' : 'text-green-700 bg-green-50 border-green-200' %}
+                            {% set r_icon_bg = isPositive ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' %}
+                            {% set r_bar = isPositive ? 'bg-red-500' : 'bg-green-500' %}
+                            {% set r_icon = isPositive ? 'sentiment_dissatisfied' : 'sentiment_satisfied' %}
+                        {% elseif severity == 'medium' %}
+                            {% set r_theme = 'text-amber-700 bg-amber-50 border-amber-200' %}
+                            {% set r_icon_bg = 'bg-amber-100 text-amber-600' %}
+                            {% set r_bar = 'bg-amber-500' %}
+                            {% set r_icon = 'sentiment_neutral' %}
+                        {% else %}
+                            {% set r_theme = isPositive ? 'text-green-700 bg-green-50 border-green-200' : 'text-red-700 bg-red-50 border-red-200' %}
+                            {% set r_icon_bg = isPositive ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' %}
+                            {% set r_bar = isPositive ? 'bg-green-500' : 'bg-red-500' %}
+                            {% set r_icon = isPositive ? 'celebration' : 'crisis_alert' %}
+                        {% endif %}
+                    {% endif %}
+
+                    <div class="mb-6 rounded-[1.25rem] border {{ r_theme }} overflow-hidden shadow-sm flex flex-col relative group">
+                        <!-- Progress Background fill (subtle) -->
+                        <div class="absolute inset-0 {{ r_bar }} opacity-5" style="width: {{ pct }}%"></div>
+                        
+                        <div class="px-5 py-4 flex items-center justify-between relative z-10">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full {{ r_icon_bg }} flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-lg">{{ r_icon }}</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-[9px] font-extrabold uppercase tracking-widest opacity-80 mb-0.5">Dernier résultat</p>
+                                    <p class="text-sm font-extrabold truncate">{{ clean_res }}</p>
+                                </div>
+                            </div>
+                            <div class="text-right pl-3">
+                                <span class="text-2xl font-extrabold font-headline">{{ pct }}%</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress bar at bottom -->
+                        <div class="h-1.5 w-full bg-black/5 relative z-10">
+                            <div class="h-full {{ r_bar }} rounded-r-full transition-all duration-1000 shadow-[0_0_8px_rgba(0,0,0,0.2)]" style="width: {{ pct }}%; box-shadow: inherit;"></div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Questions count -->
+                <div class="flex items-center gap-2 mb-6 py-3 px-4 bg-gray-50/70 rounded-2xl border border-outline/10">
+                    <span class="material-symbols-outlined text-sm text-on-surface-variant">quiz</span>
+                    <span class="text-xs font-bold text-on-surface-variant">{{ test.nombreQuestions }} questions</span>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-2 mt-auto">
+
+                    {% if dejaPasse %}
+                        <!-- Voir résultat -->
+                        <a href="{{ path('testpsy_resultat', {id: resultat.idResultat}) }}"
+                           class="flex-1 py-3 text-center text-sm font-bold text-green-600 bg-green-50 border border-green-200 rounded-2xl hover:bg-green-100 transition-all">
+                            Voir résultat
+                        </a>
+                        <!-- Supprimer essai + repasser -->
+                        <form method="post" action="{{ path('testpsy_supprimer_essai', {id: resultat.idResultat}) }}"
+                              onsubmit="return confirm('Supprimer cet essai et repasser le test ?')">
+                            <button type="submit"
+                                    class="px-3 py-3 rounded-2xl border border-outline/40 text-on-surface-variant hover:bg-amber-50 hover:text-amber-500 hover:border-amber-200 transition-all"
+                                    title="Supprimer l\'essai et repasser">
+                                <span class="material-symbols-outlined text-xl">replay</span>
+                            </button>
+                        </form>
+                    {% else %}
+                        <!-- Passer -->
+                        <a href="{{ path('testpsy_passer', {id: test.idTest}) }}"
+                           class="flex-1 py-3 text-center text-sm font-bold text-white bg-primary rounded-2xl hover:bg-primary/90 transition-all active:scale-95 shadow-sm shadow-primary/20">
+                            Passer
+                        </a>
+                    {% endif %}
+
+                    <a href="{{ path('testpsy_show', {id: test.idTest}) }}"
+                       class="px-3 py-3 rounded-2xl border border-outline/40 text-on-surface-variant hover:bg-gray-50 hover:text-primary transition-all"
+                       title="Voir le détail">
+                        <span class="material-symbols-outlined text-xl">info</span>
+                    </a>
+                    
+                    {% if is_granted('ROLE_PSYCHOLOGUE') %}
+                    <a href="{{ path('testpsy_edit', {id: test.idTest}) }}"
+                       class="px-3 py-3 rounded-2xl border border-outline/40 text-on-surface-variant hover:bg-amber-50 hover:text-amber-500 hover:border-amber-200 transition-all"
+                       title="Modifier">
+                        <span class="material-symbols-outlined text-xl">edit</span>
+                    </a>
+                    <form method="post" action="{{ path('testpsy_delete', {id: test.idTest}) }}"
+                          onsubmit="return confirm('Supprimer « {{ test.titre }} » ? Cette action est irréversible.')">
+                        <button type="submit"
+                                class="px-3 py-3 rounded-2xl border border-outline/40 text-on-surface-variant hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-all"
+                                title="Supprimer">
+                            <span class="material-symbols-outlined text-xl">delete</span>
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-12 text-center">
+            <a href="{{ path('testpsy_historique') }}"
+               class="inline-flex items-center gap-2 text-sm font-bold text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined">history</span>
+                Voir mon historique de tests
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+
+<script>
+(function() {
+    const input = document.getElementById('search-input');
+    const clearBtn = document.getElementById('search-clear');
+    const cards = document.querySelectorAll('.test-card');
+    const noResults = document.getElementById('no-results');
+    const categoryBtns = document.querySelectorAll('.filter-category');
+    
+    // Favoris logic
+    const favToggles = document.querySelectorAll('.fav-btn');
+    const favFilterBtn = document.getElementById('toggle-favorites-btn');
+    const favBtnText = document.getElementById('fav-btn-text');
+    let activeFilter = null;
+    let showFavOnly = false;
+    let favTests = JSON.parse(localStorage.getItem('psyFavTests') || '[]');
+
+    function updateFavUI() {
+        favToggles.forEach(btn => {
+            const id = parseInt(btn.dataset.id);
+            const icon = btn.querySelector('.fav-icon');
+            if (favTests.includes(id)) {
+                btn.classList.add('text-red-500', 'bg-red-50', 'border-red-200');
+                btn.classList.remove('text-gray-300', 'border-outline/30');
+                icon.style.fontVariationSettings = "'FILL' 1";
+            } else {
+                btn.classList.remove('text-red-500', 'bg-red-50', 'border-red-200');
+                btn.classList.add('text-gray-300', 'border-outline/30');
+                icon.style.fontVariationSettings = "'FILL' 0";
+            }
+        });
+    }
+
+    if (!input) return;
+
+    function applyFilters() {
+        const q = input.value.trim().toLowerCase();
+        let visible = 0;
+        cards.forEach(card => {
+            const id = parseInt(card.dataset.testid);
+            const matchTitle = card.dataset.titre.includes(q);
+            const matchType = !activeFilter || card.dataset.type === activeFilter;
+            const matchFav = !showFavOnly || favTests.includes(id);
+            const isVisible = matchTitle && matchType && matchFav;
+            
+            card.style.display = isVisible ? '' : 'none';
+            if (isVisible) visible++;
+        });
+        if (noResults) noResults.classList.toggle('hidden', visible > 0);
+    }
+
+    // Initialize favors UI
+    updateFavUI();
+
+    favToggles.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = parseInt(this.dataset.id);
+            if (favTests.includes(id)) {
+                favTests = favTests.filter(tId => tId !== id);
+            } else {
+                favTests.push(id);
+            }
+            localStorage.setItem('psyFavTests', JSON.stringify(favTests));
+            updateFavUI();
+            if (showFavOnly) applyFilters();
+        });
+    });
+
+    if (favFilterBtn) {
+        favFilterBtn.addEventListener('click', function() {
+            showFavOnly = !showFavOnly;
+            if (showFavOnly) {
+                this.classList.add('bg-red-50', 'text-red-600', 'border-red-200');
+                this.classList.remove('bg-white', 'text-on-surface-variant', 'border-outline/30');
+                favBtnText.textContent = "Masquer mes favoris";
+            } else {
+                this.classList.remove('bg-red-50', 'text-red-600', 'border-red-200');
+                this.classList.add('bg-white', 'text-on-surface-variant', 'border-outline/30');
+                favBtnText.textContent = "Afficher mes favoris";
+            }
+            applyFilters();
+        });
+    }
+
+    input.addEventListener('input', function() {
+        clearBtn.classList.toggle('hidden', this.value.trim() === '');
+        applyFilters();
+    });
+
+    clearBtn.addEventListener('click', function() {
+        input.value = '';
+        input.dispatchEvent(new Event('input'));
+        input.focus();
+    });
+
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            if (activeFilter === filter) {
+                activeFilter = null;
+                this.classList.remove('ring-2', 'ring-primary', 'bg-primary/5');
+            } else {
+                categoryBtns.forEach(b => b.classList.remove('ring-2', 'ring-primary', 'bg-primary/5'));
+                activeFilter = filter;
+                this.classList.add('ring-2', 'ring-primary', 'bg-primary/5');
+            }
+            applyFilters();
+        });
+    });
+})();
+</script>
+{% endblock %}

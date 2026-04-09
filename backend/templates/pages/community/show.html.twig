@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CommunityComment{% endblock %}
+
+{% block body %}
+    <h1>CommunityComment</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ community_comment.id }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ community_comment.content }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ community_comment.createdAt ? community_comment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Modified</th>
+                <td>{{ community_comment.modified ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ community_comment.title }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_community_index') }}">back to list</a>
+
+    <a href="{{ path('app_community_edit', {'id': community_comment.id}) }}">edit</a>
+
+    {{ include('community/_delete_form.html.twig') }}
+{% endblock %}

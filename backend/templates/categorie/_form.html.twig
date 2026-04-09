@@ -1,0 +1,30 @@
+{{ form_start(form, {attr: {class: 'space-y-5', novalidate: 'novalidate'}}) }}
+
+    <div>
+        {{ form_label(form.nom, 'Name', {label_attr: {class: 'block text-sm font-semibold text-on-surface mb-1.5'}}) }}
+        {{ form_widget(form.nom, {attr: {
+            class: 'w-full rounded-xl border border-outline/50 bg-gray-50 px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition',
+            placeholder: 'Category name…'
+        }}) }}
+        {{ form_errors(form.nom) }}
+    </div>
+
+    <div>
+        {{ form_label(form.description, 'Description', {label_attr: {class: 'block text-sm font-semibold text-on-surface mb-1.5'}}) }}
+        {{ form_widget(form.description, {attr: {
+            class: 'w-full rounded-xl border border-outline/50 bg-gray-50 px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition resize-none',
+            rows: 4,
+            placeholder: 'Describe this category…'
+        }}) }}
+        {{ form_errors(form.description) }}
+    </div>
+
+    <div class="pt-2">
+        <button type="submit"
+                class="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-primary/90 transition-all shadow-md shadow-primary/20">
+            <span class="material-symbols-outlined text-[18px]">save</span>
+            {{ button_label|default('Save') }}
+        </button>
+    </div>
+
+{{ form_end(form) }}

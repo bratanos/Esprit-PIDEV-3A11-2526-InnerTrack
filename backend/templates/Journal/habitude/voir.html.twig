@@ -1,0 +1,75 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+
+    {# EN-TÊTE #}
+    <div class="rounded-2xl overflow-hidden mb-6"
+         style="background: linear-gradient(to right, #5a3ea1, #7c5cbf)">
+        <div class="px-8 py-6">
+            <h1 class="text-2xl font-bold text-white">🌿 {{ habitude.nomHabitude }}</h1>
+            <p class="text-[#d8ccf5] text-sm mt-1">
+                📅 {{ habitude.dateCreation|date('d/m/Y') }}
+                &nbsp;•&nbsp;
+                {{ habitude.emotionDominantes }}
+            </p>
+        </div>
+    </div>
+
+    {# INDICATEURS #}
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4">
+        <h2 class="text-sm font-bold text-gray-500 mb-4">📊 Niveaux du jour</h2>
+        <div class="space-y-3">
+
+            {# Énergie #}
+            <div class="flex items-center gap-4">
+                <span class="text-xs text-gray-400 w-24">⚡ Énergie</span>
+                <span class="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-bold"
+                      style="background-color: {{ habitude.couleurEnergie }}22; color: {{ habitude.couleurEnergie }}">
+                    {{ habitude.emojiEnergie }} {{ habitude.niveauEnergie }}/10 — {{ habitude.labelEnergie }}
+                </span>
+            </div>
+
+            {# Stress #}
+            <div class="flex items-center gap-4">
+                <span class="text-xs text-gray-400 w-24">😰 Stress</span>
+                <span class="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-bold"
+                      style="background-color: {{ habitude.couleurStress }}22; color: {{ habitude.couleurStress }}">
+                    {{ habitude.emojiStress }} {{ habitude.niveauStress }}/10 — {{ habitude.labelStress }}
+                </span>
+            </div>
+
+            {# Sommeil #}
+            <div class="flex items-center gap-4">
+                <span class="text-xs text-gray-400 w-24">😴 Sommeil</span>
+                <span class="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-bold"
+                      style="background-color: {{ habitude.couleurSommeil }}22; color: {{ habitude.couleurSommeil }}">
+                    {{ habitude.emojiSommeil }} {{ habitude.qualiteSommeil }}/10 — {{ habitude.labelSommeil }}
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    {# NOTE #}
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+        <h2 class="text-sm font-bold text-gray-500 mb-3">📝 Note personnelle</h2>
+        <p class="text-sm text-gray-700 bg-gray-50 rounded-xl p-4 leading-relaxed">
+            {{ habitude.noteTextuelle ?: 'Aucune note.' }}
+        </p>
+    </div>
+
+    {# ACTIONS #}
+    <div class="flex gap-3">
+        <a href="{{ path('habitude_index') }}"
+           class="flex-1 text-center bg-gray-100 text-gray-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">
+            ← Retour
+        </a>
+        <a href="{{ path('habitude_modifier', {id: habitude.idHabit}) }}"
+           class="flex-1 text-center bg-[#006876] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
+            ✏️ Modifier
+        </a>
+    </div>
+
+</div>
+{% endblock %}

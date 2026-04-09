@@ -1,0 +1,74 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto pb-24 space-y-8">
+
+    <div>
+        <a href="{{ path('admin_event_index') }}" class="inline-flex items-center gap-1 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors mb-4">
+            <span class="material-symbols-outlined text-lg">arrow_back</span> Retour aux événements
+        </a>
+        <h2 class="text-3xl font-extrabold font-headline tracking-tighter">{{ event.titre }}</h2>
+    </div>
+
+    <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm p-8 lg:p-10 space-y-8">
+
+        {# Info grid #}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+                <div class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1">Type</div>
+                <span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-indigo-50 text-indigo-600">
+                    {{ event.type.label() }}
+                </span>
+            </div>
+            <div>
+                <div class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1">Date de l'événement</div>
+                <div class="text-sm font-bold text-on-surface">{{ event.date|date('d/m/Y') }}</div>
+            </div>
+            <div>
+                <div class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1">Capacité</div>
+                <div class="text-sm font-bold text-on-surface">{{ event.capacite }} places</div>
+            </div>
+            <div>
+                <div class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1">Statut</div>
+                <span class="flex items-center gap-1.5 text-sm font-bold {{ event.statut ? 'text-green-600' : 'text-red-500' }}">
+                    <span class="w-2 h-2 rounded-full {{ event.statut ? 'bg-green-500' : 'bg-red-500' }}"></span>
+                    {{ event.statut ? 'Actif' : 'Inactif' }}
+                </span>
+            </div>
+            <div>
+                <div class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1">Date de création</div>
+                <div class="text-sm font-bold text-on-surface">{{ event.dateCreation|date('d/m/Y') }}</div>
+            </div>
+            <div>
+                <div class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1">Inscriptions</div>
+                <div class="text-sm font-bold text-on-surface">{{ event.inscriptions|length }}</div>
+            </div>
+        </div>
+
+        {% if event.description %}
+        <div>
+            <div class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-2">Description</div>
+            <div class="p-5 bg-gray-50 rounded-2xl text-sm text-on-surface-variant leading-relaxed">
+                {{ event.description }}
+            </div>
+        </div>
+        {% endif %}
+
+        {# Actions #}
+        <div class="flex gap-3 pt-4 border-t border-outline/20">
+            <a href="{{ path('admin_event_edit', {id: event.id}) }}"
+               class="flex-1 py-3.5 rounded-2xl bg-indigo-50 text-indigo-600 text-sm font-bold hover:bg-indigo-100 transition-colors text-center flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-lg">edit</span> Modifier
+            </a>
+            <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}"
+                  onsubmit="return confirm('Supprimer cet événement ?');" class="flex-1">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
+                <button type="submit"
+                        class="w-full py-3.5 rounded-2xl bg-red-50 text-red-500 text-sm font-bold hover:bg-red-100 transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">delete</span> Supprimer
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}Votre Résultat{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto pb-24">
+
+    <div class="bg-white rounded-[3rem] p-12 shadow-sm border border-outline/20 text-center">
+
+        <div class="w-20 h-20 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-8">
+            <span class="material-symbols-outlined text-5xl">emoji_events</span>
+        </div>
+
+        <h1 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface mb-2">Résultat obtenu</h1>
+        <p class="text-sm text-on-surface-variant mb-10">Voici votre analyse complète</p>
+
+        <!-- Score ring -->
+        <div class="relative w-40 h-40 mx-auto mb-10">
+            <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#f3f4f6" stroke-width="10"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="var(--color-primary, #6366f1)" stroke-width="10"
+                        stroke-dasharray="{{ (resultat.pourcentage / 100 * 263.9)|round }} 263.9"
+                        stroke-linecap="round"/>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-3xl font-extrabold text-on-surface font-headline">{{ resultat.pourcentage|round }}%</span>
+                <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Score</span>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="bg-gray-50/50 rounded-[1.5rem] p-6 border border-outline/10">
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-[0.2em] uppercase mb-1">Score total</div>
+                <div class="text-2xl font-extrabold text-primary font-headline">
+                    {{ resultat.scoreTotal }} <span class="text-base text-on-surface-variant font-medium">/ {{ resultat.scoreMaxPossible }}</span>
+                </div>
+            </div>
+            <div class="bg-gray-50/50 rounded-[1.5rem] p-6 border border-outline/10">
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-[0.2em] uppercase mb-1">Niveau</div>
+                <div class="text-2xl font-extrabold text-on-surface font-headline">{{ resultat.resultat ?? 'N/A' }}</div>
+            </div>
+        </div>
+
+        <!-- Interpretation -->
+        {% if resultat.interpretation %}
+        <div class="bg-primary/5 rounded-[2rem] p-8 border border-primary/10 text-left mb-8">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="material-symbols-outlined text-primary">lightbulb</span>
+                <span class="text-xs font-bold text-primary uppercase tracking-widest">Interprétation</span>
+            </div>
+            <p class="text-sm text-on-surface leading-relaxed">{{ resultat.interpretation }}</p>
+        </div>
+        {% endif %}
+
+        <div class="flex gap-4">
+            <a href="{{ path('testpsy_index') }}"
+               class="flex-1 py-4 text-sm font-bold text-on-surface-variant bg-gray-50 border border-outline/30 rounded-2xl hover:bg-white hover:border-outline transition-all active:scale-95 uppercase tracking-wider">
+                Retour aux tests
+            </a>
+            <a href="{{ path('testpsy_historique') }}"
+               class="flex-1 py-4 text-sm font-bold text-white bg-primary rounded-2xl hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20 uppercase tracking-wider">
+                Mon historique
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

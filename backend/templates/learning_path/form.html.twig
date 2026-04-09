@@ -1,0 +1,150 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block content %}
+<div class="max-w-3xl space-y-6">
+
+    <div class="flex items-center gap-4">
+        <a href="{{ path('app_learning_path_index') }}"
+           class="flex items-center gap-2 text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Return
+        </a>
+        <div>
+            <h1 class="text-3xl font-extrabold text-on-surface tracking-tight">
+                {{ path ? 'Edit learning path' : 'New learning path' }}
+            </h1>
+        </div>
+    </div>
+
+    <form method="POST"
+          action="{{ path ? path('app_learning_path_update', {id: path.id}) : path('app_learning_path_create') }}"
+          id="lp-form"
+          class="space-y-6">
+
+        {# Info card #}
+        <div class="bg-white rounded-[2rem] border border-outline/30 p-8 soft-elevation space-y-5">
+            <h2 class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Information</h2>
+
+            <div>
+                <label class="block text-sm font-semibold text-on-surface mb-1.5">Title <span class="text-red-500">*</span></label>
+                <input type="text" name="titre" value="{{ old.titre ?? '' }}"
+                       placeholder="Learning path name…"
+                       class="w-full rounded-xl border border-outline/50 bg-gray-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition
+                              {{ errors.titre is defined ? 'border-red-400' : '' }}">
+                {% if errors.titre is defined %}
+                    <p class="text-xs text-red-500 mt-1">{{ errors.titre }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-on-surface mb-1.5">Description</label>
+                <textarea name="description" rows="3"
+                          placeholder="Describe this learning path…"
+                          class="w-full rounded-xl border border-outline/50 bg-gray-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition resize-none">{{ old.description ?? '' }}</textarea>
+            </div>
+        </div>
+
+        {# Article selector #}
+        <div class="bg-white rounded-[2rem] border border-outline/30 p-8 soft-elevation space-y-4">
+            <h2 class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Learning path articles</h2>
+            <p class="text-xs text-on-surface-variant">Check the articles and drag & drop to order them.</p>
+
+            {# Selected / ordered list (drag target) #}
+            <div id="selected-list" class="space-y-2 min-h-[60px] rounded-xl border-2 border-dashed border-outline/30 p-3">
+                {% if path %}
+                    {% for pa in path.pathArticles %}
+                        <div class="selected-item flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-xl px-4 py-2.5 cursor-grab"
+                             data-id="{{ pa.article.id }}">
+                            <span class="material-symbols-outlined text-on-surface-variant text-[16px]">drag_indicator</span>
+                            <span class="text-sm font-semibold text-on-surface flex-1 line-clamp-1">{{ pa.article.titre }}</span>
+                            <button type="button" onclick="removeFromPath(this)"
+                                    class="text-red-400 hover:text-red-600 transition">
+                                <span class="material-symbols-outlined text-[16px]">close</span>
+                            </button>
+                            <input type="hidden" name="articleIds[]" value="{{ pa.article.id }}">
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <p id="empty-hint" class="text-xs text-on-surface-variant text-center py-3 {{ path and path.pathArticles|length > 0 ? 'hidden' : '' }}">
+                    Add articles from the list below
+                </p>
+            </div>
+
+            {# Available articles #}
+            <div class="space-y-1.5 max-h-72 overflow-y-auto pr-1">
+                {% for article in articles %}
+                    {% set alreadyIn = path and path.pathArticles|filter(pa => pa.article.id == article.id)|length > 0 %}
+                    <div class="available-item flex items-center gap-3 px-4 py-2.5 rounded-xl border border-outline/30 hover:bg-gray-50 transition {{ alreadyIn ? 'opacity-40' : '' }}"
+                         data-id="{{ article.id }}"
+                         data-title="{{ article.titre }}">
+                        <span class="text-sm text-on-surface flex-1 line-clamp-1">{{ article.titre }}</span>
+                        {% if article.categorie %}
+                            <span class="text-[10px] font-bold bg-primary/10 text-primary px-2 py-0.5 rounded-full shrink-0">
+                                {{ article.categorie.nom }}
+                            </span>
+                        {% endif %}
+                        <button type="button" onclick="addToPath(this)"
+                                class="shrink-0 p-1 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition {{ alreadyIn ? 'pointer-events-none' : '' }}">
+                            <span class="material-symbols-outlined text-[16px]">add</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# Submit #}
+        <div class="flex items-center justify-between">
+            <a href="{{ path ? path('app_learning_path_show', {id: path.id}) : path('app_learning_path_index') }}"
+               class="text-sm font-semibold text-on-surface-variant hover:text-on-surface transition">
+                ← Cancel
+            </a>
+            <button type="submit"
+                    class="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-primary/90 transition shadow-md shadow-primary/20">
+                <span class="material-symbols-outlined text-[18px]">save</span>
+                {{ path ? 'Update' : 'Create learning path' }}
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<script>
+function addToPath(btn) {
+    const item = btn.closest('.available-item');
+    const id    = item.dataset.id;
+    const title = item.dataset.title;
+
+    // Don't add twice
+    if (document.querySelector(`#selected-list [data-id="${id}"]`)) return;
+
+    const div = document.createElement('div');
+    div.className = 'selected-item flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-xl px-4 py-2.5 cursor-grab';
+    div.dataset.id = id;
+    div.innerHTML = `
+        <span class="material-symbols-outlined text-on-surface-variant text-[16px]">drag_indicator</span>
+        <span class="text-sm font-semibold text-on-surface flex-1 line-clamp-1">${title}</span>
+        <button type="button" onclick="removeFromPath(this)" class="text-red-400 hover:text-red-600 transition">
+            <span class="material-symbols-outlined text-[16px]">close</span>
+        </button>
+        <input type="hidden" name="articleIds[]" value="${id}">
+    `;
+
+    document.getElementById('empty-hint').classList.add('hidden');
+    document.getElementById('selected-list').appendChild(div);
+    item.classList.add('opacity-40');
+}
+
+function removeFromPath(btn) {
+    const item = btn.closest('.selected-item');
+    const id   = item.dataset.id;
+    item.remove();
+
+    const avail = document.querySelector(`.available-item[data-id="${id}"]`);
+    if (avail) avail.classList.remove('opacity-40');
+
+    if (!document.querySelector('.selected-item')) {
+        document.getElementById('empty-hint').classList.remove('hidden');
+    }
+}
+</script>
+{% endblock %}

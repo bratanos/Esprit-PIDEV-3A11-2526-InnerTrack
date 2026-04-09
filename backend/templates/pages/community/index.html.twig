@@ -1,0 +1,344 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}Forum
+{% endblock %}
+
+{% block content %}
+
+<div class="community-wrapper">
+    <div class="community-header">
+        <h1 class="community-title">
+            <!--<span class="material-icons">forum</span>-->
+            Community Forum
+        </h1>
+    </div>
+
+    {% if app.user %}
+    <form method="post" class="quick-post-form">
+        <input type="hidden" name="quick_post" value="1">
+        <input type="text" name="title" class="quick-post-title" placeholder="Title (optional)">
+        <div class="quick-post-row">
+            <div class="thread-avatar">
+                {{ app.user.firstName|first|upper }}{{ app.user.lastName|first|upper }}
+            </div>
+            <input type="text" name="content" class="quick-post-input"
+                   placeholder="Share something with the community..."
+                   required
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();this.closest('form').submit();}">
+            <button type="submit" class="send-btn">
+                <span class="material-icons">send</span>
+                Post
+            </button>
+        </div>
+    </form>
+    {% endif %}
+
+    <div class="threads-list">
+        {% set emojis = ['👍','❤️','😂','😮','😢','😡'] %}
+
+        {% for post in posts %}
+            {% set allReplies = replies_map[post.id] ?? [] %}
+
+            <div class="thread-card">
+                <div class="thread-meta">
+                    <div class="thread-avatar">
+                        {{ post.user.firstName|first|upper }}{{ post.user.lastName|first|upper }}
+                    </div>
+                    <div class="thread-info">
+                        <span class="thread-author">{{ post.user.firstName }} {{ post.user.lastName }}</span>
+                        <span class="thread-date">
+                            {{ post.createdAt|date('M d, Y · H:i') }}
+                            {% if post.modified %}<em class="thread-edited">· edited</em>{% endif %}
+                        </span>
+                    </div>
+                    {% if app.user and app.user.id == post.user.id %}
+                    <div class="owner-actions">
+                        <a href="{{ path('app_community_edit', {'id': post.id}) }}" class="action-btn">
+                            <span class="material-icons">edit</span>
+                        </a>
+                        <form method="post" action="{{ path('app_community_delete', {'id': post.id}) }}" style="display:inline" onsubmit="return confirm('Delete this post?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                            <button type="submit" class="action-btn action-btn--delete">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if post.title %}<h2 class="thread-title">{{ post.title }}</h2>{% endif %}
+                <p class="thread-content">{{ post.content }}</p>
+
+                {# Reactions on post #}
+                {% set counts = post.reactionCounts %}
+                {% set myReaction = app.user ? post.getUserReaction(app.user.id) : null %}
+                <div class="reaction-bar">
+                    {% for emoji, count in counts %}
+                    <form method="post" class="reaction-form">
+                        <input type="hidden" name="react" value="1">
+                        <input type="hidden" name="comment_id" value="{{ post.id }}">
+                        <input type="hidden" name="emoji" value="{{ emoji }}">
+                        <button type="submit" class="reaction-pill {{ myReaction == emoji ? 'reaction-pill--mine' : '' }}">
+                            {{ emoji }} <span class="reaction-count">{{ count }}</span>
+                        </button>
+                    </form>
+                    {% endfor %}
+                    {% if app.user %}
+                    <div class="emoji-picker-wrap">
+                        <button type="button" class="reaction-add-btn" onclick="togglePicker(this)">
+                            <span class="material-icons">react</span>
+                        </button>
+                        <div class="emoji-picker">
+                            {% for emoji in emojis %}
+                            <form method="post" class="reaction-form">
+                                <input type="hidden" name="react" value="1">
+                                <input type="hidden" name="comment_id" value="{{ post.id }}">
+                                <input type="hidden" name="emoji" value="{{ emoji }}">
+                                <button type="submit" class="emoji-option {{ myReaction == emoji ? 'emoji-option--active' : '' }}">{{ emoji }}</button>
+                            </form>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {# All nested replies #}
+                {% if allReplies|length > 0 %}
+                <div class="replies-list">
+                    {% for reply in allReplies %}
+                        {% set isNested = reply.parent and reply.parent.id != post.id %}
+                        <div class="reply-card" style="margin-left: {{ isNested ? '20px' : '0' }}">
+                            <div class="reply-line"></div>
+                            <div class="reply-body">
+                                <div class="thread-meta">
+                                    <div class="thread-avatar thread-avatar--sm">
+                                        {{ reply.user.firstName|first|upper }}{{ reply.user.lastName|first|upper }}
+                                    </div>
+                                    <div class="thread-info">
+                                        <span class="thread-author">{{ reply.user.firstName }} {{ reply.user.lastName }}</span>
+                                        <span class="thread-date">
+                                            {{ reply.createdAt|date('M d, Y · H:i') }}
+                                            {% if reply.modified %}<em class="thread-edited">· edited</em>{% endif %}
+                                        </span>
+                                    </div>
+                                    {% if app.user and app.user.id == reply.user.id %}
+                                    <div class="owner-actions">
+                                        <a href="{{ path('app_community_edit', {'id': reply.id}) }}" class="action-btn">
+                                            <span class="material-icons">edit</span>
+                                        </a>
+                                        <form method="post" action="{{ path('app_community_delete', {'id': reply.id}) }}" style="display:inline" onsubmit="return confirm('Delete?')">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reply.id) }}">
+                                            <button type="submit" class="action-btn action-btn--delete">
+                                                <span class="material-icons">delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <p class="thread-content">{{ reply.content }}</p>
+
+                                {# Reactions on reply #}
+                                {% set rCounts = reply.reactionCounts %}
+                                {% set myRReaction = app.user ? reply.getUserReaction(app.user.id) : null %}
+                                <div class="reaction-bar">
+                                    {% for emoji, count in rCounts %}
+                                    <form method="post" class="reaction-form">
+                                        <input type="hidden" name="react" value="1">
+                                        <input type="hidden" name="comment_id" value="{{ reply.id }}">
+                                        <input type="hidden" name="emoji" value="{{ emoji }}">
+                                        <button type="submit" class="reaction-pill {{ myRReaction == emoji ? 'reaction-pill--mine' : '' }}">
+                                            {{ emoji }} <span class="reaction-count">{{ count }}</span>
+                                        </button>
+                                    </form>
+                                    {% endfor %}
+                                    {% if app.user %}
+                                    <div class="emoji-picker-wrap">
+                                        <button type="button" class="reaction-add-btn" onclick="togglePicker(this)">
+                                            <span class="material-icons">react</span>
+                                        </button>
+                                        <div class="emoji-picker">
+                                            {% for emoji in emojis %}
+                                            <form method="post" class="reaction-form">
+                                                <input type="hidden" name="react" value="1">
+                                                <input type="hidden" name="comment_id" value="{{ reply.id }}">
+                                                <input type="hidden" name="emoji" value="{{ emoji }}">
+                                                <button type="submit" class="emoji-option {{ myRReaction == emoji ? 'emoji-option--active' : '' }}">{{ emoji }}</button>
+                                            </form>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                {% if app.user %}
+                                <form method="post" class="quick-reply-form">
+                                    <input type="hidden" name="quick_post" value="1">
+                                    <input type="hidden" name="parent_id" value="{{ reply.id }}">
+                                    <div class="quick-post-row">
+                                        <div class="thread-avatar thread-avatar--sm">
+                                            {{ app.user.firstName|first|upper }}{{ app.user.lastName|first|upper }}
+                                        </div>
+                                        <input type="text" name="content" class="quick-post-input"
+                                               placeholder="Reply to {{ reply.user.firstName }}..."
+                                               onkeydown="if(event.key==='Enter'){event.preventDefault();this.closest('form').submit();}">
+                                        <button type="submit" class="send-btn send-btn--sm">
+                                            <span class="material-icons">send</span>
+                                        </button>
+                                    </div>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if app.user %}
+                <form method="post" class="quick-reply-form">
+                    <input type="hidden" name="quick_post" value="1">
+                    <input type="hidden" name="parent_id" value="{{ post.id }}">
+                    <div class="quick-post-row">
+                        <div class="thread-avatar thread-avatar--sm">
+                            {{ app.user.firstName|first|upper }}{{ app.user.lastName|first|upper }}
+                        </div>
+                        <input type="text" name="content" class="quick-post-input"
+                               placeholder="Reply to {{ post.user.firstName }}..."
+                               onkeydown="if(event.key==='Enter'){event.preventDefault();this.closest('form').submit();}">
+                        <button type="submit" class="send-btn send-btn--sm">
+                            <span class="material-icons">send</span>
+                        </button>
+                    </div>
+                </form>
+                {% endif %}
+
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <span class="material-icons">forum</span>
+                <p>No posts yet. Be the first to start a conversation!</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.community-wrapper { max-width: 780px; margin: 2rem auto; padding: 0 1rem; }
+.community-header { display: flex; align-items: center; margin-bottom: 1.5rem; }
+.community-title { display: flex; align-items: center; gap: 0.5rem; font-size: 1.5rem; font-weight: 700; margin: 0; }
+
+.quick-post-form {
+    background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;
+    display: flex; flex-direction: column; gap: 0.6rem;
+}
+.quick-post-title {
+    border: none; border-bottom: 1px solid #e5e7eb; padding: 0.4rem 0;
+    font-size: 0.9rem; font-weight: 600; outline: none; width: 100%; background: transparent;
+}
+.quick-post-row { display: flex; align-items: center; gap: 0.75rem; }
+.quick-post-input { flex: 1; border: none; outline: none; font-size: 0.95rem; background: transparent; padding: 0.4rem 0; }
+
+.send-btn {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    background: var(--primary, #6c63ff); color: #fff; border: none;
+    border-radius: 8px; padding: 0.4rem 0.9rem; font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; white-space: nowrap; transition: opacity 0.2s; flex-shrink: 0;
+}
+.send-btn:hover { opacity: 0.85; }
+.send-btn .material-icons { font-size: 1rem; }
+.send-btn--sm { padding: 0.3rem 0.65rem; font-size: 0.8rem; }
+.send-btn--sm .material-icons { font-size: 0.9rem; }
+
+.thread-card {
+    background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: box-shadow 0.2s;
+}
+.thread-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+.thread-meta { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+.thread-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--primary, #6c63ff); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+}
+.thread-avatar--sm { width: 28px; height: 28px; font-size: 0.65rem; }
+.thread-info { display: flex; flex-direction: column; line-height: 1.3; flex: 1; }
+.thread-author { font-weight: 600; font-size: 0.9rem; }
+.thread-date { font-size: 0.75rem; color: #9ca3af; }
+.thread-edited { font-size: 0.7rem; color: #9ca3af; font-style: italic; }
+
+.owner-actions { display: flex; align-items: center; gap: 0.25rem; margin-left: auto; }
+.action-btn {
+    display: inline-flex; align-items: center; color: #6b7280; background: #f3f4f6;
+    border: none; border-radius: 6px; padding: 0.25rem 0.5rem;
+    cursor: pointer; text-decoration: none; transition: background 0.15s, color 0.15s;
+}
+.action-btn:hover { background: #e5e7eb; color: #111; }
+.action-btn .material-icons { font-size: 1rem; }
+.action-btn--delete:hover { background: #fee2e2; color: #dc2626; }
+
+.thread-title { font-size: 1.1rem; font-weight: 700; margin: 0 0 0.4rem 0; }
+.thread-content { font-size: 0.95rem; color: #374151; margin: 0 0 0.6rem 0; line-height: 1.6; }
+
+.replies-list { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #f3f4f6; display: flex; flex-direction: column; gap: 0.75rem; }
+.reply-card { display: flex; gap: 0.75rem; }
+.reply-line { width: 2px; background: #e5e7eb; border-radius: 2px; flex-shrink: 0; margin-left: 0.5rem; }
+.reply-body { flex: 1; min-width: 0; }
+.quick-reply-form { margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid #f3f4f6; }
+
+.reaction-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.6rem; }
+.reaction-form { display: inline-flex; }
+.reaction-pill {
+    display: inline-flex; align-items: center; gap: 0.2rem;
+    background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 999px;
+    padding: 0.2rem 0.6rem; font-size: 0.85rem; cursor: pointer;
+    transition: background 0.15s; line-height: 1;
+}
+.reaction-pill:hover { background: #e5e7eb; }
+.reaction-pill--mine { background: #ede9fe; border-color: var(--primary, #6c63ff); color: var(--primary, #6c63ff); }
+.reaction-count { font-size: 0.75rem; font-weight: 600; }
+
+.emoji-picker-wrap { position: relative; }
+.reaction-add-btn {
+    background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 999px;
+    padding: 0.2rem 0.5rem; cursor: pointer; display: inline-flex;
+    align-items: center; transition: background 0.15s;
+}
+.reaction-add-btn:hover { background: #e5e7eb; }
+.reaction-add-btn .material-icons { font-size: 1rem; color: #6b7280; }
+
+.emoji-picker {
+    display: none; position: absolute; bottom: calc(100% + 6px); left: 0;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 10px;
+    padding: 0.4rem; box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    flex-direction: row; gap: 0.2rem; z-index: 100; white-space: nowrap;
+}
+.emoji-picker.open { display: flex; }
+.emoji-option {
+    background: none; border: 2px solid transparent; border-radius: 6px;
+    font-size: 1.2rem; padding: 0.2rem 0.3rem; cursor: pointer;
+    transition: background 0.1s, transform 0.1s; line-height: 1;
+}
+.emoji-option:hover { background: #f3f4f6; transform: scale(1.2); }
+.emoji-option--active { border-color: var(--primary, #6c63ff); background: #ede9fe; }
+
+.empty-state { text-align: center; padding: 3rem; color: #9ca3af; }
+.empty-state .material-icons { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
+</style>
+
+<script>
+function togglePicker(btn) {
+    const picker = btn.nextElementSibling;
+    const isOpen = picker.classList.contains('open');
+    document.querySelectorAll('.emoji-picker.open').forEach(p => p.classList.remove('open'));
+    if (!isOpen) picker.classList.add('open');
+}
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.emoji-picker-wrap')) {
+        document.querySelectorAll('.emoji-picker.open').forEach(p => p.classList.remove('open'));
+    }
+});
+</script>
+{% endblock %}

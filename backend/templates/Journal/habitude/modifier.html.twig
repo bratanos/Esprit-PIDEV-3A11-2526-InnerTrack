@@ -1,0 +1,246 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block head %}
+{{ parent() }}
+<style>
+input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+    background: linear-gradient(to right, #48bb78, #ff4444);
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #ccc;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+    border-color: #006876;
+}
+
+.slider-stress {
+    background: linear-gradient(to right, #63b3ed, #ff4444) !important;
+}
+
+.slider-sommeil {
+    background: linear-gradient(to right, #a0aec0, #b794f4) !important;
+}
+</style>
+
+<script>
+function getColor(type, val) {
+    if (type === 'energie') {
+        return val >= 7 ? '#48bb78' : val >= 4 ? '#f6ad55' : '#ff4444';
+    } else if (type === 'stress') {
+        return val >= 7 ? '#ff4444' : val >= 4 ? '#f6ad55' : '#63b3ed';
+    } else {
+        return val >= 7 ? '#b794f4' : val >= 4 ? '#4299e1' : '#a0aec0';
+    }
+}
+
+function updateSlider(slider, spanId, type) {
+    const val = parseInt(slider.value);
+    const max = parseInt(slider.max) || 10;
+    const pct = (val / max) * 100;
+    const color = getColor(type, val);
+
+    slider.style.background =
+        `linear-gradient(to right, ${color} ${pct}%, #e2e8f0 ${pct}%)`;
+
+    const span = document.getElementById(spanId);
+    if (span) {
+        span.textContent = val;
+        span.style.color = color;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    // ── Init sliders ──
+    const sliders = [
+        { el: document.querySelector('.slider-energie'), span: 'val_energie', type: 'energie' },
+        { el: document.querySelector('.slider-stress'),  span: 'val_stress',  type: 'stress'  },
+        { el: document.querySelector('.slider-sommeil'), span: 'val_sommeil', type: 'sommeil' },
+    ];
+    sliders.forEach(s => {
+        if (s.el) updateSlider(s.el, s.span, s.type);
+    });
+
+    // ── Désactiver placeholder émotion ──
+    const emotionSelect = document.querySelector('#habitude_emotionDominantes');
+    if (emotionSelect) {
+        const placeholder = emotionSelect.querySelector('option[value=""]');
+        if (placeholder) placeholder.disabled = true;
+
+        emotionSelect.addEventListener('change', function() {
+            if (this.value !== '') {
+                this.classList.remove('border-red-400', 'bg-red-50');
+                this.classList.add('border-gray-200');
+                const err = this.parentElement.querySelector('p.text-red-500');
+                if (err) err.style.display = 'none';
+            }
+        });
+    }
+
+    // ── Cacher erreur nom ──
+    const nomInput = document.querySelector('#habitude_nomHabitude');
+    if (nomInput) {
+        nomInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                this.classList.remove('border-red-400', 'bg-red-50');
+                this.classList.add('border-gray-200');
+                const err = this.parentElement.querySelector('p.text-red-500');
+                if (err) err.style.display = 'none';
+            }
+        });
+    }
+
+});
+
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+
+    {# EN-TÊTE #}
+    <div class="rounded-2xl overflow-hidden mb-6"
+         style="background: linear-gradient(to right, #5a3ea1, #7c5cbf)">
+        <div class="px-8 py-6">
+            <h1 class="text-2xl font-bold text-white">✏️ Modifier l'habitude</h1>
+            <p class="text-[#d8ccf5] text-sm mt-1">{{ habitude.nomHabitude }}</p>
+        </div>
+    </div>
+
+    {{ form_start(form, {attr: {class: 'space-y-4', novalidate: 'novalidate'}}) }}
+
+{% if not form.vars.valid and form.vars.submitted %}
+    <div class="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm">
+        ⚠️ Veuillez corriger les erreurs ci-dessous
+    </div>
+{% endif %}
+
+{# NOM + ÉMOTION #}
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+    <div>
+        {{ form_label(form.nomHabitude, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+        {{ form_widget(form.nomHabitude, {attr: {
+            class: 'w-full rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 ' ~
+                   (form.nomHabitude.vars.errors|length > 0 ? 'border-red-400 focus:ring-red-300 bg-red-50' : 'border-gray-200 focus:ring-[#006876]')
+        }}) }}
+        {% if form.nomHabitude.vars.errors|length > 0 %}
+            <p class="text-red-500 text-xs mt-1 font-medium">
+                ⚠️ {{ form.nomHabitude.vars.errors[0].message }}
+            </p>
+        {% endif %}
+    </div>
+    <div>
+        {{ form_label(form.emotionDominantes, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+        {{ form_widget(form.emotionDominantes, {attr: {
+            class: 'w-full rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 ' ~
+                   (form.emotionDominantes.vars.errors|length > 0 ? 'border-red-400 bg-red-50 focus:ring-red-300' : 'border-gray-200 focus:ring-[#006876]')
+        }}) }}
+        {% if form.emotionDominantes.vars.errors|length > 0 %}
+            <p class="text-red-500 text-xs mt-1 font-medium">
+                ⚠️ {{ form.emotionDominantes.vars.errors[0].message }}
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+        {# NIVEAUX #}
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+            <h2 class="text-sm font-bold text-gray-500">📊 Niveaux du jour</h2>
+
+            {# Énergie #}
+    <div>
+        {{ form_label(form.niveauEnergie, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-2'}}) }}
+        <div class="flex items-center gap-4">
+            {{ form_widget(form.niveauEnergie, {attr: {
+                class: 'slider-energie',
+                oninput: "updateSlider(this, 'val_energie', 'energie')"
+            }}) }}
+            <span id="val_energie" class="text-sm font-bold w-8 text-center">
+    {{ form.niveauEnergie.vars.value }}
+</span>
+        </div>
+        <div class="flex justify-between text-xs text-gray-400 mt-1">
+            <span>0 — Vide</span><span>10 — Vitalité</span>
+        </div>
+    </div>
+
+    {# Stress #}
+    <div>
+        {{ form_label(form.niveauStress, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-2'}}) }}
+        <div class="flex items-center gap-4">
+            {{ form_widget(form.niveauStress, {attr: {
+                class: 'slider-stress',
+                oninput: "updateSlider(this, 'val_stress', 'stress')"
+            }}) }}
+            <span id="val_stress" class="text-sm font-bold w-8 text-center">
+    {{ form.niveauStress.vars.value }}
+</span>
+        </div>
+        <div class="flex justify-between text-xs text-gray-400 mt-1">
+            <span>0 — Zen</span><span>10 — Alarme</span>
+        </div>
+    </div>
+
+    {# Sommeil #}
+    <div>
+        {{ form_label(form.qualiteSommeil, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-2'}}) }}
+        <div class="flex items-center gap-4">
+            {{ form_widget(form.qualiteSommeil, {attr: {
+                class: 'slider-sommeil',
+                oninput: "updateSlider(this, 'val_sommeil', 'sommeil')"
+            }}) }}
+            <span id="val_sommeil" class="text-sm font-bold w-8 text-center">
+    {{ form.qualiteSommeil.vars.value }}
+</span>
+        </div>
+        <div class="flex justify-between text-xs text-gray-400 mt-1">
+            <span>0 — Fatigué</span><span>10 — Récupéré</span>
+        </div>
+    </div>
+</div>
+
+        {# NOTE + DATE #}
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+            <div>
+                {{ form_label(form.noteTextuelle, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+                {{ form_widget(form.noteTextuelle) }}
+            </div>
+            <div>
+                {{ form_label(form.dateCreation, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+                {{ form_widget(form.dateCreation) }}
+            </div>
+        </div>
+
+        {# BOUTONS #}
+        <div class="flex gap-3">
+            <a href="{{ path('habitude_index') }}"
+               class="flex-1 text-center bg-gray-100 text-gray-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">
+                ✕ Annuler
+            </a>
+            <button type="submit"
+                    class="flex-1 bg-[#006876] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
+                ✅ Sauvegarder
+            </button>
+        </div>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

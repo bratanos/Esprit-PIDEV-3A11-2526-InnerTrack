@@ -1,0 +1,185 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block content %}
+<div class="max-w-3xl space-y-6">
+
+    {# Breadcrumb #}
+    <nav class="flex items-center gap-2 text-sm text-on-surface-variant">
+        <a href="{{ path('app_article_index') }}" class="hover:text-primary transition">Articles</a>
+        <span>›</span>
+        {% if currentPath %}
+            <a href="{{ path('app_learning_path_show', {id: currentPath.id}) }}"
+               class="hover:text-primary transition truncate max-w-[150px]">
+                {{ currentPath.titre }}
+            </a>
+            <span>›</span>
+        {% endif %}
+        <span class="text-on-surface font-medium truncate max-w-xs">{{ article.titre }}</span>
+    </nav>
+
+    {# Progress bar (if reading inside a path) #}
+    {% if currentPath and currentStep and totalSteps %}
+        <div class="bg-white rounded-2xl border border-outline/30 px-6 py-4 soft-elevation">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-primary flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[15px]">route</span>
+                    {{ currentPath.titre }}
+                </span>
+                <span class="text-xs font-bold text-on-surface-variant">
+                    Step {{ currentStep }} / {{ totalSteps }}
+                </span>
+            </div>
+            <div class="w-full bg-gray-100 rounded-full h-2">
+                <div class="bg-primary rounded-full h-2 transition-all duration-500"
+                     style="width: {{ ((currentStep / totalSteps) * 100)|round }}%"></div>
+            </div>
+        </div>
+    {% endif %}
+
+    {# Article card #}
+    <div class="bg-white rounded-[2rem] border border-outline/30 p-8 soft-elevation space-y-5">
+
+        {# Meta row #}
+        <div class="flex flex-wrap items-center gap-3">
+            {% if article.categorie %}
+                <a href="{{ path('app_article_index', {categorie: article.categorie.id}) }}"
+                   class="text-xs font-bold bg-primary/10 text-primary px-3 py-1 rounded-full hover:bg-primary/20 transition">
+                    {{ article.categorie.nom }}
+                </a>
+            {% endif %}
+            {% if article.readability %}
+                {% set rc = {
+                    'Easy':         'bg-green-100 text-green-700',
+                    'Intermediate': 'bg-amber-100 text-amber-700',
+                    'Advanced':     'bg-red-100 text-red-700'
+                } %}
+                <span class="text-xs font-bold px-3 py-1 rounded-full {{ rc[article.readability] ?? '' }}">
+                    {{ article.readability }}
+                </span>
+            {% endif %}
+            <span class="ml-auto text-xs text-on-surface-variant flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+                {{ article.datePublication ? article.datePublication|date('d/m/Y') : '—' }}
+            </span>
+        </div>
+
+        {# Title #}
+        <h1 class="text-2xl font-extrabold text-on-surface tracking-tight leading-tight">
+            {{ article.titre }}
+        </h1>
+
+        {# Author #}
+        {% if article.auteur %}
+            <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                <div class="w-6 h-6 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[9px] font-bold shrink-0 overflow-hidden">
+                    {% if article.auteur.profilePictureUrl is defined and article.auteur.profilePictureUrl %}
+                        <img src="{{ article.auteur.profilePictureUrl }}" class="w-full h-full object-cover" alt="">
+                    {% else %}
+                        {{ article.auteur.firstName|first|upper }}{{ article.auteur.lastName|first|upper }}
+                    {% endif %}
+                </div>
+                <span class="font-medium text-xs">{{ article.auteur.firstName }} {{ article.auteur.lastName }}</span>
+            </div>
+        {% endif %}
+
+        <div class="h-px bg-outline/20"></div>
+
+        {# Content #}
+        <div class="text-sm text-on-surface leading-relaxed whitespace-pre-line">
+            {{ article.contenu }}
+        </div>
+
+        {# Tags #}
+        {% if article.tags|length > 0 %}
+            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-outline/20">
+                <span class="material-symbols-outlined text-on-surface-variant text-[16px]">label</span>
+                {% for tag in article.tags %}
+                    <a href="{{ path('app_article_by_tag', {tagName: tag.nom}) }}"
+                       class="text-xs font-semibold bg-gray-100 text-on-surface-variant px-2.5 py-1 rounded-full
+                              hover:bg-primary/10 hover:text-primary transition">
+                        #{{ tag.nom }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+
+    {# Next article in path #}
+    {% if nextStep %}
+        <div class="bg-gradient-to-r from-primary/5 to-primary/10 rounded-2xl border border-primary/20 px-6 py-5
+                    flex items-center justify-between gap-4">
+            <div>
+                <p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Continue learning</p>
+                <p class="text-sm font-semibold text-on-surface line-clamp-1">{{ nextStep.article.titre }}</p>
+                <p class="text-xs text-on-surface-variant mt-0.5">
+                    Step {{ nextStep.articleOrder }} / {{ totalSteps }}
+                </p>
+            </div>
+            <a href="{{ path('app_article_show', {id: nextStep.article.id}) }}"
+               class="shrink-0 flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-semibold text-sm
+                      hover:bg-primary/90 transition shadow-md shadow-primary/20 whitespace-nowrap">
+                Next
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+        </div>
+    {% endif %}
+
+    {# Related articles by tags #}
+    {% if relatedArticles|length > 0 %}
+        <div class="space-y-3">
+            <h2 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
+                <span class="material-symbols-outlined text-[16px]">recommend</span>
+                You might also like
+            </h2>
+            {% for related in relatedArticles %}
+                <a href="{{ path('app_article_show', {id: related.id}) }}"
+                   class="group flex items-center gap-4 bg-white rounded-2xl border border-outline/30 px-5 py-4
+                          hover:border-primary/30 hover:shadow-md transition-all">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-primary text-[18px]">article</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors line-clamp-1">
+                            {{ related.titre }}
+                        </p>
+                        <p class="text-xs text-on-surface-variant mt-0.5 line-clamp-1">
+                            {{ related.contenu|striptags|slice(0, 80) }}…
+                        </p>
+                    </div>
+                    {% if related.categorie %}
+                        <span class="shrink-0 text-[10px] font-bold bg-primary/10 text-primary px-2 py-1 rounded-full">
+                            {{ related.categorie.nom }}
+                        </span>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Action bar #}
+    <div class="flex items-center justify-between pt-2 border-t border-outline/20">
+        <a href="{{ path('app_article_index') }}"
+           class="flex items-center gap-1.5 text-sm font-semibold text-on-surface-variant hover:text-primary transition">
+            <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+            Back
+        </a>
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PSYCHOLOGUE') %}
+            <div class="flex items-center gap-3">
+                <a href="{{ path('app_article_edit', {id: article.id}) }}"
+                   class="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-outline text-sm font-semibold hover:bg-gray-50 transition">
+                    <span class="material-symbols-outlined text-[16px]">edit</span> Edit
+                </a>
+                <form method="post" action="{{ path('app_article_delete', {id: article.id}) }}"
+                      onsubmit="return confirm('Permanently delete this article?')">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+                    <button class="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-red-200 text-sm font-semibold text-red-500 hover:bg-red-50 transition">
+                        <span class="material-symbols-outlined text-[16px]">delete</span> Delete
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

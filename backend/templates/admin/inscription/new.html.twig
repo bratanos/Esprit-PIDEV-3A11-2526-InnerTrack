@@ -1,0 +1,124 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto pb-24 space-y-8">
+
+    <div>
+        <a href="{{ path('admin_inscription_index') }}" class="inline-flex items-center gap-1 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors mb-4">
+            <span class="material-symbols-outlined text-lg">arrow_back</span> Retour aux inscriptions
+        </a>
+        <h2 class="text-3xl font-extrabold font-headline tracking-tighter">Nouvelle inscription</h2>
+    </div>
+
+    <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm p-8 lg:p-10">
+        <form method="post" action="{{ path('admin_inscription_new') }}" class="space-y-6" id="inscForm" novalidate onsubmit="return validateInscForm(event)">
+
+            {# Nom participant #}
+            <div>
+                <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Nom du participant *</label>
+                <input type="text" name="nom_participant" id="insc_nom" value="{{ inscription.nomParticipant }}"
+                       class="w-full px-4 py-3 rounded-xl border {{ errors.nom_participant is defined ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-primary' }} bg-gray-50 text-sm focus:outline-none focus:ring-2 transition"
+                       placeholder="Nom complet">
+                {% if errors.nom_participant is defined %}
+                    <div class="text-[10px] text-red-500 mt-1 font-semibold">{{ errors.nom_participant }}</div>
+                {% endif %}
+            </div>
+
+            {# Email participant #}
+            <div>
+                <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Email *</label>
+                <input type="email" name="email_participant" id="insc_email" value="{{ inscription.emailParticipant }}"
+                       class="w-full px-4 py-3 rounded-xl border {{ errors.email_participant is defined ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-primary' }} bg-gray-50 text-sm focus:outline-none focus:ring-2 transition"
+                       placeholder="participant@email.com">
+                {% if errors.email_participant is defined %}
+                    <div class="text-[10px] text-red-500 mt-1 font-semibold">{{ errors.email_participant }}</div>
+                {% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {# Événement #}
+                <div>
+                    <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Événement *</label>
+                    <select name="evenement_id" id="insc_event"
+                            class="w-full px-4 py-3 rounded-xl border {{ errors.evenement_id is defined ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-primary' }} bg-gray-50 text-sm focus:outline-none focus:ring-2 transition">
+                        <option value="">-- Choisir --</option>
+                        {% for ev in events %}
+                            <option value="{{ ev.id }}" {{ inscription.evenement is not null and inscription.evenement.id == ev.id ? 'selected' : '' }}>
+                                {{ ev.titre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if errors.evenement_id is defined %}
+                        <div class="text-[10px] text-red-500 mt-1 font-semibold">{{ errors.evenement_id }}</div>
+                    {% endif %}
+                </div>
+
+                {# Date inscription #}
+                <div>
+                    <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Date d'inscription *</label>
+                    <input type="date" name="date_inscription" id="insc_date" value="{{ inscription.dateInscription ? inscription.dateInscription|date('Y-m-d') : '' }}"
+                           class="w-full px-4 py-3 rounded-xl border {{ errors.date_inscription is defined ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-primary' }} bg-gray-50 text-sm focus:outline-none focus:ring-2 transition">
+                    {% if errors.date_inscription is defined %}
+                        <div class="text-[10px] text-red-500 mt-1 font-semibold">{{ errors.date_inscription }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="flex gap-3 pt-4">
+                <a href="{{ path('admin_inscription_index') }}"
+                   class="flex-1 py-3.5 rounded-2xl border border-outline/40 text-sm font-bold text-on-surface-variant hover:bg-gray-50 transition-colors text-center">Annuler</a>
+                <button type="submit"
+                        class="flex-2 px-8 py-3.5 rounded-2xl bg-secondary text-white text-sm font-bold shadow-lg shadow-secondary/20 hover:bg-teal-700 active:scale-95 transition-all">
+                    Inscrire
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function validateInscForm(e) {
+    document.querySelectorAll('.js-error-msg').forEach(el => el.remove());
+    document.querySelectorAll('.border-red-400').forEach(el => el.classList.remove('border-red-400', 'ring-1', 'ring-red-300'));
+    
+    let isValid = true;
+
+    function showError(inputId, message) {
+        const input = document.getElementById(inputId);
+        if(!input) return;
+        input.classList.add('border-red-400', 'ring-1', 'ring-red-300');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'js-error-msg text-[10px] text-red-500 mt-1 font-semibold';
+        errorDiv.innerText = message;
+        input.parentNode.appendChild(errorDiv);
+        isValid = false;
+    }
+
+    const nom = document.getElementById('insc_nom').value.trim();
+    if (nom.length < 2) {
+        showError('insc_nom', 'Le nom du participant est obligatoire et doit faire au moins 2 caractères.');
+    }
+
+    const email = document.getElementById('insc_email').value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showError('insc_email', 'Veuillez saisir une adresse email valide.');
+    }
+
+    const eventId = document.getElementById('insc_event').value;
+    if (!eventId) {
+        showError('insc_event', 'Veuillez sélectionner un événement.');
+    }
+
+    const dateStr = document.getElementById('insc_date').value;
+    if (!dateStr) {
+        showError('insc_date', 'La date d\'inscription est obligatoire.');
+    }
+
+    if (!isValid) {
+        e.preventDefault();
+    }
+    return isValid;
+}
+</script>
+{% endblock %}
