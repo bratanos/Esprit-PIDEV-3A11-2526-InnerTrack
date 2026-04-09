@@ -128,12 +128,11 @@ class DashboardController extends AbstractController
              ORDER BY YEAR(created_at), MONTH(created_at)"
         )->fetchAllAssociative();
 
-        // Users list for management
+        // Users list for management (all, for CRUD tab)
         $users = $conn->executeQuery("
-            SELECT id, first_name, last_name, email, roles, status, created_at, profile_picture 
+            SELECT id, first_name, last_name, email, roles, status, created_at, profile_picture, phone_number
             FROM user 
-            ORDER BY created_at DESC 
-            LIMIT 10
+            ORDER BY created_at DESC
         ")->fetchAllAssociative();
 
         // Recent reports with context

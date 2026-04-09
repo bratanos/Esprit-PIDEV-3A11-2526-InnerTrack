@@ -17,8 +17,8 @@
 
     <!-- Navbar -->
     <top>
-        <HBox fx:id="navbar" styleClass="navbar" alignment="CENTER_LEFT" spacing="20">
-            <ImageView fx:id="logoView" fitHeight="40" preserveRatio="true">
+        <HBox fx:id="navbar" styleClass="navbar" alignment="CENTER_LEFT" spacing="16">
+            <ImageView fx:id="logoView" fitHeight="32" preserveRatio="true">
                 <image>
                     <Image url="@../images/innertracklogo1.png" />
                 </image>
@@ -27,14 +27,14 @@
             
             <Region HBox.hgrow="ALWAYS" />
             
-            <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 0 20 0 0;">
+            <HBox spacing="12" alignment="CENTER_RIGHT" style="-fx-padding: 0 16 0 0;">
                 <Button style="-fx-background-color: transparent; -fx-cursor: hand;">
                     <graphic>
                         <FontIcon iconLiteral="fas-bell" iconSize="20" iconColor="#7f8c8d" />
                     </graphic>
                 </Button>
                 
-                <HBox spacing="10" alignment="CENTER_RIGHT" fx:id="authBox">
+                <HBox spacing="8" alignment="CENTER_RIGHT" fx:id="authBox">
                     <Hyperlink text="%main.home" styleClass="navbar-link" onAction="#goToHome" />
                     <Hyperlink text="%main.login" fx:id="loginLink" styleClass="navbar-link" onAction="#goToLogin" />
                     <Hyperlink text="%main.register" fx:id="registerLink" styleClass="navbar-link" onAction="#goToRegister" />
@@ -57,15 +57,15 @@
             </VBox>
             
             <!-- Vosk Loading Indicator (Bottom Right) -->
-            <HBox fx:id="voskLoadingBox" spacing="10" alignment="CENTER_RIGHT" 
+            <HBox fx:id="voskLoadingBox" spacing="8" alignment="CENTER_RIGHT" 
                   visible="false" managed="false" StackPane.alignment="BOTTOM_RIGHT"
-                  style="-fx-padding: 8 15; -fx-background-color: rgba(255, 255, 255, 0.9); -fx-background-radius: 10; -fx-border-color: #8b5cf6; -fx-border-radius: 10; -fx-border-width: 1;">
+                  style="-fx-padding: 6.4 12; -fx-background-color: rgba(255, 255, 255, 0.9); -fx-background-radius: 10; -fx-border-color: #8b5cf6; -fx-border-radius: 10; -fx-border-width: 1;">
                 <StackPane.margin>
                     <Insets bottom="10" right="20" />
                 </StackPane.margin>
                 <Label text="Assistant Vocal: Chargement..." 
-                       style="-fx-font-size: 11px; -fx-text-fill: #8b5cf6; -fx-font-weight: bold;" />
-                <ProgressBar fx:id="voskProgressBar" prefWidth="120" prefHeight="10" 
+                       style="-fx-font-size: 8.8px; -fx-text-fill: #8b5cf6; -fx-font-weight: bold;" />
+                <ProgressBar fx:id="voskProgressBar" prefWidth="96" prefHeight="8" 
                              style="-fx-accent: #8b5cf6;" />
             </HBox>
         </StackPane>

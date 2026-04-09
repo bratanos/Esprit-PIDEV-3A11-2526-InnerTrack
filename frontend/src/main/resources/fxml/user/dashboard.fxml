@@ -18,21 +18,21 @@
 
     <!-- Sidebar -->
     <left>
-        <VBox styleClass="sidebar" prefWidth="280">
+        <VBox styleClass="sidebar" prefWidth="224">
             <VBox styleClass="sidebar-logo" alignment="CENTER">
-                <ImageView fitWidth="100" preserveRatio="true">
+                <ImageView fitWidth="80" preserveRatio="true">
                     <image><Image url="@../../images/innertracklogo1.png"/></image>
                 </ImageView>
             </VBox>
 
             <VBox styleClass="profile-section">
-                <javafx.scene.shape.Circle fx:id="profileCircle" radius="25" styleClass="profile-pic"/>
+                <javafx.scene.shape.Circle fx:id="profileCircle" radius="20" styleClass="profile-pic"/>
                 <Label fx:id="userFullNameLabel" text="Utilisateur" styleClass="profile-name"/>
             </VBox>
 
             <Separator opacity="0.1"/>
 
-            <VBox spacing="2">
+            <VBox spacing="1.6">
                 <Button text="%sidebar.user.dashboard"
                         styleClass="sidebar-button, sidebar-button-active" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-th-large" iconSize="18" iconColor="#ffffff"/></graphic>
@@ -97,11 +97,11 @@
     <center>
         <ScrollPane fitToHeight="true" fitToWidth="true"
                     style="-fx-background-color: transparent; -fx-background: transparent;">
-            <VBox spacing="30" styleClass="dashboard-container" VBox.vgrow="ALWAYS">
+            <VBox spacing="24" styleClass="dashboard-container" VBox.vgrow="ALWAYS">
                 <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
 
                 <!-- Header -->
-                <HBox spacing="20" alignment="CENTER_LEFT">
+                <HBox spacing="16" alignment="CENTER_LEFT">
                     <VBox>
                         <Label fx:id="welcomeLabel"
                                styleClass="dashboard-header-label"
@@ -111,7 +111,7 @@
                     </VBox>
                     <Region HBox.hgrow="ALWAYS"/>
                     <!-- Accepted request notification -->
-                    <HBox fx:id="acceptedAlert" spacing="8" alignment="CENTER"
+                    <HBox fx:id="acceptedAlert" spacing="6.4" alignment="CENTER"
                           visible="false" managed="false"
                           styleClass="alert-success-punchy"
                           onMouseClicked="#handleGoToMessages">
@@ -122,7 +122,7 @@
                 </HBox>
 
                 <!-- Stats Cards -->
-                <HBox spacing="20">
+                <HBox spacing="16">
                     <VBox styleClass="dashboard-card, stat-card" HBox.hgrow="ALWAYS">
                         <FontIcon iconLiteral="fas-fire" iconSize="24" iconColor="#e67e22"/>
                         <Label fx:id="streakLabel" styleClass="stat-value" text="0"
@@ -149,26 +149,26 @@
                 </HBox>
 
                 <!-- Daily Inspiration -->
-                <VBox styleClass="dashboard-quote-card" spacing="15">
+                <VBox styleClass="dashboard-quote-card" spacing="12">
                     <Label text="%dashboard.user.inspiration" styleClass="quote-header"/>
                     <Label fx:id="quoteTextLabel" text="%dashboard.user.quote" styleClass="quote-text" wrapText="true"/>
                     <Label fx:id="quoteAuthorLabel" text="%dashboard.user.quoteAuthor" styleClass="quote-author"/>
                 </VBox>
 
                 <!-- Quick Actions & Summaries -->
-                <HBox spacing="20">
-                    <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="10">
+                <HBox spacing="16">
+                    <VBox styleClass="dashboard-card" HBox.hgrow="ALWAYS" spacing="8">
                         <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
                         <Label text="My Latest Activities" style="-fx-font-weight: bold;"/>
                         
-                        <Label fx:id="derniereEntreeLabel" text="Latest journal entry: None" style="-fx-text-fill: #4a5568; -fx-padding: 5 0;"/>
-                        <Label fx:id="nombreHabitudesLabel" text="Active habits: 0" style="-fx-text-fill: #4a5568; -fx-padding: 5 0;"/>
-                        <Label fx:id="moyenneHumeurLabel" text="Average Mood (last 10): —" style="-fx-text-fill: #4a5568; -fx-padding: 5 0;"/>
+                        <Label fx:id="derniereEntreeLabel" text="Latest journal entry: None" style="-fx-text-fill: #4a5568; -fx-padding: 4 0;"/>
+                        <Label fx:id="nombreHabitudesLabel" text="Active habits: 0" style="-fx-text-fill: #4a5568; -fx-padding: 4 0;"/>
+                        <Label fx:id="moyenneHumeurLabel" text="Average Mood (last 10): —" style="-fx-text-fill: #4a5568; -fx-padding: 4 0;"/>
                         
                     </VBox>
-                    <VBox styleClass="dashboard-card, action-card" HBox.hgrow="ALWAYS" spacing="15" alignment="CENTER">
+                    <VBox styleClass="dashboard-card, action-card" HBox.hgrow="ALWAYS" spacing="12" alignment="CENTER">
                         <Label text="Quick Actions" styleClass="section-title"/>
-                        <HBox spacing="20" alignment="CENTER">
+                        <HBox spacing="16" alignment="CENTER">
                             <Button text="📓 Journal" styleClass="btn-primary" onAction="#handleGoToJournal"/>
                             <Button text="🌿 Habit" styleClass="btn-primary" onAction="#handleGoToHabits"/>
                         </HBox>

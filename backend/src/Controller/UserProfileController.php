@@ -42,17 +42,55 @@ class UserProfileController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            $user->setFirstName($request->request->get('firstName'));
-            $user->setLastName($request->request->get('lastName'));
-            $user->setPhoneNumber($request->request->get('phoneNumber'));
+            $firstName = trim($request->request->get('firstName', ''));
+            $lastName  = trim($request->request->get('lastName', ''));
+            $phone     = trim($request->request->get('phoneNumber', ''));
+            $bio       = trim($request->request->get('bio', ''));
 
-            $bio = $request->request->get('bio');
+            // --- Server-side validation ---
+            $errors = [];
+
+            if (!$firstName || strlen($firstName) > 100) {
+                $errors[] = 'Le prénom est obligatoire (100 caractères max).';
+            }
+            if (!$lastName || strlen($lastName) > 100) {
+                $errors[] = 'Le nom est obligatoire (100 caractères max).';
+            }
+            if ($phone && !preg_match('/^[+0-9\s\-().]{0,20}$/', $phone)) {
+                $errors[] = 'Le numéro de téléphone est invalide.';
+            }
+            if (strlen($bio) > 1000) {
+                $errors[] = 'La biographie ne peut pas dépasser 1000 caractères.';
+            }
+
+            if ($isTherapist) {
+                $specialization = trim($request->request->get('specialization', ''));
+                $licenseNumber  = trim($request->request->get('licenseNumber', ''));
+                if (strlen($specialization) > 255) {
+                    $errors[] = 'La spécialisation ne peut pas dépasser 255 caractères.';
+                }
+                if (strlen($licenseNumber) > 50) {
+                    $errors[] = 'Le numéro de licence ne peut pas dépasser 50 caractères.';
+                }
+            }
+
+            if (!empty($errors)) {
+                foreach ($errors as $error) {
+                    $this->addFlash('error', $error);
+                }
+                return $this->redirectToRoute('app_profile');
+            }
+            // --- End validation ---
+
+            $user->setFirstName($firstName);
+            $user->setLastName($lastName);
+            $user->setPhoneNumber($phone ?: null);
 
             if ($isTherapist) {
                 $profile = $user->getTherapistProfile();
                 $profile->setBio($bio);
-                $profile->setSpecialization($request->request->get('specialization'));
-                $profile->setLicenseNumber($request->request->get('licenseNumber'));
+                $profile->setSpecialization($specialization);
+                $profile->setLicenseNumber($licenseNumber);
             } elseif ($user->getClientProfile()) {
                 $user->getClientProfile()->setBio($bio);
             }

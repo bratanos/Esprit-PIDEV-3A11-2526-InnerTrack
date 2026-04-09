@@ -13,52 +13,52 @@
 
     <!-- Top Bar -->
     <top>
-        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 15 25; -fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);">
+        <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 12 20; -fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);">
             <Button onAction="#handleBack"
-                    style="-fx-background-color: #f1f1f1; -fx-background-radius: 50; -fx-padding: 8; -fx-cursor: hand;">
+                    style="-fx-background-color: #f1f1f1; -fx-background-radius: 50; -fx-padding: 6.4; -fx-cursor: hand;">
                 <graphic>
                     <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#2c3e50"/>
                 </graphic>
             </Button>
-            <VBox spacing="2">
+            <VBox spacing="1.6">
                 <Label text="%psy.location.title"
-                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 <Label text="%psy.location.subtitle"
-                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 10.4px;"/>
             </VBox>
         </HBox>
     </top>
 
     <!-- Map -->
     <center>
-        <MapView fx:id="mapView" minHeight="400"/>
+        <MapView fx:id="mapView" minHeight="320"/>
     </center>
 
     <!-- Bottom Panel -->
     <bottom>
-        <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 16 25;
+        <VBox spacing="9.6" style="-fx-background-color: white; -fx-padding: 12.8 20;
                                    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, -2, 0);">
 
             <!-- Address search row -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
+            <HBox spacing="8" alignment="CENTER_LEFT">
                 <TextField fx:id="addressField"
                            promptText="%psy.location.searchPrompt"
                            HBox.hgrow="ALWAYS"
-                           style="-fx-pref-height: 38px;"/>
+                           style="-fx-pref-height: 30.4px;"/>
                 <Button text="%psy.location.searchBtn" onAction="#handleSearchAddress"
                         style="-fx-background-color: #7f8c8d; -fx-text-fill: white;
-                               -fx-background-radius: 5; -fx-padding: 0 18; -fx-pref-height: 38px;
+                               -fx-background-radius: 5; -fx-padding: 0 14.4; -fx-pref-height: 30.4px;
                                -fx-cursor: hand;"/>
             </HBox>
 
             <!-- Coords + Save row -->
-            <HBox spacing="15" alignment="CENTER_LEFT">
+            <HBox spacing="12" alignment="CENTER_LEFT">
                 <Label fx:id="coordsLabel" text="%psy.location.noSelect"
-                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;" HBox.hgrow="ALWAYS"/>
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 10.4px;" HBox.hgrow="ALWAYS"/>
                 <Button fx:id="saveBtn" text="%psy.location.saveBtn"
                         onAction="#handleSave"
                         style="-fx-background-color: #FF69B4; -fx-text-fill: white;
-                               -fx-background-radius: 8; -fx-padding: 10 25;
+                               -fx-background-radius: 8; -fx-padding: 8 20;
                                -fx-font-weight: bold; -fx-cursor: hand;"/>
             </HBox>
         </VBox>

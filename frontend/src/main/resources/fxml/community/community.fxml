@@ -17,7 +17,7 @@
       styleClass="community-view">
 
     <!-- Header -->
-    <HBox styleClass="community-header" spacing="12" alignment="CENTER_LEFT">
+    <HBox styleClass="community-header" spacing="9.6" alignment="CENTER_LEFT">
         <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
         <Button text="← Dashboard" onAction="#handleBack" styleClass="btn-reddit-secondary"/>
         <Label text="🗣️ Community Forum" styleClass="community-title"/>
@@ -34,8 +34,8 @@
     <StackPane VBox.vgrow="ALWAYS" fx:id="mainStackPane">
         
         <!-- View 1: Topics Hub (Grid) -->
-        <VBox fx:id="topicsView" spacing="12" style="-fx-padding: 20;">
-            <HBox spacing="10" alignment="CENTER_LEFT" styleClass="filter-bar">
+        <VBox fx:id="topicsView" spacing="9.6" style="-fx-padding: 16;">
+            <HBox spacing="8" alignment="CENTER_LEFT" styleClass="filter-bar">
                 <TextField fx:id="searchField" promptText="🔍 Search in Community..."
                            onAction="#handleSearch" HBox.hgrow="ALWAYS"/>
                 <Button text="Search" onAction="#handleSearch" styleClass="btn-reddit-secondary"/>
@@ -43,20 +43,20 @@
             </HBox>
             <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 0;" VBox.vgrow="ALWAYS" hbarPolicy="NEVER">
                 <!-- Use FlowPane for responsive grid -->
-                <FlowPane fx:id="topicsGrid" hgap="20" vgap="20" prefWrapLength="800" style="-fx-padding: 4;"/>
+                <FlowPane fx:id="topicsGrid" hgap="20" vgap="20" prefWrapLength="800" style="-fx-padding: 3.2;"/>
             </ScrollPane>
         </VBox>
 
         <!-- View 2: Individual Thread -->
         <VBox fx:id="threadView" spacing="0" visible="false">
-            <HBox style="-fx-background-color: white; -fx-padding: 10 20; -fx-border-color: #edeff1; -fx-border-width: 0 0 1 0;" alignment="CENTER_LEFT">
+            <HBox style="-fx-background-color: white; -fx-padding: 8 16; -fx-border-color: #edeff1; -fx-border-width: 0 0 1 0;" alignment="CENTER_LEFT">
                 <Button text="← Back to Topics" onAction="#handleBackToTopics" styleClass="btn-reddit-secondary"/>
             </HBox>
             
             <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" hbarPolicy="NEVER">
-                <VBox spacing="15" style="-fx-padding: 20;">
+                <VBox spacing="12" style="-fx-padding: 16;">
                     <!-- The Topic Post Details Box -->
-                    <VBox fx:id="threadTopicBox" styleClass="topic-detail-card" spacing="10">
+                    <VBox fx:id="threadTopicBox" styleClass="topic-detail-card" spacing="8">
                         <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
                     </VBox>
 
@@ -66,7 +66,7 @@
             </ScrollPane>
 
             <!-- Reply Box for the Thread -->
-            <HBox spacing="10" alignment="CENTER_LEFT" styleClass="new-comment-bar">
+            <HBox spacing="8" alignment="CENTER_LEFT" styleClass="new-comment-bar">
                 <TextField fx:id="newCommentField" promptText="Comment on this topic..."
                            onAction="#handlePostComment" HBox.hgrow="ALWAYS"/>
                 <Button text="Post Comment" onAction="#handlePostComment" styleClass="btn-reddit-primary"/>
