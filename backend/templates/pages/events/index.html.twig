@@ -19,8 +19,17 @@
     {% if events|length > 0 %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {% for event in events %}
-            {% set isRegistered = event.id in registeredEventIds %}
-            {% set isFull = event.inscriptions|length >= event.capacite %}
+            {% set userStatus = registeredStatuses[event.id] ?? null %}
+            {% set isRegistered = userStatus == 'CONFIRMÉ' %}
+            {% set isWaiting = userStatus == 'EN_ATTENTE' %}
+            
+            {% set confirmedCount = 0 %}
+            {% for insc in event.inscriptions %}
+                {% if insc.statut == 'CONFIRMÉ' %}{% set confirmedCount = confirmedCount + 1 %}{% endif %}
+            {% endfor %}
+            {% set isFull = confirmedCount >= event.capacite %}
+            {% set isPastDate = event.date < date()|date_modify('-1 day') %}
+
             
             <div class="bg-white rounded-[2rem] border border-outline/20 p-8 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all duration-300 flex flex-col group relative overflow-hidden">
                 
@@ -53,6 +62,12 @@
                     <h3 class="text-2xl font-headline font-extrabold text-on-surface mb-3 leading-tight group-hover:text-primary transition-colors">
                         {{ event.titre }}
                     </h3>
+
+                    {% if event.image %}
+                    <div class="mb-4 h-32 w-full rounded-2xl overflow-hidden shrink-0">
+                        <img src="{{ asset('uploads/events/' ~ event.image) }}" alt="{{ event.titre }}" class="w-full h-full object-cover">
+                    </div>
+                    {% endif %}
                     
                     <p class="text-sm text-on-surface-variant line-clamp-3 mb-6 flex-1">
                         {{ event.description|default('Aucune description fournie.') }}
@@ -62,13 +77,13 @@
                         <div class="flex justify-between items-center text-xs font-bold text-on-surface-variant">
                             <span class="flex items-center gap-1.5">
                                 <span class="material-symbols-outlined text-[16px]">group</span>
-                                {{ event.inscriptions|length }} / {{ event.capacite }} places
+                                {{ confirmedCount }} / {{ event.capacite }} places confirmées
                             </span>
                         </div>
 
                         <!-- Progress bar -->
                         <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                            {% set fillPercent = (event.inscriptions|length / event.capacite) * 100 %}
+                            {% set fillPercent = (confirmedCount / event.capacite) * 100 %}
                             <div class="h-full rounded-full transition-all duration-1000
                                 {% if fillPercent >= 100 %}bg-red-500{% elseif fillPercent > 80 %}bg-orange-400{% else %}bg-primary{% endif %}"
                                 style="width: {{ fillPercent }}%">
@@ -77,10 +92,18 @@
 
                         <!-- Actions -->
                         <div class="pt-2">
-                            {% if isRegistered %}
+                            {% if isPastDate and isRegistered %}
+                                <a href="{{ path('app_event_certificate', {id: event.id}) }}" target="_blank" class="w-full px-4 py-3 bg-purple-50 text-purple-700 border border-purple-200 rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-purple-100 transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">verified</span> Télécharger Attestation
+                                </a>
+                            {% elseif userStatus %}
                                 <div class="flex gap-2">
-                                    <div class="flex-1 px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-xl text-center text-xs font-bold flex items-center justify-center gap-2">
-                                        <span class="material-symbols-outlined text-[18px]">check_circle</span> Inscrit
+                                    <div class="flex-1 px-4 py-3 {{ isRegistered ? 'bg-green-50 border-green-200 text-green-700' : 'bg-orange-50 border-orange-200 text-orange-700' }} border rounded-xl text-center text-xs font-bold flex items-center justify-center gap-2">
+                                        {% if isRegistered %}
+                                            <span class="material-symbols-outlined text-[18px]">check_circle</span> Inscrit
+                                        {% else %}
+                                            <span class="material-symbols-outlined text-[18px]">hourglass_empty</span> En attente
+                                        {% endif %}
                                     </div>
                                     <form method="post" action="{{ path('app_event_cancel', {id: event.id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler votre inscription ?');" class="flex-none">
                                         <button type="submit" class="px-4 py-3 bg-white border border-red-200 text-red-600 hover:bg-red-50 rounded-xl text-xs font-bold transition-colors" title="Annuler">
@@ -88,16 +111,22 @@
                                         </button>
                                     </form>
                                 </div>
-                            {% elseif isFull %}
-                                <div class="w-full px-4 py-3 bg-gray-100 text-gray-500 rounded-xl text-center text-xs font-bold flex items-center justify-center gap-2">
-                                    <span class="material-symbols-outlined text-[18px]">block</span> Complet
-                                </div>
                             {% else %}
-                                <form method="post" action="{{ path('app_event_participate', {id: event.id}) }}">
-                                    <button type="submit" class="w-full px-4 py-3 bg-primary text-white rounded-xl text-xs font-bold hover:bg-indigo-700 active:scale-95 transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-2">
-                                        <span class="material-symbols-outlined text-[18px]">how_to_reg</span> Participer
-                                    </button>
-                                </form>
+                                {% if isPastDate %}
+                                    <div class="w-full px-4 py-3 bg-gray-100 text-gray-500 rounded-xl text-center text-xs font-bold flex items-center justify-center gap-2">
+                                        <span class="material-symbols-outlined text-[18px]">event_available</span> Terminé
+                                    </div>
+                                {% else %}
+                                    <form method="post" action="{{ path('app_event_participate', {id: event.id}) }}">
+                                        <button type="submit" class="w-full px-4 py-3 {{ isFull ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-500/20' : 'bg-primary hover:bg-indigo-700 shadow-primary/20' }} text-white rounded-xl text-xs font-bold active:scale-95 transition-all shadow-md flex items-center justify-center gap-2">
+                                            {% if isFull %}
+                                                <span class="material-symbols-outlined text-[18px]">queue</span> Liste d'attente
+                                            {% else %}
+                                                <span class="material-symbols-outlined text-[18px]">how_to_reg</span> Participer
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>

@@ -43,6 +43,9 @@ class Event
     #[ORM\Column(name: 'statut', type: Types::BOOLEAN)]
     private bool $statut = true;
 
+    #[ORM\Column(name: 'image', type: Types::STRING, length: 255, nullable: true)]
+    private ?string $image = null;
+
     #[ORM\OneToMany(mappedBy: 'evenement', targetEntity: Inscription::class, cascade: ['persist', 'remove'])]
     private Collection $inscriptions;
 
@@ -74,6 +77,9 @@ class Event
 
     public function isStatut(): bool { return $this->statut; }
     public function setStatut(bool $statut): static { $this->statut = $statut; return $this; }
+
+    public function getImage(): ?string { return $this->image; }
+    public function setImage(?string $image): static { $this->image = $image; return $this; }
 
     public function getInscriptions(): Collection { return $this->inscriptions; }
 }

@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 #[Route('/events', name: 'app_event_')]
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
@@ -25,14 +27,14 @@ class UserEventController extends AbstractController
 
         // Find which events this user is already registered for
         $myInscriptions = $inscRepo->findBy(['emailParticipant' => $user->getEmail()]);
-        $registeredEventIds = [];
+        $registeredStatuses = [];
         foreach ($myInscriptions as $insc) {
-            $registeredEventIds[] = $insc->getEvenement()->getId();
+            $registeredStatuses[$insc->getEvenement()->getId()] = $insc->getStatut();
         }
 
         return $this->render('pages/events/index.html.twig', [
             'events'             => $events,
-            'registeredEventIds' => $registeredEventIds,
+            'registeredStatuses' => $registeredStatuses,
         ]);
     }
 
@@ -53,10 +55,18 @@ class UserEventController extends AbstractController
             return $this->redirectToRoute('app_event_index');
         }
 
-        // Check capacity
-        if ($event->getInscriptions()->count() >= $event->getCapacite()) {
-            $this->addFlash('error', 'Cet événement est complet.');
-            return $this->redirectToRoute('app_event_index');
+        // Check capacity and determine status
+        $status = Inscription::STATUS_CONFIRMED;
+        $activeInscriptions = $inscRepo->count([
+            'evenement' => $event,
+            'statut' => Inscription::STATUS_CONFIRMED
+        ]);
+
+        if ($activeInscriptions >= $event->getCapacite()) {
+            $status = Inscription::STATUS_WAITING;
+            $this->addFlash('warning', 'Événement complet. Vous avez été ajouté à la liste d\'attente.');
+        } else {
+            $this->addFlash('success', 'Vous êtes inscrit à "' . $event->getTitre() . '" avec succès !');
         }
 
         // Check event is active
@@ -71,11 +81,11 @@ class UserEventController extends AbstractController
         $inscription->setNomParticipant($user->getFullName());
         $inscription->setEmailParticipant($user->getEmail());
         $inscription->setDateInscription(new \DateTime());
+        $inscription->setStatut($status);
 
         $em->persist($inscription);
         $em->flush();
 
-        $this->addFlash('success', 'Vous êtes inscrit à "' . $event->getTitre() . '" avec succès !');
         return $this->redirectToRoute('app_event_index');
     }
 
@@ -97,8 +107,55 @@ class UserEventController extends AbstractController
 
         $em->remove($inscription);
         $em->flush();
+        
+        // Promote next user in waiting list if any
+        $oldestWaiting = $inscRepo->findOldestWaitingList($event);
+        if ($oldestWaiting) {
+            $oldestWaiting->setStatut(Inscription::STATUS_CONFIRMED);
+            $em->flush();
+        }
 
         $this->addFlash('success', 'Votre inscription à "' . $event->getTitre() . '" a été annulée.');
         return $this->redirectToRoute('app_event_index');
+    }
+
+    // ------------------------------------------------------------ CERTIFICATE
+    #[Route('/{id}/certificate', name: 'certificate', methods: ['GET'])]
+    public function certificate(Event $event, InscriptionRepository $inscRepo): Response
+    {
+        $user = $this->getUser();
+        $inscription = $inscRepo->findOneBy([
+            'evenement' => $event,
+            'emailParticipant' => $user->getEmail(),
+            'statut' => Inscription::STATUS_CONFIRMED
+        ]);
+
+        if (!$inscription) {
+            $this->addFlash('error', 'Vous n\'étiez pas confirmé pour cet événement.');
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        if ($event->getDate() > new \DateTime()) {
+            $this->addFlash('error', 'L\'événement n\'est pas encore terminé.');
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        $html = $this->renderView('pages/events/certificate.html.twig', [
+            'inscription' => $inscription,
+            'event' => $event
+        ]);
+
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        $dompdf->stream("Attestation_" . $event->getId() . ".pdf", [
+            "Attachment" => true
+        ]);
+        
+        return new Response();
     }
 }

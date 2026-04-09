@@ -11,6 +11,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'inscription')]
 class Inscription
 {
+    public const STATUS_CONFIRMED = 'CONFIRMÉ';
+    public const STATUS_WAITING = 'EN_ATTENTE';
+    public const STATUS_CANCELLED = 'ANNULÉ';
+
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_inscription', type: Types::INTEGER)]
@@ -31,6 +36,9 @@ class Inscription
     #[ORM\Column(name: 'date_inscription', type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateInscription = null;
 
+    #[ORM\Column(name: 'statut', type: Types::STRING, length: 50)]
+    private string $statut = self::STATUS_CONFIRMED;
+
     public function __construct()
     {
         $this->dateInscription = new \DateTime();
@@ -49,4 +57,7 @@ class Inscription
 
     public function getDateInscription(): ?\DateTimeInterface { return $this->dateInscription; }
     public function setDateInscription(\DateTimeInterface $d): static { $this->dateInscription = $d; return $this; }
+
+    public function getStatut(): string { return $this->statut; }
+    public function setStatut(string $s): static { $this->statut = $s; return $this; }
 }

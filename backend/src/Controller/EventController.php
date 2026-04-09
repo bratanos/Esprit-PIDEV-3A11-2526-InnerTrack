@@ -95,7 +95,6 @@ class EventController extends AbstractController
         return $this->redirectToRoute('admin_event_index');
     }
 
-    // --------------------------------------------------------- HELPER
     private function processForm(Request $request, Event $event): array
     {
         $errors = [];
@@ -127,6 +126,23 @@ class EventController extends AbstractController
             $event->setType(TypeEvent::from((int)$type));
             $event->setCapacite((int)$capacite);
             $event->setStatut($statut === '1');
+
+            $imageFile = $request->files->get('image');
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = preg_replace('/[^a-zA-Z0-9_-]/', '', $originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('kernel.project_dir').'/public/uploads/events',
+                        $newFilename
+                    );
+                    $event->setImage($newFilename);
+                } catch (\Exception $e) {
+                    $errors['image'] = 'Erreur lors de l\'upload de l\'image.';
+                }
+            }
         }
 
         return $errors;
