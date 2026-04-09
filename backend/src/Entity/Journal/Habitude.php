@@ -25,13 +25,13 @@ class Habitude
     private ?string $noteTextuelle = null;
 
     #[ORM\Column(name: 'niveau_energie', type: 'integer')]
-    private int $niveauEnergie;
+    private int $niveauEnergie = 5;
 
     #[ORM\Column(name: 'niveau_stress', type: 'integer')]
-    private int $niveauStress;
+    private int $niveauStress = 5;
 
     #[ORM\Column(name: 'qualite_sommeil', type: 'integer')]
-    private int $qualiteSommeil;
+    private int $qualiteSommeil = 5;
 
     #[ORM\Column(name: 'date_creation', type: 'date')]
     private \DateTimeInterface $dateCreation;

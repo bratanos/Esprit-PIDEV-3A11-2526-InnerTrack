@@ -35,6 +35,35 @@ class EntreeJournalRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function searchAdvanced(int $userId, ?string $keyword, ?string $date, ?int $humeur): array
+{
+    $qb = $this->createQueryBuilder('e')
+        ->where('e.user = :uid')
+        ->setParameter('uid', $userId);
+
+    // 🔤 Recherche texte
+    if (!empty($keyword)) {
+        $qb->andWhere('e.noteTextuelle LIKE :kw')
+           ->setParameter('kw', '%' . $keyword . '%');
+    }
+
+    // 📅 Recherche par date
+    if (!empty($date)) {
+        $qb->andWhere('DATE(e.dateSaisie) = :date')
+           ->setParameter('date', $date);
+    }
+
+    // 😊 Recherche par humeur
+    if (!empty($humeur)) {
+        $qb->andWhere('e.humeur = :humeur')
+           ->setParameter('humeur', $humeur);
+    }
+
+    return $qb->orderBy('e.dateSaisie', 'DESC')
+              ->getQuery()
+              ->getResult();
+}
+
     public function getStatsByUserId(int $userId): array
     {
         return $this->createQueryBuilder('e')

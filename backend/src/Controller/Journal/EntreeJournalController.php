@@ -11,6 +11,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Service\PdfExporter;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 #[Route('/journal/entree', name: 'entree_')]
 class EntreeJournalController extends AbstractController
@@ -26,15 +28,30 @@ class EntreeJournalController extends AbstractController
     {
         $user    = $this->security->getUser();
         $keyword = $request->query->get('q', '');
-        $entrees = $keyword
-            ? $this->repo->search($keyword, $user->getId())
-            : $this->repo->findByUserId($user->getId());
-        $stats   = $this->repo->getStatsByUserId($user->getId());
+        $date    = $request->query->get('date');
+        $humeur  = $request->query->get('humeur');
+        $sort    = $request->query->get('sort', 'dateSaisie'); 
+        $direction = $request->query->get('direction', 'DESC');  
+
+        $entrees = $this->repo->searchAdvanced(
+            $user->getId(),
+            $keyword,
+            $date,
+            $humeur,
+            $sort,
+            $direction
+        );
+
+        $stats = $this->repo->getStatsByUserId($user->getId());
 
         return $this->render('journal/entree/index.html.twig', [
-            'entrees' => $entrees,
-            'keyword' => $keyword,
-            'stats'   => $stats,
+            'entrees'          => $entrees,
+            'keyword'          => $keyword,
+            'date'             => $date,
+            'humeur'           => $humeur,
+            'stats'            => $stats,
+            'currentSort'      => $sort,      
+            'currentDirection' => $direction, 
         ]);
     }
 
@@ -93,5 +110,17 @@ class EntreeJournalController extends AbstractController
         return $this->render('journal/entree/voir.html.twig', [
             'entree' => $entree,
         ]);
+    }
+
+    #[Route('/export/pdf', name: 'export_pdf')]
+    public function exportPdf(PdfExporter $pdfExporter): Response 
+    {
+        $user = $this->getUser();
+        $entrees = $this->repo->findByUserId($user->getId());
+
+        $tmpFile = tempnam(sys_get_temp_dir(), 'journal') . '.pdf';
+        $pdfExporter->exportJournal($entrees, $tmpFile);
+
+        return $this->file($tmpFile, 'MonJournal.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
     }
 }

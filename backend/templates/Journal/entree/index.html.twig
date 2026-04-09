@@ -8,10 +8,22 @@
         <h1 class="text-2xl font-bold text-[#006876]">📓 Mon Journal</h1>
         <p class="text-sm text-gray-500 mt-1">Vos entrées quotidiennes</p>
     </div>
-    <a href="{{ path('entree_ajouter') }}"
-       class="inline-flex items-center gap-2 bg-[#006876] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
-        ＋ Nouvelle entrée
-    </a>
+
+    {# Gap ajusté à 4 pour un équilibre parfait entre proximité et clarté #}
+    <div class="flex items-center gap-4">
+        {# Bouton PDF #}
+        <a href="{{ path('entree_export_pdf') }}"
+           target="_blank"
+           class="inline-flex items-center gap-2 bg-[#006876] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition shadow-sm">
+            <span>📝</span> Exporter PDF
+        </a>
+
+        {# Bouton Nouveau #}
+        <a href="{{ path('entree_ajouter') }}"
+           class="inline-flex items-center gap-2 bg-[#006876] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition shadow-sm">
+            <span>＋</span> Nouvelle entrée
+        </a>
+    </div>
 </div>
 
 {# ── STATS ── #}
@@ -34,18 +46,43 @@
 <form method="GET" class="mb-6 flex gap-3">
     <input type="text" name="q" value="{{ keyword }}"
            placeholder="🔍 Rechercher dans vos notes..."
-           class="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#006876]">
+           class="flex-1 rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#006876]">
     <button type="submit"
             class="bg-[#006876] text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
         Rechercher
     </button>
     {% if keyword %}
     <a href="{{ path('entree_index') }}"
-       class="bg-gray-100 text-gray-600 px-4 py-2 rounded-xl text-sm hover:bg-gray-200 transition">
+       class="bg-gray-100 text-gray-600 px-4 py-2.5 rounded-xl text-sm hover:bg-gray-200 transition">
         ✕ Effacer
     </a>
     {% endif %}
 </form>
+
+{# ── OPTIONS DE TRI ── #}
+<div class="flex items-center justify-end mb-6 px-2 relative z-50">
+    <div class="flex items-center gap-5 bg-white px-4 py-2 rounded-xl border border-gray-200 shadow-sm">
+        <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Trier par :</span>
+
+        {# Tri Date #}
+        <a href="{{ path('entree_index', { 'sort': 'dateSaisie', 'direction': (currentSort == 'dateSaisie' and currentDirection == 'DESC') ? 'ASC' : 'DESC', 'q': keyword }) }}" 
+           class="inline-flex items-center gap-1.5 text-xs font-bold transition-colors hover:opacity-70 {{ currentSort == 'dateSaisie' ? 'text-[#006876]' : 'text-gray-500' }}">
+            📅 Date
+            {% if currentSort == 'dateSaisie' %}
+                <span class="text-[10px] font-black">{{ currentDirection == 'DESC' ? '▼' : '▲' }}</span>
+            {% endif %}
+        </a>
+
+        {# Tri Humeur #}
+        <a href="{{ path('entree_index', { 'sort': 'humeur', 'direction': (currentSort == 'humeur' and currentDirection == 'DESC') ? 'ASC' : 'DESC', 'q': keyword }) }}" 
+           class="inline-flex items-center gap-1.5 text-xs font-bold transition-colors hover:opacity-70 {{ currentSort == 'humeur' ? 'text-[#006876]' : 'text-gray-500' }}">
+            📊 Humeur
+            {% if currentSort == 'humeur' %}
+                <span class="text-[10px] font-black">{{ currentDirection == 'DESC' ? '▼' : '▲' }}</span>
+            {% endif %}
+        </a>
+    </div>
+</div>
 
 {# ── LISTE DES ENTRÉES ── #}
 {% if entrees is empty %}
@@ -100,7 +137,6 @@
                     </button>
                 </form>
             </div>
-
         </div>
     </div>
     {% endfor %}

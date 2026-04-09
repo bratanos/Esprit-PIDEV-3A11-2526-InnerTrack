@@ -21,6 +21,7 @@ class HabitudeType extends AbstractType
         $builder
             ->add('nomHabitude', TextType::class, [
                 'label' => '🌿 Nom de l\'habitude',
+                'empty_data' => '',
                 'constraints' => [
                     new Assert\NotBlank(message: 'Le nom est obligatoire'),
                     new Assert\Length(['max' => 255]),
@@ -32,6 +33,12 @@ class HabitudeType extends AbstractType
             ])
             ->add('emotionDominantes', ChoiceType::class, [
                 'label'   => '💭 Émotion dominante',
+                'placeholder'  => '— Choisir votre émotion —',
+                'empty_data'  => '',
+                'required'    => true,
+                'constraints' => [
+                    new Assert\NotBlank(message: 'Veuillez choisir une émotion'),
+                ],
                 'choices' => array_combine(
                     ['Joie','Sérénité','Motivation','Calme','Énergie',
                      'Détente','Concentration','Colère','Tristesse',
@@ -45,47 +52,42 @@ class HabitudeType extends AbstractType
                 ],
             ])
             ->add('niveauEnergie', RangeType::class, [
-    'label' => '⚡ Niveau d\'énergie (0-10)',
-    'data'  => 5,
+    'label' => '⚡ Niveau d\'énergie',
     'constraints' => [
         new Assert\NotBlank(),
         new Assert\Range([
             'min' => 0,
             'max' => 10,
-            'notInRangeMessage' => 'La valeur doit être entre 0 et 10',
         ]),
-                ],
-                'attr' => [
-        'min'   => 0,
-        'max'   => 10,
-        'step'  => 1,
-        'class' => 'slider-energie',
-        'oninput' => "updateSlider(this, 'val_energie', '#48bb78', '#ff4444')",
     ],
-            ])
+    'attr' => [
+        'min' => 0,
+        'max' => 10,
+        'step' => 1,
+        'class' => 'slider-energie',
+        'oninput' => "updateSlider(this, 'val_energie', 'energie')",
+    ],
+])
 
             ->add('niveauStress', RangeType::class, [
-    'label' => '😰 Niveau de stress (0-10)',
-    'data'  => 5,
+    'label' => '😰 Niveau de stress',
     'constraints' => [
         new Assert\NotBlank(),
         new Assert\Range([
             'min' => 0,
             'max' => 10,
-            'notInRangeMessage' => 'La valeur doit être entre 0 et 10',
         ]),
-                ],
-                'attr' => [
+        ],
+        'attr' => [
         'min'   => 0,
         'max'   => 10,
         'step'  => 1,
         'class' => 'slider-stress',
-        'oninput' => "updateSlider(this, 'val_stress', '#63b3ed', '#ff4444')",
+        'oninput' => "updateSlider(this, 'val_stress', 'stress')",
     ],
             ])
             ->add('qualiteSommeil', RangeType::class, [
-    'label' => '😴 Qualité du sommeil (0-10)',
-    'data'  => 5,
+    'label' => '😴 Qualité du sommeil',
     'constraints' => [
         new Assert\NotBlank(),
         new Assert\Range([
@@ -99,7 +101,7 @@ class HabitudeType extends AbstractType
         'max'   => 10,
         'step'  => 1,
         'class' => 'slider-sommeil',
-        'oninput' => "updateSlider(this, 'val_sommeil', '#a0aec0', '#b794f4')",
+        'oninput' => "updateSlider(this, 'val_sommeil', 'sommeil')",
     ],
             ])
             ->add('noteTextuelle', TextareaType::class, [
@@ -114,7 +116,7 @@ class HabitudeType extends AbstractType
             ->add('dateCreation', DateType::class, [
                 'label'  => '📅 Date',
                 'widget' => 'single_text',
-                'data'   => new \DateTime(),
+                //'data'   => new \DateTime(),
                 'attr'   => [
                     'class' => 'w-full rounded-xl border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#006876]',
                 ],

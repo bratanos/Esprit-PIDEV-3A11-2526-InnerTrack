@@ -3,7 +3,9 @@
 {% block head %}
 {{ parent() }}
 <style>
-input[type=range] {
+input[type=range].slider-energie,
+input[type=range].slider-stress,
+input[type=range].slider-sommeil {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
@@ -11,10 +13,12 @@ input[type=range] {
     border-radius: 999px;
     outline: none;
     cursor: pointer;
-    background: linear-gradient(to right, #48bb78, #ff4444);
+    background: #e2e8f0;
 }
 
-input[type=range]::-webkit-slider-thumb {
+input[type=range].slider-energie::-webkit-slider-thumb,
+input[type=range].slider-stress::-webkit-slider-thumb,
+input[type=range].slider-sommeil::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 22px;
@@ -27,33 +31,52 @@ input[type=range]::-webkit-slider-thumb {
     transition: border-color 0.2s;
 }
 
-input[type=range]::-webkit-slider-thumb:hover {
+input[type=range].slider-energie::-webkit-slider-thumb:hover,
+input[type=range].slider-stress::-webkit-slider-thumb:hover,
+input[type=range].slider-sommeil::-webkit-slider-thumb:hover {
     border-color: #006876;
-}
-
-.slider-stress {
-    background: linear-gradient(to right, #63b3ed, #ff4444) !important;
-}
-
-.slider-sommeil {
-    background: linear-gradient(to right, #a0aec0, #b794f4) !important;
 }
 </style>
 
 <script>
-function updateSlider(slider, spanId, colorStart, colorEnd) {
-    const val = slider.value;
-    const max = slider.max || 10;
-    const pct = (val / max) * 100;
-    
-    // Dégradé dynamique selon la valeur
-    slider.style.background = `linear-gradient(to right, ${colorStart} 0%, ${colorEnd} ${pct}%, #e2e8f0 ${pct}%)`;
-    
-    // Mise à jour du span
-    const span = document.getElementById(spanId);
-    span.textContent = val;
-    span.style.color = interpolateColor(colorStart, colorEnd, pct / 100);
+
+function getColor(type, val) {
+    if (type === 'energie') {
+        return val >= 7 ? '#48bb78' : val >= 4 ? '#f6ad55' : '#ff4444';
+    } else if (type === 'stress') {
+        return val >= 7 ? '#ff4444' : val >= 4 ? '#f6ad55' : '#63b3ed';
+    } else {
+        return val >= 7 ? '#b794f4' : val >= 4 ? '#4299e1' : '#a0aec0';
+    }
 }
+
+function updateSlider(slider, spanId, type) {
+    const val = parseInt(slider.value);
+    const max = parseInt(slider.max) || 10;
+    const pct = (val / max) * 100;
+    const color = getColor(type, val);
+
+    slider.setAttribute('style',
+        `background: linear-gradient(to right, ${color} ${pct}%, #e2e8f0 ${pct}%) !important`
+    );
+
+    const span = document.getElementById(spanId);
+    if (span) {
+        span.textContent = val;
+        span.style.color = color;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const sliders = [
+        { el: document.querySelector('.slider-energie'), span: 'val_energie', type: 'energie' },
+        { el: document.querySelector('.slider-stress'),  span: 'val_stress',  type: 'stress'  },
+        { el: document.querySelector('.slider-sommeil'), span: 'val_sommeil', type: 'sommeil' },
+    ];
+    sliders.forEach(s => {
+        if (s.el) updateSlider(s.el, s.span, s.type);
+    });
+});
 
 function interpolateColor(c1, c2, t) {
     const hex = h => parseInt(h, 16);
@@ -73,9 +96,52 @@ document.addEventListener('DOMContentLoaded', function() {
         { el: document.querySelector('.slider-sommeil'), span: 'val_sommeil', c1: '#a0aec0', c2: '#b794f4' },
     ];
     sliders.forEach(s => {
-        if (s.el) updateSlider(s.el, s.span, s.c1, s.c2);
+        if (s.el) {
+            const val = parseInt(s.el.value);
+            const max = parseInt(s.el.max) || 10;
+            const pct = (val / max) * 100;
+            s.el.setAttribute('style', 
+                `background: linear-gradient(to right, ${s.c1} 0%, ${s.c2} ${pct}%, #e2e8f0 ${pct}%) !important`
+            );
+
+            const span = document.getElementById(s.span);
+        if (span) {
+            span.textContent = val;
+            span.style.color = interpolateColor(s.c1, s.c2, pct / 100);
+        }
+    }
     });
+
+// Cacher erreur nom quand l'utilisateur tape
+    const nomInput = document.querySelector('#habitude_nomHabitude');
+    if (nomInput) {
+        nomInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                this.classList.remove('border-red-400', 'bg-red-50');
+                this.classList.add('border-gray-200');
+                const err = this.parentElement.querySelector('p.text-red-500');
+                if (err) err.style.display = 'none';
+            }
+        });
+    }
+
+
+    // Cacher erreur émotion quand l'utilisateur choisit
+    const emotionSelect = document.querySelector('#habitude_emotionDominantes');
+    if (emotionSelect) {
+        const placeholder = emotionSelect.querySelector('option[value=""]');
+        if (placeholder) placeholder.disabled = true;
+        emotionSelect.addEventListener('change', function() {
+            if (this.value !== '') {
+                this.classList.remove('border-red-400', 'bg-red-50');
+                this.classList.add('border-gray-200');
+                const err = this.parentElement.querySelector('p.text-red-500');
+                if (err) err.style.display = 'none';
+            }
+        });
+    }
 });
+
 </script>
 {% endblock %}
 
@@ -114,9 +180,17 @@ document.addEventListener('DOMContentLoaded', function() {
     {% endif %}
 </div>
             <div>
-                {{ form_label(form.emotionDominantes, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
-                {{ form_widget(form.emotionDominantes) }}
-            </div>
+    {{ form_label(form.emotionDominantes, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+    {{ form_widget(form.emotionDominantes, {attr: {
+    class: 'w-full rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 ' ~
+           (form.emotionDominantes.vars.errors|length > 0 ? 'border-red-400 bg-red-50 focus:ring-red-300' : 'border-gray-200 focus:ring-[#006876]')
+}}) }}
+    {% if form.emotionDominantes.vars.errors|length > 0 %}
+        <p class="text-red-500 text-xs mt-1 font-medium">
+            ⚠️ {{ form.emotionDominantes.vars.errors[0].message }}
+        </p>
+    {% endif %}
+</div>
         </div>
 
         {# NIVEAUX #}
@@ -129,9 +203,11 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="flex items-center gap-4">
             {{ form_widget(form.niveauEnergie, {attr: {
                 class: 'slider-energie',
-                oninput: "updateSlider(this, 'val_energie', '#48bb78', '#ff4444')"
+                oninput: "updateSlider(this, 'val_energie', 'energie')"
             }}) }}
-            <span id="val_energie" class="text-sm font-bold w-8 text-center">5</span>
+            <span id="val_energie" class="text-sm font-bold w-8 text-center">
+    {{ form.niveauEnergie.vars.value }}
+</span>
         </div>
         <div class="flex justify-between text-xs text-gray-400 mt-1">
             <span>0 — Vide</span><span>10 — Vitalité</span>
@@ -144,9 +220,11 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="flex items-center gap-4">
             {{ form_widget(form.niveauStress, {attr: {
                 class: 'slider-stress',
-                oninput: "updateSlider(this, 'val_stress', '#63b3ed', '#ff4444')"
+                oninput: "updateSlider(this, 'val_stress', 'stress')"
             }}) }}
-            <span id="val_stress" class="text-sm font-bold w-8 text-center">5</span>
+            <span id="val_stress" class="text-sm font-bold w-8 text-center">
+    {{ form.niveauStress.vars.value }}
+</span>
         </div>
         <div class="flex justify-between text-xs text-gray-400 mt-1">
             <span>0 — Zen</span><span>10 — Alarme</span>
@@ -159,9 +237,11 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="flex items-center gap-4">
             {{ form_widget(form.qualiteSommeil, {attr: {
                 class: 'slider-sommeil',
-                oninput: "updateSlider(this, 'val_sommeil', '#a0aec0', '#b794f4')"
+                oninput: "updateSlider(this, 'val_sommeil', 'sommeil')"
             }}) }}
-            <span id="val_sommeil" class="text-sm font-bold w-8 text-center">5</span>
+            <span id="val_sommeil" class="text-sm font-bold w-8 text-center">
+    {{ form.qualiteSommeil.vars.value }}
+</span>
         </div>
         <div class="flex justify-between text-xs text-gray-400 mt-1">
             <span>0 — Fatigué</span><span>10 — Récupéré</span>

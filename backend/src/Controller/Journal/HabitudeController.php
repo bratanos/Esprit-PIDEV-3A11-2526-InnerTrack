@@ -42,6 +42,7 @@ class HabitudeController extends AbstractController
     public function ajouter(Request $request): Response
     {
         $habitude = new Habitude();
+        $habitude->setDateCreation(new \DateTime());
         $form     = $this->createForm(HabitudeType::class, $habitude);
         $form->handleRequest($request);
 
