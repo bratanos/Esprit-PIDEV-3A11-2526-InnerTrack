@@ -11,6 +11,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 
 #[Route('/journal/habitude', name: 'habitude_')]
 class HabitudeController extends AbstractController
@@ -22,21 +24,27 @@ class HabitudeController extends AbstractController
     ) {}
 
     #[Route('/', name: 'index')]
-    public function index(Request $request): Response
-    {
-        $user      = $this->security->getUser();
-        $keyword   = $request->query->get('q', '');
-        $habitudes = $keyword
-            ? $this->repo->search($keyword, $user->getId())
-            : $this->repo->findByUserId($user->getId());
-        $stats     = $this->repo->getStatsByUserId($user->getId());
+public function index(Request $request): Response
+{
+    $user    = $this->security->getUser();
+    $keyword = $request->query->get('q', '');
+    $sortBy  = $request->query->get('sort', 'dateCreation');
+    $order   = $request->query->get('order', 'DESC');
 
-        return $this->render('journal/habitude/index.html.twig', [
-            'habitudes' => $habitudes,
-            'keyword'   => $keyword,
-            'stats'     => $stats,
-        ]);
-    }
+    $habitudes = $keyword
+        ? $this->repo->search($keyword, $user->getId())
+        : $this->repo->findByUserIdSorted($user->getId(), $sortBy, $order);
+
+    $stats = $this->repo->getStatsByUserId($user->getId());
+
+    return $this->render('journal/habitude/index.html.twig', [
+        'habitudes' => $habitudes,
+        'keyword'   => $keyword,
+        'stats'     => $stats,
+        'sortBy'    => $sortBy,
+        'order'     => $order,
+    ]);
+}
 
     #[Route('/ajouter', name: 'ajouter')]
     public function ajouter(Request $request): Response
@@ -94,5 +102,33 @@ class HabitudeController extends AbstractController
         return $this->render('journal/habitude/voir.html.twig', [
             'habitude' => $habitude,
         ]);
+    }
+    
+    #[Route('/qrcode/{id}', name: 'qrcode')]
+    public function qrcode(Habitude $habitude): Response
+    {
+        $texte = sprintf(
+            "Habitude: %s\nDate: %s\nEmotion: %s\nEnergie: %d/10\nStress: %d/10\nSommeil: %d/10\nNote: %s",
+            $habitude->getNomHabitude(),
+            $habitude->getDateCreation()->format('d/m/Y'),
+            $habitude->getEmotionDominantes(),
+            $habitude->getNiveauEnergie(),
+            $habitude->getNiveauStress(),
+            $habitude->getQualiteSommeil(),
+            $habitude->getNoteTextuelle() ?? ''
+        );
+        
+        $qrCode = QrCode::create($texte)
+            ->setSize(200)
+            ->setMargin(10);
+
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+        
+        return new Response(
+            $result->getString(),
+            200,
+            ['Content-Type' => 'image/png']
+        );
     }
 }

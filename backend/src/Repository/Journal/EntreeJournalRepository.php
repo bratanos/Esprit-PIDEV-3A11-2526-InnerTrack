@@ -35,7 +35,7 @@ class EntreeJournalRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function searchAdvanced(int $userId, ?string $keyword, ?string $date, ?int $humeur): array
+    public function searchAdvanced(int $userId, ?string $keyword, ?string $date, ?int $humeur, string $sort = 'dateSaisie', string $direction = 'DESC'): array
 {
     $qb = $this->createQueryBuilder('e')
         ->where('e.user = :uid')
@@ -59,7 +59,15 @@ class EntreeJournalRepository extends ServiceEntityRepository
            ->setParameter('humeur', $humeur);
     }
 
-    return $qb->orderBy('e.dateSaisie', 'DESC')
+    // 🚀 LOGIQUE DE TRI DYNAMIQUE
+    // Sécurité : on vérifie que le champ de tri est autorisé
+    $allowedSorts = ['dateSaisie', 'humeur'];
+    $finalSort = in_array($sort, $allowedSorts) ? 'e.' . $sort : 'e.dateSaisie';
+    
+    // Sécurité : on vérifie la direction
+    $finalDirection = strtoupper($direction) === 'ASC' ? 'ASC' : 'DESC';
+
+    return $qb->orderBy($finalSort, $finalDirection)
               ->getQuery()
               ->getResult();
 }

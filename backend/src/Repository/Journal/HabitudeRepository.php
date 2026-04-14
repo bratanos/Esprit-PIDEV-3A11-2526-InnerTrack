@@ -49,4 +49,18 @@ class HabitudeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleResult();
     }
+
+    public function findByUserIdSorted(int $userId, string $sortBy = 'dateCreation', string $order = 'DESC'): array
+    {
+        $allowed = ['dateCreation', 'niveauEnergie', 'niveauStress', 'qualiteSommeil', 'nomHabitude'];
+        if (!in_array($sortBy, $allowed)) $sortBy = 'dateCreation';
+        if (!in_array($order, ['ASC', 'DESC'])) $order = 'DESC';
+        
+        return $this->createQueryBuilder('h')
+        ->where('h.user = :uid')
+        ->setParameter('uid', $userId)
+        ->orderBy('h.' . $sortBy, $order)
+        ->getQuery()
+        ->getResult();
+    }
 }

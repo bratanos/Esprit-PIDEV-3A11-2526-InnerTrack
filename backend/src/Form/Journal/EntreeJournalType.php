@@ -34,7 +34,7 @@ class EntreeJournalType extends AbstractType
                 'required' => true,
                 'empty_data' => '',
                 'constraints' => [
-                    new Assert\NotBlank(message: 'La note est obligatoire'),  // ← ajouter
+                    new Assert\NotBlank(message: 'La note est obligatoire'),
                     new Assert\Length([
                         'max' => 1000,
                         'maxMessage' => 'La note ne peut pas dépasser 1000 caractères',

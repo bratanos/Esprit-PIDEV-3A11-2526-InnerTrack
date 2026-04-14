@@ -59,31 +59,6 @@
     {% endif %}
 </form>
 
-{# ── OPTIONS DE TRI ── #}
-<div class="flex items-center justify-end mb-6 px-2 relative z-50">
-    <div class="flex items-center gap-5 bg-white px-4 py-2 rounded-xl border border-gray-200 shadow-sm">
-        <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Trier par :</span>
-
-        {# Tri Date #}
-        <a href="{{ path('entree_index', { 'sort': 'dateSaisie', 'direction': (currentSort == 'dateSaisie' and currentDirection == 'DESC') ? 'ASC' : 'DESC', 'q': keyword }) }}" 
-           class="inline-flex items-center gap-1.5 text-xs font-bold transition-colors hover:opacity-70 {{ currentSort == 'dateSaisie' ? 'text-[#006876]' : 'text-gray-500' }}">
-            📅 Date
-            {% if currentSort == 'dateSaisie' %}
-                <span class="text-[10px] font-black">{{ currentDirection == 'DESC' ? '▼' : '▲' }}</span>
-            {% endif %}
-        </a>
-
-        {# Tri Humeur #}
-        <a href="{{ path('entree_index', { 'sort': 'humeur', 'direction': (currentSort == 'humeur' and currentDirection == 'DESC') ? 'ASC' : 'DESC', 'q': keyword }) }}" 
-           class="inline-flex items-center gap-1.5 text-xs font-bold transition-colors hover:opacity-70 {{ currentSort == 'humeur' ? 'text-[#006876]' : 'text-gray-500' }}">
-            📊 Humeur
-            {% if currentSort == 'humeur' %}
-                <span class="text-[10px] font-black">{{ currentDirection == 'DESC' ? '▼' : '▲' }}</span>
-            {% endif %}
-        </a>
-    </div>
-</div>
-
 {# ── LISTE DES ENTRÉES ── #}
 {% if entrees is empty %}
 <div class="text-center py-16 text-gray-400">
@@ -91,56 +66,89 @@
     <p class="text-lg font-medium">Aucune entrée trouvée</p>
     <p class="text-sm mt-1">Commencez à écrire votre journal !</p>
 </div>
+
 {% else %}
-<div class="space-y-4">
-    {% for e in entrees %}
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition">
-        <div class="flex items-start justify-between gap-4">
+<div class="overflow-x-auto">
+<table class="min-w-full bg-white rounded-2xl overflow-hidden shadow-sm">
 
-            {# Humeur badge #}
-            <div class="flex items-center gap-3 flex-1">
-                <span class="text-3xl">{{ e.emojiHumeur }}</span>
-                <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold"
-                              style="background-color: {{ e.couleurHumeur }}22; color: {{ e.couleurHumeur }}">
-                            {{ e.labelHumeur }} — {{ e.humeur }}/10
-                        </span>
-                        <span class="text-xs text-gray-400">
-                            📅 {{ e.dateSaisie|date('d/m/Y') }}
-                        </span>
-                    </div>
-                    <p class="text-sm text-gray-600 line-clamp-2">
-                        {{ e.noteTextuelle ?: 'Aucune note.' }}
-                    </p>
-                </div>
-            </div>
+    {# ── THEAD ── #}
+<thead class="bg-gradient-to-r from-[#006876] to-[#008a9a] text-white">
+    <tr>
+        {% set toggleDir = currentDirection == 'ASC' ? 'DESC' : 'ASC' %}
 
-            {# Actions #}
-            <div class="flex items-center gap-2 shrink-0">
-                <a href="{{ path('entree_voir', {id: e.idJournal}) }}"
-                   class="bg-[#006876] text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-[#005562] transition">
-                    👁 Voir
-                </a>
-                <a href="{{ path('entree_modifier', {id: e.idJournal}) }}"
-                   class="bg-amber-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-amber-500 transition">
-                    ✏️
-                </a>
-                <form method="POST"
-                      action="{{ path('entree_supprimer', {id: e.idJournal}) }}"
-                      onsubmit="return confirm('Supprimer cette entrée ?')">
-                    <input type="hidden" name="_token"
-                           value="{{ csrf_token('delete-entree-' ~ e.idJournal) }}">
-                    <button type="submit"
-                            class="bg-red-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-500 transition">
-                        🗑
-                    </button>
-                </form>
-            </div>
-        </div>
+        <th class="px-4 py-3 text-left font-semibold">
+            <a href="{{ path('entree_index', {sort: 'noteTextuelle', direction: currentSort == 'noteTextuelle' ? toggleDir : 'ASC', q: keyword}) }}"
+               class="flex items-center gap-1 hover:text-yellow-200 transition">
+                📝 Note
+                {% if currentSort == 'noteTextuelle' %}{{ currentDirection == 'ASC' ? '↑' : '↓' }}{% endif %}
+            </a>
+        </th>
+
+        <th class="px-4 py-3 text-center font-semibold">
+            <a href="{{ path('entree_index', {sort: 'humeur', direction: currentSort == 'humeur' ? toggleDir : 'DESC', q: keyword}) }}"
+               class="flex items-center justify-center gap-1 hover:text-yellow-200 transition">
+                😊 Humeur
+                {% if currentSort == 'humeur' %}{{ currentDirection == 'ASC' ? '↑' : '↓' }}{% endif %}
+            </a>
+        </th>
+
+        <th class="px-4 py-3 text-center font-semibold">
+            <a href="{{ path('entree_index', {sort: 'dateSaisie', direction: currentSort == 'dateSaisie' ? toggleDir : 'DESC', q: keyword}) }}"
+               class="flex items-center justify-center gap-1 hover:text-yellow-200 transition">
+                📅 Date
+                {% if currentSort == 'dateSaisie' %}{{ currentDirection == 'ASC' ? '↑' : '↓' }}{% endif %}
+            </a>
+        </th>
+
+        <th class="px-4 py-3 text-center font-semibold">Actions</th>
+    </tr>
+</thead>
+
+    {# ── TBODY ── #}
+    <tbody class="divide-y">
+        {% for e in entrees %}
+        <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 text-sm text-gray-600">
+                {{ e.noteTextuelle ?: 'Aucune note.' }}
+            </td>
+
+            <td class="px-4 py-3 text-center">
+                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold"
+                    style="background-color: {{ e.couleurHumeur }}22; color: {{ e.couleurHumeur }}">
+                {{ e.emojiHumeur }} {{ e.humeur }}/10
+                </span>
+            </td>
+
+            <td class="px-4 py-3 text-center text-sm text-gray-500">
+                {{ e.dateSaisie|date('d/m/Y') }}
+            </td>
+
+            <td class="px-4 py-3 text-center">
+    <div class="flex items-center justify-center gap-2">
+        <a href="{{ path('entree_voir', {id: e.idJournal}) }}"
+           class="bg-[#006876] text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-[#005562] transition">
+            👁 Voir
+        </a>
+        <a href="{{ path('entree_modifier', {id: e.idJournal}) }}"
+           class="bg-amber-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-amber-500 transition">
+            ✏️
+        </a>
+        <form method="POST"
+              action="{{ path('entree_supprimer', {id: e.idJournal}) }}"
+              onsubmit="return confirm('Supprimer cette entrée ?')">
+            <input type="hidden" name="_token"
+                   value="{{ csrf_token('delete-entree-' ~ e.idJournal) }}">
+            <button type="submit"
+                    class="bg-red-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-500 transition">
+                🗑
+            </button>
+        </form>
     </div>
-    {% endfor %}
+</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 </div>
 {% endif %}
-
 {% endblock %}

@@ -39,6 +39,62 @@ input[type=range].slider-sommeil::-webkit-slider-thumb:hover {
 </style>
 
 <script>
+// ── Voice to Text ──
+let recognition = null;
+let isRecording = false;
+
+function toggleVoice() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert('Voice to Text non supporté. Utilisez Chrome.');
+        return;
+    }
+
+    if (isRecording) {
+        recognition.stop();
+        return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'fr-FR';
+    recognition.continuous = true;
+    recognition.interimResults = false;
+
+    recognition.onstart = function() {
+        isRecording = true;
+        const btn = document.getElementById('btn-voice');
+        btn.textContent = '🛑';
+        btn.style.backgroundColor = '#f56565';
+        btn.style.color = 'white';
+    };
+
+    recognition.onresult = function(event) {
+        const textarea = document.querySelector('#habitude_noteTextuelle');
+        if (textarea) {
+            let newText = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                newText += event.results[i][0].transcript;
+            }
+            textarea.value += (textarea.value ? ' ' : '') + newText;
+        }
+    };
+
+    recognition.onend = function() {
+        isRecording = false;
+        const btn = document.getElementById('btn-voice');
+        btn.textContent = '🎙️';
+        btn.style.backgroundColor = '';
+        btn.style.color = '';
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Erreur reconnaissance:', event.error);
+        isRecording = false;
+    };
+
+    recognition.start();
+}
+
 
 function getColor(type, val) {
     if (type === 'energie') {
@@ -253,7 +309,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
             <div>
                 {{ form_label(form.noteTextuelle, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
-                {{ form_widget(form.noteTextuelle) }}
+                <div class="flex gap-2 items-start">
+                    {{ form_widget(form.noteTextuelle, {attr: {class: 'flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#006876]', rows: '4'}}) }}
+                    <button type="button" id="btn-voice" onclick="toggleVoice()"
+                            class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-xl flex items-center justify-center transition mt-1"
+                            title="Dicter une note">
+                        🎙️
+            </button>
             </div>
             <div>
                 {{ form_label(form.dateCreation, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}

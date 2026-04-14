@@ -52,8 +52,6 @@ class PdfExporter
         foreach ($entrees as $e) {
             $v = $e->getHumeur();
 
-            // Logique EXACTE de votre code JavaFX
-            // v >= 7 ? "#f6a623" : v >= 4 ? "#48bb78" : "#2b6cb0"
             if ($v >= 7) {
                 $couleur = "#f6a623";
                 $emoji = "☀️";

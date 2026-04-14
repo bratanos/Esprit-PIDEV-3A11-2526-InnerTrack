@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\PdfExporter;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 
 #[Route('/journal/entree', name: 'entree_')]
 class EntreeJournalController extends AbstractController
@@ -123,4 +125,29 @@ class EntreeJournalController extends AbstractController
 
         return $this->file($tmpFile, 'MonJournal.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
     }
+
+    #[Route('/qrcode/{id}', name: 'qrcode')]
+public function qrcode(EntreeJournal $entree): Response
+{
+    $texte = sprintf(
+        "Journal: %s\nHumeur: %d/10 - %s\nNote: %s",
+        $entree->getDateSaisie()->format('d/m/Y'),
+        $entree->getHumeur(),
+        $entree->getLabelHumeur(),
+        $entree->getNoteTextuelle() ?? ''
+    );
+
+    $qrCode = QrCode::create($texte)
+        ->setSize(150)
+        ->setMargin(8);
+
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
+
+    return new Response(
+        $result->getString(),
+        200,
+        ['Content-Type' => 'image/png']
+    );
+}
 }

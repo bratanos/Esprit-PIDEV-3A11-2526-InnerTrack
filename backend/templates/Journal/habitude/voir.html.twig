@@ -1,5 +1,46 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
+
+{% block head %}
+{{ parent() }}
+<script>
+function lireHabitude() {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const texte = `
+            Habitude : {{ habitude.nomHabitude }}.
+            Date : {{ habitude.dateCreation|date('d MMMM Y') }}.
+            Émotion : {{ habitude.emotionDominantes }}.
+            Énergie : {{ habitude.niveauEnergie }} sur 10, {{ habitude.labelEnergie }}.
+            Stress : {{ habitude.niveauStress }} sur 10, {{ habitude.labelStress }}.
+            Sommeil : {{ habitude.qualiteSommeil }} sur 10, {{ habitude.labelSommeil }}.
+            Note : {{ habitude.noteTextuelle ?: 'Aucune note.' }}.
+        `;
+
+        const utterance = new SpeechSynthesisUtterance(texte);
+        utterance.lang = 'fr-FR';
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+
+        window.speechSynthesis.speak(utterance);
+
+        document.getElementById('btn-tts').textContent = '🔊 Lecture...';
+
+        utterance.onend = () => {
+            document.getElementById('btn-tts').textContent = '🔊 Lire à voix haute';
+        };
+    } else {
+        alert('Text to Speech non supporté par ce navigateur.');
+    }
+}
+
+function stopLecture() {
+    window.speechSynthesis.cancel();
+    document.getElementById('btn-tts').textContent = '🔊 Lire à voix haute';
+}
+</script>
+
+
 {% block content %}
 <div class="max-w-xl mx-auto">
 
@@ -15,6 +56,16 @@
             </p>
         </div>
     </div>
+
+    {# QR CODE #}
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4 text-center">
+    <h2 class="text-sm font-bold text-gray-500 mb-4">🔗 QR Code</h2>
+    <img src="{{ path('habitude_qrcode', {id: habitude.idHabit}) }}"
+         alt="QR Code"
+         class="mx-auto rounded-xl"
+         width="200" height="200">
+    <p class="text-xs text-gray-400 mt-2">Scannez pour voir les détails</p>
+</div>
 
     {# INDICATEURS #}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4">
@@ -60,16 +111,29 @@
     </div>
 
     {# ACTIONS #}
-    <div class="flex gap-3">
-        <a href="{{ path('habitude_index') }}"
-           class="flex-1 text-center bg-gray-100 text-gray-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">
-            ← Retour
-        </a>
-        <a href="{{ path('habitude_modifier', {id: habitude.idHabit}) }}"
-           class="flex-1 text-center bg-[#006876] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
-            ✏️ Modifier
-        </a>
-    </div>
+<div class="flex gap-3 flex-wrap">
+
+    <a href="{{ path('habitude_index') }}"
+       class="flex-1 text-center bg-gray-100 text-gray-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">
+        ← Retour
+    </a>
+
+    <button id="btn-tts" onclick="lireHabitude()"
+            class="flex-1 bg-[#48bb78] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#38a169] transition">
+        🔊 Lire à voix haute
+    </button>
+
+    <button onclick="stopLecture()"
+            class="bg-gray-200 text-gray-600 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-300 transition">
+        ⏹
+    </button>
+
+    <a href="{{ path('habitude_modifier', {id: habitude.idHabit}) }}"
+       class="flex-1 text-center bg-[#006876] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
+        ✏️ Modifier
+    </a>
+
+</div>
 
 </div>
 {% endblock %}
