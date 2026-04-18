@@ -126,9 +126,15 @@ class EntreeJournalController extends AbstractController
         return $this->file($tmpFile, 'MonJournal.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
     }
 
-    #[Route('/qrcode/{id}', name: 'qrcode')]
-public function qrcode(EntreeJournal $entree): Response
+#[Route('/qrcode/{id}', name: 'qrcode')]
+public function qrcode(int $id): Response
 {
+    $entree = $this->repo->findOneBy(['idJournal' => $id]);
+
+    if (!$entree) {
+        throw $this->createNotFoundException('Entrée non trouvée');
+    }
+
     $texte = sprintf(
         "Journal: %s\nHumeur: %d/10 - %s\nNote: %s",
         $entree->getDateSaisie()->format('d/m/Y'),
@@ -137,9 +143,7 @@ public function qrcode(EntreeJournal $entree): Response
         $entree->getNoteTextuelle() ?? ''
     );
 
-    $qrCode = QrCode::create($texte)
-        ->setSize(150)
-        ->setMargin(8);
+    $qrCode = new QrCode($texte);
 
     $writer = new PngWriter();
     $result = $writer->write($qrCode);
