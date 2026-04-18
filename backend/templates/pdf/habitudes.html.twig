@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(to right, #5a3ea1, #7c5cbf);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        .stats-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            flex: 1;
+            background: #f8f4ff;
+            border: 1px solid #e2d9f3;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat .number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #5a3ea1;
+        }
+
+        .stat .label {
+            font-size: 10px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        thead tr {
+            background-color: #5a3ea1;
+            color: white;
+        }
+
+        thead th {
+            padding: 10px 8px;
+            text-align: left;
+            font-size: 11px;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8f4ff;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        tbody td {
+            padding: 8px;
+            border-bottom: 1px solid #e2d9f3;
+            font-size: 11px;
+        }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 10px;
+            color: #aaa;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
+</head>
+<body>
+
+    {# EN-TÊTE #}
+    <div class="header">
+        <h1>🌿 Mes Habitudes — InnerTrack</h1>
+        <p>Rapport généré le {{ "now"|date("d/m/Y à H:i") }} • {{ habitudes|length }} habitude(s)</p>
+    </div>
+
+    {# STATS GLOBALES #}
+    <div class="stats-box">
+        <div class="stat">
+            <div class="number">{{ habitudes|length }}</div>
+            <div class="label">Total habitudes</div>
+        </div>
+        <div class="stat">
+            <div class="number">
+                {% set total = 0 %}
+                {% for h in habitudes %}{% set total = total + h.niveauEnergie %}{% endfor %}
+                {{ habitudes|length > 0 ? (total / habitudes|length)|round(1) : 0 }}
+            </div>
+            <div class="label">⚡ Énergie moy.</div>
+        </div>
+        <div class="stat">
+            <div class="number">
+                {% set total = 0 %}
+                {% for h in habitudes %}{% set total = total + h.niveauStress %}{% endfor %}
+                {{ habitudes|length > 0 ? (total / habitudes|length)|round(1) : 0 }}
+            </div>
+            <div class="label">😰 Stress moy.</div>
+        </div>
+        <div class="stat">
+            <div class="number">
+                {% set total = 0 %}
+                {% for h in habitudes %}{% set total = total + h.qualiteSommeil %}{% endfor %}
+                {{ habitudes|length > 0 ? (total / habitudes|length)|round(1) : 0 }}
+            </div>
+            <div class="label">😴 Sommeil moy.</div>
+        </div>
+    </div>
+
+    {# TABLEAU #}
+    <table>
+        <thead>
+            <tr>
+                <th>Habitude</th>
+                <th>Date</th>
+                <th>Émotion</th>
+                <th>⚡ Énergie</th>
+                <th>😰 Stress</th>
+                <th>😴 Sommeil</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in habitudes %}
+            <tr>
+                <td><strong>{{ h.nomHabitude }}</strong></td>
+                <td>{{ h.dateCreation|date('d/m/Y') }}</td>
+                <td>{{ h.emotionDominantes }}</td>
+                <td>
+                    <span class="badge" style="background-color: {{ h.couleurEnergie }}22; color: {{ h.couleurEnergie }}">
+                        {{ h.niveauEnergie }}/10
+                    </span>
+                </td>
+                <td>
+                    <span class="badge" style="background-color: {{ h.couleurStress }}22; color: {{ h.couleurStress }}">
+                        {{ h.niveauStress }}/10
+                    </span>
+                </td>
+                <td>
+                    <span class="badge" style="background-color: {{ h.couleurSommeil }}22; color: {{ h.couleurSommeil }}">
+                        {{ h.qualiteSommeil }}/10
+                    </span>
+                </td>
+                <td>{{ h.noteTextuelle|default('—')|slice(0, 40) }}{% if h.noteTextuelle|length > 40 %}...{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="footer">
+        InnerTrack — Digital Sanctuary • Rapport confidentiel
+    </div>
+
+</body>
+</html>

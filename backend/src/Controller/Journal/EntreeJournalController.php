@@ -114,18 +114,6 @@ class EntreeJournalController extends AbstractController
         ]);
     }
 
-    #[Route('/export/pdf', name: 'export_pdf')]
-    public function exportPdf(PdfExporter $pdfExporter): Response 
-    {
-        $user = $this->getUser();
-        $entrees = $this->repo->findByUserId($user->getId());
-
-        $tmpFile = tempnam(sys_get_temp_dir(), 'journal') . '.pdf';
-        $pdfExporter->exportJournal($entrees, $tmpFile);
-
-        return $this->file($tmpFile, 'MonJournal.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
-    }
-
 #[Route('/qrcode/{id}', name: 'qrcode')]
 public function qrcode(int $id): Response
 {
@@ -153,5 +141,17 @@ public function qrcode(int $id): Response
         200,
         ['Content-Type' => 'image/png']
     );
+}
+
+#[Route('/export/pdf', name: 'export_pdf')]
+public function exportPdf(PdfExporter $pdfExporter): Response 
+{
+    $user = $this->getUser();
+    $entrees = $this->repo->findByUserId($user->getId());
+
+    $tmpFile = tempnam(sys_get_temp_dir(), 'journal') . '.pdf';
+    $pdfExporter->exportJournal($entrees, $tmpFile);
+
+    return $this->file($tmpFile, 'MonJournal.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
 }
 }

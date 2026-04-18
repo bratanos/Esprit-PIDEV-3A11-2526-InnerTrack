@@ -13,6 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use App\Service\PdfExporter;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+
 
 #[Route('/journal/habitude', name: 'habitude_')]
 class HabitudeController extends AbstractController
@@ -97,38 +100,58 @@ public function index(Request $request): Response
     }
 
     #[Route('/voir/{id}', name: 'voir')]
-    public function voir(Habitude $habitude): Response
-    {
-        return $this->render('journal/habitude/voir.html.twig', [
-            'habitude' => $habitude,
-        ]);
+public function voir(int $id): Response
+{
+    $habitude = $this->repo->find($id);
+    if (!$habitude) {
+        throw $this->createNotFoundException('Habitude non trouvée');
     }
-    
-    #[Route('/qrcode/{id}', name: 'qrcode')]
-    public function qrcode(Habitude $habitude): Response
-    {
-        $texte = sprintf(
-            "Habitude: %s\nDate: %s\nEmotion: %s\nEnergie: %d/10\nStress: %d/10\nSommeil: %d/10\nNote: %s",
-            $habitude->getNomHabitude(),
-            $habitude->getDateCreation()->format('d/m/Y'),
-            $habitude->getEmotionDominantes(),
-            $habitude->getNiveauEnergie(),
-            $habitude->getNiveauStress(),
-            $habitude->getQualiteSommeil(),
-            $habitude->getNoteTextuelle() ?? ''
-        );
-        
-        $qrCode = QrCode::create($texte)
-            ->setSize(200)
-            ->setMargin(10);
+    return $this->render('journal/habitude/voir.html.twig', [
+        'habitude' => $habitude,
+    ]);
+}
 
-        $writer = new PngWriter();
-        $result = $writer->write($qrCode);
-        
-        return new Response(
-            $result->getString(),
-            200,
-            ['Content-Type' => 'image/png']
-        );
+#[Route('/qrcode/{id}', name: 'qrcode')]
+public function qrcode(int $id): Response
+{
+    $habitude = $this->repo->findOneBy(['idHabit' => $id]);
+
+    if (!$habitude) {
+        throw $this->createNotFoundException('Habitude non trouvée');
     }
+
+    $texte = sprintf(
+        "Habitude: %s\nDate: %s\nEmotion: %s\nEnergie: %d/10\nStress: %d/10\nSommeil: %d/10\nNote: %s",
+        $habitude->getNomHabitude(),
+        $habitude->getDateCreation()->format('d/m/Y'),
+        $habitude->getEmotionDominantes(),
+        $habitude->getNiveauEnergie(),
+        $habitude->getNiveauStress(),
+        $habitude->getQualiteSommeil(),
+        $habitude->getNoteTextuelle() ?? ''
+    );
+
+    $qrCode = new QrCode($texte);
+
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
+
+    return new Response(
+        $result->getString(),
+        200,
+        ['Content-Type' => 'image/png']
+    );
+}
+
+#[Route('/export/pdf', name: 'export_pdf')]
+public function exportPdf(PdfExporter $pdfExporter): Response
+{
+    $user = $this->security->getUser();
+    $habitudes = $this->repo->findByUserIdSorted($user->getId(), 'dateCreation', 'DESC');
+
+    $tmpFile = tempnam(sys_get_temp_dir(), 'habitudes') . '.pdf';
+    $pdfExporter->exportHabitudes($habitudes, $tmpFile);
+
+    return $this->file($tmpFile, 'mes-habitudes.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
+}
 }

@@ -3,28 +3,41 @@
 {% block head %}
 {{ parent() }}
 <script>
-function lireEntree() {
+let isPlaying = false;
+
+function toggleLecture() {
+    const btn = document.getElementById('btn-tts');
+    
+    if (isPlaying) {
+        window.speechSynthesis.cancel();
+        isPlaying = false;
+        btn.innerHTML = '🔊 Lire';
+        btn.style.backgroundColor = '';
+        btn.classList.remove('bg-red-500');
+        btn.classList.add('bg-[#48bb78]');
+        return;
+    }
+
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        const texte = `
-            Journal du {{ entree.dateSaisie|date('d/m/Y') }}.
-            Humeur : {{ entree.humeur }} sur 10, {{ entree.labelHumeur }}.
-            Note : {{ entree.noteTextuelle ?: 'Aucune note.' }}.
-        `;
+        const texte = document.getElementById('tts-data').dataset.texte;
         const utterance = new SpeechSynthesisUtterance(texte);
         utterance.lang = 'fr-FR';
         utterance.rate = 0.9;
         window.speechSynthesis.speak(utterance);
-        document.getElementById('btn-tts').textContent = '🔊 Lecture...';
+
+        isPlaying = true;
+        btn.innerHTML = '⏹ Stop';
+        btn.style.backgroundColor = '#f56565';
+
         utterance.onend = () => {
-            document.getElementById('btn-tts').textContent = '🔊 Lire';
+            isPlaying = false;
+            btn.innerHTML = '🔊 Lire';
+            btn.style.backgroundColor = '';
         };
     }
 }
-function stopLecture() {
-    window.speechSynthesis.cancel();
-    document.getElementById('btn-tts').textContent = '🔊 Lire';
-}
+
 </script>
 {% endblock %}
 
@@ -95,13 +108,13 @@ function stopLecture() {
            class="flex-1 text-center bg-gray-100 text-gray-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">
             ← Retour
         </a>
-        <button id="btn-tts" onclick="lireEntree()"
+        <div id="tts-data"
+     data-texte="{{ ('Journal du ' ~ entree.dateSaisie|date('d/m/Y') ~ '. Humeur ' ~ entree.humeur ~ ' sur 10, ' ~ entree.labelHumeur ~ '. ' ~ (entree.noteTextuelle ?: 'Aucune note.'))|e('html_attr') }}"
+     style="display:none">
+</div>
+        <button id="btn-tts" onclick="toggleLecture()"
                 class="flex-1 bg-[#48bb78] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#38a169] transition">
             🔊 Lire
-        </button>
-        <button onclick="stopLecture()"
-                class="bg-gray-200 text-gray-600 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-300 transition">
-            ⏹
         </button>
         <a href="{{ path('entree_modifier', {id: entree.idJournal}) }}"
            class="flex-1 text-center bg-amber-400 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-500 transition">

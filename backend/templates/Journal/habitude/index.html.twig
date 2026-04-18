@@ -8,10 +8,19 @@
         <h1 class="text-2xl font-bold text-[#006876]">🌿 Mes Habitudes</h1>
         <p class="text-sm text-gray-500 mt-1">Suivez vos habitudes quotidiennes</p>
     </div>
-    <a href="{{ path('habitude_ajouter') }}"
-       class="inline-flex items-center gap-2 bg-[#006876] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
-        ＋ Ajouter une habitude
+    {# Bouton PDF #}
+    <div class="flex items-center gap-4">
+    <a href="{{ path('habitude_export_pdf') }}"
+       target="_blank"
+       style="background-color: #006876; color: white; padding: 8px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; text-decoration: none;">
+        📝 Exporter PDF
     </a>
+    {# Bouton Nouveau #}
+        <a href="{{ path('habitude_ajouter') }}"
+       class="inline-flex items-center gap-2 bg-[#006876] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition shadow-sm">
+        <span>＋</span> Nouvelle habitude
+    </a>
+    </div>
 </div>
 
 {# ── STATS ── #}
