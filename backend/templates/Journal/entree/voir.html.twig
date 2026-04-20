@@ -85,10 +85,13 @@ function toggleLecture() {
         {# Côté droit — QR Code #}
         <div class="text-center shrink-0">
             <p class="text-xs font-bold text-gray-400 mb-2">🔗 QR Code</p>
-            <img src="{{ path('entree_qrcode', {id: entree.idJournal}) }}"
-                 alt="QR Code"
-                 class="rounded-xl border border-gray-100"
-                 width="120" height="120">
+            <img src="{{ path('qrcode_journal_png', {id: entree.idJournal}) }}"
+                alt="QR Code"
+                class="rounded-xl border border-gray-100"
+                width="120" height="120"
+                style="cursor:pointer"
+                onclick="window.open('{{ path('qrcode_journal_detail', {id: entree.idJournal}) }}', '_blank')">
+            <p class="text-xs text-gray-400 mt-1">Cliquez pour voir la page détail</p>
         </div>
 
     </div>

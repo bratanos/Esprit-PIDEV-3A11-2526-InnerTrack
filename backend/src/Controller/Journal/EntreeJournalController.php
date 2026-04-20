@@ -15,15 +15,18 @@ use App\Service\PdfExporter;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 #[Route('/journal/entree', name: 'entree_')]
 class EntreeJournalController extends AbstractController
 {
     public function __construct(
-        private EntreeJournalRepository $repo,
-        private EntityManagerInterface  $em,
-        private Security                $security
-    ) {}
+    private EntreeJournalRepository   $repo,
+    private EntityManagerInterface    $em,
+    private Security                  $security,
+    private CsrfTokenManagerInterface $csrfTokenManager
+) {}
 
     #[Route('/', name: 'index')]
     public function index(Request $request): Response
@@ -153,5 +156,43 @@ public function exportPdf(PdfExporter $pdfExporter): Response
     $pdfExporter->exportJournal($entrees, $tmpFile);
 
     return $this->file($tmpFile, 'MonJournal.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
+}
+#[Route('/search', name: 'search', methods: ['GET'])]
+public function search(Request $request): JsonResponse
+{
+    $user      = $this->security->getUser();
+    $keyword   = $request->query->get('q', '');
+    $date      = $request->query->get('date', '');
+    $humeurMin = $request->query->get('humeurMin') !== '' ? (int)$request->query->get('humeurMin') : null;
+    $humeurMax = $request->query->get('humeurMax') !== '' ? (int)$request->query->get('humeurMax') : null;
+    $sort      = $request->query->get('sort', 'dateSaisie');
+    $direction = $request->query->get('direction', 'DESC');
+
+    $entrees = $this->repo->searchAdvanced(
+        $user->getId(),
+        $keyword,
+        $date,
+        null,
+        $sort,
+        $direction,
+        $humeurMin,
+        $humeurMax
+    );
+
+    $data = array_map(fn($e) => [
+        'id'            => $e->getIdJournal(),
+        'noteTextuelle' => $e->getNoteTextuelle() ?? 'Aucune note.',
+        'humeur'        => $e->getHumeur(),
+        'labelHumeur'   => $e->getLabelHumeur(),
+        'emojiHumeur'   => $e->getEmojiHumeur(),
+        'couleurHumeur' => $e->getCouleurHumeur(),
+        'dateSaisie'    => $e->getDateSaisie()->format('d/m/Y'),
+        'urlVoir'       => $this->generateUrl('entree_voir',      ['id' => $e->getIdJournal()]),
+        'urlModifier'   => $this->generateUrl('entree_modifier',  ['id' => $e->getIdJournal()]),
+        'urlSupprimer'  => $this->generateUrl('entree_supprimer', ['id' => $e->getIdJournal()]),
+        'csrfToken' => $this->csrfTokenManager->getToken('delete-entree-' . $e->getIdJournal())->getValue(),
+    ], $entrees);
+
+    return new JsonResponse($data);
 }
 }

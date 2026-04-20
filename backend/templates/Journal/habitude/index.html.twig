@@ -8,34 +8,30 @@
         <h1 class="text-2xl font-bold text-[#006876]">🌿 Mes Habitudes</h1>
         <p class="text-sm text-gray-500 mt-1">Suivez vos habitudes quotidiennes</p>
     </div>
-    {# Bouton PDF #}
     <div class="flex items-center gap-4">
-    <a href="{{ path('habitude_export_pdf') }}"
-       target="_blank"
-       style="background-color: #006876; color: white; padding: 8px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; text-decoration: none;">
-        📝 Exporter PDF
-    </a>
-    {# Bouton Nouveau #}
+        <a href="{{ path('habitude_export_pdf') }}" target="_blank"
+           style="background-color:#006876;color:white;padding:8px 16px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;">
+            Exporter PDF
+        </a>
         <a href="{{ path('habitude_ajouter') }}"
-       class="inline-flex items-center gap-2 bg-[#006876] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition shadow-sm">
-        <span>＋</span> Nouvelle habitude
-    </a>
+           class="inline-flex items-center gap-2 bg-[#006876] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition shadow-sm">
+            <span>＋</span> Nouvelle habitude
+        </a>
     </div>
 </div>
 
 {# ── STATS ── #}
 {% if stats.total > 0 %}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-    {% set statCards = [
-        { label: 'Total',        value: stats.total,                       emoji: '📋', color: '#006876' },
-        { label: 'Énergie moy.', value: stats.avgEnergie|number_format(1), emoji: '⚡', color: '#48bb78' },
-        { label: 'Stress moy.',  value: stats.avgStress|number_format(1),  emoji: '😰', color: '#f6ad55' },
-        { label: 'Sommeil moy.', value: stats.avgSommeil|number_format(1), emoji: '😴', color: '#b794f4' },
+    {% for card in [
+        {label:'Total',        value:stats.total,                       emoji:'📋', color:'#006876'},
+        {label:'Énergie moy.', value:stats.avgEnergie|number_format(1), emoji:'⚡', color:'#48bb78'},
+        {label:'Stress moy.',  value:stats.avgStress|number_format(1),  emoji:'😰', color:'#f6ad55'},
+        {label:'Sommeil moy.', value:stats.avgSommeil|number_format(1), emoji:'😴', color:'#b794f4'},
     ] %}
-    {% for card in statCards %}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
         <div class="text-2xl mb-1">{{ card.emoji }}</div>
-        <div class="text-xl font-bold" style="color: {{ card.color }}">{{ card.value }}</div>
+        <div class="text-xl font-bold" style="color:{{ card.color }}">{{ card.value }}</div>
         <div class="text-xs text-gray-400 mt-1">{{ card.label }}</div>
     </div>
     {% endfor %}
@@ -60,15 +56,15 @@
 </form>
 
 {# ── TABLEAU ── #}
+<div id="results-container">
 {% if habitudes is empty %}
 <div class="text-center py-16 text-gray-400">
     <div class="text-5xl mb-4">🌱</div>
     <p class="text-lg font-medium">Aucune habitude trouvée</p>
-    <p class="text-sm mt-1">Commencez par en ajouter une !</p>
 </div>
 {% else %}
 <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
-    <table class="w-full text-sm">
+    <table class="w-full text-sm" id="habitudes-table">
         <thead class="bg-gradient-to-r from-[#006876] to-[#008a9a] text-white">
             <tr>
                 <th class="px-4 py-3 text-left font-semibold">🌿 Habitude</th>
@@ -80,75 +76,48 @@
                 <th class="px-4 py-3 text-center font-semibold">Actions</th>
             </tr>
         </thead>
-        <tbody class="divide-y divide-gray-50 bg-white">
+        <tbody id="habitudes-tbody" class="divide-y divide-gray-50 bg-white">
             {% for h in habitudes %}
             <tr class="hover:bg-[#f0fdfd] transition">
-
-                <td class="px-4 py-3 font-medium text-gray-800">
-                    {{ h.nomHabitude }}
-                </td>
-
-                <td class="px-4 py-3 text-gray-500 text-xs">
-                    {{ h.emotionDominantes }}
-                </td>
-
-                {# Badge Énergie #}
+                <td class="px-4 py-3 font-medium text-gray-800">{{ h.nomHabitude }}</td>
+                <td class="px-4 py-3 text-gray-500 text-xs">{{ h.emotionDominantes }}</td>
                 <td class="px-4 py-3 text-center">
                     <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold"
-                          style="background-color: {{ h.couleurEnergie }}22; color: {{ h.couleurEnergie }}">
+                          style="background-color:{{ h.couleurEnergie }}22;color:{{ h.couleurEnergie }}">
                         {{ h.emojiEnergie }} {{ h.niveauEnergie }} — {{ h.labelEnergie }}
                     </span>
                 </td>
-
-                {# Badge Stress #}
                 <td class="px-4 py-3 text-center">
                     <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold"
-                          style="background-color: {{ h.couleurStress }}22; color: {{ h.couleurStress }}">
+                          style="background-color:{{ h.couleurStress }}22;color:{{ h.couleurStress }}">
                         {{ h.emojiStress }} {{ h.niveauStress }} — {{ h.labelStress }}
                     </span>
                 </td>
-
-                {# Badge Sommeil #}
                 <td class="px-4 py-3 text-center">
                     <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold"
-                          style="background-color: {{ h.couleurSommeil }}22; color: {{ h.couleurSommeil }}">
+                          style="background-color:{{ h.couleurSommeil }}22;color:{{ h.couleurSommeil }}">
                         {{ h.emojiSommeil }} {{ h.qualiteSommeil }} — {{ h.labelSommeil }}
                     </span>
                 </td>
-
-                <td class="px-4 py-3 text-center text-gray-400 text-xs">
-                    {{ h.dateCreation|date('d/m/Y') }}
-                </td>
-
-                {# Actions #}
+                <td class="px-4 py-3 text-center text-gray-400 text-xs">{{ h.dateCreation|date('d/m/Y') }}</td>
                 <td class="px-4 py-3">
                     <div class="flex items-center justify-center gap-2">
                         <a href="{{ path('habitude_voir', {id: h.idHabit}) }}"
-                           class="bg-[#006876] text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-[#005562] transition">
-                            👁 Voir
-                        </a>
+                           class="bg-[#006876] text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-[#005562] transition">👁 Voir</a>
                         <a href="{{ path('habitude_modifier', {id: h.idHabit}) }}"
-                           class="bg-amber-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-amber-500 transition">
-                            ✏️
-                        </a>
-                        <form method="POST"
-                              action="{{ path('habitude_supprimer', {id: h.idHabit}) }}"
-                              onsubmit="return confirm('Supprimer cette habitude ?')">
-                            <input type="hidden" name="_token"
-                                   value="{{ csrf_token('delete-habitude-' ~ h.idHabit) }}">
-                            <button type="submit"
-                                    class="bg-red-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-500 transition">
-                                🗑
-                            </button>
+                           class="bg-amber-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-amber-500 transition">✏️</a>
+                        <form method="POST" action="{{ path('habitude_supprimer', {id: h.idHabit}) }}"
+                              onsubmit="return confirm('Supprimer ?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-habitude-' ~ h.idHabit) }}">
+                            <button class="bg-red-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-500 transition">🗑</button>
                         </form>
                     </div>
                 </td>
-
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 {% endif %}
-
+</div>
 {% endblock %}

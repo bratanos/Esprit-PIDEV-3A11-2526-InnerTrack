@@ -15,15 +15,17 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use App\Service\PdfExporter;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 #[Route('/journal/habitude', name: 'habitude_')]
 class HabitudeController extends AbstractController
 {
     public function __construct(
-        private HabitudeRepository     $repo,
-        private EntityManagerInterface $em,
-        private Security               $security
+        private HabitudeRepository        $repo,
+        private EntityManagerInterface    $em,
+        private Security                  $security,
+        private CsrfTokenManagerInterface $csrfTokenManager
     ) {}
 
     #[Route('/', name: 'index')]
@@ -153,5 +155,48 @@ public function exportPdf(PdfExporter $pdfExporter): Response
     $pdfExporter->exportHabitudes($habitudes, $tmpFile);
 
     return $this->file($tmpFile, 'mes-habitudes.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
+}
+
+#[Route('/search', name: 'search', methods: ['GET'])]
+public function search(Request $request): JsonResponse
+{
+    $user      = $this->security->getUser();
+    $keyword   = $request->query->get('q', '');
+    $emotion   = $request->query->get('emotion', '');
+    $energieMin = $request->query->get('energieMin') !== '' ? (int)$request->query->get('energieMin') : null;
+    $energieMax = $request->query->get('energieMax') !== '' ? (int)$request->query->get('energieMax') : null;
+    $stressMax  = $request->query->get('stressMax')  !== '' ? (int)$request->query->get('stressMax')  : null;
+    $date      = $request->query->get('date', '');
+    $sort      = $request->query->get('sort', 'dateCreation');
+    $order     = $request->query->get('order', 'DESC');
+
+    $habitudes = $this->repo->searchAdvanced(
+        $user->getId(), $keyword, $emotion, $energieMin, $energieMax, $stressMax, $date, $sort, $order
+    );
+
+    $data = array_map(fn($h) => [
+        'id'              => $h->getIdHabit(),
+        'nomHabitude'     => $h->getNomHabitude(),
+        'emotionDominantes' => $h->getEmotionDominantes(),
+        'niveauEnergie'   => $h->getNiveauEnergie(),
+        'niveauStress'    => $h->getNiveauStress(),
+        'qualiteSommeil'  => $h->getQualiteSommeil(),
+        'dateCreation'    => $h->getDateCreation()->format('d/m/Y'),
+        'labelEnergie'    => $h->getLabelEnergie(),
+        'labelStress'     => $h->getLabelStress(),
+        'labelSommeil'    => $h->getLabelSommeil(),
+        'couleurEnergie'  => $h->getCouleurEnergie(),
+        'couleurStress'   => $h->getCouleurStress(),
+        'couleurSommeil'  => $h->getCouleurSommeil(),
+        'emojiEnergie'    => $h->getEmojiEnergie(),
+        'emojiStress'     => $h->getEmojiStress(),
+        'emojiSommeil'    => $h->getEmojiSommeil(),
+        'urlVoir'         => $this->generateUrl('habitude_voir',     ['id' => $h->getIdHabit()]),
+        'urlModifier'     => $this->generateUrl('habitude_modifier', ['id' => $h->getIdHabit()]),
+        'urlSupprimer'    => $this->generateUrl('habitude_supprimer',['id' => $h->getIdHabit()]),
+        'csrfToken' => $this->csrfTokenManager->getToken('delete-habitude-' . $h->getIdHabit())->getValue(),
+    ], $habitudes);
+
+    return new JsonResponse($data);
 }
 }

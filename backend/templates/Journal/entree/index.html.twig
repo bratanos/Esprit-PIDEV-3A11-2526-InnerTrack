@@ -42,21 +42,36 @@
 {% endif %}
 
 {# ── RECHERCHE ── #}
-<form method="GET" class="mb-6 flex gap-3">
-    <input type="text" name="q" value="{{ keyword }}"
-           placeholder="🔍 Rechercher dans vos notes..."
-           class="flex-1 rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#006876]">
-    <button type="submit"
-            class="bg-[#006876] text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
-        Rechercher
-    </button>
-    {% if keyword %}
-    <a href="{{ path('entree_index') }}"
-       class="bg-gray-100 text-gray-600 px-4 py-2.5 rounded-xl text-sm hover:bg-gray-200 transition">
-        ✕ Effacer
-    </a>
-    {% endif %}
-</form>
+{# ── FILTRES AJAX ── #}
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
+    <h2 class="text-sm font-bold text-gray-500 mb-4">🔍 Recherche avancée</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+
+        <input id="f-keyword" type="text" placeholder="🔍 Rechercher dans vos notes..."
+               class="rounded-xl border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#006876]">
+
+        <input id="f-date" type="date"
+               class="rounded-xl border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#006876]">
+
+        <div class="flex items-center gap-2">
+            <label class="text-xs text-gray-500 whitespace-nowrap">😊 Humeur min</label>
+            <input id="f-humeur-min" type="number" min="1" max="10" placeholder="1"
+                   class="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#006876]">
+        </div>
+
+        <div class="flex items-center gap-2">
+            <label class="text-xs text-gray-500 whitespace-nowrap">😊 Humeur max</label>
+            <input id="f-humeur-max" type="number" min="1" max="10" placeholder="10"
+                   class="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#006876]">
+        </div>
+
+        <button onclick="resetFiltres()"
+                class="rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 transition">
+            ✕ Effacer filtres
+        </button>
+    </div>
+    <div id="search-status" class="text-xs text-gray-400 mt-3"></div>
+</div>
 
 {# ── LISTE DES ENTRÉES ── #}
 {% if entrees is empty %}
@@ -67,8 +82,8 @@
 </div>
 
 {% else %}
-<div class="overflow-x-auto">
-<table class="min-w-full bg-white rounded-2xl overflow-hidden shadow-sm">
+<div class="overflow-x-auto w-full">
+<table class="w-full bg-white rounded-2xl overflow-hidden shadow-sm">
 
     {# ── THEAD ── #}
 <thead class="bg-gradient-to-r from-[#006876] to-[#008a9a] text-white">
@@ -104,7 +119,7 @@
 </thead>
 
     {# ── TBODY ── #}
-    <tbody class="divide-y">
+    <tbody class="divide-y" id="entrees-tbody">
         {% for e in entrees %}
         <tr class="hover:bg-gray-50">
             <td class="px-4 py-3 text-sm text-gray-600">
@@ -150,4 +165,81 @@
 </table>
 </div>
 {% endif %}
+<script>
+const SEARCH_URL = '{{ path('entree_search') }}';
+let debounceTimer = null;
+
+function resetFiltres() {
+    document.getElementById('f-keyword').value    = '';
+    document.getElementById('f-date').value       = '';
+    document.getElementById('f-humeur-min').value = '';
+    document.getElementById('f-humeur-max').value = '';
+    doSearch();
+}
+
+function renderRow(e) {
+    return `
+    <tr class="hover:bg-gray-50">
+        <td class="px-4 py-3 text-sm text-gray-600">${e.noteTextuelle}</td>
+        <td class="px-4 py-3 text-center">
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold"
+                  style="background-color:${e.couleurHumeur}22;color:${e.couleurHumeur}">
+                ${e.emojiHumeur} ${e.humeur}/10
+            </span>
+        </td>
+        <td class="px-4 py-3 text-center text-sm text-gray-500">${e.dateSaisie}</td>
+        <td class="px-4 py-3 text-center">
+            <div class="flex items-center justify-center gap-2">
+                <a href="${e.urlVoir}" class="bg-[#006876] text-white px-3 py-1.5 rounded-lg text-xs font-semibold">👁 Voir</a>
+                <a href="${e.urlModifier}" class="bg-amber-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">✏️</a>
+                <form method="POST" action="${e.urlSupprimer}" onsubmit="return confirm('Supprimer ?')">
+                    <input type="hidden" name="_token" value="${e.csrfToken}">
+                    <button class="bg-red-400 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">🗑</button>
+                </form>
+            </div>
+        </td>
+    </tr>`;
+}
+
+async function doSearch() {
+    const params = new URLSearchParams({
+        q:         document.getElementById('f-keyword').value,
+        date:      document.getElementById('f-date').value,
+        humeurMin: document.getElementById('f-humeur-min').value,
+        humeurMax: document.getElementById('f-humeur-max').value,
+    });
+
+    const status = document.getElementById('search-status');
+    status.textContent = '🔄 Recherche...';
+
+    try {
+        const res  = await fetch(SEARCH_URL + '?' + params.toString());
+        const data = await res.json();
+        const tbody = document.getElementById('entrees-tbody');
+
+        if (data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-gray-400">
+                <div class="text-5xl mb-4">📭</div>
+                <p>Aucune entrée trouvée</p>
+            </td></tr>`;
+        } else {
+            tbody.innerHTML = data.map(renderRow).join('');
+        }
+
+        status.textContent = `✅ ${data.length} résultat(s)`;
+    } catch(e) {
+        status.textContent = '❌ Erreur';
+    }
+}
+
+function debounceSearch() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(doSearch, 350);
+}
+
+document.getElementById('f-keyword').addEventListener('input', debounceSearch);
+['f-date', 'f-humeur-min', 'f-humeur-max'].forEach(id => {
+    document.getElementById(id).addEventListener('change', doSearch);
+});
+</script>
 {% endblock %}
