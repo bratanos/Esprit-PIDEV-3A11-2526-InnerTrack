@@ -1,0 +1,230 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block head %}
+{{ parent() }}
+<style>
+.score-ring {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: 800;
+    color: white;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+.card-ia {
+    background: linear-gradient(135deg, #667eea 0%, #5a3ea1 100%);
+    border-radius: 20px;
+    padding: 24px;
+    color: white;
+}
+.recommendation-item {
+    background: #f8f4ff;
+    border-left: 4px solid #5a3ea1;
+    border-radius: 0 12px 12px 0;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #2d3748;
+}
+.loading-dots::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+
+    {# EN-TÊTE #}
+    <div class="rounded-2xl overflow-hidden mb-6"
+         style="background: linear-gradient(to right, #5a3ea1, #7c5cbf)">
+        <div class="px-8 py-6">
+            <h1 class="text-2xl font-bold text-white">🧘 Tableau de bord Bien-être</h1>
+            <p class="text-[#d8ccf5] text-sm mt-1">Analyse personnalisée de votre santé mentale</p>
+        </div>
+    </div>
+
+    {# SCORE GLOBAL #}
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 mb-6 text-center">
+        <h2 class="text-sm font-bold text-gray-500 mb-6">🌟 Score Global de Bien-être</h2>
+        
+        <div class="score-ring mb-4" style="background: {{ couleur }}">
+            {{ score }}
+        </div>
+        
+        <div class="text-2xl font-bold mt-4" style="color: {{ couleur }}">
+            {{ emoji }} {{ niveau }}
+        </div>
+        <div class="text-sm text-gray-400 mt-1">Score calculé sur vos {{ nbHabitudes }} habitudes et {{ nbEntrees }} entrées</div>
+
+        {# Barre de progression #}
+        <div class="w-full bg-gray-100 rounded-full h-3 mt-6 max-w-md mx-auto">
+            <div class="h-3 rounded-full transition-all duration-1000"
+                 style="width: {{ score }}%; background: {{ couleur }}">
+            </div>
+        </div>
+        <div class="flex justify-between text-xs text-gray-400 mt-1 max-w-md mx-auto">
+            <span>0 — Critique</span>
+            <span>100 — Excellent</span>
+        </div>
+    </div>
+
+    {# STATS DÉTAILLÉES #}
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+            <div class="text-2xl mb-1">⚡</div>
+            <div class="text-xl font-bold text-[#48bb78]">{{ avgEnergie }}/10</div>
+            <div class="text-xs text-gray-400 mt-1">Énergie moy.</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+            <div class="text-2xl mb-1">😰</div>
+            <div class="text-xl font-bold text-[#f6ad55]">{{ avgStress }}/10</div>
+            <div class="text-xs text-gray-400 mt-1">Stress moy.</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+            <div class="text-2xl mb-1">😴</div>
+            <div class="text-xl font-bold text-[#b794f4]">{{ avgSommeil }}/10</div>
+            <div class="text-xs text-gray-400 mt-1">Sommeil moy.</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+            <div class="text-2xl mb-1">😊</div>
+            <div class="text-xl font-bold text-[#63b3ed]">{{ avgHumeur }}/10</div>
+            <div class="text-xs text-gray-400 mt-1">Humeur moy.</div>
+        </div>
+    </div>
+
+    {# ANALYSE IA #}
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-bold text-gray-500">🤖 Analyse IA Personnalisée</h2>
+            <button id="btn-analyser"
+                onclick="lancerAnalyse()"
+                style="background:#5a3ea1; color:white; padding:8px 20px; border-radius:12px; border:none; cursor:pointer; font-size:14px; font-weight:600;">
+                ✨ Analyser avec Claude
+            </button>
+        </div>
+
+        <div id="ia-loading" class="hidden text-center py-8">
+            <div class="text-4xl mb-3">🤔</div>
+            <p class="text-gray-500 text-sm loading-dots">Claude analyse vos données</p>
+        </div>
+
+        <div id="ia-result" class="hidden space-y-4">
+
+            {# Message encouragement #}
+            <div class="bg-gradient-to-r from-[#5a3ea1] to-[#7c5cbf] rounded-xl p-5 text-white">
+                <p class="text-sm font-medium leading-relaxed" id="msg-encouragement"></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {# Points forts #}
+                <div>
+                    <h3 class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">✅ Points forts</h3>
+                    <div id="points-forts"></div>
+                </div>
+
+                {# Axes amélioration #}
+                <div>
+                    <h3 class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">🎯 Axes d'amélioration</h3>
+                    <div id="axes-amelioration"></div>
+                </div>
+            </div>
+
+            {# Recommandations #}
+            <div>
+                <h3 class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">💡 Recommandations</h3>
+                <div id="recommandations"></div>
+            </div>
+
+            {# Conseil du jour #}
+            <div class="bg-[#f0fafa] rounded-xl p-4 border-l-4 border-[#006876]">
+                <div class="text-xs font-bold text-[#006876] mb-1">🌟 Conseil du jour</div>
+                <p class="text-sm text-gray-700" id="conseil-jour"></p>
+            </div>
+
+        </div>
+
+        <div id="ia-placeholder" class="text-center py-8 text-gray-400">
+            <div class="text-4xl mb-3">🧠</div>
+            <p class="text-sm">Cliquez sur "Analyser avec Claude" pour obtenir votre analyse personnalisée</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+async function lancerAnalyse() {
+    const btn = document.getElementById('btn-analyser');
+    const loading = document.getElementById('ia-loading');
+    const result = document.getElementById('ia-result');
+    const placeholder = document.getElementById('ia-placeholder');
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Analyse en cours...';
+    placeholder.classList.add('hidden');
+    result.classList.add('hidden');
+    loading.classList.remove('hidden');
+
+    try {
+        const res = await fetch('{{ path('bienetre_analyser') }}', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }
+});
+
+console.log('HTTP status:', res.status);
+
+if (!res.ok) {
+    const txt = await res.text();
+    console.error('Backend error:', txt);
+    throw new Error('HTTP ' + res.status);
+}
+
+const data = await res.json();
+
+console.log('API data:', data);
+        // Remplir les résultats
+        document.getElementById('msg-encouragement').textContent = data.message_encouragement ?? '';
+
+        document.getElementById('points-forts').innerHTML = 
+            (data.points_forts ?? []).map(p => 
+                `<div class="recommendation-item" style="border-color:#48bb78;background:#f0fdf4">✅ ${p}</div>`
+            ).join('');
+
+        document.getElementById('axes-amelioration').innerHTML = 
+            (data.axes_amelioration ?? []).map(a => 
+                `<div class="recommendation-item" style="border-color:#f6ad55;background:#fffbeb">🎯 ${a}</div>`
+            ).join('');
+
+        document.getElementById('recommandations').innerHTML = 
+            (data.recommandations ?? []).map((r, i) => 
+                `<div class="recommendation-item">💡 ${r}</div>`
+            ).join('');
+
+        document.getElementById('conseil-jour').textContent = data.conseil_du_jour ?? '';
+
+        loading.classList.add('hidden');
+        result.classList.remove('hidden');
+
+    } catch(e) {
+        console.error(e);
+        loading.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        placeholder.innerHTML = '<div class="text-4xl mb-3">❌</div><p class="text-sm text-red-400">Erreur lors de l\'analyse. Réessayez.</p>';
+    }
+
+    btn.disabled = false;
+    btn.textContent = '✨ Analyser avec Claude';
+}
+</script>
+{% endblock %}
