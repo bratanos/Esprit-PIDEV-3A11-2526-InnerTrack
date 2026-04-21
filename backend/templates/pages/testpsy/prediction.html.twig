@@ -37,7 +37,7 @@
             <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-indigo-600">psychiatry</span>
-                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest">Analyse Globale IA</span>
+                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest">Analyse Globale de vos réponses </span>
                 </div>
                 <button type="button" class="tts-btn p-1.5 text-indigo-600 hover:bg-indigo-100 rounded-full transition-colors"
                         data-text="{{ rec.analyseGlobale|escape }}" title="Écouter">
@@ -49,33 +49,7 @@
     </div>
 
     {# ── VOTE DES 3 MODÈLES ──────────────────────────────────────────────── #}
-    <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-outline/20 mb-8">
-        <h3 class="text-lg font-extrabold font-headline text-on-surface mb-1 flex items-center gap-2">
-            <span class="material-symbols-outlined text-indigo-500">how_to_vote</span>
-            Vote des 3 modèles d'IA
-        </h3>
-        <p class="text-xs text-on-surface-variant mb-6">Chaque modèle analyse votre profil indépendamment — le résultat final est leur consensus.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {% set modelColors = {'Fragile': 'red', 'Stable': 'amber', 'Résilient': 'green'} %}
-            {% for vote in rec.votesModeles %}
-                {% set pred = vote.prediction %}
-                {% set col = pred == 'Fragile' ? 'red' : (pred == 'Stable' ? 'amber' : 'green') %}
-                <div class="rounded-2xl border p-5
-                    {% if col == 'red' %}bg-red-50 border-red-100{% elseif col == 'amber' %}bg-amber-50 border-amber-100{% else %}bg-green-50 border-green-100{% endif %}">
-                    <p class="text-[10px] font-bold uppercase tracking-widest mb-2
-                        {% if col == 'red' %}text-red-400{% elseif col == 'amber' %}text-amber-400{% else %}text-green-400{% endif %}">
-                        {{ vote.modele }}
-                    </p>
-                    <p class="text-xl font-extrabold mb-1
-                        {% if col == 'red' %}text-red-600{% elseif col == 'amber' %}text-amber-600{% else %}text-green-600{% endif %}">
-                        {{ vote.prediction }}
-                    </p>
-                    <p class="text-xs text-on-surface-variant mb-3">Confiance : {{ vote.confiance }}</p>
-                    <p class="text-xs text-on-surface-variant leading-relaxed">{{ vote.description }}</p>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+    
 
     {# ── ANALYSE DES 7 FEATURES + RADAR ─────────────────────────────────── #}
     <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-outline/20 mb-8">
