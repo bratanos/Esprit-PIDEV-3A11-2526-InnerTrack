@@ -1,3 +1,4 @@
+
 {% extends 'layouts/dashboard.html.twig' %}
 
 {% block header_title %}Mon Historique{% endblock %}
@@ -12,6 +13,10 @@
         </div>
         <div class="flex items-center gap-4">
             {% if historiques is not empty %}
+            <a href="{{ path('testpsy_historique_excel') }}"
+               class="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 text-sm font-bold rounded-xl hover:bg-green-100 transition-colors">
+                <span class="material-symbols-outlined text-lg">table_view</span> Exporter Excel
+            </a>
             <form method="post" action="{{ path('testpsy_historique_reset') }}" onsubmit="return confirm('Êtes-vous sûr de vouloir réinitialiser tout votre historique ? Cette action est irréversible et effacera tous vos résultats.');">
                 <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 text-sm font-bold rounded-xl hover:bg-red-100 transition-colors">
                     <span class="material-symbols-outlined text-lg">delete_sweep</span> Réinitialiser
@@ -68,10 +73,10 @@
     {% if historiques_asc is defined and historiques_asc|length > 0 %}
     <div class="mb-10 p-8 bg-white rounded-[3rem] border border-outline/20 shadow-sm">
         <h3 class="text-xl font-extrabold font-headline mb-6 flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">timeline</span> 
+            <span class="material-symbols-outlined text-primary">timeline</span>
             Évolution de vos scores
         </h3>
-        
+
         <div class="mb-4">
             <label for="evolution-select" class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Choisir un test à analyser</label>
             <select id="evolution-select" class="w-full md:w-1/2 p-3 bg-gray-50 border border-outline/30 rounded-xl text-sm font-bold text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all">
@@ -177,7 +182,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Transformer l'objet Twig en tableau JS
     const rawData = [
         {% for h in historiques_asc %}
             {
@@ -196,15 +200,15 @@ document.addEventListener('DOMContentLoaded', function() {
     let chartInstance = null;
 
     function renderChart(testId) {
-        // Filtrer les données pour le test sélectionné
         const dataForTest = rawData.filter(d => d.idTest == testId);
-        
         const labels = dataForTest.map(d => d.date);
         const data = dataForTest.map(d => d.score);
 
-        if (chartInstance) {
-            chartInstance.destroy();
-        }
+        if (chartInstance) chartInstance.destroy();
+
+        const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(79, 70, 229, 0.6)');
+        gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
 
         chartInstance = new Chart(ctx, {
             type: 'line',
@@ -213,24 +217,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     label: 'Score au fil du temps (%)',
                     data: data,
-                    borderColor: '#4f46e5', // Indigo 600
-                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                    borderWidth: 3,
-                    pointBackgroundColor: '#fff',
+                    borderColor: '#4f46e5',
+                    backgroundColor: gradient,
+                    borderWidth: 4,
+                    pointBackgroundColor: '#ffffff',
                     pointBorderColor: '#4f46e5',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                    fill: 'start',
-                    tension: 0.3
+                    pointBorderWidth: 3,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: '#4f46e5',
+                    pointHoverBorderColor: '#ffffff',
+                    fill: true,
+                    tension: 0.4
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
+                plugins: { legend: { display: false } },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -242,15 +246,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Afficher le premier test sélectionné
-    if (select.options.length > 0) {
-        renderChart(select.value);
-    }
-
-    // Mettre à jour au changement
-    select.addEventListener('change', function() {
-        renderChart(this.value);
-    });
+    if (select.options.length > 0) renderChart(select.value);
+    select.addEventListener('change', function() { renderChart(this.value); });
 });
 </script>
 {% endif %}

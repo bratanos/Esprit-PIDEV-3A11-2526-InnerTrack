@@ -1,0 +1,241 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}Analyse Profonde & Recommandations {% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto pb-24">
+
+    {# ── HEADER ──────────────────────────────────────────────────────────── #}
+    <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-outline/20 mb-8 text-center">
+        <div class="w-20 h-20 rounded-full bg-indigo-50 flex items-center justify-center mx-auto mb-4 text-5xl">
+            {{ rec.emojiCluster }}
+        </div>
+        <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1">Votre profil</p>
+        <h1 class="text-4xl font-extrabold font-headline tracking-tight mb-1" style="color: {{ rec.couleurCluster }}">
+            {{ rec.cluster }}
+        </h1>
+        <p class="text-sm text-on-surface-variant mb-6">{{ rec.niveauConfiance }}</p>
+
+        {# Barre de probabilités #}
+        <div class="grid grid-cols-3 gap-3 mb-8">
+            {% set labels = ['Fragile', 'Stable', 'Résilient'] %}
+            {% set colors = ['#ef4444', '#f59e0b', '#10b981'] %}
+            {% for i, proba in rec.probabilites %}
+                <div class="bg-gray-50 rounded-2xl p-4 border border-outline/10">
+                    <p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">{{ labels[i] }}</p>
+                    <div class="h-2 bg-gray-200 rounded-full mb-2">
+                        <div class="h-full rounded-full transition-all duration-700"
+                             style="width: {{ (proba * 100)|round }}%; background: {{ colors[i] }}"></div>
+                    </div>
+                    <p class="text-sm font-extrabold" style="color: {{ colors[i] }}">{{ (proba * 100)|round }}%</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        {# Analyse globale #}
+        <div class="bg-indigo-50/50 rounded-[2rem] p-8 border border-indigo-100 text-left">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-indigo-600">psychiatry</span>
+                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest">Analyse Globale IA</span>
+                </div>
+                <button type="button" class="tts-btn p-1.5 text-indigo-600 hover:bg-indigo-100 rounded-full transition-colors"
+                        data-text="{{ rec.analyseGlobale|escape }}" title="Écouter">
+                    <span class="material-symbols-outlined text-lg">volume_up</span>
+                </button>
+            </div>
+            <pre class="whitespace-pre-wrap font-sans text-sm text-on-surface leading-relaxed font-medium">{{ rec.analyseGlobale }}</pre>
+        </div>
+    </div>
+
+    {# ── VOTE DES 3 MODÈLES ──────────────────────────────────────────────── #}
+    <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-outline/20 mb-8">
+        <h3 class="text-lg font-extrabold font-headline text-on-surface mb-1 flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-500">how_to_vote</span>
+            Vote des 3 modèles d'IA
+        </h3>
+        <p class="text-xs text-on-surface-variant mb-6">Chaque modèle analyse votre profil indépendamment — le résultat final est leur consensus.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% set modelColors = {'Fragile': 'red', 'Stable': 'amber', 'Résilient': 'green'} %}
+            {% for vote in rec.votesModeles %}
+                {% set pred = vote.prediction %}
+                {% set col = pred == 'Fragile' ? 'red' : (pred == 'Stable' ? 'amber' : 'green') %}
+                <div class="rounded-2xl border p-5
+                    {% if col == 'red' %}bg-red-50 border-red-100{% elseif col == 'amber' %}bg-amber-50 border-amber-100{% else %}bg-green-50 border-green-100{% endif %}">
+                    <p class="text-[10px] font-bold uppercase tracking-widest mb-2
+                        {% if col == 'red' %}text-red-400{% elseif col == 'amber' %}text-amber-400{% else %}text-green-400{% endif %}">
+                        {{ vote.modele }}
+                    </p>
+                    <p class="text-xl font-extrabold mb-1
+                        {% if col == 'red' %}text-red-600{% elseif col == 'amber' %}text-amber-600{% else %}text-green-600{% endif %}">
+                        {{ vote.prediction }}
+                    </p>
+                    <p class="text-xs text-on-surface-variant mb-3">Confiance : {{ vote.confiance }}</p>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">{{ vote.description }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# ── ANALYSE DES 7 FEATURES + RADAR ─────────────────────────────────── #}
+    <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-outline/20 mb-8">
+        <h3 class="text-lg font-extrabold font-headline text-on-surface mb-1 flex items-center gap-2">
+            <span class="material-symbols-outlined text-purple-500">radar</span>
+            Analyse détaillée de votre profil
+        </h3>
+        <p class="text-xs text-on-surface-variant mb-6">7 indicateurs extraits de vos réponses </p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {# Radar Chart #}
+            <div id="radar_chart" style="width:100%; height:320px;"></div>
+
+            {# Indicateurs détaillés #}
+            <div class="space-y-4">
+                {% for feat in rec.analyseFeatures %}
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs font-bold text-on-surface">{{ feat.nom }}</span>
+                            <span class="text-xs font-bold" style="color: {{ feat.couleur }}">{{ feat.pourcentage }}% — {{ feat.niveau }}</span>
+                        </div>
+                        <div class="h-2 bg-gray-100 rounded-full">
+                            <div class="h-full rounded-full transition-all duration-700"
+                                 style="width: {{ feat.pourcentage }}%; background: {{ feat.couleur }}"></div>
+                        </div>
+                        <p class="text-[11px] text-on-surface-variant mt-1 leading-relaxed">{{ feat.interpretation }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {# ── ALERTES ─────────────────────────────────────────────────────────── #}
+    {% if rec.alertes|length > 0 %}
+    <div class="bg-red-50 rounded-[2rem] p-8 border border-red-100 mb-8">
+        <h3 class="text-sm font-bold text-red-600 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined">warning</span> Points d'Attention
+        </h3>
+        <ul class="space-y-3">
+            {% for alerte in rec.alertes %}
+                <li class="flex gap-3 text-red-800 text-sm font-medium">
+                    <span class="material-symbols-outlined text-red-500 text-lg">error</span>
+                    {{ alerte }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {# ── PLAN SEMAINE ────────────────────────────────────────────────────── #}
+    <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-outline/20 mb-8">
+        <h3 class="text-xl font-extrabold text-on-surface mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary">calendar_month</span> Mon Plan d'Action
+        </h3>
+        <div class="bg-gray-50 rounded-[2rem] p-6 border border-outline/10">
+            <pre class="whitespace-pre-wrap font-sans text-sm text-on-surface-variant font-medium leading-relaxed">{{ rec.planSemaine }}</pre>
+        </div>
+    </div>
+
+    {# ── HABITUDES ───────────────────────────────────────────────────────── #}
+    <h3 class="text-2xl font-extrabold text-on-surface mb-6 ml-2">Habitudes Recommandées</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        {% for habitude in rec.habitudes %}
+            <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-outline/20 hover:shadow-md transition-shadow relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-primary/10 text-primary text-[10px] font-bold px-4 py-2 rounded-bl-[1.5rem] uppercase tracking-widest">
+                    {{ habitude.categorie }}
+                </div>
+                <div class="text-4xl mb-4">{{ habitude.emoji }}</div>
+                <h4 class="text-lg font-bold text-on-surface mb-2">{{ habitude.titre }}</h4>
+                <p class="text-sm text-on-surface-variant mb-4">{{ habitude.description }}</p>
+                <div class="flex items-center justify-between pt-4 border-t border-outline/10">
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                        <span class="material-symbols-outlined text-base">update</span> {{ habitude.frequence }}
+                    </div>
+                    {% if habitude.impact == 'CRITIQUE' %}
+                        <span class="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded">CRITIQUE</span>
+                    {% else %}
+                        <span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">{{ habitude.impact }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {# ── BOUTONS ─────────────────────────────────────────────────────────── #}
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
+        <a href="{{ path('testpsy_index') }}"
+           class="inline-flex items-center gap-2 py-4 px-8 text-sm font-bold text-on-surface-variant bg-gray-50 border border-outline/30 rounded-2xl hover:bg-white hover:border-outline transition-all active:scale-95 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-base">arrow_back</span> Retour à l'Accueil
+        </a>
+        <button id="btn-send-email" data-resultat-id="{{ resultat.idResultat }}"
+                class="inline-flex items-center gap-2 py-4 px-8 text-sm font-bold text-on-surface-variant bg-gray-50 border border-outline/30 rounded-2xl hover:bg-white hover:border-outline transition-all active:scale-95 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-base">mail</span> Recevoir mon rapport par email
+        </button>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+// ── Google Charts Radar ───────────────────────────────────────────────────
+google.charts.load('current', { packages: ['corechart'] });
+google.charts.setOnLoadCallback(function () {
+    const features = {{ rec.features|json_encode|raw }};
+    const noms = ['Score global','Variabilité','Cohérence','Énergie fin','Énergie début','Stabilité','Consistance'];
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Indicateur');
+    data.addColumn('number', 'Votre profil');
+
+    noms.forEach((n, i) => data.addRow([n, Math.round(features[i] * 100)]));
+
+    var options = {
+        legend: 'none',
+        chartArea: { left: 40, top: 20, right: 40, bottom: 20, width: '100%', height: '100%' },
+        colors: ['#6366f1'],
+        backgroundColor: 'transparent',
+        vAxis: { minValue: 0, maxValue: 100, gridlines: { color: '#f3f4f6' }, textStyle: { color: '#9ca3af', fontSize: 10 } },
+        hAxis: { textStyle: { color: '#6b7280', fontSize: 10 } },
+        animation: { startup: true, duration: 800, easing: 'out' },
+        fontName: 'Inter, Arial, sans-serif',
+    };
+
+    new google.visualization.BarChart(document.getElementById('radar_chart')).draw(data, options);
+});
+
+// ── TTS ───────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.tts-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utt = new SpeechSynthesisUtterance(this.dataset.text);
+                utt.lang = 'fr-FR'; utt.rate = 0.95;
+                window.speechSynthesis.speak(utt);
+            }
+        });
+    });
+
+    // ── Email ─────────────────────────────────────────────────────────────
+    const btnEmail = document.getElementById('btn-send-email');
+    btnEmail.addEventListener('click', async function () {
+        btnEmail.disabled = true;
+        btnEmail.innerHTML = `<svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Envoi en cours...`;
+        try {
+            const res = await fetch(`/testpsy/email/rapport/${this.dataset.resultatId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                body: JSON.stringify({}),
+            });
+            const data = await res.json();
+            if (data.success) {
+                btnEmail.innerHTML = `<span class="material-symbols-outlined text-base">check_circle</span> Email envoyé !`;
+                btnEmail.classList.add('bg-green-50', 'text-green-700', 'border-green-300');
+            } else {
+                btnEmail.innerHTML = `<span class="material-symbols-outlined text-base">error</span> Erreur`;
+                btnEmail.classList.add('bg-red-50', 'text-red-700'); btnEmail.disabled = false;
+            }
+        } catch { btnEmail.innerHTML = `Erreur réseau`; btnEmail.disabled = false; }
+    });
+});
+</script>
+{% endblock %}

@@ -1,3 +1,4 @@
+
 {% extends 'layouts/dashboard.html.twig' %}
 
 {% block header_title %}Votre Résultat{% endblock %}
@@ -44,26 +45,115 @@
 
         <!-- Interpretation -->
         {% if resultat.interpretation %}
-        <div class="bg-primary/5 rounded-[2rem] p-8 border border-primary/10 text-left mb-8">
-            <div class="flex items-center gap-3 mb-4">
-                <span class="material-symbols-outlined text-primary">lightbulb</span>
-                <span class="text-xs font-bold text-primary uppercase tracking-widest">Interprétation</span>
+        <div class="bg-primary/5 rounded-[2rem] p-8 border border-primary/10 text-left mb-8 relative">
+            <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary">lightbulb</span>
+                    <span class="text-xs font-bold text-primary uppercase tracking-widest">Interprétation</span>
+                </div>
+                <button type="button" class="tts-btn p-1.5 text-primary hover:bg-primary/10 rounded-full transition-colors focus:outline-none" data-text="{{ resultat.interpretation|escape }}" title="Écouter l'interprétation">
+                    <span class="material-symbols-outlined text-lg leading-none">volume_up</span>
+                </button>
             </div>
             <p class="text-sm text-on-surface leading-relaxed">{{ resultat.interpretation }}</p>
         </div>
         {% endif %}
 
-        <div class="flex gap-4">
-            <a href="{{ path('testpsy_index') }}"
-               class="flex-1 py-4 text-sm font-bold text-on-surface-variant bg-gray-50 border border-outline/30 rounded-2xl hover:bg-white hover:border-outline transition-all active:scale-95 uppercase tracking-wider">
-                Retour aux tests
+        <!-- Action Buttons -->
+        <div class="flex flex-col gap-5 mt-6">
+
+            <a href="{{ path('app_testpsy_prediction', {'idResultat': resultat.idResultat}) }}"
+               class="flex items-center justify-center gap-3 w-full py-4 text-sm font-extrabold text-white bg-primary rounded-2xl hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/30 uppercase tracking-wider relative z-10">
+                <span class="material-symbols-outlined">psychiatry</span>
+                Voir l'Analyse Profonde & Recommandations par IA
             </a>
-            <a href="{{ path('testpsy_historique') }}"
-               class="flex-1 py-4 text-sm font-bold text-white bg-primary rounded-2xl hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20 uppercase tracking-wider">
-                Mon historique
-            </a>
+
+            <div class="flex gap-4">
+                <a href="{{ path('testpsy_index') }}"
+                   class="flex-1 py-4 text-sm font-bold text-on-surface-variant bg-gray-50 border border-outline/30 rounded-2xl hover:bg-white hover:border-outline transition-all active:scale-95 uppercase tracking-wider text-center">
+                    Retour aux tests
+                </a>
+                <a href="{{ path('testpsy_historique') }}"
+                   class="flex-1 py-4 text-sm font-bold text-white bg-primary rounded-2xl hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20 uppercase tracking-wider text-center">
+                    Mon historique
+                </a>
+            </div>
+
+            <button id="btn-whatsapp"
+                    data-resultat-id="{{ resultat.idResultat }}"
+                    class="flex items-center justify-center gap-3 w-full py-4 text-sm font-extrabold text-white rounded-2xl transition-all active:scale-95 shadow-lg uppercase tracking-wider"
+                    style="background-color: #25D366;"
+                    onmouseover="this.style.backgroundColor='#128C7E'"
+                    onmouseout="this.style.backgroundColor='#25D366'">
+                <span class="material-symbols-outlined">chat</span>
+                Recevoir sur WhatsApp
+            </button>
+
         </div>
 
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('.tts-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(this.dataset.text);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("La synthèse vocale n'est pas supportée par votre navigateur.");
+            }
+        });
+    });
+
+    const btnWA = document.getElementById('btn-whatsapp');
+    if (btnWA) {
+        btnWA.addEventListener('click', async function () {
+            btnWA.disabled = true;
+            btnWA.onmouseover = null;
+            btnWA.onmouseout = null;
+            btnWA.style.backgroundColor = '#128C7E';
+            btnWA.innerHTML = `
+                <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+                Envoi en cours...
+            `;
+
+            const resultatId = this.dataset.resultatId;
+
+            try {
+                const res = await fetch(`/testpsy/whatsapp/resultat/${resultatId}`, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    btnWA.style.backgroundColor = '#128C7E';
+                    btnWA.innerHTML = `<span class="material-symbols-outlined">check_circle</span> WhatsApp envoyé !`;
+                } else {
+                    btnWA.style.backgroundColor = '#ef4444';
+                    btnWA.innerHTML = `<span class="material-symbols-outlined">error</span> ${data.message}`;
+                    btnWA.disabled = false;
+                }
+
+            } catch (err) {
+                btnWA.style.backgroundColor = '#ef4444';
+                btnWA.innerHTML = `<span class="material-symbols-outlined">error</span> Erreur réseau`;
+                btnWA.disabled = false;
+            }
+        });
+    }
+
+});
+</script>
 {% endblock %}

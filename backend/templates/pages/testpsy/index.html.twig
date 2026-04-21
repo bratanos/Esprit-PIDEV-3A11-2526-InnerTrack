@@ -37,33 +37,83 @@
         </div>
     {% endfor %}
 
-    <!-- Bien Être Global -->
+    <!-- Tamagotchi de Bien-Être Global -->
     {% if bien_etre is defined and bien_etre is not null %}
-    <div class="mb-10 bg-[#4f46e5] text-white rounded-[2rem] p-8 shadow-lg shadow-indigo-200/50 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden" style="background-color: #4f46e5;">
-        <div class="absolute -right-8 -top-8 opacity-10 pointer-events-none">
-            <span class="material-symbols-outlined text-[12rem] md:text-[18rem]" style="font-variation-settings: 'FILL' 1;">favorite</span>
-        </div>
-        <div class="z-10 text-center md:text-left">
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-[10px] font-bold uppercase tracking-wider mb-4 border border-white/20">
-                <span class="material-symbols-outlined text-[14px]">psychology</span> Indicateur de Santé Mentale
+        {% set tama_state = '' %}
+        {% set tama_color = '' %}
+        {% set tama_emoji = '' %}
+        {% set tama_message = '' %}
+
+        {% if bien_etre < 40 %}
+            {% set tama_state = 'alerte' %}
+            {% set tama_color = '#44403c' %} {# stone-700 #}
+            {% set tama_emoji = '🌱' %}
+            {% set tama_message = 'Votre compagnon mental semble fragile. N\'hésitez pas à vous accorder du repos.' %}
+        {% elseif bien_etre < 75 %}
+            {% set tama_state = 'moyen' %}
+            {% set tama_color = '#0d9488' %} {# teal-600 #}
+            {% set tama_emoji = '🌿' %}
+            {% set tama_message = 'Votre compagnon mental pousse paisiblement. Maintenez vos bonnes habitudes.' %}
+        {% else %}
+            {% set tama_state = 'optimal' %}
+            {% set tama_color = '#10b981' %} {# emerald-500 #}
+            {% set tama_emoji = '🌳' %}
+            {% set tama_message = 'Fantastique ! Votre compagnon mental rayonne d\'énergie positive !' %}
+        {% endif %}
+
+        <style>
+            @keyframes tama-float {
+                0%, 100% { transform: translateY(0px) scale(1); }
+                50% { transform: translateY(-10px) scale(1.05); }
+            }
+            @keyframes tama-pulse-glow {
+                0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.2); }
+                50% { box-shadow: 0 0 50px rgba(255,255,255,0.6); }
+            }
+            .tamagotchi-avatar {
+                animation: tama-float 4s ease-in-out infinite, tama-pulse-glow 4s ease-in-out infinite;
+            }
+            .tamagotchi-alerte .tamagotchi-avatar { filter: grayscale(50%) brightness(0.8); animation-duration: 6s; }
+            .tamagotchi-moyen .tamagotchi-avatar { animation-duration: 4s; }
+            .tamagotchi-optimal .tamagotchi-avatar { animation-duration: 3s; filter: drop-shadow(0 0 15px rgba(255,215,0,0.5)); }
+        </style>
+
+        <div class="mb-10 text-white rounded-[2.5rem] p-8 md:p-10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden transition-all duration-700 tamagotchi-{{ tama_state }}" style="background-color: {{ tama_color }};">
+            <!-- Background Decoration -->
+            <div class="absolute -right-10 -top-10 opacity-10 pointer-events-none">
+                <span class="material-symbols-outlined text-[20rem]" style="font-variation-settings: 'FILL' 1;">eco</span>
             </div>
-            <h2 class="text-3xl lg:text-4xl font-headline font-extrabold mb-2 tracking-tight">Score Global de Bien-Être</h2>
-            <p class="text-indigo-100 text-sm max-w-lg leading-relaxed">
-                Calculé automatiquement et intelligemment à partir des résultats de l'ensemble de vos tests psychologiques, en inversant les scores de détresse pour créer une jauge unifiée de votre santé mentale.
-            </p>
-        </div>
-        <div class="z-10 flex items-center shrink-0 mt-4 md:mt-0">
-            <div class="relative w-28 h-28 rounded-full flex items-center justify-center bg-transparent">
-                <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="44" fill="transparent" stroke="rgba(255,255,255,0.2)" stroke-width="8"></circle>
-                    <circle cx="50" cy="50" r="44" fill="transparent" stroke="white" stroke-width="8" stroke-dasharray="276.46" stroke-dashoffset="{{ 276.46 - (276.46 * bien_etre / 100) }}" stroke-linecap="round" class="transition-all duration-[1500ms] ease-out"></circle>
-                </svg>
-                <div class="absolute inset-2 bg-white/10 rounded-full backdrop-blur-md flex flex-col items-center justify-center shadow-inner border border-white/20">
-                    <span class="text-3xl font-extrabold font-headline leading-none">{{ bien_etre }}<span class="text-base opacity-70">%</span></span>
+
+            <!-- Content -->
+            <div class="z-10 flex flex-col items-center text-center flex-1">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider mb-5 border border-white/30 backdrop-blur-sm">
+                    <span class="material-symbols-outlined text-[16px]">psychology</span> Votre Compagnon Mental
+                </div>
+                <h2 class="text-3xl lg:text-5xl font-headline font-extrabold mb-3 tracking-tight">Santé Globale : {{ bien_etre }}%</h2>
+                <p class="text-white/90 text-sm md:text-base max-w-lg leading-relaxed font-medium text-center">
+                    {{ tama_message }}
+                </p>
+                <div class="mt-6 flex items-center justify-center gap-4">
+                    <div class="h-2 w-48 bg-black/20 rounded-full overflow-hidden">
+                        <div class="h-full bg-white/90 rounded-full transition-all duration-1000" style="width: {{ bien_etre }}%"></div>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-widest opacity-70">Jauge d'Énergie</span>
+                </div>
+            </div>
+
+            <!-- Avatar Tamagotchi -->
+            <div class="z-10 flex items-center justify-center shrink-0 mt-6 md:mt-0 relative group">
+                <div class="absolute inset-0 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all duration-500"></div>
+                <div class="tamagotchi-avatar w-40 h-40 md:w-48 md:h-48 rounded-full bg-white/10 backdrop-blur-md border-[3px] border-white/30 flex items-center justify-center relative shadow-[inset_0_0_30px_rgba(255,255,255,0.2)]">
+                    <span class="text-7xl md:text-8xl select-none leading-none">{{ tama_emoji }}</span>
+                    <!-- Jauge circulaire subtile autour -->
+                    <svg class="absolute inset-[-10px] w-[calc(100%+20px)] h-[calc(100%+20px)] -rotate-90 pointer-events-none" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="48" fill="transparent" stroke="rgba(255,255,255,0.15)" stroke-width="4"></circle>
+                        <circle cx="50" cy="50" r="48" fill="transparent" stroke="rgba(255,255,255,0.8)" stroke-width="4" stroke-dasharray="301.59" stroke-dashoffset="{{ 301.59 - (301.59 * bien_etre / 100) }}" stroke-linecap="round" class="transition-all duration-[2000ms] ease-out"></circle>
+                    </svg>
                 </div>
             </div>
         </div>
-    </div>
     {% endif %}
 
     <!-- Statistiques par type -->
@@ -157,9 +207,14 @@
                 </div>
 
                 <!-- Title & description -->
-                <h3 class="text-lg font-extrabold text-on-surface font-headline leading-tight mb-2">
-                    {{ test.titre }}
-                </h3>
+                <div class="flex items-start justify-between mb-2">
+                    <h3 class="text-lg font-extrabold text-on-surface font-headline leading-tight">
+                        {{ test.titre }}
+                    </h3>
+                    <button type="button" class="tts-btn shrink-0 ml-2 p-1.5 text-gray-400 bg-gray-50 rounded-full hover:bg-primary hover:text-white transition-all focus:outline-none" data-text="{{ test.titre|escape }} . {{ test.description|escape }}" title="Écouter la description">
+                        <span class="material-symbols-outlined text-lg leading-none">volume_up</span>
+                    </button>
+                </div>
                 <p class="text-sm text-on-surface-variant leading-relaxed flex-1 mb-4">
                     {{ test.description|slice(0, 100) }}{% if test.description|length > 100 %}…{% endif %}
                 </p>
@@ -426,6 +481,24 @@
                 this.classList.add('ring-2', 'ring-primary', 'bg-primary/5');
             }
             applyFilters();
+        });
+    });
+
+    // TTS logic
+    const ttsBtns = document.querySelectorAll('.tts-btn');
+    ttsBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(this.dataset.text);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("La synthèse vocale n'est pas supportée par votre navigateur.");
+            }
         });
     });
 })();
