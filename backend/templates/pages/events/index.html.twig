@@ -118,7 +118,7 @@
                                     </div>
                                 {% else %}
                                     <form method="post" action="{{ path('app_event_participate', {id: event.id}) }}">
-                                        <button type="submit" class="w-full px-4 py-3 {{ isFull ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-500/20' : 'bg-primary hover:bg-indigo-700 shadow-primary/20' }} text-white rounded-xl text-xs font-bold active:scale-95 transition-all shadow-md flex items-center justify-center gap-2">
+                                        <button type="submit" class="w-full px-4 py-3 {{ isFull ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-500/20' : 'bg-primary hover:bg-indigo-700 shadow-primary/20' }} text-black rounded-xl text-xs font-bold active:scale-95 transition-all shadow-md flex items-center justify-center gap-2">
                                             {% if isFull %}
                                                 <span class="material-symbols-outlined text-[18px]">queue</span> Liste d'attente
                                             {% else %}

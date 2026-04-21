@@ -18,10 +18,48 @@ class EventController extends AbstractController
 {
     // ------------------------------------------------------------------ LIST
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(EventRepository $repo): Response
+    public function index(EventRepository $repo, \App\Repository\InscriptionRepository $inscRepo): Response
     {
+        $events = $repo->findAll();
+
+        // ── FullCalendar JSON data ──
+        $calendarEvents = [];
+        $typeColors = [
+            1 => '#3b82f6', // Conférence → blue
+            2 => '#22c55e', // Atelier → green
+            3 => '#a855f7', // Forum → purple
+            4 => '#f97316', // Webinaire → orange
+        ];
+        foreach ($events as $event) {
+            $calendarEvents[] = [
+                'id'    => $event->getId(),
+                'title' => $event->getTitre(),
+                'start' => $event->getDate()->format('Y-m-d'),
+                'url'   => $this->generateUrl('admin_event_show', ['id' => $event->getId()]),
+                'color' => $typeColors[$event->getType()->value] ?? '#6b7280',
+                'extendedProps' => [
+                    'type'     => $event->getType()->label(),
+                    'capacite' => $event->getCapacite(),
+                    'statut'   => $event->isStatut(),
+                ],
+            ];
+        }
+
+        // ── Statistics data ──
+        $stats = [
+            'eventsByType'         => $repo->countByType(),
+            'eventsByMonth'        => $repo->countByMonth(),
+            'activeVsInactive'     => $repo->countActiveVsInactive(),
+            'inscriptionsByStatus' => $inscRepo->countByStatus(),
+            'inscriptionsByMonth'  => $inscRepo->countByMonth(),
+            'topEvents'            => $inscRepo->getTopEvents(5),
+            'occupancyRates'       => $inscRepo->getOccupancyRates(),
+        ];
+
         return $this->render('admin/event/index.html.twig', [
-            'events' => $repo->findAll(),
+            'events'         => $events,
+            'calendarEvents' => json_encode($calendarEvents),
+            'stats'          => $stats,
         ]);
     }
 
