@@ -8,6 +8,7 @@ use App\Repository\EventRepository;
 use App\Repository\InscriptionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -33,6 +34,32 @@ class UserEventController extends AbstractController
         }
 
         return $this->render('pages/events/index.html.twig', [
+            'events'             => $events,
+            'registeredStatuses' => $registeredStatuses,
+        ]);
+    }
+
+    // ------------------------------------------------------------------ FILTER (AJAX)
+    #[Route('/filter', name: 'filter', methods: ['GET'])]
+    public function filter(Request $request, EventRepository $eventRepo, InscriptionRepository $inscRepo): Response
+    {
+        $q      = $request->query->get('q');
+        $type   = $request->query->get('type');
+        $period = $request->query->get('period');
+        $avail  = $request->query->get('avail');
+
+        $typeInt = $type ? (int)$type : null;
+
+        $events = $eventRepo->filterEvents($q, $typeInt, $period, $avail);
+
+        $user = $this->getUser();
+        $myInscriptions = $inscRepo->findBy(['emailParticipant' => $user->getEmail()]);
+        $registeredStatuses = [];
+        foreach ($myInscriptions as $insc) {
+            $registeredStatuses[$insc->getEvenement()->getId()] = $insc->getStatut();
+        }
+
+        return $this->render('pages/events/_events_grid.html.twig', [
             'events'             => $events,
             'registeredStatuses' => $registeredStatuses,
         ]);
