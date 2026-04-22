@@ -549,3 +549,126 @@ document.addEventListener('DOMContentLoaded', function () {
     .dark .fc .fc-daygrid-day.fc-day-today { background: rgba(37, 99, 235, 0.08); }
 </style>
 {% endblock %}
+
+{% block body_end %}
+    {{ parent() }}
+<!-- Chatbot Widget -->
+<div id="chatbot-widget" class="fixed z-50" style="bottom: 1.5rem; right: 1.5rem;">
+    <button id="chatbot-toggle" class="bg-primary text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-primary/90 transition-colors">
+        <span class="material-symbols-outlined text-3xl">chat</span>
+    </button>
+    
+    <div id="chatbot-window" class="hidden absolute w-80 md:w-96 bg-white rounded-[2rem] shadow-2xl border border-gray-100 overflow-hidden flex-col h-[500px]" style="bottom: 4rem; right: 0;">
+        <div class="bg-primary text-white p-5 flex justify-between items-center shadow-sm z-10">
+            <h3 class="font-bold flex items-center gap-2 font-headline tracking-wide">
+                <span class="material-symbols-outlined">smart_toy</span> Agent InnerTrack
+            </h3>
+            <button id="chatbot-close" class="text-white hover:text-gray-200 transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <div id="chatbot-messages" class="flex-1 p-5 overflow-y-auto bg-gray-50 flex flex-col gap-3 font-body">
+            <div class="bg-white text-gray-800 border border-gray-100 self-start p-3.5 rounded-2xl rounded-tl-sm max-w-[85%] text-sm shadow-sm leading-relaxed">
+                Bonjour! Je suis l'assistant AI d'InnerTrack. Comment puis-je vous aider avec la gestion de vos événements aujourd'hui ?
+            </div>
+        </div>
+        
+        <div class="p-4 bg-white border-t border-gray-100 flex gap-2 shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)] relative z-10">
+            <input type="text" id="chatbot-input" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none" placeholder="Posez votre question...">
+            <button id="chatbot-send" class="bg-primary text-white w-12 flex items-center justify-center rounded-xl hover:bg-primary/90 transition-all shadow-md shadow-primary/20 hover:scale-105 active:scale-95 text-xl">
+                <span class="material-symbols-outlined">send</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatToggle = document.getElementById('chatbot-toggle');
+    const chatWindow = document.getElementById('chatbot-window');
+    const chatClose = document.getElementById('chatbot-close');
+    const chatInput = document.getElementById('chatbot-input');
+    const chatSend = document.getElementById('chatbot-send');
+    const chatMessages = document.getElementById('chatbot-messages');
+    
+    // Create unique session ID
+    const sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+    
+    function toggleChat() {
+        chatWindow.classList.toggle('hidden');
+        chatWindow.classList.toggle('flex');
+        if (!chatWindow.classList.contains('hidden')) {
+            chatInput.focus();
+        }
+    }
+    
+    if(chatToggle) chatToggle.addEventListener('click', toggleChat);
+    if(chatClose) chatClose.addEventListener('click', toggleChat);
+    
+    function addMessage(text, isUser = false) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = isUser 
+            ? 'bg-primary text-white self-end p-3.5 rounded-2xl rounded-tr-sm max-w-[85%] text-sm shadow-sm leading-relaxed whitespace-pre-wrap' 
+            : 'bg-white text-gray-800 border border-gray-100 self-start p-3.5 rounded-2xl rounded-tl-sm max-w-[85%] text-sm shadow-sm leading-relaxed whitespace-pre-wrap';
+        msgDiv.textContent = text;
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    async function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+        
+        // Disable input
+        chatInput.disabled = true;
+        chatSend.disabled = true;
+        chatSend.style.opacity = '0.5';
+        
+        addMessage(message, true);
+        chatInput.value = '';
+        
+        // Typing indicator
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'bg-white text-gray-800 border border-gray-100 self-start p-3.5 rounded-2xl rounded-tl-sm max-w-[85%] text-sm shadow-sm flex gap-1 items-center';
+        typingDiv.id = 'typing-indicator';
+        typingDiv.innerHTML = '<span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span><span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span><span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>';
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        try {
+            const response = await fetch('http://127.0.0.1:8001/interact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    message: message
+                })
+            });
+            
+            const data = await response.json();
+            const ind = document.getElementById('typing-indicator');
+            if (ind) ind.remove();
+            
+            addMessage(data.response, false);
+            
+        } catch (error) {
+            const ind = document.getElementById('typing-indicator');
+            if (ind) ind.remove();
+            addMessage("Erreur: Impossible de contacter l'agent intelligent. Assurez-vous que FastAPI tourne sur le port 8001 (uvicorn agent:app --port 8001 --reload).", false);
+        } finally {
+            // Re-enable input
+            chatInput.disabled = false;
+            chatSend.disabled = false;
+            chatSend.style.opacity = '1';
+            chatInput.focus();
+        }
+    }
+    
+    if(chatSend) chatSend.addEventListener('click', sendMessage);
+    if(chatInput) chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+});
+</script>
+{% endblock %}
