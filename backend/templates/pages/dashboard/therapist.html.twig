@@ -6,15 +6,15 @@
 <div class="space-y-12">
     <!-- Hero Welcome -->
     <section class="space-y-2">
-        <h2 class="font-headline text-4xl lg:text-5xl text-on-surface font-extrabold tracking-tight">Welcome back, Dr. {{ app.user.lastName|default(app.user.firstName) }} 👩‍⚕️</h2>
-        <p class="text-on-surface-variant text-lg">Your sanctuary for patient care and therapeutic management.</p>
+        <h2 class="font-headline text-4xl lg:text-5xl text-on-surface font-extrabold tracking-tight">Welcome back / Bienvenue, Dr. {{ app.user.lastName|default(app.user.firstName) }} 👩‍⚕️</h2>
+        <p class="text-on-surface-variant text-lg">Your sanctuary for patient care and therapeutic management. / Votre espace de soins et de suivi thérapeutique.</p>
     </section>
 
     <!-- Stats Grid -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="sanctuary-gradient bg-gradient-to-br from-primary to-indigo-800 p-8 rounded-xl shadow-xl shadow-primary/10 flex justify-between items-center text-white overflow-hidden relative group">
             <div class="relative z-10">
-                <p class="text-sm font-medium opacity-80 uppercase tracking-widest">Active Patients</p>
+                <p class="text-sm font-medium opacity-80 uppercase tracking-widest">Active Patients / Patients Actifs</p>
                 <h3 class="text-5xl font-extrabold mt-1">{{ activePatients|length }}</h3>
             </div>
             <span class="material-symbols-outlined text-7xl opacity-20 group-hover:scale-110 transition-transform duration-500" data-icon="group">group</span>
@@ -22,7 +22,7 @@
         
         <div class="bg-surface-container-low p-8 rounded-xl flex justify-between items-center text-on-surface border-l-4 border-secondary overflow-hidden relative group shadow-sm">
             <div class="relative z-10">
-                <p class="text-sm font-medium text-on-surface-variant uppercase tracking-widest">Pending Requests</p>
+                <p class="text-sm font-medium text-on-surface-variant uppercase tracking-widest">Pending Requests / Demandes</p>
                 <h3 class="text-5xl font-extrabold mt-1 text-secondary">{{ pendingRequests|length }}</h3>
             </div>
             <span class="material-symbols-outlined text-7xl text-secondary opacity-10 group-hover:scale-110 transition-transform duration-500" data-icon="person_add">person_add</span>
@@ -30,7 +30,7 @@
         
         <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm flex justify-between items-center text-on-surface border border-outline-variant/10 overflow-hidden relative group">
             <div class="relative z-10">
-                <p class="text-sm font-medium text-on-surface-variant uppercase tracking-widest">Unread Notifications</p>
+                <p class="text-sm font-medium text-on-surface-variant uppercase tracking-widest">Unread Notifs / Non Lues</p>
                 <h3 class="text-5xl font-extrabold mt-1 text-primary">{{ unreadNotifs }}</h3>
             </div>
             <span class="material-symbols-outlined text-7xl text-primary opacity-10 group-hover:scale-110 transition-transform duration-500" data-icon="notifications">notifications</span>
@@ -44,8 +44,8 @@
             <!-- Pending Requests Table -->
             <section>
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="font-headline text-2xl font-bold">Pending Contact Requests</h3>
-                    <a href="#" class="text-primary font-semibold text-sm hover:underline">View all</a>
+                    <h3 class="font-headline text-2xl font-bold">Pending Contact Requests / Demandes de contact</h3>
+                    <a href="#" class="text-primary font-semibold text-sm hover:underline">View all / Voir tout</a>
                 </div>
                 
                 <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl overflow-hidden shadow-sm">
@@ -53,7 +53,7 @@
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-surface-container-low text-on-surface-variant text-xs uppercase tracking-widest">
-                                    <th class="px-6 py-4 font-semibold">Patient Name</th>
+                                    <th class="px-6 py-4 font-semibold">Patient Name / Nom</th>
                                     <th class="px-6 py-4 font-semibold">Message</th>
                                     <th class="px-6 py-4 font-semibold">Date</th>
                                     <th class="px-6 py-4 font-semibold text-right">Actions</th>
@@ -76,15 +76,15 @@
                                         <span class="text-xs test-on-surface-variant">{{ req.client.email }}</span>
                                     </td>
                                     <td class="px-6 py-5 text-sm text-on-surface-variant max-w-xs truncate">
-                                        {{ req.message|default('No specific message provided...') }}
+                                        {{ req.message|default('No specific message provided... / Aucun message spécifique...') }}
                                     </td>
                                     <td class="px-6 py-5 text-sm">{{ req.createdAt|date('M d, Y') }}</td>
                                     <td class="px-6 py-5 text-right space-x-2">
                                         <form method="post" action="{{ path('contact_request_accept', {'id': req.id}) }}" class="inline">
-                                            <button class="bg-secondary text-white px-4 py-1.5 rounded-xl shadow-sm text-xs font-bold hover:shadow-md transition-shadow">Accept</button>
+                                            <button class="bg-secondary text-white px-4 py-1.5 rounded-xl shadow-sm text-xs font-bold hover:shadow-md transition-shadow">Accept / Accepter</button>
                                         </form>
                                         <form method="post" action="{{ path('contact_request_reject', {'id': req.id}) }}" class="inline">
-                                            <button class="border border-red-500 text-red-600 px-4 py-1.5 rounded-xl text-xs font-bold hover:bg-red-50 transition-colors">Decline</button>
+                                            <button class="border border-red-500 text-red-600 px-4 py-1.5 rounded-xl text-xs font-bold hover:bg-red-50 transition-colors">Decline / Refuser</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -93,7 +93,7 @@
                                     <td colspan="4" class="px-6 py-12 text-center text-on-surface-variant text-sm bg-white">
                                         <div class="flex flex-col items-center justify-center opacity-60">
                                             <span class="material-symbols-outlined text-4xl mb-2" data-icon="inbox">inbox</span>
-                                            <p>No pending contact requests. You're all caught up!</p>
+                                            <p>No pending contact requests. You're all caught up! / Aucune demande en attente.</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -106,7 +106,7 @@
 
             <!-- Recent Conversations -->
             <section>
-                <h3 class="font-headline text-2xl font-bold mb-6">Recent Conversations</h3>
+                <h3 class="font-headline text-2xl font-bold mb-6">Recent Conversations / Conversations récentes</h3>
                 <div class="space-y-4">
                     {% for conversation in activePatients|slice(0, 3) %}
                         {% set otherUser = conversation.client %}
@@ -129,7 +129,7 @@
                                         {% if lastMsg %}
                                             "{{ lastMsg.content }}"
                                         {% else %}
-                                            <i>Started a new conversation</i>
+                                            <i>Started a new conversation / Nouvelle conversation</i>
                                         {% endif %}
                                     </p>
                                 </div>
@@ -145,7 +145,7 @@
                     {% else %}
                         <div class="bg-surface-container-lowest border border-outline-variant/10 p-10 rounded-2xl text-center text-on-surface-variant flex flex-col items-center gap-3">
                             <span class="material-symbols-outlined text-4xl opacity-50" data-icon="chat_bubble_outline">chat_bubble_outline</span>
-                            <p class="font-medium">You have no active conversations yet.</p>
+                            <p class="font-medium">You have no active conversations yet. / Aucune conversation active.</p>
                         </div>
                     {% endfor %}
                 </div>
@@ -167,13 +167,13 @@
                         </div>
                     {% endif %}
                     <h4 class="font-headline text-2xl font-bold text-on-surface">Dr. {{ app.user.lastName|default(app.user.firstName) }}</h4>
-                    <p class="text-xs text-primary font-bold uppercase tracking-widest mb-8 mt-1">Clinical Psychologist</p>
+                    <p class="text-xs text-primary font-bold uppercase tracking-widest mb-8 mt-1">Clinical Psychologist / Psychologue Clinicien</p>
                     
                     <div class="w-full space-y-3 text-left">
                     </div>
                     
                     <a href="{{ path('app_profile') }}" class="mt-8 text-primary font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all group px-6 py-2 bg-white rounded-full shadow-sm hover:shadow-md border border-outline/10">
-                        Edit Profile Details
+                        Edit Profile / Modifier
                         <span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
                     </a>
                 </div>
@@ -182,7 +182,7 @@
             <!-- Journey Path Bespoke Component -->
             <div class="bg-surface-container-low p-8 rounded-[2rem] border border-outline/20">
                 <h5 class="font-extrabold text-xs mb-8 uppercase tracking-[0.2em] text-on-surface-variant flex items-center justify-between">
-                    Global Patient Progress
+                    Global Patient Progress / Progrès Global
                     <span class="material-symbols-outlined text-[18px]">trending_up</span>
                 </h5>
                 <div class="relative flex flex-col gap-8 h-48 items-center justify-center">
@@ -195,11 +195,12 @@
                     </svg>
                     <div class="z-10 bg-white shadow-xl shadow-secondary/10 p-5 rounded-2xl text-center border border-secondary/20 min-w-[100px]">
                         <p class="text-3xl font-black text-secondary">72%</p>
-                        <p class="text-[9px] font-bold uppercase tracking-widest opacity-60 mt-1">Goal Reached</p>
+                        <p class="text-[9px] font-bold uppercase tracking-widest opacity-60 mt-1">Goal Reached / Objectif Atteint</p>
                     </div>
                 </div>
                 <p class="text-xs text-center text-on-surface-variant mt-6 italic font-medium">
-                    "The journey of recovery is organic, not clinical."
+                    "The journey of recovery is organic, not clinical." <br>
+                    "Le chemin de la guérison est organique, non clinique."
                 </p>
             </div>
         </aside>

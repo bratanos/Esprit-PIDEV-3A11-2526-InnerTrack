@@ -259,4 +259,48 @@ final class CommunityController extends AbstractController
 
         return $this->redirectToRoute('app_community_index');
     }
+
+    // ─── Report a community post/comment ─────────────────────────────────────
+    #[Route('/{id}/report', name: 'app_community_report', methods: ['POST'])]
+    public function report(
+        Request $request,
+        CommunityComment $comment,
+        EntityManagerInterface $em
+    ): \Symfony\Component\HttpFoundation\JsonResponse {
+        /** @var \App\Entity\User $currentUser */
+        $currentUser = $this->getUser();
+        if (!$currentUser) {
+            return $this->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $data    = json_decode($request->getContent(), true);
+        $reason  = strtoupper(trim($data['reason'] ?? 'OTHER'));
+        $allowed = ['SPAM', 'HARASSMENT', 'INAPPROPRIATE', 'OTHER'];
+        if (!in_array($reason, $allowed, true)) {
+            $reason = 'OTHER';
+        }
+
+        // Prevent duplicate pending report from same reporter on same post author
+        $existing = $em->getRepository(\App\Entity\Report::class)->findOneBy([
+            'reporter' => $currentUser,
+            'reported' => $comment->getUser(),
+            'context'  => 'COMMUNITY',
+            'status'   => 'PENDING',
+        ]);
+        if ($existing) {
+            return $this->json(['error' => 'You already have a pending report against this user.'], 409);
+        }
+
+        $report = new \App\Entity\Report();
+        $report->setReporter($currentUser)
+               ->setReported($comment->getUser())
+               ->setReason($reason)
+               ->setContext('COMMUNITY')
+               ->setDetails(mb_substr($comment->getContent(), 0, 300));
+
+        $em->persist($report);
+        $em->flush();
+
+        return $this->json(['success' => true]);
+    }
 }

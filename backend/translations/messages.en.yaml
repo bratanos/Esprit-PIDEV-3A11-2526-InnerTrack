@@ -13,10 +13,65 @@ common:
   welcome: Welcome
   status: Global Status
   active: Systems Active
+  cancel: Cancel
+  details: Details
 dashboard:
   therapist: Therapist
   patient: Patient
   admin: Administrator
-notifications:
-  empty: No notifications yet.
-  mark_all_read: Mark all as read
+  overview: Overview
+  stats: 
+    total_users: Total Users
+    total_clients: Total Clients
+    total_therapists: Total Therapists
+    new_month: New this month
+    blocked: Blocked Accounts
+    active: Active Accounts
+    pending_verif: Pending Verification
+    pending_reports: Pending Reports
+  system_health: System Health
+  db_latency: DB Latency
+  api_load: API Load
+  messages_hour: msgs/hr
+  security_score: Security Score
+  tabs:
+    users: Users Management
+    messages: Messaging Reports
+    community: Community Reports
+  users:
+    id: ID
+    name: Name
+    role: Role
+    status: Status
+    joined: Joined
+    actions: Actions
+  reports:
+    reporter: Reporter
+    reported: Reported User
+    reason: Reason
+    date: Date
+    action: Action
+    no_pending: No pending reports
+    clean_inbox: Clean Inbox
+    community_clean: Community Clean
+    dismiss: Dismiss
+    ban: Ban User
+    delete_post: Delete Post
+  user_dashboard:
+    active_sessions: Active Sessions
+    messages: Messages
+    next_appointment: Next Appointment
+    quick_actions: Quick Actions
+    book_session: Book Session
+    find_therapist: Find Therapist
+    view_history: View History
+    activity: Activity
+  therapist_dashboard:
+    total_patients: Total Patients
+    sessions: Sessions
+    revenue: Revenue
+    today: Today's Appointments
+    no_appointments: No appointments today
+map:
+  set_location: Set Clinic Location
+  setup_banner: Click anywhere on the map to set your clinic location.

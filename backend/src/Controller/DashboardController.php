@@ -26,12 +26,15 @@ class DashboardController extends AbstractController
         $role = $user->getPrimaryRole();
 
         return match(true) {
-            str_contains($role, 'ADMIN') => $this->adminDashboard($user),
+            str_contains($role, 'ADMIN')      => $this->adminDashboard($user),
             str_contains($role, 'PSYCHOLOGUE') => $this->therapistDashboard($user),
-            default => $this->userDashboard($user),
+            default                            => $this->userDashboard($user),
         };
     }
 
+    // ─────────────────────────────────────────────────────────────
+    //  USER DASHBOARD
+    // ─────────────────────────────────────────────────────────────
     private function userDashboard(User $user): Response
     {
         $userId = $user->getId();
@@ -64,12 +67,15 @@ class DashboardController extends AbstractController
 
         return $this->render('pages/dashboard/user.html.twig', [
             'conversationCount' => $conversationCount,
-            'unreadNotifs' => $unreadNotifs,
-            'unreadMessages' => $unreadMessages,
-            'therapists' => $therapists,
+            'unreadNotifs'      => $unreadNotifs,
+            'unreadMessages'    => $unreadMessages,
+            'therapists'        => $therapists,
         ]);
     }
 
+    // ─────────────────────────────────────────────────────────────
+    //  THERAPIST DASHBOARD
+    // ─────────────────────────────────────────────────────────────
     private function therapistDashboard(User $user): Response
     {
         $userId = $user->getId();
@@ -96,70 +102,144 @@ class DashboardController extends AbstractController
 
         return $this->render('pages/dashboard/therapist.html.twig', [
             'pendingRequests' => $pendingRequests,
-            'activePatients' => $activePatients,
-            'unreadNotifs' => $unreadNotifs,
+            'activePatients'  => $activePatients,
+            'unreadNotifs'    => $unreadNotifs,
             'profileComplete' => $profileComplete,
         ]);
     }
 
+    // ─────────────────────────────────────────────────────────────
+    //  ADMIN DASHBOARD
+    // ─────────────────────────────────────────────────────────────
     private function adminDashboard(User $user): Response
     {
         $conn = $this->em->getConnection();
 
-        // Analytics
-        // Analytics - Consolidated single query for high performance
+        // ── User counts (single consolidated query) ───────────────
         $stats = $conn->executeQuery("
-            SELECT 
-                (SELECT COUNT(*) FROM user) as totalUsers,
-                (SELECT COUNT(*) FROM user WHERE roles LIKE '%ROLE_USER%' AND roles NOT LIKE '%ROLE_ADMIN%' AND roles NOT LIKE '%ROLE_PSYCHOLOGUE%') as totalClients,
-                (SELECT COUNT(*) FROM user WHERE roles LIKE '%ROLE_PSYCHOLOGUE%') as totalTherapists,
-                (SELECT COUNT(*) FROM user WHERE MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())) as newThisMonth,
-                (SELECT COUNT(*) FROM user WHERE status = 'BLOCKED') as blockedCount,
-                (SELECT COUNT(*) FROM user WHERE status = 'ACTIVE') as activeCount,
-                (SELECT COUNT(*) FROM user WHERE status = 'PENDING') as pendingCount,
-                (SELECT COUNT(*) FROM report WHERE status = 'PENDING') as pendingReports
+            SELECT
+                (SELECT COUNT(*) FROM user)                                                                                             AS totalUsers,
+                (SELECT COUNT(*) FROM user WHERE roles LIKE '%ROLE_USER%'
+                    AND roles NOT LIKE '%ROLE_ADMIN%' AND roles NOT LIKE '%ROLE_PSYCHOLOGUE%')                                          AS totalClients,
+                (SELECT COUNT(*) FROM user WHERE roles LIKE '%ROLE_PSYCHOLOGUE%')                                                       AS totalTherapists,
+                (SELECT COUNT(*) FROM user WHERE MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW()))                   AS newThisMonth,
+                (SELECT COUNT(*) FROM user WHERE status = 'BLOCKED')                                                                    AS blockedCount,
+                (SELECT COUNT(*) FROM user WHERE status = 'ACTIVE')                                                                     AS activeCount,
+                (SELECT COUNT(*) FROM user WHERE status = 'PENDING')                                                                    AS pendingCount,
+                (SELECT COUNT(*) FROM report WHERE status = 'PENDING')                                                                  AS pendingReports
         ")->fetchAssociative();
 
-        // Monthly registrations for chart
+        // ── Monthly registrations (last 6 months) for bar chart ───
         $monthly = $conn->executeQuery(
             "SELECT DATE_FORMAT(created_at, '%b %Y') AS month, COUNT(*) AS cnt
-             FROM user WHERE created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+             FROM user
+             WHERE created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
              GROUP BY YEAR(created_at), MONTH(created_at)
              ORDER BY YEAR(created_at), MONTH(created_at)"
         )->fetchAllAssociative();
 
-        // Users list for management (all, for CRUD tab)
+        // Dynamic max so the tallest bar always reaches 100 % height
+        $monthlyMax = 1;
+        foreach ($monthly as $m) {
+            if ((int) $m['cnt'] > $monthlyMax) {
+                $monthlyMax = (int) $m['cnt'];
+            }
+        }
+
+        // ── Real system metrics ────────────────────────────────────
+
+        // Security Score: ratio of ACTIVE users to total (0–100 %)
+        $total         = max(1, (int) $stats['totalUsers']);
+        $securityScore = (int) round(((int) $stats['activeCount'] / $total) * 100);
+
+        // Health Score: DB round-trip latency → mapped to 0–100 %
+        //   <1 ms ≈ 100 %, 100 ms → 0 % (clamped)
+        $t0           = microtime(true);
+        $conn->executeQuery('SELECT 1');
+        $dbLatencyMs  = round((microtime(true) - $t0) * 1000, 1);
+        $healthScore  = (int) max(0, min(100, round(100 - ($dbLatencyMs / 100) * 100)));
+        $healthLabel  = match(true) {
+            $healthScore >= 95 => 'Excellent',
+            $healthScore >= 80 => 'Good',
+            $healthScore >= 60 => 'Fair',
+            default            => 'Degraded',
+        };
+
+        // API Load: messages sent in the last hour (platform activity proxy)
+        //   300 msg/hr = 100 % capacity
+        $recentMessages = (int) $conn->executeQuery(
+            "SELECT COUNT(*) FROM message WHERE sent_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)"
+        )->fetchOne();
+        $apiLoadScore = min(100, (int) round($recentMessages / 3));
+        $apiLoadLabel = match(true) {
+            $recentMessages > 200 => 'High',
+            $recentMessages > 50  => 'Moderate',
+            $recentMessages > 10  => 'Normal',
+            default               => 'Low',
+        };
+
+        // ── User list (CRUD tab) ───────────────────────────────────
         $users = $conn->executeQuery("
             SELECT id, first_name, last_name, email, roles, status, created_at, profile_picture, phone_number
-            FROM user 
+            FROM user
             ORDER BY created_at DESC
         ")->fetchAllAssociative();
 
-        // Recent reports with context
-        $reports = $conn->executeQuery("
+        // ── Pending messaging reports ────────────────────────────
+        $messagingReports = $conn->executeQuery("
             SELECT r.id, r.status, r.created_at, r.reason, r.context, r.details,
-                   u1.first_name as reporter_first, u1.last_name as reporter_last, u1.profile_picture as reporter_pfp,
-                   u2.first_name as reported_first, u2.last_name as reported_last, u2.profile_picture as reported_pfp
+                   u1.first_name AS reporter_first, u1.last_name AS reporter_last, u1.profile_picture AS reporter_pfp,
+                   u2.id AS reported_user_id,
+                   u2.first_name AS reported_first, u2.last_name AS reported_last, u2.profile_picture AS reported_pfp
             FROM report r
             JOIN user u1 ON r.reporter_id = u1.id
             JOIN user u2 ON r.reported_id = u2.id
-            WHERE r.status = 'PENDING'
+            WHERE r.status = 'PENDING' AND r.context = 'MESSAGING'
+            ORDER BY r.created_at DESC
+            LIMIT 20
+        ")->fetchAllAssociative();
+
+        // ── Pending community reports (with post snippet from details) ───
+        $communityReports = $conn->executeQuery("
+            SELECT r.id, r.status, r.created_at, r.reason, r.context, r.details,
+                   u1.first_name AS reporter_first, u1.last_name AS reporter_last, u1.profile_picture AS reporter_pfp,
+                   u2.id AS reported_user_id,
+                   u2.first_name AS reported_first, u2.last_name AS reported_last, u2.profile_picture AS reported_pfp,
+                   cc.id AS post_id, cc.content AS post_content, cc.title AS post_title
+            FROM report r
+            JOIN user u1 ON r.reporter_id = u1.id
+            JOIN user u2 ON r.reported_id = u2.id
+            LEFT JOIN community_comment cc ON cc.user_id = u2.id AND cc.content LIKE CONCAT('%', SUBSTRING(r.details, 1, 50), '%')
+            WHERE r.status = 'PENDING' AND r.context = 'COMMUNITY'
             ORDER BY r.created_at DESC
             LIMIT 20
         ")->fetchAllAssociative();
 
         return $this->render('pages/dashboard/admin.html.twig', [
-            'totalUsers' => $stats['totalUsers'],
-            'totalClients' => $stats['totalClients'],
+            // User analytics
+            'totalUsers'      => $stats['totalUsers'],
+            'totalClients'    => $stats['totalClients'],
             'totalTherapists' => $stats['totalTherapists'],
-            'newThisMonth' => $stats['newThisMonth'],
-            'blockedCount' => $stats['blockedCount'],
-            'activeCount' => $stats['activeCount'],
-            'pendingCount' => $stats['pendingCount'],
-            'monthly' => $monthly,
-            'pendingReports' => $stats['pendingReports'],
-            'users' => $users,
-            'reports' => $reports,
+            'newThisMonth'    => $stats['newThisMonth'],
+            'blockedCount'    => $stats['blockedCount'],
+            'activeCount'     => $stats['activeCount'],
+            'pendingCount'    => $stats['pendingCount'],
+            // Chart
+            'monthly'         => $monthly,
+            'monthlyMax'      => $monthlyMax,
+            // Reports
+            'pendingReports'   => $stats['pendingReports'],
+            'users'            => $users,
+            'messagingReports' => $messagingReports,
+            'communityReports' => $communityReports,
+            // Real system metrics
+            'securityScore'   => $securityScore,
+            'healthScore'     => $healthScore,
+            'healthLabel'     => $healthLabel,
+            'dbLatencyMs'     => $dbLatencyMs,
+            'apiLoadLabel'    => $apiLoadLabel,
+            'apiLoadScore'    => $apiLoadScore,
+            'recentMessages'  => $recentMessages,
         ]);
     }
 }

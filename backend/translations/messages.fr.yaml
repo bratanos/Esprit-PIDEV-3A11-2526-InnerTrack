@@ -11,12 +11,67 @@ common:
   privacy: Confidentialité
   support: Support
   welcome: Bienvenue
-  status: État Global
+  status: État global
   active: Systèmes Actifs
+  cancel: Annuler
+  details: Détails
 dashboard:
   therapist: Thérapeute
   patient: Patient
   admin: Administrateur
-notifications:
-  empty: Pas encore de notifications.
-  mark_all_read: Tout marquer comme lu
+  overview: Vue d'ensemble
+  stats: 
+    total_users: Utilisateurs Totaux
+    total_clients: Clients
+    total_therapists: Thérapeutes
+    new_month: Nouveaux ce mois
+    blocked: Comptes Bloqués
+    active: Comptes Actifs
+    pending_verif: En attente de vérification
+    pending_reports: Signalements en attente
+  system_health: Santé du système
+  db_latency: Latence BDD
+  api_load: Charge API
+  messages_hour: msgs/h
+  security_score: Score de Sécurité
+  tabs:
+    users: Gestion des utilisateurs
+    messages: Signalements (Messages)
+    community: Signalements (Communauté)
+  users:
+    id: ID
+    name: Nom
+    role: Rôle
+    status: Statut
+    joined: Inscrit le
+    actions: Actions
+  reports:
+    reporter: Signalé par
+    reported: Utilisateur signalé
+    reason: Raison
+    date: Date
+    action: Action
+    no_pending: Aucun signalement en attente
+    clean_inbox: Canal de messagerie fluide
+    community_clean: Espace communautaire sûr
+    dismiss: Passer
+    ban: Bloquer
+    delete_post: Supprimer la publication
+  user_dashboard:
+    active_sessions: Séances Actives
+    messages: Messages
+    next_appointment: Prochain Rendez-vous
+    quick_actions: Actions Rapides
+    book_session: Réserver une séance
+    find_therapist: Trouver un thérapeute
+    view_history: Voir l'historique
+    activity: Activité
+  therapist_dashboard:
+    total_patients: Patients Totaux
+    sessions: Séances
+    revenue: Revenus
+    today: Rendez-vous d'aujourd'hui
+    no_appointments: Aucun rendez-vous aujourd'hui
+map:
+  set_location: Définir ma position de cabinet
+  setup_banner: Cliquez n'importe où sur la carte pour placer votre cabinet.

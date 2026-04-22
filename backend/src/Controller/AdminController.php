@@ -231,4 +231,19 @@ class AdminController extends AbstractController
 
         return new JsonResponse(['success' => true]);
     }
+
+    // ─── Admin: delete a community post as moderation action ─────────────
+    #[Route('/community/post/{id}/delete', name: 'community_post_delete', methods: ['POST'])]
+    public function deleteCommunityPost(int $id): JsonResponse
+    {
+        $post = $this->em->getRepository(\App\Entity\CommunityComment::class)->find($id);
+        if (!$post) {
+            return new JsonResponse(['error' => 'Post not found'], 404);
+        }
+
+        $this->em->remove($post);
+        $this->em->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
 }

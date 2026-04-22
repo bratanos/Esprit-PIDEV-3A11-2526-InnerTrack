@@ -107,10 +107,11 @@
 </div>
 
 <script>
+    let currentOtherId = null;
+
     // Task 2.3: Use a more stable management for SSE to avoid leaks
     (function() {
         let currentConvId = null;
-        let currentOtherId = null;
         let lastMessageId = 0;
         let pollTimer = null;
         const currentUserId = {{ app.user.id }};

@@ -18,12 +18,12 @@
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
 						</svg>
-						Définir ma position de cabinet
+						{{ 'map.set_location'|trans|default('Définir ma position de cabinet') }}
 					</button>
 				</div>
 				<div id="setup-banner" class="hidden absolute top-0 left-0 w-full bg-emerald-500/90 backdrop-blur-md text-white py-3 text-center z-[1000] font-semibold flex justify-center items-center gap-4">
-					Cliquez n'importe où sur la carte pour placer votre cabinet.
-					<button onclick="cancelLocationSetup()" class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg text-sm">Annuler</button>
+					{{ 'map.setup_banner'|trans|default('Cliquez n\'importe où sur la carte pour placer votre cabinet.') }}
+					<button onclick="cancelLocationSetup()" class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg text-sm">{{ 'common.cancel'|trans|default('Annuler') }}</button>
 				</div>
 			{% endif %}
 		</div>
@@ -90,105 +90,104 @@ attribution: '© OpenStreetMap InnerTrack'
 let therapists = [];
 let currentSelectedId = null;
 let setupMode = false;
+let tempMarker = null;
 
 // Load markers
 fetch('/map/api/therapists').then(res => res.json()).then(data => {
-therapists = data;
-data.forEach(t => {
-const marker = L.marker([t.lat, t.lng]).addTo(map);
-marker.on('click', () => showInfo(t));
+    therapists = data;
+    data.forEach(t => {
+        const marker = L.marker([t.lat, t.lng]).addTo(map);
+        marker.on('click', () => showInfo(t));
 
-// If it's me
-if (t.id === {{ app.user.id }}) {
-map.setView([
-t.lat, t.lng
-], 14);
-}
-});
+        // If it's me
+        if (t.id === {{ app.user.id }}) {
+            map.setView([t.lat, t.lng], 14);
+        }
+    });
 
-// Auto fit bounds if many
-if (data.length > 0 && !{{ app.user.therapistProfile ? 'true' : 'false' }}) {
-const group = new L.featureGroup(data.map(t => L.marker([t.lat, t.lng])));
-map.fitBounds(group.getBounds().pad(0.1));
-}
+    // Auto fit bounds if many
+    if (data.length > 0 && !{{ app.user.therapistProfile ? 'true' : 'false' }}) {
+        const group = new L.featureGroup(data.map(t => L.marker([t.lat, t.lng])));
+        map.fitBounds(group.getBounds().pad(0.1));
+    }
 });
 
 function showInfo(t) {
-currentSelectedId = t.id;
-document.getElementById('empty-state').classList.add('hidden');
-document.getElementById('therapist-info').classList.remove('hidden');
+    currentSelectedId = t.id;
+    document.getElementById('empty-state').classList.add('hidden');
+    document.getElementById('therapist-info').classList.remove('hidden');
 
-document.getElementById('t-name').innerText = 'Dr. ' + t.name.split(' ').pop();
-document.getElementById('t-avatar').innerText = t.name.charAt(0);
-document.getElementById('t-spec').innerText = t.specialization || 'Généraliste';
-document.getElementById('t-address').innerText = t.address || 'Adresse non communiquée';
-document.getElementById('t-bio').innerText = t.bio || 'Aucune description fournie.';
+    document.getElementById('t-name').innerText = 'Dr. ' + t.name.split(' ').pop();
+    document.getElementById('t-avatar').innerText = t.name.charAt(0);
+    document.getElementById('t-spec').innerText = t.specialization || 'Généraliste';
+    document.getElementById('t-address').innerText = t.address || 'Adresse non communiquée';
+    document.getElementById('t-bio').innerText = t.bio || 'Aucune description fournie.';
 
-const btn = document.getElementById('btn-contact');
-if (t.id === {{ app.user.id }}) {
-btn.classList.add('hidden');
-} else {
-btn.classList.remove('hidden');
-}
+    const btn = document.getElementById('btn-contact');
+    if (t.id === {{ app.user.id }}) {
+        btn.classList.add('hidden');
+    } else {
+        btn.classList.remove('hidden');
+    }
 }
 
 function contactTherapist() {
-if (! currentSelectedId) 
-return;
+    if (!currentSelectedId) return;
 
-
-
-fetch (`/map/contact/${currentSelectedId}`, {
-method: 'POST',
-body: JSON.stringify(
-{message: "Bonjour, je souhaite prendre contact avec vous via la carte InnerTrack."}
-)
-}).then(res => res.json()).then(data => {
-if (data.success) {
-alert("Demande envoyée au thérapeute.");
-} else {
-alert(data.message || "Erreur lors de l'envoi.");
-}
-});
+    fetch(`/map/contact/${currentSelectedId}`, {
+        method: 'POST',
+        body: JSON.stringify({ message: "Bonjour, je souhaite prendre contact avec vous via la carte InnerTrack." })
+    }).then(res => res.json()).then(data => {
+        if (data.success) {
+            alert("Demande envoyée au thérapeute.");
+        } else {
+            alert(data.message || "Erreur lors de l'envoi.");
+        }
+    });
 }
 
 // Interactive placement for therapists
 function enableLocationSetup() {
-setupMode = true;
-document.getElementById('setup-banner').classList.remove('hidden');
-document.getElementById('map').style.cursor = 'crosshair';
+    setupMode = true;
+    document.getElementById('setup-banner').classList.remove('hidden');
+    const container = document.querySelector('.leaflet-container');
+    if(container) container.style.cursor = 'crosshair';
 }
 
 function cancelLocationSetup() {
-setupMode = false;
-document.getElementById('setup-banner').classList.add('hidden');
-document.getElementById('map').style.cursor = '';
+    setupMode = false;
+    document.getElementById('setup-banner').classList.add('hidden');
+    const container = document.querySelector('.leaflet-container');
+    if(container) container.style.cursor = '';
+    if (tempMarker) {
+        map.removeLayer(tempMarker);
+        tempMarker = null;
+    }
 }
 
 map.on('click', function (e) {
-if (! setupMode) 
-return;
+    if (!setupMode) return;
 
+    if (tempMarker) {
+        map.removeLayer(tempMarker);
+    }
+    tempMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
 
+    setTimeout(() => {
+        fetch('/map/api/setup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ lat: e.latlng.lat, lng: e.latlng.lng, address: "" })
+        }).then(res => res.json()).then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        });
 
-const address = prompt("Voulez-vous préciser l'adresse textuelle de ce repère ? (Optionnel)");
-
-fetch('/map/api/setup', {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json'
-},
-body: JSON.stringify(
-{lat: e.latlng.lat, lng: e.latlng.lng, address: address}
-)
-}).then(res => res.json()).then(data => {
-if (data.success) {
-alert("Position de cabinet enregistrée avec succès.");
-location.reload();
-}
-});
-
-cancelLocationSetup();
+        cancelLocationSetup();
+    }, 100);
 });
 	</script>
 
