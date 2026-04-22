@@ -7,7 +7,7 @@ use App\Repository\Journal\EntreeJournalRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EntreeJournalRepository::class)]
-#[ORM\Table(name: '	journal_emotionnel')]
+#[ORM\Table(name: 'journalemotionelle')]
 class EntreeJournal
 {
     #[ORM\Id]
@@ -28,7 +28,7 @@ class EntreeJournal
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'id', nullable: false)]
     private User $user;
 
-    // ── Getters & Setters ──────────────────────────────────────
+    //Getters & Setters
 
     public function getIdJournal(): ?int { return $this->idJournal; }
 
@@ -44,7 +44,7 @@ class EntreeJournal
     public function getUser(): User { return $this->user; }
     public function setUser(User $v): self { $this->user = $v; return $this; }
 
-    // ── Helpers métier ─────────────────────────────────────────
+    // Helpers métier
 
     public function getEmojiHumeur(): string {
         return match(true) {

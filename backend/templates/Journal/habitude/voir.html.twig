@@ -1,5 +1,44 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
+
+{% block head %}
+{{ parent() }}
+<script>
+let isPlaying = false;
+
+function toggleLecture() {
+    const btn = document.getElementById('btn-tts');
+    
+    if (isPlaying) {
+        window.speechSynthesis.cancel();
+        isPlaying = false;
+        btn.innerHTML = '🔊 Lire à voix haute';
+        btn.style.backgroundColor = '';
+        return;
+    }
+
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const texte = document.getElementById('tts-data').dataset.texte;
+        const utterance = new SpeechSynthesisUtterance(texte);
+        utterance.lang = 'fr-FR';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+
+        isPlaying = true;
+        btn.innerHTML = '⏹ Stop';
+        btn.style.backgroundColor = '#f56565';
+
+        utterance.onend = () => {
+            isPlaying = false;
+            btn.innerHTML = '🔊 Lire à voix haute';
+            btn.style.backgroundColor = '';
+        };
+    }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-xl mx-auto">
 
@@ -16,40 +55,59 @@
         </div>
     </div>
 
-    {# INDICATEURS #}
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4">
-        <h2 class="text-sm font-bold text-gray-500 mb-4">📊 Niveaux du jour</h2>
-        <div class="space-y-3">
+{# INDICATEURS + QR CODE côte à côte #}
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4">
+    <div class="flex items-start justify-between gap-4">
 
-            {# Énergie #}
-            <div class="flex items-center gap-4">
-                <span class="text-xs text-gray-400 w-24">⚡ Énergie</span>
-                <span class="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-bold"
-                      style="background-color: {{ habitude.couleurEnergie }}22; color: {{ habitude.couleurEnergie }}">
-                    {{ habitude.emojiEnergie }} {{ habitude.niveauEnergie }}/10 — {{ habitude.labelEnergie }}
-                </span>
+        {# Côté gauche — Niveaux #}
+        <div class="flex-1">
+            <h2 class="text-sm font-bold text-gray-500 mb-4">📊 Niveaux du jour</h2>
+            <div class="space-y-3">
+
+                {# Énergie #}
+                <div class="flex items-center gap-4">
+                    <span class="text-xs text-gray-400 w-24">⚡ Énergie</span>
+                    <span class="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-bold"
+                          style="background-color: {{ habitude.couleurEnergie }}22; color: {{ habitude.couleurEnergie }}">
+                        {{ habitude.emojiEnergie }} {{ habitude.niveauEnergie }}/10 — {{ habitude.labelEnergie }}
+                    </span>
+                </div>
+
+                {# Stress #}
+                <div class="flex items-center gap-4">
+                    <span class="text-xs text-gray-400 w-24">😰 Stress</span>
+                    <span class="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-bold"
+                          style="background-color: {{ habitude.couleurStress }}22; color: {{ habitude.couleurStress }}">
+                        {{ habitude.emojiStress }} {{ habitude.niveauStress }}/10 — {{ habitude.labelStress }}
+                    </span>
+                </div>
+
+                {# Sommeil #}
+                <div class="flex items-center gap-4">
+                    <span class="text-xs text-gray-400 w-24">😴 Sommeil</span>
+                    <span class="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-bold"
+                          style="background-color: {{ habitude.couleurSommeil }}22; color: {{ habitude.couleurSommeil }}">
+                        {{ habitude.emojiSommeil }} {{ habitude.qualiteSommeil }}/10 — {{ habitude.labelSommeil }}
+                    </span>
+                </div>
+
             </div>
-
-            {# Stress #}
-            <div class="flex items-center gap-4">
-                <span class="text-xs text-gray-400 w-24">😰 Stress</span>
-                <span class="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-bold"
-                      style="background-color: {{ habitude.couleurStress }}22; color: {{ habitude.couleurStress }}">
-                    {{ habitude.emojiStress }} {{ habitude.niveauStress }}/10 — {{ habitude.labelStress }}
-                </span>
-            </div>
-
-            {# Sommeil #}
-            <div class="flex items-center gap-4">
-                <span class="text-xs text-gray-400 w-24">😴 Sommeil</span>
-                <span class="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-bold"
-                      style="background-color: {{ habitude.couleurSommeil }}22; color: {{ habitude.couleurSommeil }}">
-                    {{ habitude.emojiSommeil }} {{ habitude.qualiteSommeil }}/10 — {{ habitude.labelSommeil }}
-                </span>
-            </div>
-
         </div>
+
+        {# Côté droit — QR Code #}
+        <div class="text-center shrink-0">
+            <p class="text-xs font-bold text-gray-400 mb-2">🔗 QR Code</p>
+            <img src="{{ path('habitude_qrcode', {id: habitude.idHabit}) }}"
+                alt="QR Code"
+                class="rounded-xl border border-gray-100"
+                width="120" height="120"
+                style="cursor:pointer"
+                onclick="window.open('{{ path('habitude_qrcode', {id: habitude.idHabit}) }}', '_blank')"
+            <p class="text-xs text-gray-400 mt-1">Cliquez pour voir la page détail</p>
+        </div>
+
     </div>
+</div>
 
     {# NOTE #}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
@@ -60,16 +118,27 @@
     </div>
 
     {# ACTIONS #}
-    <div class="flex gap-3">
-        <a href="{{ path('habitude_index') }}"
-           class="flex-1 text-center bg-gray-100 text-gray-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">
-            ← Retour
-        </a>
-        <a href="{{ path('habitude_modifier', {id: habitude.idHabit}) }}"
-           class="flex-1 text-center bg-[#006876] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
-            ✏️ Modifier
-        </a>
-    </div>
+<div class="flex gap-3 flex-wrap">
+
+    <a href="{{ path('habitude_index') }}"
+       class="flex-1 text-center bg-gray-100 text-gray-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">
+        ← Retour
+    </a>
+<div id="tts-data"
+     data-texte="{{ (habitude.nomHabitude ~ '. ' ~ habitude.emotionDominantes ~ '. Énergie ' ~ habitude.niveauEnergie ~ ' sur 10. Stress ' ~ habitude.niveauStress ~ ' sur 10. Sommeil ' ~ habitude.qualiteSommeil ~ ' sur 10. ' ~ (habitude.noteTextuelle ?: 'Aucune note.'))|e('html_attr') }}"
+     style="display:none">
+</div>
+    <button id="btn-tts" onclick="toggleLecture()"
+        class="flex-1 bg-[#48bb78] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#38a169] transition">
+    🔊 Lire à voix haute
+</button>
+
+    <a href="{{ path('habitude_modifier', {id: habitude.idHabit}) }}"
+       class="flex-1 text-center bg-[#006876] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
+        ✏️ Modifier
+    </a>
+
+</div>
 
 </div>
 {% endblock %}

@@ -1,5 +1,46 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
+{% block head %}
+{{ parent() }}
+<script>
+let isPlaying = false;
+
+function toggleLecture() {
+    const btn = document.getElementById('btn-tts');
+    
+    if (isPlaying) {
+        window.speechSynthesis.cancel();
+        isPlaying = false;
+        btn.innerHTML = '🔊 Lire';
+        btn.style.backgroundColor = '';
+        btn.classList.remove('bg-red-500');
+        btn.classList.add('bg-[#48bb78]');
+        return;
+    }
+
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const texte = document.getElementById('tts-data').dataset.texte;
+        const utterance = new SpeechSynthesisUtterance(texte);
+        utterance.lang = 'fr-FR';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+
+        isPlaying = true;
+        btn.innerHTML = '⏹ Stop';
+        btn.style.backgroundColor = '#f56565';
+
+        utterance.onend = () => {
+            isPlaying = false;
+            btn.innerHTML = '🔊 Lire';
+            btn.style.backgroundColor = '';
+        };
+    }
+}
+
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-xl mx-auto">
 
@@ -14,21 +55,23 @@
         </div>
     </div>
 
-    {# HUMEUR #}
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4">
-        <h2 class="text-sm font-bold text-gray-500 mb-4">😊 Humeur du jour</h2>
-        <div class="flex items-center gap-4">
-            <span class="text-5xl">{{ entree.emojiHumeur }}</span>
-            <div>
-                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold"
-                      style="background-color: {{ entree.couleurHumeur }}22; color: {{ entree.couleurHumeur }}">
-                    {{ entree.labelHumeur }} — {{ entree.humeur }}/10
-                </span>
-            </div>
-        </div>
+    {# HUMEUR + QR CODE côte à côte #}
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4">
+    <div class="flex items-start justify-between gap-4">
 
-        {# Barre de progression #}
-        <div class="mt-4">
+        {# Côté gauche — Humeur #}
+        <div class="flex-1">
+            <h2 class="text-sm font-bold text-gray-500 mb-4">😊 Humeur du jour</h2>
+            <div class="flex items-center gap-4 mb-4">
+                <span class="text-5xl">{{ entree.emojiHumeur }}</span>
+                <div>
+                    <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold"
+                          style="background-color: {{ entree.couleurHumeur }}22; color: {{ entree.couleurHumeur }}">
+                        {{ entree.labelHumeur }} — {{ entree.humeur }}/10
+                    </span>
+                </div>
+            </div>
+            {# Barre de progression #}
             <div class="w-full bg-gray-100 rounded-full h-2">
                 <div class="h-2 rounded-full transition-all"
                      style="width: {{ (entree.humeur / 10 * 100)|round }}%; background-color: {{ entree.couleurHumeur }}">
@@ -38,10 +81,25 @@
                 <span>0</span><span>10</span>
             </div>
         </div>
+
+
+        {# Côté droit — QR Code #}
+<div class="text-center shrink-0">
+    <p class="text-xs font-bold text-gray-400 mb-2">🔗 QR Code</p>
+    <img src="{{ path('entree_qrcode', {id: entree.idJournal}) }}"
+        alt="QR Code"
+        class="rounded-xl border border-gray-100"
+        width="120" height="120"
+        style="cursor:pointer"
+        onclick="window.open('{{ path('entree_qrcode', {id: entree.idJournal}) }}', '_blank')">
+    <p class="text-xs text-gray-400 mt-1">Cliquez pour voir la page détail</p>
+</div>
+
     </div>
+</div>
 
     {# NOTE #}
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4">
         <h2 class="text-sm font-bold text-gray-500 mb-3">📝 Note du jour</h2>
         <p class="text-sm text-gray-700 bg-gray-50 rounded-xl p-4 leading-relaxed whitespace-pre-line">
             {{ entree.noteTextuelle ?: 'Aucune note.' }}
@@ -49,15 +107,33 @@
     </div>
 
     {# ACTIONS #}
-    <div class="flex gap-3">
+    <div class="flex gap-3 flex-wrap">
         <a href="{{ path('entree_index') }}"
            class="flex-1 text-center bg-gray-100 text-gray-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">
             ← Retour
         </a>
+        <div id="tts-data"
+     data-texte="{{ ('Journal du ' ~ entree.dateSaisie|date('d/m/Y') ~ '. Humeur ' ~ entree.humeur ~ ' sur 10, ' ~ entree.labelHumeur ~ '. ' ~ (entree.noteTextuelle ?: 'Aucune note.'))|e('html_attr') }}"
+     style="display:none">
+</div>
+        <button id="btn-tts" onclick="toggleLecture()"
+                class="flex-1 bg-[#48bb78] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#38a169] transition">
+            🔊 Lire
+        </button>
         <a href="{{ path('entree_modifier', {id: entree.idJournal}) }}"
-           class="flex-1 text-center bg-[#006876] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#005562] transition">
+           class="flex-1 text-center bg-amber-400 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-500 transition">
             ✏️ Modifier
         </a>
+        <form method="POST"
+              action="{{ path('entree_supprimer', {id: entree.idJournal}) }}"
+              onsubmit="return confirm('Supprimer cette entrée ?')">
+            <input type="hidden" name="_token"
+                   value="{{ csrf_token('delete-entree-' ~ entree.idJournal) }}">
+            <button type="submit"
+                    class="bg-red-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-red-500 transition">
+                🗑 Supprimer
+            </button>
+        </form>
     </div>
 
 </div>

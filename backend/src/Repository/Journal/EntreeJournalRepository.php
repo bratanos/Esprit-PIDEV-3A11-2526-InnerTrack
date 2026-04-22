@@ -35,31 +35,42 @@ class EntreeJournalRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function searchAdvanced(int $userId, ?string $keyword, ?string $date, ?int $humeur): array
+public function searchAdvanced(int $userId, ?string $keyword, ?string $date, ?int $humeur, string $sort = 'dateSaisie', string $direction = 'DESC', ?int $humeurMin = null, ?int $humeurMax = null): array
 {
+    $allowedSorts = ['dateSaisie', 'humeur'];
+    $finalSort = in_array($sort, $allowedSorts) ? 'e.' . $sort : 'e.dateSaisie';
+    $finalDirection = strtoupper($direction) === 'ASC' ? 'ASC' : 'DESC';
+
     $qb = $this->createQueryBuilder('e')
         ->where('e.user = :uid')
         ->setParameter('uid', $userId);
 
-    // 🔤 Recherche texte
     if (!empty($keyword)) {
         $qb->andWhere('e.noteTextuelle LIKE :kw')
            ->setParameter('kw', '%' . $keyword . '%');
     }
 
-    // 📅 Recherche par date
     if (!empty($date)) {
-        $qb->andWhere('DATE(e.dateSaisie) = :date')
-           ->setParameter('date', $date);
+        $qb->andWhere('e.dateSaisie = :date')
+            ->setParameter('date', new \DateTime($date));
     }
 
-    // 😊 Recherche par humeur
-    if (!empty($humeur)) {
+    if ($humeur !== null) {
         $qb->andWhere('e.humeur = :humeur')
            ->setParameter('humeur', $humeur);
     }
 
-    return $qb->orderBy('e.dateSaisie', 'DESC')
+    if ($humeurMin !== null) {
+        $qb->andWhere('e.humeur >= :humeurMin')
+           ->setParameter('humeurMin', $humeurMin);
+    }
+
+    if ($humeurMax !== null) {
+        $qb->andWhere('e.humeur <= :humeurMax')
+           ->setParameter('humeurMax', $humeurMax);
+    }
+
+    return $qb->orderBy($finalSort, $finalDirection)
               ->getQuery()
               ->getResult();
 }

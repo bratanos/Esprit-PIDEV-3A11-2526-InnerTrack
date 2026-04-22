@@ -55,6 +55,84 @@ document.addEventListener('DOMContentLoaded', function() {
     const slider = document.querySelector('.slider-humeur');
     if (slider) updateHumeur(slider);
 });
+
+// ── Voice to Text ──
+let recognition = null;
+let isRecording = false;
+let mediaRecorder = null;
+
+function toggleVoice() {
+    const btn = document.getElementById('btn-voice');
+
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert('Voice to Text non supporté. Utilisez Chrome.');
+        return;
+    }
+
+    if (isRecording) {
+        recognition.stop();
+        isRecording = false;
+        btn.textContent = '🎙️';
+        btn.style.backgroundColor = '';
+        btn.style.color = '';
+        return;
+    }
+
+    btn.textContent = '⏳';
+    btn.style.backgroundColor = '#f6ad55';
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'fr-FR';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = function() {
+        isRecording = true;
+        btn.textContent = '🛑';
+        btn.style.backgroundColor = '#f56565';
+        btn.style.color = 'white';
+    };
+
+    recognition.onresult = function(event) {
+        const textarea = document.querySelector('#entree_journal_noteTextuelle');
+        if (textarea) {
+            let newText = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) {
+                    newText += event.results[i][0].transcript;
+                }
+            }
+            if (newText) {
+                textarea.value += (textarea.value ? ' ' : '') + newText;
+            }
+        }
+    };
+
+    recognition.onend = function() {
+        isRecording = false;
+        btn.textContent = '🎙️';
+        btn.style.backgroundColor = '';
+        btn.style.color = '';
+    };
+
+    recognition.onerror = function(event) {
+        alert('Erreur micro : ' + event.error);
+        isRecording = false;
+        btn.textContent = '🎙️';
+        btn.style.backgroundColor = '';
+        btn.style.color = '';
+    };
+
+    try {
+        recognition.start();
+    } catch(e) {
+        alert('Exception: ' + e.message);
+        btn.textContent = '🎙️';
+        btn.style.backgroundColor = '';
+    }
+}
 </script>
 {% endblock %}
 
@@ -72,13 +150,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     {{ form_start(form, {attr: {class: 'space-y-4', novalidate: 'novalidate'}}) }}
 
-{% if not form.vars.valid and form.vars.submitted %}
-    <div class="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm">
-        ⚠️ Champs Obligatoire!
-    </div>
-{% endif %}
-
-    {{ form_start(form, {attr: {class: 'space-y-4', novalidate: 'novalidate'}}) }}
+    {% if not form.vars.valid and form.vars.submitted %}
+        <div class="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm">
+            ⚠️ Champs Obligatoire!
+        </div>
+    {% endif %}
 
         {# 1. HUMEUR #}
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
@@ -99,34 +175,42 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
 
         {# 2. NOTE + DATE #}
-<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
-    <div>
-        {{ form_label(form.noteTextuelle, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
-        {{ form_widget(form.noteTextuelle, {attr: {
-            class: 'w-full rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 ' ~
-                   (form.noteTextuelle.vars.errors|length > 0 ? 'border-red-400 focus:ring-red-300 bg-red-50' : 'border-gray-200 focus:ring-[#006876]')
-        }}) }}
-        {% if form.noteTextuelle.vars.errors|length > 0 %}
-            <p class="text-red-500 text-xs mt-1 font-medium flex items-center gap-1">
-                ⚠️ {{ form.noteTextuelle.vars.errors[0].message }}
-            </p>
-        {% endif %}
-    </div>
-    <div>
-        {{ form_label(form.dateSaisie, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
-        {{ form_widget(form.dateSaisie, {attr: {
-            class: 'w-full rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 ' ~
-                   (form.dateSaisie.vars.errors|length > 0 ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:ring-[#006876]')
-        }}) }}
-        {% if form.dateSaisie.vars.errors|length > 0 %}
-            <p class="text-red-500 text-xs mt-1 font-medium">
-                ⚠️ {{ form.dateSaisie.vars.errors[0].message }}
-            </p>
-        {% endif %}
-    </div>
-</div>
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+            <div>
+                {{ form_label(form.noteTextuelle, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+                <div class="flex gap-2 items-start">
+                    {{ form_widget(form.noteTextuelle, {attr: {
+                        class: 'flex-1 rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 ' ~
+                               (form.noteTextuelle.vars.errors|length > 0 ? 'border-red-400 focus:ring-red-300 bg-red-50' : 'border-gray-200 focus:ring-[#006876]'),
+                        rows: '4'
+                    }}) }}
+                    <button type="button" id="btn-voice" onclick="toggleVoice()"
+                            class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-xl flex items-center justify-center transition mt-1"
+                            title="Dicter une note">
+                        🎙️
+                    </button>
+                </div>
+                {% if form.noteTextuelle.vars.errors|length > 0 %}
+                    <p class="text-red-500 text-xs mt-1 font-medium flex items-center gap-1">
+                        ⚠️ {{ form.noteTextuelle.vars.errors[0].message }}
+                    </p>
+                {% endif %}
+            </div>
+            <div>
+                {{ form_label(form.dateSaisie, null, {label_attr: {class: 'block text-sm font-semibold text-gray-600 mb-1'}}) }}
+                {{ form_widget(form.dateSaisie, {attr: {
+                    class: 'w-full rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 ' ~
+                           (form.dateSaisie.vars.errors|length > 0 ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:ring-[#006876]')
+                }}) }}
+                {% if form.dateSaisie.vars.errors|length > 0 %}
+                    <p class="text-red-500 text-xs mt-1 font-medium">
+                        ⚠️ {{ form.dateSaisie.vars.errors[0].message }}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
 
-        {# 3. BOUTONS — toujours en dernier #}
+        {# 3. BOUTONS #}
         <div class="flex gap-3">
             <a href="{{ path('entree_index') }}"
                class="flex-1 text-center bg-gray-100 text-gray-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">

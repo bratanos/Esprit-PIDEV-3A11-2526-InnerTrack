@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; color: #333; padding: 20px; }
+        .header { background: #006876; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 22px; }
+        .header p { margin: 5px 0 0; font-size: 12px; opacity: 0.85; }
+        .stats-box { display: flex; gap: 10px; margin-bottom: 20px; }
+        .stat { flex: 1; background: #f0fafa; border: 1px solid #b2e8ed; border-radius: 8px; padding: 12px; text-align: center; }
+        .stat .number { font-size: 24px; font-weight: bold; color: #006876; }
+        .stat .label { font-size: 10px; color: #888; margin-top: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        thead tr { background-color: #006876; color: white; }
+        thead th { padding: 10px 8px; text-align: left; font-size: 11px; }
+        tbody tr:nth-child(even) { background-color: #f0fafa; }
+        tbody tr:nth-child(odd) { background-color: #ffffff; }
+        tbody td { padding: 8px; border-bottom: 1px solid #b2e8ed; font-size: 11px; }
+        .badge { padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; }
+        .footer { margin-top: 30px; text-align: center; font-size: 10px; color: #aaa; border-top: 1px solid #eee; padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>📝 Mon Journal — InnerTrack</h1>
+        <p>Rapport généré le {{ "now"|date("d/m/Y à H:i") }} • {{ entrees|length }} entrée(s)</p>
+    </div>
+
+    <div class="stats-box">
+        <div class="stat">
+            <div class="number">{{ entrees|length }}</div>
+            <div class="label">Total entrées</div>
+        </div>
+        <div class="stat">
+            <div class="number">
+                {% set total = 0 %}
+                {% for e in entrees %}{% set total = total + e.humeur %}{% endfor %}
+                {{ entrees|length > 0 ? (total / entrees|length)|round(1) : 0 }}
+            </div>
+            <div class="label">😊 Humeur moy.</div>
+        </div>
+        <div class="stat">
+            <div class="number">
+                {% set best = 0 %}
+                {% for e in entrees %}{% if e.humeur > best %}{% set best = e.humeur %}{% endif %}{% endfor %}
+                {{ best }}/10
+            </div>
+            <div class="label">🏆 Meilleure humeur</div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Humeur</th>
+                <th>Niveau</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in entrees %}
+            <tr>
+                <td>{{ e.dateSaisie|date('d/m/Y') }}</td>
+                <td>{{ e.emojiHumeur }}</td>
+                <td>
+                    <span class="badge" style="background-color: {{ e.couleurHumeur }}22; color: {{ e.couleurHumeur }}">
+                        {{ e.labelHumeur }} — {{ e.humeur }}/10
+                    </span>
+                </td>
+                <td>{{ e.noteTextuelle|default('—')|slice(0, 60) }}{% if e.noteTextuelle|length > 60 %}...{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="footer">
+        InnerTrack — Digital Sanctuary • Rapport confidentiel
+    </div>
+
+</body>
+</html>

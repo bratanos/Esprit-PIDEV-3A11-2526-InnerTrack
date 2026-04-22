@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnerTrack — {{ habitude.nomHabitude }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #5a3ea1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+        .brand {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .brand-name {
+            font-size: 28px;
+            font-weight: 800;
+            color: #5a3ea1;
+            letter-spacing: -0.5px;
+        }
+        .brand-sub {
+            font-size: 11px;
+            color: #a0aec0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, #5a3ea1, #7c5cbf);
+            border-radius: 2px;
+            margin: 20px 0;
+        }
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+        .subtitle {
+            font-size: 13px;
+            color: #718096;
+            margin-bottom: 24px;
+        }
+        .qr-box {
+            background: #f8f4ff;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .qr-box img {
+            width: 180px;
+            height: 180px;
+            border-radius: 8px;
+        }
+        .qr-label {
+            font-size: 11px;
+            color: #a0aec0;
+            margin-top: 10px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            opacity: 0.75;
+            text-transform: uppercase;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #718096; font-weight: 500; }
+        .info-value { color: #2d3748; font-weight: 600; }
+        .note-box {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+        .note-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #a0aec0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .btn-download {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            background: linear-gradient(to right, #5a3ea1, #7c5cbf);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: #cbd5e0;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+
+    <div class="brand">
+        <div class="brand-name">🧘 InnerTrack</div>
+        <div class="brand-sub">Digital Sanctuary</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="title">🌿 {{ habitude.nomHabitude }}</div>
+    <div class="subtitle">
+        📅 {{ habitude.dateCreation|date('d/m/Y') }} &nbsp;•&nbsp; {{ habitude.emotionDominantes }}
+    </div>
+
+    <div class="qr-box">
+        <img src="{{ qrBase64 }}" alt="QR Code">
+        <div class="qr-label">Scannez ce QR pour partager cette habitude</div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-box" style="background: {{ habitude.couleurEnergie }}15; color: {{ habitude.couleurEnergie }}">
+            <div class="stat-value">{{ habitude.niveauEnergie }}/10</div>
+            <div class="stat-label">Energie</div>
+        </div>
+        <div class="stat-box" style="background: {{ habitude.couleurStress }}15; color: {{ habitude.couleurStress }}">
+            <div class="stat-value">{{ habitude.niveauStress }}/10</div>
+            <div class="stat-label">Stress</div>
+        </div>
+        <div class="stat-box" style="background: {{ habitude.couleurSommeil }}15; color: {{ habitude.couleurSommeil }}">
+            <div class="stat-value">{{ habitude.qualiteSommeil }}/10</div>
+            <div class="stat-label">Sommeil</div>
+        </div>
+    </div>
+
+    {% if habitude.noteTextuelle %}
+    <div class="note-box">
+        <div class="note-title">Note personnelle</div>
+        {{ habitude.noteTextuelle }}
+    </div>
+    {% endif %}
+
+    <a href="{{ path('qrcode_habitude_png', {id: habitude.idHabit}) }}"
+       download="qrcode-{{ habitude.nomHabitude }}.png"
+       class="btn-download">
+        ⬇️ Télécharger le QR Code
+    </a>
+
+    <div class="footer">
+        Généré par InnerTrack • {{ "now"|date("d/m/Y") }}
+    </div>
+
+</div>
+</body>
+</html>

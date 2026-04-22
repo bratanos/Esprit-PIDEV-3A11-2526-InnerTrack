@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>InnerTrack — Journal {{ entree.dateSaisie|date('d/m/Y') }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #006876 0%, #008a9a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+        .brand { text-align: center; margin-bottom: 24px; }
+        .brand-name { font-size: 28px; font-weight: 800; color: #006876; letter-spacing: -0.5px; }
+        .brand-sub { font-size: 11px; color: #a0aec0; letter-spacing: 2px; text-transform: uppercase; }
+        .divider { height: 2px; background: linear-gradient(to right, #006876, #008a9a); border-radius: 2px; margin: 20px 0; }
+        .title { font-size: 22px; font-weight: 700; color: #2d3748; margin-bottom: 4px; }
+        .subtitle { font-size: 13px; color: #718096; margin-bottom: 24px; }
+        .qr-box { background: #f0fafa; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 24px; }
+        .qr-box img { width: 180px; height: 180px; border-radius: 8px; }
+        .qr-label { font-size: 11px; color: #a0aec0; margin-top: 10px; }
+        .humeur-box {
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            background: {{ entree.couleurHumeur }}15;
+        }
+        .humeur-emoji { font-size: 48px; margin-bottom: 8px; }
+        .humeur-label { font-size: 18px; font-weight: 700; color: {{ entree.couleurHumeur }}; }
+        .humeur-value { font-size: 13px; color: #718096; margin-top: 4px; }
+        .note-box { background: #f7fafc; border-radius: 12px; padding: 16px; font-size: 13px; color: #4a5568; line-height: 1.6; }
+        .note-title { font-size: 11px; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .btn-download { display: block; margin-top: 20px; text-align: center; background: linear-gradient(to right, #006876, #008a9a); color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 14px; text-decoration: none; }
+        .footer { text-align: center; font-size: 11px; color: #cbd5e0; margin-top: 20px; }
+    </style>
+</head>
+<body>
+<div class="card">
+
+    <div class="brand">
+        <div class="brand-name">🧘 InnerTrack</div>
+        <div class="brand-sub">Digital Sanctuary</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="title">📓 Journal du {{ entree.dateSaisie|date('d/m/Y') }}</div>
+    <div class="subtitle">Entrée personnelle • InnerTrack</div>
+
+    <div class="qr-box">
+        <img src="{{ qrBase64 }}" alt="QR Code">
+        <div class="qr-label">Scannez ce QR pour partager cette entrée</div>
+    </div>
+
+    <div class="humeur-box">
+        <div class="humeur-emoji">{{ entree.emojiHumeur }}</div>
+        <div class="humeur-label">{{ entree.labelHumeur }}</div>
+        <div class="humeur-value">{{ entree.humeur }}/10</div>
+    </div>
+
+    {% if entree.noteTextuelle %}
+    <div class="note-box">
+        <div class="note-title">Note du jour</div>
+        {{ entree.noteTextuelle }}
+    </div>
+    {% endif %}
+
+    <a href="{{ path('qrcode_journal_png', {id: entree.idJournal}) }}"
+       download="qrcode-journal-{{ entree.dateSaisie|date('d-m-Y') }}.png"
+       class="btn-download">
+        ⬇️ Télécharger le QR Code
+    </a>
+
+    <div class="footer">
+        Généré par InnerTrack • {{ "now"|date("d/m/Y") }}
+    </div>
+
+</div>
+</body>
+</html>

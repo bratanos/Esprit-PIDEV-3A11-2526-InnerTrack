@@ -13,15 +13,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\PdfExporter;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 #[Route('/journal/entree', name: 'entree_')]
 class EntreeJournalController extends AbstractController
 {
     public function __construct(
-        private EntreeJournalRepository $repo,
-        private EntityManagerInterface  $em,
-        private Security                $security
-    ) {}
+    private EntreeJournalRepository   $repo,
+    private EntityManagerInterface    $em,
+    private Security                  $security,
+    private CsrfTokenManagerInterface $csrfTokenManager
+) {}
 
     #[Route('/', name: 'index')]
     public function index(Request $request): Response
@@ -112,15 +117,82 @@ class EntreeJournalController extends AbstractController
         ]);
     }
 
-    #[Route('/export/pdf', name: 'export_pdf')]
-    public function exportPdf(PdfExporter $pdfExporter): Response 
-    {
-        $user = $this->getUser();
-        $entrees = $this->repo->findByUserId($user->getId());
+#[Route('/qrcode/{id}', name: 'qrcode')]
+public function qrcode(int $id): Response
+{
+    $entree = $this->repo->findOneBy(['idJournal' => $id]);
 
-        $tmpFile = tempnam(sys_get_temp_dir(), 'journal') . '.pdf';
-        $pdfExporter->exportJournal($entrees, $tmpFile);
-
-        return $this->file($tmpFile, 'MonJournal.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
+    if (!$entree) {
+        throw $this->createNotFoundException('Entrée non trouvée');
     }
+
+    $texte = sprintf(
+        "Journal: %s\nHumeur: %d/10 - %s\nNote: %s",
+        $entree->getDateSaisie()->format('d/m/Y'),
+        $entree->getHumeur(),
+        $entree->getLabelHumeur(),
+        $entree->getNoteTextuelle() ?? ''
+    );
+
+    $qrCode = new QrCode($texte);
+
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
+
+    return new Response(
+        $result->getString(),
+        200,
+        ['Content-Type' => 'image/png']
+    );
+}
+
+#[Route('/export/pdf', name: 'export_pdf')]
+public function exportPdf(PdfExporter $pdfExporter): Response 
+{
+    $user = $this->getUser();
+    $entrees = $this->repo->findByUserId($user->getId());
+
+    $tmpFile = tempnam(sys_get_temp_dir(), 'journal') . '.pdf';
+    $pdfExporter->exportJournal($entrees, $tmpFile);
+
+    return $this->file($tmpFile, 'MonJournal.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
+}
+#[Route('/search', name: 'search', methods: ['GET'])]
+public function search(Request $request): JsonResponse
+{
+    $user      = $this->security->getUser();
+    $keyword   = $request->query->get('q', '');
+    $date      = $request->query->get('date', '');
+    $humeurMin = $request->query->get('humeurMin') !== '' ? (int)$request->query->get('humeurMin') : null;
+    $humeurMax = $request->query->get('humeurMax') !== '' ? (int)$request->query->get('humeurMax') : null;
+    $sort      = $request->query->get('sort', 'dateSaisie');
+    $direction = $request->query->get('direction', 'DESC');
+
+    $entrees = $this->repo->searchAdvanced(
+        $user->getId(),
+        $keyword,
+        $date,
+        null,
+        $sort,
+        $direction,
+        $humeurMin,
+        $humeurMax
+    );
+
+    $data = array_map(fn($e) => [
+        'id'            => $e->getIdJournal(),
+        'noteTextuelle' => $e->getNoteTextuelle() ?? 'Aucune note.',
+        'humeur'        => $e->getHumeur(),
+        'labelHumeur'   => $e->getLabelHumeur(),
+        'emojiHumeur'   => $e->getEmojiHumeur(),
+        'couleurHumeur' => $e->getCouleurHumeur(),
+        'dateSaisie'    => $e->getDateSaisie()->format('d/m/Y'),
+        'urlVoir'       => $this->generateUrl('entree_voir',      ['id' => $e->getIdJournal()]),
+        'urlModifier'   => $this->generateUrl('entree_modifier',  ['id' => $e->getIdJournal()]),
+        'urlSupprimer'  => $this->generateUrl('entree_supprimer', ['id' => $e->getIdJournal()]),
+        'csrfToken' => $this->csrfTokenManager->getToken('delete-entree-' . $e->getIdJournal())->getValue(),
+    ], $entrees);
+
+    return new JsonResponse($data);
+}
 }

@@ -254,6 +254,7 @@ class ComposerStaticInit2156b084aed439304bc09f197da69223
         ),
         'E' => 
         array (
+            'Endroid\\QrCode\\' => 15,
             'Egulias\\EmailValidator\\' => 23,
         ),
         'D' => 
@@ -273,6 +274,7 @@ class ComposerStaticInit2156b084aed439304bc09f197da69223
             'Doctrine\\Bundle\\MigrationsBundle\\' => 33,
             'Doctrine\\Bundle\\DoctrineBundle\\' => 31,
             'DeepCopy\\' => 9,
+            'DASPRiD\\Enum\\' => 13,
         ),
         'C' => 
         array (
@@ -282,6 +284,7 @@ class ComposerStaticInit2156b084aed439304bc09f197da69223
         ),
         'B' => 
         array (
+            'BaconQrCode\\' => 12,
             'BabDev\\PagerfantaBundle\\' => 24,
         ),
         'A' => 
@@ -718,6 +721,10 @@ class ComposerStaticInit2156b084aed439304bc09f197da69223
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-font-lib/src/FontLib',
         ),
+        'Endroid\\QrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/endroid/qr-code/src',
+        ),
         'Egulias\\EmailValidator\\' => 
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/src',
@@ -782,6 +789,10 @@ class ComposerStaticInit2156b084aed439304bc09f197da69223
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
+        'DASPRiD\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dasprid/enum/src',
+        ),
         'Composer\\Semver\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/semver/src',
@@ -793,6 +804,10 @@ class ComposerStaticInit2156b084aed439304bc09f197da69223
         'Complex\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
+        ),
+        'BaconQrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
         ),
         'BabDev\\PagerfantaBundle\\' => 
         array (
