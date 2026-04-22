@@ -319,6 +319,6 @@ class __TwigTemplate_0e7a956d4407e0353b5e1fda16012baf extends Template
     </div>
 </main>
 {% endblock %}
-", "pages/verifyEmail.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\verifyEmail.html.twig");
+", "pages/verifyEmail.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\verifyEmail.html.twig");
     }
 }

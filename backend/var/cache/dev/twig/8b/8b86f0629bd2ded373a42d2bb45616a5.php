@@ -535,6 +535,6 @@ function validateEventForm(e) {
 }
 </script>
 {% endblock %}
-", "admin/event/edit.html.twig", "C:\\Users\\user\\Documents\\master\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\admin\\event\\edit.html.twig");
+", "admin/event/edit.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\admin\\event\\edit.html.twig");
     }
 }

@@ -764,6 +764,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     {{ form_end(form) }}
 </div>
-{% endblock %}", "Journal/habitude/ajouter.html.twig", "C:\\Users\\user\\Documents\\master\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\Journal\\habitude\\ajouter.html.twig");
+{% endblock %}", "Journal/habitude/ajouter.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\Journal\\habitude\\ajouter.html.twig");
     }
 }

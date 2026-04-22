@@ -157,6 +157,6 @@ class __TwigTemplate_952e99742bdedfb03f8087d1b33a968b extends Template
 
 </div>
 {% endblock %}
-", "article/new.html.twig", "C:\\Users\\user\\Documents\\master\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\article\\new.html.twig");
+", "article/new.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\article\\new.html.twig");
     }
 }

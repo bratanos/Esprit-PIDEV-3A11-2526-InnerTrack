@@ -5,7 +5,8 @@ namespace App\Service;
 class ReadabilityService
 {
     /**
-     * Returns: 'Easy' | 'Medium' | 'Advanced' | 'Unknown'
+     * Calculates the readability level of text using Flesch-Kincaid formula
+     * Returns one of: 'Easy', 'Medium', 'Advanced', or 'Unknown'
      */
     public function calculateLevel(string $text): string
     {
@@ -25,18 +26,28 @@ class ReadabilityService
         return 'Advanced';
     }
 
+    /**
+     * Utility to count the total number of words in the text
+     */
     private function countWords(string $text): int
     {
         $words = preg_split('/\s+/', trim($text), -1, PREG_SPLIT_NO_EMPTY);
         return $words ? count($words) : 0;
     }
 
+    /**
+     * Utility to count the number of sentences in the text
+     */
     private function countSentences(string $text): int
     {
         $parts = preg_split('/[.!?]+\s*/', $text, -1, PREG_SPLIT_NO_EMPTY);
         return $parts ? count($parts) : 1;
     }
 
+    /**
+     * Utility to count syllables including accented French characters
+     * Used for accurate readability score calculation
+     */
     private function countSyllables(string $text): int
     {
         $vowels = ['a','e','i','o','u','y','à','â','è','é','ê','ë','î','ï','ô','ù','û','ü','ÿ'];

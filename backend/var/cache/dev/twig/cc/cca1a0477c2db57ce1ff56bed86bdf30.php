@@ -239,6 +239,6 @@ class __TwigTemplate_7a1dc8255d13cb12736a3585e2be503f extends Template
     </div>
 </div>
 {% endblock %}
-", "pages/profile/changePassword.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\profile\\changePassword.html.twig");
+", "pages/profile/changePassword.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\profile\\changePassword.html.twig");
     }
 }

@@ -353,6 +353,6 @@ class __TwigTemplate_0e8d68b07b5314dc8a16ca899bf54c28 extends Template
         </div>
     </footer>
 {% endmacro %}
-", "macros/ui.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\macros\\ui.html.twig");
+", "macros/ui.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\macros\\ui.html.twig");
     }
 }

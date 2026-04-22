@@ -703,6 +703,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     {{ form_end(form) }}
 </div>
-{% endblock %}", "Journal/habitude/modifier.html.twig", "C:\\Users\\user\\Documents\\master\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\Journal\\habitude\\modifier.html.twig");
+{% endblock %}", "Journal/habitude/modifier.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\Journal\\habitude\\modifier.html.twig");
     }
 }

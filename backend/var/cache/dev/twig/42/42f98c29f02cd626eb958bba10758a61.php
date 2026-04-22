@@ -278,6 +278,6 @@ class __TwigTemplate_a49313dc7a125a071b20904b4a96e079 extends Template
     </div>
 </main>
 {% endblock %}
-", "pages/forgotPassword.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\forgotPassword.html.twig");
+", "pages/forgotPassword.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\forgotPassword.html.twig");
     }
 }

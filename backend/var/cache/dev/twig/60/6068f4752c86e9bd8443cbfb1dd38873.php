@@ -315,6 +315,6 @@ class __TwigTemplate_5d76f3371c1a81a489efa08c5df900cc extends Template
     </div>
 
 </div>
-{% endblock %}", "Journal/habitude/voir.html.twig", "C:\\Users\\user\\Documents\\master\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\Journal\\habitude\\voir.html.twig");
+{% endblock %}", "Journal/habitude/voir.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\Journal\\habitude\\voir.html.twig");
     }
 }

@@ -1941,6 +1941,6 @@ function adminSystem() {
 }
 </script>
 {% endblock %}
-", "pages/dashboard/admin.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\dashboard\\admin.html.twig");
+", "pages/dashboard/admin.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\dashboard\\admin.html.twig");
     }
 }

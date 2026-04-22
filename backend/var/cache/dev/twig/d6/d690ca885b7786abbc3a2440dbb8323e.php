@@ -87,6 +87,6 @@ class __TwigTemplate_99b26c0f244caaa14a39486b26e48e6c extends Template
         </a>
     </div>
 </nav>
-", "components/_navbar.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\components\\_navbar.html.twig");
+", "components/_navbar.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\components\\_navbar.html.twig");
     }
 }

@@ -682,6 +682,6 @@ class __TwigTemplate_03beccc0c7ad5f4ec7cf9524e9a69ba9 extends Template
     </div>
 </div>
 {% endblock %}
-", "pages/dashboard/therapist.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\dashboard\\therapist.html.twig");
+", "pages/dashboard/therapist.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\dashboard\\therapist.html.twig");
     }
 }

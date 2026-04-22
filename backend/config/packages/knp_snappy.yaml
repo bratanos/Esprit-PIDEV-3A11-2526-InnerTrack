@@ -1,0 +1,14 @@
+knp_snappy:
+    pdf:
+        enabled: true
+        binary: '%env(WKHTMLTOPDF_PATH)%'
+        options:
+            encoding: 'utf-8'
+            margin-top: 15
+            margin-bottom: 15
+            margin-left: 12
+            margin-right: 12
+            page-size: 'A4'
+            dpi: 150
+    image:
+        enabled: false

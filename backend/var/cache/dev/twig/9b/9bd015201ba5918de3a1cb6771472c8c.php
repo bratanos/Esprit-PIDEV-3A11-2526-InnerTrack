@@ -356,6 +356,6 @@ class __TwigTemplate_43b8e77d457157db67d39295aecf7078 extends Template
 
 </body>
 </html>
-", "layouts/auth.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\layouts\\auth.html.twig");
+", "layouts/auth.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\layouts\\auth.html.twig");
     }
 }

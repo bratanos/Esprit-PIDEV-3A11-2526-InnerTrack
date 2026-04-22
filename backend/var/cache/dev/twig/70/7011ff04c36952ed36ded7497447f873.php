@@ -149,6 +149,6 @@ class __TwigTemplate_75ad0baa514332760fbaa7009ed4945f extends Template
         Your Symfony + JavaFX shared backend project is ready.
     </p>
 {% endblock %}
-", "pages/home.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\home.html.twig");
+", "pages/home.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\home.html.twig");
     }
 }

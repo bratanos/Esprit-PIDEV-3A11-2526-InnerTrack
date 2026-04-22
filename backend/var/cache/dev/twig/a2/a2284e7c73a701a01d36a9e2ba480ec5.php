@@ -582,6 +582,6 @@ $context["event"], "type", [], "any", false, false, false, 51), "value", [], "an
     {% endif %}
 </div>
 {% endblock %}
-", "pages/events/index.html.twig", "C:\\Users\\user\\Documents\\master\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\events\\index.html.twig");
+", "pages/events/index.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\events\\index.html.twig");
     }
 }

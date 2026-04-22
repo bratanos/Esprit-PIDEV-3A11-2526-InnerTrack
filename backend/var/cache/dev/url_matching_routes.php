@@ -129,70 +129,71 @@ return [
                         .'|tag/([^/]++)(*:629)'
                         .'|(\\d+)/edit(*:647)'
                         .'|(\\d+)(*:660)'
+                        .'|(\\d+)/pdf(*:677)'
                     .')'
                 .')'
                 .'|/c(?'
                     .'|ategorie/([^/]++)(?'
-                        .'|(*:695)'
-                        .'|/edit(*:708)'
-                        .'|(*:716)'
+                        .'|(*:712)'
+                        .'|/edit(*:725)'
+                        .'|(*:733)'
                     .')'
                     .'|ommunity/([^/]++)(?'
-                        .'|/edit(*:750)'
-                        .'|(*:758)'
+                        .'|/edit(*:767)'
+                        .'|(*:775)'
                     .')'
-                    .'|hange\\-locale/([^/]++)(*:789)'
+                    .'|hange\\-locale/([^/]++)(*:806)'
                 .')'
                 .'|/requests/([^/]++)/(?'
-                    .'|postpone(*:828)'
-                    .'|accept(*:842)'
-                    .'|reject(*:856)'
+                    .'|postpone(*:845)'
+                    .'|accept(*:859)'
+                    .'|reject(*:873)'
                 .')'
                 .'|/journal/(?'
                     .'|entree/(?'
-                        .'|modifier/([^/]++)(*:904)'
-                        .'|supprimer/([^/]++)(*:930)'
-                        .'|voir/([^/]++)(*:951)'
+                        .'|modifier/([^/]++)(*:921)'
+                        .'|supprimer/([^/]++)(*:947)'
+                        .'|voir/([^/]++)(*:968)'
                     .')'
                     .'|habitude/(?'
-                        .'|modifier/([^/]++)(*:989)'
-                        .'|supprimer/([^/]++)(*:1015)'
-                        .'|voir/([^/]++)(*:1037)'
+                        .'|modifier/([^/]++)(*:1006)'
+                        .'|supprimer/([^/]++)(*:1033)'
+                        .'|voir/([^/]++)(*:1055)'
                     .')'
                 .')'
                 .'|/learning\\-path/(?'
-                    .'|(\\d+)(*:1072)'
+                    .'|(\\d+)(*:1090)'
                     .'|(\\d+)/edit(?'
-                        .'|(*:1094)'
+                        .'|(*:1112)'
                     .')'
-                    .'|(\\d+)/delete(*:1116)'
+                    .'|(\\d+)/delete(*:1134)'
                 .')'
                 .'|/m(?'
-                    .'|ap/contact/([^/]++)(*:1150)'
+                    .'|ap/contact/([^/]++)(*:1168)'
                     .'|essages(?'
-                        .'|(?:/([^/]++))?(*:1183)'
-                        .'|(*:1192)'
+                        .'|(?:/([^/]++))?(*:1201)'
+                        .'|(*:1210)'
                     .')'
                 .')'
                 .'|/testpsy/(?'
-                    .'|(\\d+)(*:1220)'
-                    .'|([^/]++)/passer(*:1244)'
-                    .'|resultat/([^/]++)(*:1270)'
+                    .'|(\\d+)(*:1238)'
+                    .'|([^/]++)/passer(*:1262)'
+                    .'|resultat/([^/]++)(*:1288)'
                     .'|([^/]++)/(?'
-                        .'|edit(*:1295)'
-                        .'|delete(*:1310)'
+                        .'|edit(*:1313)'
+                        .'|delete(*:1328)'
                     .')'
                     .'|question/([^/]++)/(?'
-                        .'|edit(*:1345)'
-                        .'|delete(*:1360)'
+                        .'|edit(*:1363)'
+                        .'|delete(*:1378)'
                     .')'
-                    .'|resultat/([^/]++)/supprimer(*:1397)'
+                    .'|resultat/([^/]++)/supprimer(*:1415)'
                 .')'
                 .'|/events/([^/]++)/(?'
-                    .'|participate(*:1438)'
+                    .'|participate(*:1456)'
                     .'|c(?'
-                        .'|ancel(*:1456)'
-                        .'|ertificate(*:1475)'
+                        .'|ancel(*:1474)'
+                        .'|ertificate(*:1493)'
                     .')'
                 .')'
             .')/?$}sDu',
@@ -226,41 +227,42 @@ return [
         629 => [[['_route' => 'app_article_by_tag', '_controller' => 'App\\Controller\\ArticleController::byTag'], ['tagName'], ['GET' => 0], null, false, true, null]],
         647 => [[['_route' => 'app_article_edit', '_controller' => 'App\\Controller\\ArticleController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
         660 => [[['_route' => 'app_article_delete', '_controller' => 'App\\Controller\\ArticleController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        695 => [[['_route' => 'app_categorie_show', '_controller' => 'App\\Controller\\CategorieController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        708 => [[['_route' => 'app_categorie_edit', '_controller' => 'App\\Controller\\CategorieController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        716 => [[['_route' => 'app_categorie_delete', '_controller' => 'App\\Controller\\CategorieController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        750 => [[['_route' => 'app_community_edit', '_controller' => 'App\\Controller\\CommunityController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        758 => [[['_route' => 'app_community_delete', '_controller' => 'App\\Controller\\CommunityController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        789 => [[['_route' => 'app_change_locale', '_controller' => 'App\\Controller\\LocaleController::changeLocale'], ['locale'], null, null, false, true, null]],
-        828 => [[['_route' => 'contact_request_postpone', '_controller' => 'App\\Controller\\ContactRequestController::postpone'], ['id'], ['POST' => 0], null, false, false, null]],
-        842 => [[['_route' => 'contact_request_accept', '_controller' => 'App\\Controller\\ContactRequestController::accept'], ['id'], ['POST' => 0], null, false, false, null]],
-        856 => [[['_route' => 'contact_request_reject', '_controller' => 'App\\Controller\\ContactRequestController::reject'], ['id'], ['POST' => 0], null, false, false, null]],
-        904 => [[['_route' => 'entree_modifier', '_controller' => 'App\\Controller\\Journal\\EntreeJournalController::modifier'], ['id'], null, null, false, true, null]],
-        930 => [[['_route' => 'entree_supprimer', '_controller' => 'App\\Controller\\Journal\\EntreeJournalController::supprimer'], ['id'], ['POST' => 0], null, false, true, null]],
-        951 => [[['_route' => 'entree_voir', '_controller' => 'App\\Controller\\Journal\\EntreeJournalController::voir'], ['id'], null, null, false, true, null]],
-        989 => [[['_route' => 'habitude_modifier', '_controller' => 'App\\Controller\\Journal\\HabitudeController::modifier'], ['id'], null, null, false, true, null]],
-        1015 => [[['_route' => 'habitude_supprimer', '_controller' => 'App\\Controller\\Journal\\HabitudeController::supprimer'], ['id'], ['POST' => 0], null, false, true, null]],
-        1037 => [[['_route' => 'habitude_voir', '_controller' => 'App\\Controller\\Journal\\HabitudeController::voir'], ['id'], null, null, false, true, null]],
-        1072 => [[['_route' => 'app_learning_path_show', '_controller' => 'App\\Controller\\LearningPathController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1094 => [
+        677 => [[['_route' => 'app_article_pdf', '_controller' => 'App\\Controller\\ArticleController::exportPdf'], ['id'], ['GET' => 0], null, false, false, null]],
+        712 => [[['_route' => 'app_categorie_show', '_controller' => 'App\\Controller\\CategorieController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        725 => [[['_route' => 'app_categorie_edit', '_controller' => 'App\\Controller\\CategorieController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        733 => [[['_route' => 'app_categorie_delete', '_controller' => 'App\\Controller\\CategorieController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        767 => [[['_route' => 'app_community_edit', '_controller' => 'App\\Controller\\CommunityController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        775 => [[['_route' => 'app_community_delete', '_controller' => 'App\\Controller\\CommunityController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        806 => [[['_route' => 'app_change_locale', '_controller' => 'App\\Controller\\LocaleController::changeLocale'], ['locale'], null, null, false, true, null]],
+        845 => [[['_route' => 'contact_request_postpone', '_controller' => 'App\\Controller\\ContactRequestController::postpone'], ['id'], ['POST' => 0], null, false, false, null]],
+        859 => [[['_route' => 'contact_request_accept', '_controller' => 'App\\Controller\\ContactRequestController::accept'], ['id'], ['POST' => 0], null, false, false, null]],
+        873 => [[['_route' => 'contact_request_reject', '_controller' => 'App\\Controller\\ContactRequestController::reject'], ['id'], ['POST' => 0], null, false, false, null]],
+        921 => [[['_route' => 'entree_modifier', '_controller' => 'App\\Controller\\Journal\\EntreeJournalController::modifier'], ['id'], null, null, false, true, null]],
+        947 => [[['_route' => 'entree_supprimer', '_controller' => 'App\\Controller\\Journal\\EntreeJournalController::supprimer'], ['id'], ['POST' => 0], null, false, true, null]],
+        968 => [[['_route' => 'entree_voir', '_controller' => 'App\\Controller\\Journal\\EntreeJournalController::voir'], ['id'], null, null, false, true, null]],
+        1006 => [[['_route' => 'habitude_modifier', '_controller' => 'App\\Controller\\Journal\\HabitudeController::modifier'], ['id'], null, null, false, true, null]],
+        1033 => [[['_route' => 'habitude_supprimer', '_controller' => 'App\\Controller\\Journal\\HabitudeController::supprimer'], ['id'], ['POST' => 0], null, false, true, null]],
+        1055 => [[['_route' => 'habitude_voir', '_controller' => 'App\\Controller\\Journal\\HabitudeController::voir'], ['id'], null, null, false, true, null]],
+        1090 => [[['_route' => 'app_learning_path_show', '_controller' => 'App\\Controller\\LearningPathController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1112 => [
             [['_route' => 'app_learning_path_edit', '_controller' => 'App\\Controller\\LearningPathController::edit'], ['id'], ['GET' => 0], null, false, false, null],
             [['_route' => 'app_learning_path_update', '_controller' => 'App\\Controller\\LearningPathController::update'], ['id'], ['POST' => 0], null, false, false, null],
         ],
-        1116 => [[['_route' => 'app_learning_path_delete', '_controller' => 'App\\Controller\\LearningPathController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        1150 => [[['_route' => 'app_map_contact', '_controller' => 'App\\Controller\\MapController::contactRequest'], ['id'], ['POST' => 0], null, false, true, null]],
-        1183 => [[['_route' => 'app_messages_show', 'id' => null, '_controller' => 'App\\Controller\\MessagingController::index'], ['id'], ['GET' => 0], null, false, true, null]],
-        1192 => [[['_route' => 'app_messages', '_controller' => 'App\\Controller\\MessagingController::index'], [], ['GET' => 0], null, false, false, null]],
-        1220 => [[['_route' => 'testpsy_show', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::show'], ['id'], null, null, false, true, null]],
-        1244 => [[['_route' => 'testpsy_passer', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::passer'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1270 => [[['_route' => 'testpsy_resultat', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::resultat'], ['id'], null, null, false, true, null]],
-        1295 => [[['_route' => 'testpsy_edit', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1310 => [[['_route' => 'testpsy_delete', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        1345 => [[['_route' => 'testpsy_question_edit', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::editQuestion'], ['id'], ['POST' => 0], null, false, false, null]],
-        1360 => [[['_route' => 'testpsy_question_delete', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::deleteQuestion'], ['id'], ['POST' => 0], null, false, false, null]],
-        1397 => [[['_route' => 'testpsy_supprimer_essai', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::supprimerEssai'], ['id'], ['POST' => 0], null, false, false, null]],
-        1438 => [[['_route' => 'app_event_participate', '_controller' => 'App\\Controller\\UserEventController::participate'], ['id'], ['POST' => 0], null, false, false, null]],
-        1456 => [[['_route' => 'app_event_cancel', '_controller' => 'App\\Controller\\UserEventController::cancel'], ['id'], ['POST' => 0], null, false, false, null]],
-        1475 => [
+        1134 => [[['_route' => 'app_learning_path_delete', '_controller' => 'App\\Controller\\LearningPathController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        1168 => [[['_route' => 'app_map_contact', '_controller' => 'App\\Controller\\MapController::contactRequest'], ['id'], ['POST' => 0], null, false, true, null]],
+        1201 => [[['_route' => 'app_messages_show', 'id' => null, '_controller' => 'App\\Controller\\MessagingController::index'], ['id'], ['GET' => 0], null, false, true, null]],
+        1210 => [[['_route' => 'app_messages', '_controller' => 'App\\Controller\\MessagingController::index'], [], ['GET' => 0], null, false, false, null]],
+        1238 => [[['_route' => 'testpsy_show', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::show'], ['id'], null, null, false, true, null]],
+        1262 => [[['_route' => 'testpsy_passer', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::passer'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1288 => [[['_route' => 'testpsy_resultat', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::resultat'], ['id'], null, null, false, true, null]],
+        1313 => [[['_route' => 'testpsy_edit', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1328 => [[['_route' => 'testpsy_delete', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        1363 => [[['_route' => 'testpsy_question_edit', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::editQuestion'], ['id'], ['POST' => 0], null, false, false, null]],
+        1378 => [[['_route' => 'testpsy_question_delete', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::deleteQuestion'], ['id'], ['POST' => 0], null, false, false, null]],
+        1415 => [[['_route' => 'testpsy_supprimer_essai', '_controller' => 'App\\Controller\\Testpsy\\TestPsyController::supprimerEssai'], ['id'], ['POST' => 0], null, false, false, null]],
+        1456 => [[['_route' => 'app_event_participate', '_controller' => 'App\\Controller\\UserEventController::participate'], ['id'], ['POST' => 0], null, false, false, null]],
+        1474 => [[['_route' => 'app_event_cancel', '_controller' => 'App\\Controller\\UserEventController::cancel'], ['id'], ['POST' => 0], null, false, false, null]],
+        1493 => [
             [['_route' => 'app_event_certificate', '_controller' => 'App\\Controller\\UserEventController::certificate'], ['id'], ['GET' => 0], null, false, false, null],
             [null, null, null, null, false, false, 0],
         ],

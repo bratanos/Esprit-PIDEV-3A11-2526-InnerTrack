@@ -312,6 +312,6 @@ class __TwigTemplate_be69cfe1c915e58fb911e9672e997a80 extends Template
     </div>
 </div>
 {% endblock %}
-", "admin/inscription/index.html.twig", "C:\\Users\\user\\Documents\\master\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\admin\\inscription\\index.html.twig");
+", "admin/inscription/index.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\admin\\inscription\\index.html.twig");
     }
 }

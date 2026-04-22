@@ -14,7 +14,7 @@ use Twig\Source;
 use Twig\Template;
 use Twig\TemplateWrapper;
 
-/* journal/entree/modifier.html.twig */
+/* Journal/entree/modifier.html.twig */
 class __TwigTemplate_d4cc85d2158731ea4cc9122cfd3c1dda extends Template
 {
     private Source $source;
@@ -45,10 +45,10 @@ class __TwigTemplate_d4cc85d2158731ea4cc9122cfd3c1dda extends Template
     {
         $macros = $this->macros;
         $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
-        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "journal/entree/modifier.html.twig"));
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "Journal/entree/modifier.html.twig"));
 
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "journal/entree/modifier.html.twig"));
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "Journal/entree/modifier.html.twig"));
 
         $this->parent = $this->load("layouts/dashboard.html.twig", 1);
         yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     public function getTemplateName(): string
     {
-        return "journal/entree/modifier.html.twig";
+        return "Journal/entree/modifier.html.twig";
     }
 
     /**
@@ -471,6 +471,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     {{ form_end(form) }}
 </div>
-{% endblock %}", "journal/entree/modifier.html.twig", "C:\\Users\\user\\Documents\\master\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\Journal\\entree\\modifier.html.twig");
+{% endblock %}", "Journal/entree/modifier.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\Journal\\entree\\modifier.html.twig");
     }
 }

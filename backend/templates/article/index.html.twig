@@ -1,316 +1,763 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
 {% block content %}
-<div class="space-y-6">
-
-    {# Page header with title and actions #}
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-3xl font-extrabold text-on-surface tracking-tight">Articles Space</h1>
-            <p class="text-on-surface-variant text-sm mt-1">Articles, categories, learning paths and tags</p>
-        </div>
-        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PSYCHOLOGUE') %}
-            <div class="flex items-center gap-2" id="header-actions">
-                <a href="{{ path('app_article_new') }}" id="btn-new-article"
-                   class="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-semibold text-sm
-                          hover:bg-primary/90 transition-all shadow-md shadow-primary/20">
-                    <span class="material-symbols-outlined text-[18px]">add</span>
-                    New article
-                </a>
-                <a href="{{ path('app_categorie_new') }}" id="btn-new-categorie"
-                   class="hidden flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-semibold text-sm
-                          hover:bg-primary/90 transition-all shadow-md shadow-primary/20">
-                    <span class="material-symbols-outlined text-[18px]">add</span>
-                    New category
-                </a>
-                <a href="{{ path('app_learning_path_new') }}" id="btn-new-path"
-                   class="hidden flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-semibold text-sm
-                          hover:bg-primary/90 transition-all shadow-md shadow-primary/20">
-                    <span class="material-symbols-outlined text-[18px]">add</span>
-                    New path
-                </a>
-            </div>
-        {% endif %}
-    </div>
-
-    {# Tab navigation for different sections #}
-    <div class="flex items-center gap-1 bg-gray-100/80 p-1 rounded-2xl w-fit">
-        <button onclick="switchTab('articles')" id="tab-articles"
-                class="tab-btn active-tab flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all">
-            <span class="material-symbols-outlined text-[17px]">article</span>
-            Articles
-            <span class="text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded-full">{{ articles|length }}</span>
-        </button>
-        <button onclick="switchTab('categories')" id="tab-categories"
-                class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all">
-            <span class="material-symbols-outlined text-[17px]">folder</span>
-            Categories
-            <span class="text-[10px] bg-gray-200 text-on-surface-variant px-1.5 py-0.5 rounded-full">{{ categories|length }}</span>
-        </button>
-        <button onclick="switchTab('paths')" id="tab-paths"
-                class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all">
-            <span class="material-symbols-outlined text-[17px]">route</span>
-            Learning Paths
-            <span class="text-[10px] bg-gray-200 text-on-surface-variant px-1.5 py-0.5 rounded-full">{{ paths|length }}</span>
-        </button>
-        <button onclick="switchTab('tags')" id="tab-tags"
-                class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all">
-            <span class="material-symbols-outlined text-[17px]">label</span>
-            Tags
-        </button>
-    </div>
-
-    {# ════════════════════════════════════════════════════════════
-       TAB: ARTICLES
-    ════════════════════════════════════════════════════════════ #}
-    <div id="panel-articles" class="tab-panel space-y-5">
-
-        {# Search — real-time client-side filter #}
-        <div class="relative w-full">
-            <span class="material-symbols-outlined text-[20px] text-on-surface-variant pointer-events-none"
-                  style="position:absolute; left:1rem; top:50%; transform:translateY(-50%);">search</span>
-            <input type="text" id="article-search" placeholder="Search articles…"
-                   style="padding-left:2.75rem;"
-                   class="w-full pr-4 py-3 rounded-xl border border-outline/40 bg-white text-sm
-                          focus:outline-none focus:ring-2 focus:ring-primary/30 transition shadow-sm">
-        </div>
-
-        {# Category filter chips #}
-        <div class="flex items-center gap-2 overflow-x-auto pb-1" id="cat-chips">
-            <button onclick="filterArticlesByCategory(null)"
-                    class="cat-chip active-chip shrink-0 px-4 py-1.5 rounded-full text-xs font-bold border transition-all">
-                All
-            </button>
-            {% for cat in categories %}
-                <button onclick="filterArticlesByCategory('{{ cat.id }}')"
-                        data-cat-id="{{ cat.id }}"
-                        class="cat-chip shrink-0 flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold border transition-all
-                               bg-white text-on-surface-variant border-outline/40 hover:bg-gray-50">
-                    {{ cat.nom }}
-                    <span class="opacity-60">({{ cat.articles|length }})</span>
-                </button>
-            {% endfor %}
-        </div>
-
-        {# Articles table #}
-        <div class="bg-white rounded-[2rem] border border-outline/30 overflow-hidden soft-elevation">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="border-b border-outline/20">
-                            <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Title</th>
-                            <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Author</th>
-                            <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Category</th>
-                            <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Date</th>
-                            <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Readability</th>
-                            <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-outline/10" id="article-tbody">
-                    {% for article in articles %}
-                        <tr class="article-row hover:bg-gray-50/50 transition-colors group"
-                            data-search="{{ (article.titre ~ ' ' ~ article.contenu|striptags ~ ' ' ~ (article.auteur ? article.auteur.firstName ~ ' ' ~ article.auteur.lastName : '') ~ ' ' ~ (article.categorie ? article.categorie.nom : ''))|lower }}"
-                            data-cat-id="{{ article.categorie ? article.categorie.id : '' }}">
-                            <td class="px-6 py-4 max-w-xs">
-                                <p class="font-semibold text-sm text-on-surface line-clamp-1">{{ article.titre }}</p>
-                                <p class="text-xs text-on-surface-variant mt-0.5 line-clamp-1">
-                                    {{ article.contenu|striptags|slice(0,60) }}…
-                                </p>
-                            </td>
-                            <td class="px-6 py-4">
-                                {% if article.auteur %}
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center text-[10px] font-bold overflow-hidden shrink-0">
-                                            {{ article.auteur.firstName|first|upper }}{{ article.auteur.lastName|first|upper }}
-                                        </div>
-                                        <span class="text-xs font-medium text-on-surface-variant whitespace-nowrap">
-                                            {{ article.auteur.firstName }} {{ article.auteur.lastName }}
-                                        </span>
-                                    </div>
-                                {% else %}—{% endif %}
-                            </td>
-                            <td class="px-6 py-4">
-                                {% if article.categorie %}
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
-                                        {{ article.categorie.nom }}
-                                    </span>
-                                {% else %}
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-on-surface-variant">—</span>
-                                {% endif %}
-                            </td>
-                            <td class="px-6 py-4 text-xs text-on-surface-variant whitespace-nowrap">
-                                {{ article.datePublication ? article.datePublication|date('d/m/Y') : '—' }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {% if article.readability %}
-                                    {% set rc = {
-                                        'Easy':         'bg-green-100 text-green-700',
-                                        'Intermediate': 'bg-amber-100 text-amber-700',
-                                        'Advanced':     'bg-red-100 text-red-700'
-                                    } %}
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold {{ rc[article.readability] ?? '' }}">
-                                        {{ article.readability }}
-                                    </span>
-                                {% else %}—{% endif %}
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center justify-end gap-1">
-                                    <a href="{{ path('app_article_show', {id: article.id}) }}"
-                                       class="p-2 rounded-xl text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-all"
-                                       title="View">
-                                        <span class="material-symbols-outlined text-[18px]">visibility</span>
-                                    </a>
-                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PSYCHOLOGUE') %}
-                                        <a href="{{ path('app_article_edit', {id: article.id}) }}"
-                                           class="p-2 rounded-xl text-on-surface-variant hover:bg-amber-50 hover:text-amber-600 transition-all"
-                                           title="Edit">
-                                            <span class="material-symbols-outlined text-[18px]">edit</span>
-                                        </a>
-                                        <form method="post" action="{{ path('app_article_delete', {id: article.id}) }}"
-                                              onsubmit="return confirm('Delete this article?')">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
-                                            <button class="p-2 rounded-xl text-on-surface-variant hover:bg-red-50 hover:text-red-500 transition-all">
-                                                <span class="material-symbols-outlined text-[18px]">delete</span>
-                                            </button>
-                                        </form>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr id="no-articles-row">
-                            <td colspan="6" class="px-6 py-16 text-center text-on-surface-variant">
-                                <span class="material-symbols-outlined text-5xl opacity-30 block mb-2">article</span>
-                                <p class="font-semibold">No articles found</p>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>{# /panel-articles #}
-
-    {# ════════════════════════════════════════════════════════════
-       TAB: CATEGORIES  — pulled from the shared partial
-    ════════════════════════════════════════════════════════════ #}
-    <div id="panel-categories" class="tab-panel hidden space-y-5">
-        {{ include('categorie/_list.html.twig') }}
-    </div>
-
-    {# ════════════════════════════════════════════════════════════
-       TAB: LEARNING PATHS  — pulled from the shared partial
-    ════════════════════════════════════════════════════════════ #}
-    <div id="panel-paths" class="tab-panel hidden space-y-5">
-        {{ include('learning_path/_list.html.twig') }}
-    </div>
-
-    {# ════════════════════════════════════════════════════════════
-       TAB: TAGS  — pulled from the shared partial
-    ════════════════════════════════════════════════════════════ #}
-    <div id="panel-tags" class="tab-panel hidden space-y-5">
-        {{ include('tag/_list.html.twig') }}
-    </div>
-
-</div>
 
 <style>
-.tab-btn { color: var(--on-surface-variant); }
-.tab-btn.active-tab {
-    background: white;
-    color: var(--primary);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-.cat-chip {
-    background: white;
-    color: var(--on-surface-variant);
-    border-color: rgba(0,0,0,0.12);
-}
-.cat-chip.active-chip {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  display: inline-block;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Important fixes */
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
 }
 </style>
 
+
+{# ── Neural particle canvas ── #}
+<canvas id="idx-particles"
+        style="position:fixed;top:0;left:0;width:100%;height:100%;
+               pointer-events:none;z-index:0;opacity:0.28"></canvas>
+
+<div class="relative z-10 w-full" id="articles-space">
+
+{# ══════════════════════════════════════════
+   HERO HEADER BAND
+══════════════════════════════════════════ #}
+<div class="idx-hero relative overflow-hidden rounded-[2rem] mb-7 px-8 py-7"
+     style="background:linear-gradient(135deg, #232d8d 0%, #131c74 55%, #11125e 100%)">
+
+    {# Grid texture – lighter blue lines #}
+    <div style="position:absolute;inset:0;
+                background-image:linear-gradient(rgba(96,165,250,0.08) 1px,transparent 1px),
+                                 linear-gradient(90deg,rgba(96,165,250,0.08) 1px,transparent 1px);
+                background-size:28px 28px;border-radius:inherit;pointer-events:none"></div>
+
+    {# Glow orbs – lighter blue #}
+    <div style="position:absolute;top:-80px;right:-60px;width:300px;height:300px;
+                background:radial-gradient(circle,rgba(96,165,250,0.2) 0%,transparent 70%);
+                border-radius:50%;pointer-events:none"></div>
+    <div style="position:absolute;bottom:-60px;left:20%;width:200px;height:200px;
+                background:radial-gradient(circle,rgba(59,130,246,0.15) 0%,transparent 70%);
+                border-radius:50%;pointer-events:none"></div>
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;position:relative">
+        <div>
+            <div style="font-size:10px;font-weight:800;letter-spacing:.18em;
+                        color:rgba(96,165,250,0.8);text-transform:uppercase;margin-bottom:6px">
+                InnerTrack · Psychology Platform
+            </div>
+            <h1 style="font-family:var(--serif);font-size:clamp(1.6rem,3.5vw,2.2rem);
+                       font-weight:400;color:#f0f6ff;letter-spacing:-.01em;line-height:1.15;
+                       font-style:italic;margin:0">
+                Articles Space
+            </h1>
+            
+        </div>
+
+        {# Hero stats #}
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+            {% set statData = [
+                {val: articles|length,   label: 'Articles',  icon: 'article'},
+                {val: categories|length, label: 'Categories',icon: 'folder'},
+                {val: paths|length,      label: 'Paths',     icon: 'route'},
+            ] %}
+            {% for s in statData %}
+                <div style="text-align:center">
+                    <div style="font-family:var(--serif);font-size:1.8rem;color:#93c5fd;
+                                line-height:1;font-weight:400" class="hero-counter"
+                         data-target="{{ s.val }}">0</div>
+                    <div style="font-size:10px;color:rgba(240,246,255,0.4);
+                                font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:2px">
+                        {{ s.label }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# Action buttons row #}
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PSYCHOLOGUE') %}
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;position:relative"
+             id="header-actions">
+            <a href="{{ path('app_article_new') }}" id="btn-new-article"
+               style="display:inline-flex;align-items:center;gap:6px;
+                      padding:8px 18px;border-radius:12px;
+                      background:linear-gradient(135deg,#60a5fa,#3b82f6);
+                      color:#0d1b2a;font-size:12px;font-weight:800;
+                      text-decoration:none;letter-spacing:.03em;
+                      box-shadow:0 4px 16px rgba(96,165,250,0.3);
+                      transition:all .2s">
+                <span class="material-symbols-outlined" style="font-size:15px">add</span>
+                New Article
+            </a>
+            <a href="{{ path('app_categorie_new') }}" id="btn-new-categorie"
+               style="display:none;align-items:center;gap:6px;
+                      padding:8px 18px;border-radius:12px;
+                      background:linear-gradient(135deg,#60a5fa,#3b82f6);
+                      color:white;font-size:12px;font-weight:800;
+                      text-decoration:none;letter-spacing:.03em;
+                      box-shadow:0 4px 16px rgba(96,165,250,0.3);
+                      transition:all .2s">
+                <span class="material-symbols-outlined" style="font-size:15px">add</span>
+                New Category
+            </a>
+            <a href="{{ path('app_learning_path_new') }}" id="btn-new-path"
+               style="display:none;align-items:center;gap:6px;
+                      padding:8px 18px;border-radius:12px;
+                      background:linear-gradient(135deg,#60a5fa,#3b82f6);
+                      color:white;font-size:12px;font-weight:800;
+                      text-decoration:none;letter-spacing:.03em;
+                      box-shadow:0 4px 16px rgba(96,165,250,0.3);
+                      transition:all .2s">
+                <span class="material-symbols-outlined" style="font-size:15px">add</span>
+                New Path
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+{# ══════════════════════════════════════════
+   NAV PILL TABS
+══════════════════════════════════════════ #}
+<div style="display:flex;gap:4px;background:rgba(13,27,42,0.06);
+            padding:4px;border-radius:16px;width:fit-content;margin-bottom:20px"
+     class="idx-tabs-wrap">
+   {% set tabs = [
+    {id:'articles',   label:'Articles',       icon:'article', color:'#60a5fa', cnt: articles|length},
+    {id:'categories', label:'Categories',     icon:'folder',  color:'#60a5fa', cnt: categories|length},
+    {id:'paths',      label:'Learning Paths', icon:'route',   color:'#60a5fa', cnt: paths|length},
+    {id:'tags',       label:'Tags',           icon:'label',   color:'#f59e0b', cnt: null},
+] %}
+    {% for tab in tabs %}
+        <button onclick="switchPanel('{{ tab.id }}')" id="nav-{{ tab.id }}"
+                class="idx-tab {% if tab.id == 'articles' %}idx-tab-active{% endif %}"
+                data-color="{{ tab.color }}"
+                style="display:flex;align-items:center;gap:6px;
+                       padding:8px 16px;border-radius:12px;border:none;cursor:pointer;
+                       font-family:var(--sans);font-size:12px;font-weight:700;
+                       letter-spacing:.02em;transition:all .22s;white-space:nowrap;
+                       {% if tab.id == 'articles' %}
+                           background:white;color:#0d1b2a;
+                           box-shadow:0 2px 10px rgba(0,0,0,0.1);
+                       {% else %}
+                           background:transparent;color:#64748b;
+                       {% endif %}">
+            <span class="material-symbols-outlined" style="font-size:15px">{{ tab.icon }}</span>
+            {{ tab.label }}
+            {% if tab.cnt is not null %}
+                <span style="font-size:10px;font-weight:800;
+                              padding:1px 6px;border-radius:20px;
+                              background:{% if tab.id == 'articles' %}rgba(96,165,250,0.15){% else %}rgba(0,0,0,0.07){% endif %};
+                              color:{% if tab.id == 'articles' %}#3b82f6{% else %}#94a3b8{% endif %}"
+                      class="tab-cnt-{{ tab.id }}">
+                    {{ tab.cnt }}
+                </span>
+            {% endif %}
+        </button>
+    {% endfor %}
+</div>
+
+{# ══════════════════════════════════════════
+   PANEL: ARTICLES
+══════════════════════════════════════════ #}
+<div id="panel-articles" class="idx-panel space-y-4">
+
+    {# Filter bar #}
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+
+        {# Search #}
+        <div style="flex:1;min-width:200px;display:flex;align-items:center;
+                    background:white;border-radius:12px;
+                    border:1.5px solid var(--border);
+                    box-shadow:0 1px 4px rgba(0,0,0,0.05);overflow:hidden;
+                    transition:border-color .2s"
+             class="search-wrap">
+            <span class="material-symbols-outlined"
+                  style="font-size:18px;color:#94a3b8;padding:0 12px;flex-shrink:0">search</span>
+            <input type="text" id="article-search"
+                   placeholder="Search articles, authors, content…"
+                   style="flex:1;padding:10px 8px;font-size:13px;border:none;
+                          outline:none;background:transparent;font-family:var(--sans);color:#1e293b">
+            <button id="search-clear" onclick="clearSearch()"
+                    style="display:none;padding:0 12px;background:none;border:none;
+                           cursor:pointer;color:#94a3b8;font-size:16px">✕</button>
+        </div>
+
+        {# Category select #}
+        <select id="cat-select" onchange="filterByCat(this.value)"
+                style="padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);
+                       background:white;font-size:12px;font-weight:600;color:#334155;
+                       font-family:var(--sans);outline:none;cursor:pointer;
+                       box-shadow:0 1px 4px rgba(0,0,0,0.05)">
+            <option value="">All categories</option>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}">{{ cat.nom }}</option>
+            {% endfor %}
+        </select>
+
+        {# Readability select #}
+        <select id="read-select" onchange="filterByReadability(this.value)"
+                style="padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);
+                       background:white;font-size:12px;font-weight:600;color:#334155;
+                       font-family:var(--sans);outline:none;cursor:pointer;
+                       box-shadow:0 1px 4px rgba(0,0,0,0.05)">
+            <option value="">All levels</option>
+            <option value="Easy">🟢 Easy</option>
+            <option value="Medium">🟡 Medium</option>
+            <option value="Advanced">🔴 Advanced</option>
+        </select>
+
+        {# View toggle #}
+        <div style="display:flex;gap:2px;background:rgba(0,0,0,0.06);
+                    padding:3px;border-radius:10px">
+            <button id="view-table" onclick="setView('table')"
+                    class="vbtn vbtn-active" title="Table view"
+                    style="padding:7px 10px;border-radius:8px;border:none;cursor:pointer;
+                           font-family:var(--sans);transition:all .18s">
+                <span class="material-symbols-outlined" style="font-size:16px;display:block">table_rows</span>
+            </button>
+            <button id="view-cards" onclick="setView('cards')"
+                    class="vbtn" title="Card view"
+                    style="padding:7px 10px;border-radius:8px;border:none;cursor:pointer;
+                           font-family:var(--sans);transition:all .18s">
+                <span class="material-symbols-outlined" style="font-size:16px;display:block">grid_view</span>
+            </button>
+        </div>
+    </div>
+
+    {# Results bar #}
+    <div style="display:flex;align-items:center;justify-content:space-between">
+        <span id="results-summary"
+              style="font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:.04em;
+                     text-transform:uppercase">
+            {{ articles|length }} Articles
+        </span>
+        <button onclick="clearAllFilters()" id="clear-filters-btn"
+                style="display:none;font-size:11px;font-weight:700;color:#ef4444;
+                       background:none;border:none;cursor:pointer;font-family:var(--sans);
+                       display:none;align-items:center;gap:4px">
+            <span class="material-symbols-outlined" style="font-size:13px">filter_alt_off</span>
+            Clear filters
+        </button>
+    </div>
+
+    {# ── TABLE VIEW ── #}
+    <div id="view-table-panel"
+         style="background:white;border-radius:20px;border:1.5px solid var(--border);
+                overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05)">
+        <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;min-width:580px">
+                <thead>
+                    <tr style="border-bottom:1px solid #f1f5f9;background:#fafbfc">
+                        {% for h in ['Title','Author','Category','Date','Level',''] %}
+                            <th style="padding:12px 18px;font-size:10px;font-weight:800;
+                                       letter-spacing:.14em;text-transform:uppercase;
+                                       color:#94a3b8;text-align:{% if loop.last %}right{% else %}left{% endif %}">
+                                {{ h }}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody id="article-tbody">
+                {% for article in articles %}
+                    <tr class="article-row trow"
+                        data-id="{{ article.id }}"
+                        data-search="{{ (article.titre ~ ' ' ~ article.contenu|striptags ~ ' ' ~ (article.auteur ? article.auteur.firstName ~ ' ' ~ article.auteur.lastName : '') ~ ' ' ~ (article.categorie ? article.categorie.nom : ''))|lower }}"
+                        data-cat-id="{{ article.categorie ? article.categorie.id : '' }}"
+                        data-readability="{{ article.readability }}"
+                        style="border-bottom:1px solid #f8fafc;transition:background .15s;
+                               animation:rowIn .35s ease both;animation-delay:{{ loop.index * 0.04 }}s;opacity:0">
+
+                        <td style="padding:13px 18px;max-width:240px">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <span class="read-dot"
+                                      data-article-id="{{ article.id }}"
+                                      style="width:6px;height:6px;border-radius:50%;
+                                             background:#e2e8f0;flex-shrink:0;transition:all .2s"></span>
+                                <div style="min-width:0">
+                                    <p style="font-size:13px;font-weight:700;color:#1e293b;
+                                               overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+                                               margin:0">{{ article.titre }}</p>
+                                    <p style="font-size:11px;color:#94a3b8;margin:2px 0 0;
+                                               overflow:hidden;white-space:nowrap;text-overflow:ellipsis">
+                                        {{ article.contenu|striptags|slice(0,52) }}…
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td style="padding:13px 18px">
+                            {% if article.auteur %}
+                                <div style="display:flex;align-items:center;gap:6px">
+                                    <div style="width:22px;height:22px;border-radius:50%;
+                                                background:linear-gradient(135deg,#60a5fa22,#3b82f608);
+                                                border:1px solid rgba(96,165,250,0.3);
+                                                color:#3b82f6;font-size:8px;font-weight:800;
+                                                display:flex;align-items:center;justify-content:center;
+                                                flex-shrink:0">
+                                        {{ article.auteur.firstName|first|upper }}{{ article.auteur.lastName|first|upper }}
+                                    </div>
+                                    <span style="font-size:11px;color:#64748b;white-space:nowrap;
+                                                 overflow:hidden;text-overflow:ellipsis;max-width:80px">
+                                        {{ article.auteur.firstName }}
+                                    </span>
+                                </div>
+                            {% else %}<span style="color:#cbd5e1;font-size:12px">—</span>{% endif %}
+                        </td>
+
+                        <td style="padding:13px 18px">
+                            {% if article.categorie %}
+                                <span style="font-size:10px;font-weight:800;
+                                              padding:3px 10px;border-radius:20px;
+                                              background:rgba(96,165,250,0.1); color:#3b82f6;
+                                              white-space:nowrap">
+                                    {{ article.categorie.nom }}
+                                </span>
+                            {% else %}<span style="color:#cbd5e1;font-size:12px">—</span>{% endif %}
+                        </td>
+
+                        <td style="padding:13px 18px;font-size:11px;color:#94a3b8;white-space:nowrap">
+                            {{ article.datePublication ? article.datePublication|date('d/m/Y') : '—' }}
+                        </td>
+
+                        <td style="padding:13px 18px">
+                            {% if article.readability %}
+                                {% set rmap = {
+                                    'Easy':     'rgba(34,197,94,.1)|#16a34a',
+                                    'Medium':   'rgba(245,158,11,.1)|#b45309',
+                                    'Advanced': 'rgba(239,68,68,.1)|#dc2626'
+                                } %}
+                                {% set rp = rmap[article.readability]|default('rgba(0,0,0,.06)|#666')|split('|') %}
+                                <span style="font-size:10px;font-weight:800;padding:3px 10px;
+                                              border-radius:20px;white-space:nowrap;
+                                              background:{{ rp[0] }};color:{{ rp[1] }}">
+                                    {{ article.readability }}
+                                </span>
+                            {% else %}<span style="color:#cbd5e1">—</span>{% endif %}
+                        </td>
+
+                        <td style="padding:13px 18px">
+                            <div style="display:flex;align-items:center;justify-content:flex-end;gap:2px">
+                                <a href="{{ path('app_article_show', {id: article.id}) }}"
+                                   class="tact" title="View"
+                                   style="padding:6px;border-radius:8px;color:#94a3b8;
+                                          display:flex;transition:all .15s;text-decoration:none">
+                                    <span class="material-symbols-outlined" style="font-size:16px">visibility</span>
+                                </a>
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PSYCHOLOGUE') %}
+                                    <a href="{{ path('app_article_edit', {id: article.id}) }}"
+                                       class="tact tact-edit" title="Edit"
+                                       style="padding:6px;border-radius:8px;color:#94a3b8;
+                                              display:flex;transition:all .15s;text-decoration:none">
+                                        <span class="material-symbols-outlined" style="font-size:16px">edit</span>
+                                    </a>
+                                    <form method="post" action="{{ path('app_article_delete', {id: article.id}) }}"
+                                          onsubmit="return confirm('Delete this article?')"
+                                          style="display:flex;margin:0">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+                                        <button class="tact tact-del" title="Delete"
+                                                style="padding:6px;border-radius:8px;color:#94a3b8;
+                                                       background:none;border:none;cursor:pointer;
+                                                       display:flex;transition:all .15s;font-family:var(--sans)">
+                                            <span class="material-symbols-outlined" style="font-size:16px">delete</span>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" style="padding:60px;text-align:center;color:#94a3b8">
+                            <span class="material-symbols-outlined"
+                                  style="font-size:40px;display:block;opacity:.2;margin-bottom:8px">article</span>
+                            <p style="font-size:13px;font-weight:600;margin:0">No articles found</p>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# ── CARD VIEW ── #}
+    <div id="view-cards-panel" style="display:none">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px"
+             id="article-cards-grid">
+        {% for article in articles %}
+            <div class="article-row acard"
+                 data-id="{{ article.id }}"
+                 data-search="{{ (article.titre ~ ' ' ~ article.contenu|striptags ~ ' ' ~ (article.auteur ? article.auteur.firstName ~ ' ' ~ article.auteur.lastName : '') ~ ' ' ~ (article.categorie ? article.categorie.nom : ''))|lower }}"
+                 data-cat-id="{{ article.categorie ? article.categorie.id : '' }}"
+                 data-readability="{{ article.readability }}"
+                 style="background:white;border-radius:18px;border:1.5px solid var(--border);
+                        overflow:hidden;transition:all .25s;cursor:pointer;
+                        animation:cardIn .4s ease both;
+                        animation-delay:{{ loop.index * 0.05 }}s;opacity:0">
+
+                {# Top strip – blue for default, keep readability colors #}
+                {% if article.readability == 'Easy' %}
+                    <div style="height:3px;background:linear-gradient(90deg,#22c55e,#10b981)"></div>
+                {% elseif article.readability == 'Medium' %}
+                    <div style="height:3px;background:linear-gradient(90deg,#f59e0b,#f97316)"></div>
+                {% elseif article.readability == 'Advanced' %}
+                    <div style="height:3px;background:linear-gradient(90deg,#ef4444,#f43f5e)"></div>
+                {% else %}
+                    <div style="height:3px;background:linear-gradient(90deg,#60a5fa,#3b82f6)"></div>
+                {% endif %}
+
+                <div style="padding:16px">
+                    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+                        {% if article.categorie %}
+                            <span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;
+                                          background:rgba(96,165,250,0.1);color:#3b82f6">
+                                {{ article.categorie.nom }}
+                            </span>
+                        {% endif %}
+                        {% if article.readability %}
+                            {% set rmap = {'Easy':'rgba(34,197,94,.1)|#16a34a','Medium':'rgba(245,158,11,.1)|#b45309','Advanced':'rgba(239,68,68,.1)|#dc2626'} %}
+                            {% set rp = rmap[article.readability]|default('rgba(0,0,0,.06)|#666')|split('|') %}
+                            <span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;
+                                          background:{{ rp[0] }};color:{{ rp[1] }}">
+                                {{ article.readability }}
+                            </span>
+                        {% endif %}
+                        <span class="read-dot" data-article-id="{{ article.id }}"
+                              style="width:6px;height:6px;border-radius:50%;
+                                     background:#e2e8f0;margin-left:auto;transition:all .2s"></span>
+                    </div>
+
+                    <h3 style="font-size:13px;font-weight:700;color:#1e293b;
+                                line-height:1.4;margin:0 0 6px;
+                                display:-webkit-box;-webkit-line-clamp:2;
+                                -webkit-box-orient:vertical;overflow:hidden">
+                        {{ article.titre }}
+                    </h3>
+                    <p style="font-size:11px;color:#94a3b8;line-height:1.6;margin:0 0 12px;
+                               display:-webkit-box;-webkit-line-clamp:2;
+                               -webkit-box-orient:vertical;overflow:hidden">
+                        {{ article.contenu|striptags|slice(0, 90) }}…
+                    </p>
+
+                    <div style="display:flex;align-items:center;justify-content:space-between;
+                                padding-top:10px;border-top:1px solid #f1f5f9">
+                        <div style="display:flex;align-items:center;gap:5px">
+                            {% if article.auteur %}
+                                <div style="width:18px;height:18px;border-radius:50%;
+                                            background:rgba(96,165,250,0.15);color:#3b82f6;
+                                            font-size:7px;font-weight:800;
+                                            display:flex;align-items:center;justify-content:center">
+                                    {{ article.auteur.firstName|first|upper }}
+                                </div>
+                                <span style="font-size:10px;color:#94a3b8">{{ article.auteur.firstName }}</span>
+                                <span style="font-size:10px;color:#e2e8f0">·</span>
+                            {% endif %}
+                            <span style="font-size:10px;color:#94a3b8">
+                                {{ article.datePublication ? article.datePublication|date('d/m/Y') : '' }}
+                            </span>
+                        </div>
+                        <a href="{{ path('app_article_show', {id: article.id}) }}"
+                           style="font-size:10px;font-weight:800;color:#3b82f6;
+                                  text-decoration:none;display:flex;align-items:center;gap:2px">
+                            Read
+                            <span class="material-symbols-outlined" style="font-size:12px">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div style="grid-column:1/-1;padding:60px;text-align:center;color:#94a3b8">
+                <span class="material-symbols-outlined" style="font-size:40px;display:block;opacity:.2;margin-bottom:8px">article</span>
+                <p style="font-size:13px;font-weight:600;margin:0">No articles found</p>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+    {# No results #}
+    <div id="no-results-state"
+         style="display:none;background:white;border-radius:20px;border:1.5px solid var(--border);
+                padding:60px;text-align:center;color:#94a3b8">
+        <span class="material-symbols-outlined" style="font-size:40px;display:block;opacity:.2;margin-bottom:8px">search_off</span>
+        <p style="font-size:13px;font-weight:600;margin:0 0 8px">No articles match your filters</p>
+        <button onclick="clearAllFilters()"
+                style="font-size:12px;font-weight:800;color:#3b82f6;background:none;
+                       border:none;cursor:pointer;font-family:var(--sans)">
+            Clear all filters
+        </button>
+    </div>
+
+    {# Pagination #}
+    {% if pager is defined and pager.haveToPaginate %}
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding-top:8px">
+            {% if pager.hasPreviousPage %}
+                <a href="{{ path('app_article_index', app.request.query.all|merge({page: pager.previousPage})) }}"
+                   style="display:inline-flex;align-items:center;gap:4px;
+                          padding:8px 18px;border-radius:12px;
+                          border:1.5px solid var(--border);background:white;
+                          font-size:12px;font-weight:700;color:#334155;
+                          text-decoration:none;transition:all .2s">
+                    <span class="material-symbols-outlined" style="font-size:14px">arrow_back</span> Prev
+                </a>
+            {% endif %}
+            <span style="font-size:12px;font-weight:700;color:#94a3b8;padding:0 8px">
+                {{ pager.currentPage }} / {{ pager.nbPages }}
+            </span>
+            {% if pager.hasNextPage %}
+                <a href="{{ path('app_article_index', app.request.query.all|merge({page: pager.nextPage})) }}"
+                   style="display:inline-flex;align-items:center;gap:4px;
+                          padding:8px 18px;border-radius:12px;
+                          border:1.5px solid var(--border);background:white;
+                          font-size:12px;font-weight:700;color:#334155;
+                          text-decoration:none;transition:all .2s">
+                    Next <span class="material-symbols-outlined" style="font-size:14px">arrow_forward</span>
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>{# /panel-articles #}
+
+{# ══ PANEL: CATEGORIES ══ #}
+<div id="panel-categories" class="idx-panel" style="display:none">
+    {{ include('categorie/_list.html.twig') }}
+</div>
+
+{# ══ PANEL: PATHS ══ #}
+<div id="panel-paths" class="idx-panel" style="display:none">
+    {{ include('learning_path/_list.html.twig') }}
+</div>
+
+{# ══ PANEL: TAGS ══ #}
+<div id="panel-tags" class="idx-panel" style="display:none">
+    {{ include('tag/_list.html.twig') }}
+</div>
+
+</div>{# /articles-space #}
+
+<style>
+/* ── Animations ── */
+@keyframes heroIn   { from{opacity:0;transform:translateY(16px) scale(.98)} to{opacity:1;transform:none} }
+@keyframes tabsIn   { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+@keyframes rowIn    { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:none} }
+@keyframes cardIn   { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+@keyframes panelIn  { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+
+.idx-hero       { animation: heroIn .55s cubic-bezier(.4,0,.2,1) both; }
+.idx-tabs-wrap  { animation: tabsIn .45s cubic-bezier(.4,0,.2,1) .1s both; }
+.idx-panel      { animation: panelIn .38s ease both; }
+
+/* ── Search focus ── */
+.search-wrap:focus-within {
+    border-color: rgba(96,165,250,0.5) !important;
+    box-shadow: 0 0 0 3px rgba(96,165,250,0.1) !important;
+}
+
+/* ── Table row hover ── */
+.trow:hover { background: #eff6ff !important; }
+.tact:hover { background: rgba(96,165,250,.08) !important; color: #3b82f6 !important; }
+.tact-edit:hover { background: rgba(245,158,11,.08) !important; color: #d97706 !important; }
+.tact-del:hover  { background: rgba(239,68,68,.08) !important; color: #dc2626 !important; }
+
+/* ── Card hover ── */
+.acard:hover {
+    border-color: rgba(96,165,250,0.3) !important;
+    box-shadow: 0 8px 28px rgba(96,165,250,0.1) !important;
+    transform: translateY(-3px) !important;
+}
+
+/* ── View buttons ── */
+.vbtn { background:transparent; color:#94a3b8; }
+.vbtn-active { background:white !important; color:#0d1b2a !important; box-shadow:0 1px 4px rgba(0,0,0,.1); }
+
+/* ── Read dot ── */
+.read-dot.is-read { background:#22c55e !important; box-shadow:0 0 0 3px rgba(34,197,94,.2); }
+
+/* ── Hero action btn hover ── */
+#btn-new-article:hover { box-shadow:0 6px 24px rgba(96,165,250,0.45) !important; }
+
+/* ── Pagination hover ── */
+a[href*="page"]:hover { background:#eff6ff !important; border-color:rgba(96,165,250,0.3) !important; }
+</style>
+
 <script>
-/* ── Tab switching ── */
-const TAB_ACTIONS = {
-    articles:   ['btn-new-article'],
-    categories: ['btn-new-categorie'],
-    paths:      ['btn-new-path'],
-    tags:       [],
-};
+/* ── Particle canvas ── */
+(function(){
+    const c=document.getElementById('idx-particles');
+    if(!c) return;
+    const x=c.getContext('2d');
+    let W,H,P=[];
+    function resize(){ W=c.width=window.innerWidth; H=c.height=window.innerHeight; }
+    function mk(){ return {x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+.4,
+        vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,
+        life:Math.random(),sp:Math.random()*.003+.001,t:Math.random()>.5}; }
+    function frame(){
+        x.clearRect(0,0,W,H);
+        for(let i=0;i<P.length;i++) for(let j=i+1;j<P.length;j++){
+            const dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,d=Math.sqrt(dx*dx+dy*dy);
+            if(d<120){ x.beginPath();x.strokeStyle=`rgba(96,165,250,${(1-d/120)*.06})`;
+                x.lineWidth=.5;x.moveTo(P[i].x,P[i].y);x.lineTo(P[j].x,P[j].y);x.stroke(); }
+        }
+        P.forEach(p=>{
+            p.life+=p.sp;
+            const op=(Math.sin(p.life*Math.PI)*.5+.5)*.5;
+            x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);
+            x.fillStyle=p.t?`rgba(96,165,250,${op})`:`rgba(59,130,246,${op*.5})`;
+            x.fill();
+            p.x+=p.vx;p.y+=p.vy;
+            if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+            if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+        });
+        requestAnimationFrame(frame);
+    }
+    window.addEventListener('resize',resize);
+    resize();P=Array.from({length:50},mk);frame();
+})();
 
-function switchTab(name) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
-    document.getElementById('panel-' + name).classList.remove('hidden');
+/* ── State ── */
+let activeSearch='',activeCatId=null,activeReadability=null;
+let currentView=localStorage.getItem('articles_view')||'table';
 
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
-    document.getElementById('tab-' + name).classList.add('active-tab');
-
-    ['btn-new-article', 'btn-new-categorie', 'btn-new-path'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
+/* ── Hero counters ── */
+function animateCounters(){
+    document.querySelectorAll('.hero-counter').forEach(el=>{
+        const t=parseInt(el.dataset.target,10);
+        let n=0,step=t/(600/16);
+        const timer=setInterval(()=>{ n=Math.min(n+step,t); el.textContent=Math.floor(n); if(n>=t)clearInterval(timer); },16);
     });
-    (TAB_ACTIONS[name] || []).forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.remove('hidden');
-    });
-
-    history.replaceState(null, '', '#' + name);
 }
 
-/* ── Article real-time search + category filter ── */
-let activeSearch = '';
-let activeCatId  = null;
-
-function applyArticleFilters() {
-    const rows = document.querySelectorAll('.article-row');
-    let visibleCount = 0;
-
-    rows.forEach(row => {
-        const matchesSearch = !activeSearch || row.dataset.search.includes(activeSearch);
-        const matchesCat    = !activeCatId  || row.dataset.catId === activeCatId;
-        const visible       = matchesSearch && matchesCat;
-        row.style.display   = visible ? '' : 'none';
-        if (visible) visibleCount++;
+/* ── Read dots ── */
+function paintReadDots(){
+    const rs=JSON.parse(localStorage.getItem('read_articles')||'[]');
+    document.querySelectorAll('.read-dot').forEach(d=>{
+        if(rs.includes(String(d.dataset.articleId))) d.classList.add('is-read');
     });
-
-    // Show/hide the empty state row if it exists
-    const emptyRow = document.getElementById('no-articles-row');
-    if (emptyRow) emptyRow.style.display = visibleCount === 0 ? '' : 'none';
+    const el=document.getElementById('read-count');
+    if(el) el.textContent=rs.length;
 }
 
-function filterArticlesByCategory(catId) {
-    activeCatId = catId ? String(catId) : null;
+/* ── Panel switcher ── */
+const PANEL_BTNS={articles:'btn-new-article',categories:'btn-new-categorie',paths:'btn-new-path',tags:null};
 
-    // Update chip styles
-    document.querySelectorAll('.cat-chip').forEach(chip => {
-        const chipCat = chip.dataset.catId || null;
-        const isActive = (!catId && !chipCat) || (catId && chipCat === String(catId));
-        chip.classList.toggle('active-chip', isActive);
+function switchPanel(name){
+    document.querySelectorAll('.idx-panel').forEach(p=>p.style.display='none');
+    const t=document.getElementById('panel-'+name);
+    if(t){ t.style.display=''; t.style.animation='none'; void t.offsetWidth; t.style.animation=''; }
+
+    document.querySelectorAll('.idx-tab').forEach(b=>{
+        b.style.background='transparent';b.style.color='#64748b';b.style.boxShadow='none';
+        const cnt=b.querySelector('[class^="tab-cnt"]');
+        if(cnt){ cnt.style.background='rgba(0,0,0,.07)';cnt.style.color='#94a3b8'; }
     });
+    const ab=document.getElementById('nav-'+name);
+    if(ab){
+        ab.style.background='white';ab.style.color='#0d1b2a';ab.style.boxShadow='0 2px 10px rgba(0,0,0,.1)';
+        const cnt=ab.querySelector('[class^="tab-cnt"]');
+        const color=ab.dataset.color||'#60a5fa';
+        if(cnt){ cnt.style.background=color+'22';cnt.style.color=color; }
+    }
 
-    applyArticleFilters();
+    ['btn-new-article','btn-new-categorie','btn-new-path'].forEach(id=>{
+        const el=document.getElementById(id); if(el) el.style.display='none';
+    });
+    const bid=PANEL_BTNS[name];
+    if(bid){ const el=document.getElementById(bid); if(el) el.style.display='inline-flex'; }
+
+    history.replaceState(null,'','#'+name);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Real-time search
-    const searchInput = document.getElementById('article-search');
-    if (searchInput) {
-        searchInput.addEventListener('input', function () {
-            activeSearch = this.value.toLowerCase().trim();
-            applyArticleFilters();
+/* ── View toggle ── */
+function setView(v){
+    currentView=v;
+    localStorage.setItem('articles_view',v);
+    document.getElementById('view-table-panel').style.display=v==='table'?'':'none';
+    document.getElementById('view-cards-panel').style.display=v==='cards'?'':'none';
+    document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('vbtn-active'));
+    document.getElementById('view-'+v)?.classList.add('vbtn-active');
+    applyFilters();
+}
+
+/* ── Filters ── */
+function applyFilters(){
+    const container = currentView === 'table' 
+        ? document.getElementById('view-table-panel')
+        : document.getElementById('view-cards-panel');
+    
+    if (!container) return;
+    
+    const rows = container.querySelectorAll('.article-row');
+    let vis = 0;
+    
+    rows.forEach(r => {
+        const ok = (!activeSearch || r.dataset.search.includes(activeSearch))
+               && (!activeCatId || r.dataset.catId === activeCatId)
+               && (!activeReadability || r.dataset.readability === activeReadability);
+        r.style.display = ok ? '' : 'none';
+        if (ok) vis++;
+    });
+    
+    const total = rows.length;
+    const s = document.getElementById('results-summary');
+    if (s) {
+        s.textContent = vis === total 
+            ? `${total} Article${total !== 1 ? 's' : ''}`
+            : `${vis} of ${total} Articles`;
+    }
+    
+    const nr = document.getElementById('no-results-state');
+    if (nr) nr.style.display = vis === 0 ? '' : 'none';
+    
+    const cb = document.getElementById('clear-filters-btn');
+    if (cb) cb.style.display = (activeSearch || activeCatId || activeReadability) ? 'flex' : 'none';
+}
+function filterByCat(id){ activeCatId=id||null; applyFilters(); }
+function filterByReadability(v){ activeReadability=v||null; applyFilters(); }
+function clearSearch(){
+    activeSearch='';
+    const i=document.getElementById('article-search'); if(i) i.value='';
+    const b=document.getElementById('search-clear'); if(b) b.style.display='none';
+    applyFilters();
+}
+function clearAllFilters(){
+    clearSearch(); activeCatId=null; activeReadability=null;
+    const cs=document.getElementById('cat-select'); if(cs) cs.value='';
+    const rs=document.getElementById('read-select'); if(rs) rs.value='';
+    applyFilters();
+}
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded',()=>{
+    animateCounters();
+    paintReadDots();
+    setView(currentView);
+
+    const si=document.getElementById('article-search');
+    if(si){
+        si.addEventListener('input',function(){
+            activeSearch=this.value.toLowerCase().trim();
+            const b=document.getElementById('search-clear');
+            if(b) b.style.display=activeSearch?'':'none';
+            applyFilters();
         });
     }
 
-    // Restore tab from URL hash
-    const hash = window.location.hash.replace('#', '');
-    if (['articles', 'categories', 'paths', 'tags'].includes(hash)) {
-        switchTab(hash);
-    }
+    const hash=window.location.hash.replace('#','');
+    if(['articles','categories','paths','tags'].includes(hash)) switchPanel(hash);
+    else switchPanel('articles');
 });
 </script>
 

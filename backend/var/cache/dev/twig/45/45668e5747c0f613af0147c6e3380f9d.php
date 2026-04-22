@@ -223,6 +223,6 @@ class __TwigTemplate_06c910999bc1267cd2223795de20c42a extends Template
     </div>
 
 {{ form_end(form) }}
-", "article/_form.html.twig", "C:\\Users\\user\\Documents\\master\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\article\\_form.html.twig");
+", "article/_form.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\article\\_form.html.twig");
     }
 }

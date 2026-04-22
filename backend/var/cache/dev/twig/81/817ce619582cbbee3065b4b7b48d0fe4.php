@@ -94,6 +94,6 @@ class __TwigTemplate_36e53458f3eb9a3b33842adcefd2fc86 extends Template
         © {{ \"now\"|date(\"Y\") }} InnerTrack — All rights reserved
     </div>
 </footer>
-", "components/_footer.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\components\\_footer.html.twig");
+", "components/_footer.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\components\\_footer.html.twig");
     }
 }

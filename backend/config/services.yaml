@@ -26,3 +26,8 @@ services:
     App\EventSubscriber\LocaleSubscriber:
         arguments:
             $defaultLocale: '%kernel.default_locale%'
+    
+    App\Service\FreeSoundService:
+        arguments:
+            $apiKey: '%env(FREESOUND_API_KEY)%' 
+

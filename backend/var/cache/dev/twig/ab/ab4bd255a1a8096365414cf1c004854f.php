@@ -338,6 +338,6 @@ class __TwigTemplate_e3886614d15fb701f1e5d0695102b9bb extends Template
 
 </body>
 </html>
-", "base.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\base.html.twig");
+", "base.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\base.html.twig");
     }
 }

@@ -334,6 +334,6 @@ $context["notif"], "type", [], "any", false, false, false, 44) == "MESSAGE")) {
 
 </div>
 {% endblock %}
-", "pages/notifications/notifications.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\notifications\\notifications.html.twig");
+", "pages/notifications/notifications.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\notifications\\notifications.html.twig");
     }
 }

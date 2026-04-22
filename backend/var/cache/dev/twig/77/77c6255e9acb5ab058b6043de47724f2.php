@@ -170,6 +170,6 @@ class __TwigTemplate_2973d78c535613ba09cf524d14c51aa1 extends Template
     </ul>
 </div>
 {% endblock %}
-", "debug/index.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\debug\\index.html.twig");
+", "debug/index.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\debug\\index.html.twig");
     }
 }

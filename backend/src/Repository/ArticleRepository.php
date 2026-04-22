@@ -62,4 +62,25 @@ class ArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function createQueryBuilderForIndex(string $q = '', ?string $catId = null, ?string $tag = null): \Doctrine\ORM\QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->leftJoin('a.categorie', 'c')
+            ->leftJoin('a.tags', 't')
+            ->addSelect('c', 't')
+            ->orderBy('a.datePublication', 'DESC');
+
+        if ($q !== '') {
+            $qb->andWhere('LOWER(a.titre) LIKE LOWER(:q) OR LOWER(a.contenu) LIKE LOWER(:q)')
+            ->setParameter('q', '%' . $q . '%');
+        }
+        if ($catId) {
+            $qb->andWhere('c.id = :catId')->setParameter('catId', (int) $catId);
+        }
+        if ($tag) {
+            $qb->andWhere('t.nom = :tag')->setParameter('tag', $tag);
+        }
+
+        return $qb;
+    }
 }

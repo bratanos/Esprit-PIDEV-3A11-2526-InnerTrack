@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
   <parameters>
-    <parameter key="kernel.project_dir">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</parameter>
+    <parameter key="kernel.project_dir">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</parameter>
     <parameter key="kernel.environment">dev</parameter>
     <parameter key="kernel.runtime_environment">%env(default:kernel.environment:APP_RUNTIME_ENV)%</parameter>
     <parameter key="kernel.runtime_mode">%env(query_string:default:container.runtime_mode:APP_RUNTIME_MODE)%</parameter>
@@ -9,9 +9,9 @@
     <parameter key="kernel.runtime_mode.cli">%env(not:default:kernel.runtime_mode.web:)%</parameter>
     <parameter key="kernel.runtime_mode.worker">%env(bool:default::key:worker:default:kernel.runtime_mode:)%</parameter>
     <parameter key="kernel.debug">true</parameter>
-    <parameter key="kernel.build_dir">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev</parameter>
-    <parameter key="kernel.cache_dir">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev</parameter>
-    <parameter key="kernel.logs_dir">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\log</parameter>
+    <parameter key="kernel.build_dir">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev</parameter>
+    <parameter key="kernel.cache_dir">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev</parameter>
+    <parameter key="kernel.logs_dir">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\log</parameter>
     <parameter key="kernel.bundles" type="collection">
       <parameter key="FrameworkBundle">Symfony\Bundle\FrameworkBundle\FrameworkBundle</parameter>
       <parameter key="DoctrineBundle">Doctrine\Bundle\DoctrineBundle\DoctrineBundle</parameter>
@@ -29,71 +29,81 @@
       <parameter key="SymfonyCastsVerifyEmailBundle">SymfonyCasts\Bundle\VerifyEmail\SymfonyCastsVerifyEmailBundle</parameter>
       <parameter key="NelmioCorsBundle">Nelmio\CorsBundle\NelmioCorsBundle</parameter>
       <parameter key="SymfonycastsTailwindBundle">Symfonycasts\TailwindBundle\SymfonycastsTailwindBundle</parameter>
+      <parameter key="KnpSnappyBundle">Knp\Bundle\SnappyBundle\KnpSnappyBundle</parameter>
+      <parameter key="BabDevPagerfantaBundle">BabDev\PagerfantaBundle\BabDevPagerfantaBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\framework-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\framework-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\FrameworkBundle</parameter>
       </parameter>
       <parameter key="DoctrineBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-bundle</parameter>
         <parameter key="namespace">Doctrine\Bundle\DoctrineBundle</parameter>
       </parameter>
       <parameter key="DoctrineMigrationsBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-migrations-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-migrations-bundle</parameter>
         <parameter key="namespace">Doctrine\Bundle\MigrationsBundle</parameter>
       </parameter>
       <parameter key="DebugBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\debug-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\debug-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\DebugBundle</parameter>
       </parameter>
       <parameter key="TwigBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\TwigBundle</parameter>
       </parameter>
       <parameter key="WebProfilerBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\web-profiler-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\web-profiler-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\WebProfilerBundle</parameter>
       </parameter>
       <parameter key="StimulusBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\stimulus-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\stimulus-bundle</parameter>
         <parameter key="namespace">Symfony\UX\StimulusBundle</parameter>
       </parameter>
       <parameter key="TurboBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo</parameter>
         <parameter key="namespace">Symfony\UX\Turbo</parameter>
       </parameter>
       <parameter key="TwigExtraBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\twig\extra-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\twig\extra-bundle</parameter>
         <parameter key="namespace">Twig\Extra\TwigExtraBundle</parameter>
       </parameter>
       <parameter key="SecurityBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\SecurityBundle</parameter>
       </parameter>
       <parameter key="MonologBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\monolog-bundle\src</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\monolog-bundle\src</parameter>
         <parameter key="namespace">Symfony\Bundle\MonologBundle</parameter>
       </parameter>
       <parameter key="MakerBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\maker-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\maker-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\MakerBundle</parameter>
       </parameter>
       <parameter key="LexikJWTAuthenticationBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\lexik\jwt-authentication-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\lexik\jwt-authentication-bundle</parameter>
         <parameter key="namespace">Lexik\Bundle\JWTAuthenticationBundle</parameter>
       </parameter>
       <parameter key="SymfonyCastsVerifyEmailBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src</parameter>
         <parameter key="namespace">SymfonyCasts\Bundle\VerifyEmail</parameter>
       </parameter>
       <parameter key="NelmioCorsBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\nelmio\cors-bundle</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\nelmio\cors-bundle</parameter>
         <parameter key="namespace">Nelmio\CorsBundle</parameter>
       </parameter>
       <parameter key="SymfonycastsTailwindBundle" type="collection">
-        <parameter key="path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\tailwind-bundle\src</parameter>
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\tailwind-bundle\src</parameter>
         <parameter key="namespace">Symfonycasts\TailwindBundle</parameter>
+      </parameter>
+      <parameter key="KnpSnappyBundle" type="collection">
+        <parameter key="path">C:/Users/wiem/Desktop/SYmfonymerged/Esprit-PIDEV-3A11-2526-InnerTrack/backend/vendor/knplabs/knp-snappy-bundle/src</parameter>
+        <parameter key="namespace">Knp\Bundle\SnappyBundle</parameter>
+      </parameter>
+      <parameter key="BabDevPagerfantaBundle" type="collection">
+        <parameter key="path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle</parameter>
+        <parameter key="namespace">BabDev\PagerfantaBundle</parameter>
       </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
@@ -134,18 +144,18 @@
     <parameter key="asset.request_context.base_path">null</parameter>
     <parameter key="asset.request_context.secure">null</parameter>
     <parameter key="translator.logging">false</parameter>
-    <parameter key="translator.default_path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations</parameter>
+    <parameter key="translator.default_path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations</parameter>
     <parameter key="debug.error_handler.throw_at">-1</parameter>
-    <parameter key="debug.container.dump">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/App_KernelDevDebugContainer.xml</parameter>
+    <parameter key="debug.container.dump">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/App_KernelDevDebugContainer.xml</parameter>
     <parameter key="router.request_context.host">localhost</parameter>
     <parameter key="router.request_context.scheme">http</parameter>
     <parameter key="router.request_context.base_url"></parameter>
     <parameter key="router.resource">kernel::loadRoutes</parameter>
-    <parameter key="router.cache_dir">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev</parameter>
+    <parameter key="router.cache_dir">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
-    <parameter key="serializer.mapping.cache.file">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/serialization.php</parameter>
-    <parameter key="cache.prefix.seed">_C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend.App_KernelDevDebugContainer</parameter>
+    <parameter key="serializer.mapping.cache.file">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/serialization.php</parameter>
+    <parameter key="cache.prefix.seed">_C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend.App_KernelDevDebugContainer</parameter>
     <parameter key="session.metadata.storage_key">_sf2_meta</parameter>
     <parameter key="session.storage.options" type="collection">
       <parameter key="cache_limiter" type="string">0</parameter>
@@ -158,11 +168,11 @@
     <parameter key="session.metadata.update_threshold">0</parameter>
     <parameter key="form.type_extension.csrf.enabled">true</parameter>
     <parameter key="form.type_extension.csrf.field_name">_token</parameter>
-    <parameter key="validator.mapping.cache.file">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/validation.php</parameter>
+    <parameter key="validator.mapping.cache.file">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/validation.php</parameter>
     <parameter key="validator.translation_domain">validators</parameter>
     <parameter key="profiler_listener.only_exceptions">false</parameter>
     <parameter key="profiler_listener.only_main_requests">false</parameter>
-    <parameter key="profiler.storage.dsn">file:C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/profiler</parameter>
+    <parameter key="profiler.storage.dsn">file:C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/profiler</parameter>
     <parameter key="doctrine.dbal.configuration.class">Doctrine\DBAL\Configuration</parameter>
     <parameter key="doctrine.data_collector.class">Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector</parameter>
     <parameter key="doctrine.dbal.connection.event_manager.class">Symfony\Bridge\Doctrine\ContainerAwareEventManager</parameter>
@@ -229,7 +239,7 @@
     <parameter key="doctrine.orm.auto_generate_proxy_classes">true</parameter>
     <parameter key="doctrine.orm.enable_lazy_ghost_objects">true</parameter>
     <parameter key="doctrine.orm.enable_native_lazy_objects">false</parameter>
-    <parameter key="doctrine.orm.proxy_dir">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/doctrine/orm/Proxies</parameter>
+    <parameter key="doctrine.orm.proxy_dir">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/doctrine/orm/Proxies</parameter>
     <parameter key="doctrine.orm.proxy_namespace">Proxies</parameter>
     <parameter key="doctrine.migrations.preferred_em">null</parameter>
     <parameter key="doctrine.migrations.preferred_connection">null</parameter>
@@ -237,7 +247,7 @@
     <parameter key="twig.form.resources" type="collection">
       <parameter>form_div_layout.html.twig</parameter>
     </parameter>
-    <parameter key="twig.default_path">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</parameter>
+    <parameter key="twig.default_path">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</parameter>
     <parameter key="web_profiler.debug_toolbar.intercept_redirects">false</parameter>
     <parameter key="web_profiler.debug_toolbar.mode">2</parameter>
     <parameter key="security.role_hierarchy.roles" type="collection">
@@ -317,6 +327,17 @@
     <parameter key="nelmio_cors.cors_listener.class">Nelmio\CorsBundle\EventListener\CorsListener</parameter>
     <parameter key="nelmio_cors.options_resolver.class">Nelmio\CorsBundle\Options\Resolver</parameter>
     <parameter key="nelmio_cors.options_provider.config.class">Nelmio\CorsBundle\Options\ConfigProvider</parameter>
+    <parameter key="knp_snappy.pdf.binary">%env(WKHTMLTOPDF_PATH)%</parameter>
+    <parameter key="knp_snappy.pdf.options" type="collection">
+      <parameter key="encoding">utf-8</parameter>
+      <parameter key="margin-top">15</parameter>
+      <parameter key="margin-bottom">15</parameter>
+      <parameter key="margin-left">12</parameter>
+      <parameter key="margin-right">12</parameter>
+      <parameter key="page-size">A4</parameter>
+      <parameter key="dpi">150</parameter>
+    </parameter>
+    <parameter key="knp_snappy.pdf.env" type="collection"/>
     <parameter key="data_collector.templates" type="collection">
       <parameter key="data_collector.request" type="collection">
         <parameter>request</parameter>
@@ -435,6 +456,7 @@
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <argument type="service" id="App\Service\ReadabilityService"/>
+      <argument type="service" id=".debug.http_client"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\ArticleController"/>
       </call>
@@ -672,8 +694,18 @@
     </service>
     <service id="App\Security\OtpGenerator" class="App\Security\OtpGenerator" autowire="true" autoconfigure="true"/>
     <service id="App\Security\UserChecker" class="App\Security\UserChecker" autowire="true" autoconfigure="true"/>
+    <service id="App\Service\AiInsightService" class="App\Service\AiInsightService" autowire="true" autoconfigure="true">
+      <argument type="service" id=".debug.http_client"/>
+    </service>
     <service id="App\Service\EmailSender" class="App\Service\EmailSender" autowire="true" autoconfigure="true">
       <argument type="service" id="mailer.mailer"/>
+    </service>
+    <service id="App\Service\FreeSoundService" class="App\Service\FreeSoundService" autowire="true" autoconfigure="true">
+      <argument type="service" id=".debug.http_client"/>
+      <argument>%env(FREESOUND_API_KEY)%</argument>
+    </service>
+    <service id="App\Service\OpenLibraryService" class="App\Service\OpenLibraryService" autowire="true" autoconfigure="true">
+      <argument type="service" id=".debug.http_client"/>
     </service>
     <service id="App\Service\PdfExporter" class="App\Service\PdfExporter" autowire="true" autoconfigure="true"/>
     <service id="App\Service\ReadabilityService" class="App\Service\ReadabilityService" autowire="true" autoconfigure="true"/>
@@ -709,7 +741,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.mKi6qh1"/>
+      <argument type="service" id=".service_locator.7kxD99B"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -792,7 +824,7 @@
       </argument>
     </service>
     <service id="http_cache.store" class="Symfony\Component\HttpKernel\HttpCache\Store">
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/http_cache</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/http_cache</argument>
     </service>
     <service id="url_helper" class="Symfony\Component\HttpFoundation\UrlHelper">
       <argument type="service" id="request_stack"/>
@@ -802,7 +834,7 @@
       <tag name="container.no_preload"/>
       <argument type="tagged_iterator" tag="kernel.cache_warmer"/>
       <argument>true</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/App_KernelDevDebugContainerDeprecations.log</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/App_KernelDevDebugContainerDeprecations.log</argument>
     </service>
     <service id="cache_clearer" class="Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer">
       <argument type="tagged_iterator" tag="kernel.cache_clearer"/>
@@ -1072,7 +1104,7 @@
       </argument>
       <argument>UTF-8</argument>
       <argument type="service" id="debug.file_link_formatter" on-invalid="null"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <argument type="service">
         <service>
           <argument type="service" id="request_stack"/>
@@ -1108,7 +1140,7 @@
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
       <argument type="service" id="filesystem"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <call method="setName">
         <argument>assets:install</argument>
       </call>
@@ -1297,7 +1329,7 @@
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
       <argument>dev</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <call method="setName">
         <argument>debug:dotenv</argument>
       </call>
@@ -1531,18 +1563,19 @@
       <argument type="service" id="translator.data_collector"/>
       <argument type="service" id="translation.reader"/>
       <argument type="service" id="translation.extractor"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
       <argument type="collection">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations</argument>
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations</argument>
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations</argument>
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations</argument>
       </argument>
       <argument type="collection">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public/icons</argument>
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Email</argument>
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Form</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public/icons</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Email</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Form</argument>
       </argument>
       <argument type="collection"/>
       <call method="setName">
@@ -1559,18 +1592,19 @@
       <argument type="service" id="translation.reader"/>
       <argument type="service" id="translation.extractor"/>
       <argument>en</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
       <argument type="collection">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations</argument>
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations</argument>
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations</argument>
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations</argument>
       </argument>
       <argument type="collection">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public/icons</argument>
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Email</argument>
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Form</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public/icons</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Email</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Form</argument>
       </argument>
       <argument type="collection"/>
       <call method="setName">
@@ -1819,7 +1853,7 @@
       <argument></argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -1838,7 +1872,7 @@
       <tag name="monolog.logger" channel="cache"/>
       <argument></argument>
       <argument>0</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/app</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
@@ -2009,16 +2043,17 @@
     <service id="asset_mapper.cached_mapped_asset_factory" class="Symfony\Component\AssetMapper\Factory\CachedMappedAssetFactory">
       <tag name="container.decorator" id="asset_mapper.mapped_asset_factory" inner="asset_mapper.cached_mapped_asset_factory.inner"/>
       <argument type="service" id="asset_mapper.cached_mapped_asset_factory.inner"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/asset_mapper</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/asset_mapper</argument>
       <argument>true</argument>
     </service>
     <service id="asset_mapper.repository" class="Symfony\Component\AssetMapper\AssetMapperRepository">
       <argument type="collection">
-        <argument key="C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo\src\DependencyInjection/../../assets/dist">@symfony/ux-turbo</argument>
-        <argument key="C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\stimulus-bundle\src\DependencyInjection/../../assets/dist">@symfony/stimulus-bundle</argument>
+        <argument key="C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo\src\DependencyInjection/../../assets/dist">@symfony/ux-turbo</argument>
+        <argument key="C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\stimulus-bundle\src\DependencyInjection/../../assets/dist">@symfony/stimulus-bundle</argument>
         <argument key="assets/"></argument>
+        <argument key="C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/public">bundles/babdevpagerfanta</argument>
       </argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <argument type="collection">
         <argument>#^(?=[^\.]).*\.d\.ts$#</argument>
         <argument>#^(?=[^\.])/?(?=[^\.]).*.*/(?=[^\.])controllers\.json$#</argument>
@@ -2030,10 +2065,10 @@
       <argument>/assets/</argument>
     </service>
     <service id="asset_mapper.local_public_assets_filesystem" class="Symfony\Component\AssetMapper\Path\LocalPublicAssetsFilesystem">
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public</argument>
     </service>
     <service id="asset_mapper.compiled_asset_mapper_config_reader" class="Symfony\Component\AssetMapper\CompiledAssetMapperConfigReader">
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public/assets</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public/assets</argument>
     </service>
     <service id="asset_mapper.asset_package" class="Symfony\Component\AssetMapper\MapperAwareAssetPackage">
       <tag name="container.decorator" id="assets._default_package" inner="asset_mapper.asset_package.inner"/>
@@ -2057,7 +2092,7 @@
       <argument type="service" id="asset_mapper"/>
       <argument type="service" id="asset_mapper.importmap.generator"/>
       <argument type="service" id="asset_mapper.local_public_assets_filesystem"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <argument>true</argument>
       <argument type="service" id="debug.event_dispatcher" on-invalid="null"/>
       <call method="setName">
@@ -2072,7 +2107,7 @@
       <tag name="container.no_preload"/>
       <argument type="service" id="asset_mapper"/>
       <argument type="service" id="asset_mapper.repository"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <call method="setName">
         <argument>debug:asset-map</argument>
       </call>
@@ -2101,7 +2136,7 @@
       <argument type="service" id="monolog.logger.asset_mapper"/>
     </service>
     <service id="asset_mapper.importmap.config_reader" class="Symfony\Component\AssetMapper\ImportMap\ImportMapConfigReader">
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/importmap.php</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/importmap.php</argument>
       <argument type="service" id="asset_mapper.importmap.remote_package_storage"/>
     </service>
     <service id="asset_mapper.importmap.manager" class="Symfony\Component\AssetMapper\ImportMap\ImportMapManager">
@@ -2116,7 +2151,7 @@
       <argument type="service" id="asset_mapper.importmap.config_reader"/>
     </service>
     <service id="asset_mapper.importmap.remote_package_storage" class="Symfony\Component\AssetMapper\ImportMap\RemotePackageStorage">
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/assets/vendor</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/assets/vendor</argument>
     </service>
     <service id="asset_mapper.importmap.remote_package_downloader" class="Symfony\Component\AssetMapper\ImportMap\RemotePackageDownloader">
       <argument type="service" id="asset_mapper.importmap.remote_package_storage"/>
@@ -2187,7 +2222,7 @@
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
       <argument type="service" id="asset_mapper.importmap.remote_package_downloader"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <call method="setName">
         <argument>importmap:install</argument>
       </call>
@@ -2373,369 +2408,409 @@
         </argument>
       </argument>
       <argument type="collection">
-        <argument key="cache_dir">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/translations</argument>
+        <argument key="cache_dir">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/translations</argument>
         <argument key="debug">true</argument>
         <argument key="resource_files" type="collection">
           <argument key="af" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.af.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.af.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.af.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.af.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.af.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.af.xlf</argument>
           </argument>
           <argument key="ar" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ar.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ar.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ar.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ar.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ar.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ar.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ar.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ar.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.ar.xliff</argument>
           </argument>
           <argument key="az" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.az.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.az.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.az.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.az.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.az.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.az.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.az.xliff</argument>
           </argument>
           <argument key="be" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.be.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.be.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.be.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.be.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.be.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.be.xlf</argument>
           </argument>
           <argument key="bg" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.bg.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.bg.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.bg.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.bg.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.bg.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.bg.xlf</argument>
           </argument>
           <argument key="bs" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.bs.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.bs.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.bs.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.bs.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.bs.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.bs.xlf</argument>
           </argument>
           <argument key="ca" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ca.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ca.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ca.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ca.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ca.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ca.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ca.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ca.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.ca.xliff</argument>
           </argument>
           <argument key="cs" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.cs.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.cs.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.cs.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.cs.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.cs.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.cs.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.cs.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.cs.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.cs.xliff</argument>
           </argument>
           <argument key="cy" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.cy.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.cy.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.cy.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.cy.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.cy.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.cy.xlf</argument>
           </argument>
           <argument key="da" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.da.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.da.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.da.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.da.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.da.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.da.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.da.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.da.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.da.xliff</argument>
           </argument>
           <argument key="de" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.de.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.de.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.de.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.de.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.de.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.de.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.de.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.de.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.de.xliff</argument>
           </argument>
           <argument key="el" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.el.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.el.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.el.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.el.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.el.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.el.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.el.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.el.xlf</argument>
           </argument>
           <argument key="en" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.en.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.en.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.en.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.en.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations\messages.en.yaml</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.en.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.en.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.en.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.en.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.en.xliff</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations\messages.en.yaml</argument>
           </argument>
           <argument key="es" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.es.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.es.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.es.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.es.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.es.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.es.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.es.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.es.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.es.xliff</argument>
           </argument>
           <argument key="et" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.et.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.et.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.et.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.et.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.et.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.et.xlf</argument>
           </argument>
           <argument key="eu" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.eu.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.eu.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.eu.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.eu.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.eu.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.eu.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.eu.xliff</argument>
           </argument>
           <argument key="fa" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.fa.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.fa.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.fa.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.fa.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.fa.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.fa.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.fa.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.fa.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.fa.xliff</argument>
           </argument>
           <argument key="fi" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.fi.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.fi.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.fi.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.fi.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.fi.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.fi.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.fi.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.fi.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.fi.xliff</argument>
           </argument>
           <argument key="fr" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.fr.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.fr.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.fr.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.fr.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations\messages.fr.yaml</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.fr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.fr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.fr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.fr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.fr.xliff</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations\messages.fr.yaml</argument>
           </argument>
           <argument key="gl" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.gl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.gl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.gl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.gl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.gl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.gl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.gl.xliff</argument>
           </argument>
           <argument key="he" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.he.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.he.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.he.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.he.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.he.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.he.xlf</argument>
           </argument>
           <argument key="hr" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.hr.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.hr.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.hr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.hr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.hr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.hr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.hr.xliff</argument>
           </argument>
           <argument key="hu" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.hu.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.hu.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.hu.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.hu.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.hu.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.hu.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.hu.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.hu.xlf</argument>
           </argument>
           <argument key="hy" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.hy.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.hy.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.hy.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.hy.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.hy.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.hy.xlf</argument>
           </argument>
           <argument key="id" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.id.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.id.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.id.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.id.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.id.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.id.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.id.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.id.xlf</argument>
           </argument>
           <argument key="it" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.it.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.it.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.it.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.it.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.it.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.it.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.it.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.it.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.it.xliff</argument>
           </argument>
           <argument key="ja" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ja.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ja.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ja.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ja.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ja.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ja.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ja.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ja.xlf</argument>
           </argument>
           <argument key="lb" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.lb.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.lb.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.lb.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.lb.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.lb.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.lb.xlf</argument>
           </argument>
           <argument key="lt" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.lt.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.lt.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.lt.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.lt.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.lt.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.lt.xlf</argument>
           </argument>
           <argument key="lv" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.lv.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.lv.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.lv.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.lv.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.lv.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.lv.xlf</argument>
           </argument>
           <argument key="mk" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.mk.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.mk.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.mk.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.mk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.mk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.mk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.mk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.mk.xlf</argument>
           </argument>
           <argument key="mn" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.mn.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.mn.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.mn.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.mn.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.mn.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.mn.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.mn.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.mn.xlf</argument>
           </argument>
           <argument key="my" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.my.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.my.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.my.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.my.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.my.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.my.xlf</argument>
           </argument>
           <argument key="nb" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.nb.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.nb.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.nb.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.nb.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.nb.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.nb.xlf</argument>
           </argument>
           <argument key="nl" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.nl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.nl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.nl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.nl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.nl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.nl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.nl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.nl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.nl.xliff</argument>
           </argument>
           <argument key="nn" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.nn.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.nn.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.nn.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.nn.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.nn.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.nn.xlf</argument>
           </argument>
           <argument key="no" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.no.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.no.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.no.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.no.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.no.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.no.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.no.xliff</argument>
           </argument>
           <argument key="pl" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.pl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.pl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.pl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.pl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.pl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.pl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.pl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.pl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.pl.xliff</argument>
           </argument>
           <argument key="pt" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.pt.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.pt.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.pt.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.pt.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.pt.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.pt.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.pt.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.pt.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.pt.xliff</argument>
           </argument>
           <argument key="pt_BR" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.pt_BR.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.pt_BR.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.pt_BR.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.pt_BR.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.pt_BR.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.pt_BR.xlf</argument>
           </argument>
           <argument key="ro" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ro.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ro.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ro.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ro.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ro.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ro.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ro.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ro.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.ro.xliff</argument>
           </argument>
           <argument key="ru" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ru.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ru.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ru.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ru.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ru.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ru.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ru.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.ru.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.ru.xliff</argument>
           </argument>
           <argument key="sk" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sk.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sk.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sk.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.sk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.sk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.sk.xliff</argument>
           </argument>
           <argument key="sl" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.sl.xliff</argument>
           </argument>
           <argument key="sq" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sq.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sq.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sq.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sq.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sq.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sq.xlf</argument>
           </argument>
           <argument key="sr_Cyrl" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sr_Cyrl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sr_Cyrl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sr_Cyrl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sr_Cyrl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sr_Cyrl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sr_Cyrl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.sr_Cyrl.xliff</argument>
           </argument>
           <argument key="sr_Latn" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sr_Latn.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sr_Latn.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sr_Latn.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sr_Latn.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sr_Latn.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sr_Latn.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.sr_Latn.xliff</argument>
           </argument>
           <argument key="sv" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sv.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sv.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sv.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.sv.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.sv.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.sv.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.sv.xliff</argument>
           </argument>
           <argument key="th" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.th.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.th.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.th.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.th.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.th.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.th.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.th.xliff</argument>
           </argument>
           <argument key="tl" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.tl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.tl.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.tl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.tl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.tl.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.tl.xlf</argument>
           </argument>
           <argument key="tr" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.tr.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.tr.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.tr.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.tr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.tr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.tr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.tr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.tr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.tr.xliff</argument>
           </argument>
           <argument key="uk" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.uk.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.uk.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.uk.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.uk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.uk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.uk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.uk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.uk.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.uk.xliff</argument>
           </argument>
           <argument key="ur" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ur.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ur.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ur.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.ur.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.ur.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.ur.xlf</argument>
           </argument>
           <argument key="uz" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.uz.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.uz.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.uz.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.uz.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.uz.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.uz.xlf</argument>
           </argument>
           <argument key="vi" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.vi.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.vi.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.vi.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.vi.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.vi.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.vi.xlf</argument>
           </argument>
           <argument key="zh_CN" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.zh_CN.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.zh_CN.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.zh_CN.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.zh_CN.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.zh_CN.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.zh_CN.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.zh_CN.xliff</argument>
           </argument>
           <argument key="zh_TW" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.zh_TW.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.zh_TW.xlf</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.zh_TW.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations\validators.zh_TW.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations\validators.zh_TW.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations\security.zh_TW.xlf</argument>
           </argument>
           <argument key="sr" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.sr.xlf</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations\VerifyEmailBundle.sr.xlf</argument>
+          </argument>
+          <argument key="oc" type="collection">
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.oc.xliff</argument>
+          </argument>
+          <argument key="sw" type="collection">
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations\pagerfanta.sw.xliff</argument>
           </argument>
         </argument>
         <argument key="scanned_directories" type="collection">
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\framework-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-migrations-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\debug-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\web-profiler-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\stimulus-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\twig\extra-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\monolog-bundle\src/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\maker-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\lexik\jwt-authentication-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\nelmio\cors-bundle/translations</argument>
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\tailwind-bundle\src/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\framework-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-migrations-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\debug-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\web-profiler-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\stimulus-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\twig\extra-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\monolog-bundle\src/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\maker-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\lexik\jwt-authentication-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\nelmio\cors-bundle/translations</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\tailwind-bundle\src/translations</argument>
+          <argument>C:/Users/wiem/Desktop/SYmfonymerged/Esprit-PIDEV-3A11-2526-InnerTrack/backend/vendor/knplabs/knp-snappy-bundle/src/translations</argument>
         </argument>
         <argument key="cache_vary" type="collection">
           <argument key="scanned_directories" type="collection">
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\validator/Resources/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-core/Resources/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\verify-email-bundle\src/Resources/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/translations</argument>
             <argument>translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\framework-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-migrations-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\debug-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\web-profiler-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\stimulus-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\twig\extra-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\monolog-bundle\src/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\maker-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\lexik\jwt-authentication-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\nelmio\cors-bundle/translations</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\tailwind-bundle\src/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\framework-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-migrations-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\debug-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\web-profiler-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\stimulus-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\twig\extra-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\monolog-bundle\src/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\maker-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\lexik\jwt-authentication-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\nelmio\cors-bundle/translations</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfonycasts\tailwind-bundle\src/translations</argument>
+            <argument>C:/Users/wiem/Desktop/SYmfonymerged/Esprit-PIDEV-3A11-2526-InnerTrack/backend/vendor/knplabs/knp-snappy-bundle/src/translations</argument>
           </argument>
         </argument>
       </argument>
@@ -3066,7 +3141,7 @@
     <service id="debug.file_link_formatter" class="Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter">
       <argument>%env(default::SYMFONY_IDE)%</argument>
       <argument type="service" id="request_stack" on-invalid="ignore"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <argument type="service_closure" id="debug.file_link_formatter.url_format"/>
     </service>
     <service id="debug.stopwatch" class="Symfony\Component\Stopwatch\Stopwatch" public="true">
@@ -3146,6 +3221,22 @@
           <argument>onResponse</argument>
         </argument>
         <argument>-15</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.exception</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="pagerfanta.event_listener.convert_not_valid_max_per_page_to_not_found"/>
+          <argument>onKernelException</argument>
+        </argument>
+        <argument>512</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.exception</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="pagerfanta.event_listener.convert_not_valid_current_page_to_not_found"/>
+          <argument>onKernelException</argument>
+        </argument>
+        <argument>512</argument>
       </call>
       <call method="addListener">
         <argument>kernel.request</argument>
@@ -3713,7 +3804,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.mKi6qh1"/>
+      <argument type="service" id=".service_locator.7kxD99B"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -3816,7 +3907,7 @@
       <argument type="service" id=".service_locator.bN.V_Nq.router.default"/>
       <argument>kernel::loadRoutes</argument>
       <argument type="collection">
-        <argument key="cache_dir">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev</argument>
+        <argument key="cache_dir">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev</argument>
         <argument key="debug">true</argument>
         <argument key="generator_class">Symfony\Component\Routing\Generator\CompiledUrlGenerator</argument>
         <argument key="generator_dumper_class">Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper</argument>
@@ -3865,7 +3956,7 @@
       <argument type="service" id="request_stack"/>
       <argument type="service" id="router.request_context" on-invalid="ignore"/>
       <argument type="service" id="monolog.logger.request" on-invalid="ignore"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <argument>true</argument>
     </service>
     <service id="Symfony\Bundle\FrameworkBundle\Controller\RedirectController" class="Symfony\Bundle\FrameworkBundle\Controller\RedirectController" public="true">
@@ -3893,7 +3984,7 @@
     </service>
     <service id="secrets.vault" class="Symfony\Bundle\FrameworkBundle\Secrets\SodiumVault">
       <tag name="container.env_var_loader"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/config/secrets/%env(default:kernel.environment:APP_RUNTIME_ENV)%</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/config/secrets/%env(default:kernel.environment:APP_RUNTIME_ENV)%</argument>
       <argument type="service" id="secrets.decryption_key" on-invalid="ignore"/>
     </service>
     <service id="secrets.decryption_key" class="Symfony\Component\String\LazyString" constructor="fromCallable">
@@ -3901,7 +3992,7 @@
       <argument>base64:default::SYMFONY_DECRYPTION_SECRET</argument>
     </service>
     <service id="secrets.local_vault" class="Symfony\Bundle\FrameworkBundle\Secrets\DotenvVault">
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/.env.%env(default:kernel.environment:APP_RUNTIME_ENV)%.local</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/.env.%env(default:kernel.environment:APP_RUNTIME_ENV)%.local</argument>
     </service>
     <service id="serializer.mapping.class_discriminator_resolver" class="Symfony\Component\Serializer\Mapping\ClassDiscriminatorFromClassMetadata">
       <argument type="service" id="serializer.mapping.class_metadata_factory"/>
@@ -3995,10 +4086,10 @@
           </service>
         </argument>
       </argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/serialization.php</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/serialization.php</argument>
     </service>
     <service id="serializer.mapping.cache.symfony" class="Psr\Cache\CacheItemPoolInterface">
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/serialization.php</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/serialization.php</argument>
       <argument type="service" id="cache.serializer"/>
       <factory class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" method="create"/>
     </service>
@@ -4134,7 +4225,7 @@
       <argument>true</argument>
     </service>
     <service id="session.storage.factory.mock_file" class="Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory">
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/sessions</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/sessions</argument>
       <argument>MOCKSESSID</argument>
       <argument type="service">
         <service class="Symfony\Component\HttpFoundation\Session\Storage\MetadataBag">
@@ -4314,7 +4405,7 @@
       </call>
       <call method="addXmlMappings">
         <argument type="collection">
-          <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/config/validation.xml</argument>
+          <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\form/Resources/config/validation.xml</argument>
         </argument>
       </call>
       <call method="enableAttributeMapping">
@@ -4339,10 +4430,10 @@
     <service id="validator.mapping.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\ValidatorCacheWarmer">
       <tag name="kernel.cache_warmer"/>
       <argument type="service" id="validator.builder"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/validation.php</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/validation.php</argument>
     </service>
     <service id="validator.mapping.cache.adapter" class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" constructor="create">
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/validation.php</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/validation.php</argument>
       <argument type="service" id="cache.validator"/>
     </service>
     <service id="validator.validator_factory" class="Symfony\Component\Validator\ContainerConstraintValidatorFactory">
@@ -5021,7 +5112,7 @@
       </call>
     </service>
     <service id="profiler.storage" class="Symfony\Component\HttpKernel\Profiler\FileProfilerStorage">
-      <argument>file:C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/profiler</argument>
+      <argument>file:C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/profiler</argument>
     </service>
     <service id="profiler_listener" class="Symfony\Component\HttpKernel\EventListener\ProfilerListener">
       <tag name="kernel.event_subscriber"/>
@@ -5086,7 +5177,7 @@
       <tag name="monolog.logger" channel="profiler"/>
       <tag name="data_collector" template="@WebProfiler/Collector/logger.html.twig" id="logger" priority="300"/>
       <argument type="service" id="monolog.logger.profiler" on-invalid="ignore"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/App_KernelDevDebugContainer</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/App_KernelDevDebugContainer</argument>
       <argument type="service" id=".virtual_request_stack" on-invalid="ignore"/>
     </service>
     <service id="data_collector.time" class="Symfony\Component\HttpKernel\DataCollector\TimeDataCollector">
@@ -5678,7 +5769,7 @@
         <argument type="service" id=".doctrine.orm.default_metadata_driver"/>
       </call>
       <call method="setProxyDir">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/doctrine/orm/Proxies</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/doctrine/orm/Proxies</argument>
       </call>
       <call method="setProxyNamespace">
         <argument>Proxies</argument>
@@ -5719,7 +5810,7 @@
     </service>
     <service id="doctrine.orm.default_attribute_metadata_driver" class="Doctrine\ORM\Mapping\Driver\AttributeDriver">
       <argument type="collection">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\src\Entity</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\src\Entity</argument>
       </argument>
       <argument>true</argument>
     </service>
@@ -5783,7 +5874,7 @@
     <service id="doctrine.migrations.configuration" class="Doctrine\Migrations\Configuration\Configuration">
       <call method="addMigrationsDirectory">
         <argument>DoctrineMigrations</argument>
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/migrations</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/migrations</argument>
       </call>
       <call method="setAllOrNothing">
         <argument>false</argument>
@@ -6010,7 +6101,7 @@
         <argument key="source" type="service">
           <service class="Symfony\Component\VarDumper\Dumper\ContextProvider\SourceContextProvider">
             <argument>UTF-8</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
             <argument type="service" id="debug.file_link_formatter" on-invalid="null"/>
           </service>
         </argument>
@@ -6032,7 +6123,7 @@
         <argument key="source" type="service">
           <service class="Symfony\Component\VarDumper\Dumper\ContextProvider\SourceContextProvider">
             <argument>UTF-8</argument>
-            <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+            <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
             <argument type="service" id="debug.file_link_formatter" on-invalid="null"/>
           </service>
         </argument>
@@ -6098,7 +6189,7 @@
       <argument type="service" id="twig.loader.native_filesystem"/>
       <argument type="collection">
         <argument key="autoescape">name</argument>
-        <argument key="cache">C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/twig</argument>
+        <argument key="cache">C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/twig</argument>
         <argument key="charset">UTF-8</argument>
         <argument key="debug">true</argument>
         <argument key="strict_variables">true</argument>
@@ -6200,6 +6291,12 @@
           <argument>suggestTag</argument>
         </argument>
       </call>
+      <call method="registerUndefinedFunctionCallback">
+        <argument type="collection">
+          <argument type="service" id="pagerfanta.undefined_callable_handler"/>
+          <argument>onUndefinedFunction</argument>
+        </argument>
+      </call>
       <configurator service="twig.configurator.environment" method="configure"/>
     </service>
     <service id="twig.app_variable" class="Symfony\Bridge\Twig\AppVariable">
@@ -6225,11 +6322,11 @@
     <service id="twig.template_iterator" class="Symfony\Bundle\TwigBundle\TemplateIterator">
       <argument type="service" id="kernel"/>
       <argument type="collection">
-        <argument key="C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public/icons">icons</argument>
-        <argument key="C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Email">email</argument>
-        <argument key="C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Form">null</argument>
+        <argument key="C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public/icons">icons</argument>
+        <argument key="C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Email">email</argument>
+        <argument key="C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Form">null</argument>
       </argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
       <argument type="collection">
         <argument>*.twig</argument>
       </argument>
@@ -6243,80 +6340,88 @@
     <service id="twig.loader.native_filesystem" class="Twig\Loader\FilesystemLoader">
       <tag name="twig.loader"/>
       <argument type="collection"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public/icons</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/public/icons</argument>
         <argument>icons</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-bundle/templates</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-bundle/templates</argument>
         <argument>Doctrine</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-bundle/templates</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-bundle/templates</argument>
         <argument>!Doctrine</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-migrations-bundle/templates</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-migrations-bundle/templates</argument>
         <argument>DoctrineMigrations</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-migrations-bundle/templates</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\doctrine\doctrine-migrations-bundle/templates</argument>
         <argument>!DoctrineMigrations</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\debug-bundle/Resources/views</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\debug-bundle/Resources/views</argument>
         <argument>Debug</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\debug-bundle/Resources/views</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\debug-bundle/Resources/views</argument>
         <argument>!Debug</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\web-profiler-bundle/Resources/views</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\web-profiler-bundle/Resources/views</argument>
         <argument>WebProfiler</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\web-profiler-bundle/Resources/views</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\web-profiler-bundle/Resources/views</argument>
         <argument>!WebProfiler</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo/templates</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo/templates</argument>
         <argument>Turbo</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo/templates</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\ux-turbo/templates</argument>
         <argument>!Turbo</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-bundle/Resources/views</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-bundle/Resources/views</argument>
         <argument>Security</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-bundle/Resources/views</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\security-bundle/Resources/views</argument>
         <argument>!Security</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\maker-bundle/templates</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\maker-bundle/templates</argument>
         <argument>Maker</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\maker-bundle/templates</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\maker-bundle/templates</argument>
         <argument>!Maker</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/templates</argument>
+        <argument>BabDevPagerfanta</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Email</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\babdev\pagerfanta-bundle/templates</argument>
+        <argument>!BabDevPagerfanta</argument>
+      </call>
+      <call method="addPath">
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
+      </call>
+      <call method="addPath">
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Email</argument>
         <argument>email</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Email</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Email</argument>
         <argument>!email</argument>
       </call>
       <call method="addPath">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Form</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\vendor\symfony\twig-bridge/Resources/views/Form</argument>
       </call>
     </service>
     <service id="twig.loader.chain" class="Twig\Loader\ChainLoader"/>
@@ -6342,7 +6447,7 @@
     <service id="twig.extension.code" class="Symfony\Bridge\Twig\Extension\CodeExtension">
       <tag name="twig.extension"/>
       <argument type="service" id="debug.file_link_formatter" on-invalid="ignore"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <argument>UTF-8</argument>
     </service>
     <service id="twig.extension.routing" class="Symfony\Bridge\Twig\Extension\RoutingExtension">
@@ -6435,9 +6540,9 @@
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
       <argument type="service" id="twig"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <argument>%kernel.bundles_metadata%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
       <argument type="service" id="debug.file_link_formatter" on-invalid="null"/>
       <call method="setName">
         <argument>debug:twig</argument>
@@ -6482,7 +6587,7 @@
       <argument type="service" id="twig"/>
       <argument>%data_collector.templates%</argument>
       <argument type="service" id="web_profiler.csp.handler"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
     </service>
     <service id="web_profiler.controller.router" class="Symfony\Bundle\WebProfilerBundle\Controller\RouterController" public="true">
       <argument type="service" id="profiler" on-invalid="null"/>
@@ -6541,7 +6646,7 @@
       <argument type="service" id="stimulus.helper"/>
     </service>
     <service id="stimulus.asset_mapper.ux_package_reader" class="Symfony\UX\StimulusBundle\Ux\UxPackageReader">
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
     </service>
     <service id="stimulus.ux_controllers_twig_extension" class="Symfony\UX\StimulusBundle\Twig\UxControllersTwigExtension">
       <tag name="twig.extension"/>
@@ -6551,15 +6656,15 @@
       <argument type="service" id="stimulus.asset_mapper.controllers_map_generator"/>
       <argument type="service" id="asset_mapper"/>
       <argument type="service" id="stimulus.asset_mapper.ux_package_reader"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
     </service>
     <service id="stimulus.asset_mapper.controllers_map_generator" class="Symfony\UX\StimulusBundle\AssetMapper\ControllersMapGenerator">
       <argument type="service" id="asset_mapper"/>
       <argument type="service" id="stimulus.asset_mapper.ux_package_reader"/>
       <argument type="collection">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/assets/controllers</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/assets/controllers</argument>
       </argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/assets/controllers.json</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/assets/controllers.json</argument>
       <argument type="service" id="stimulus.asset_mapper.auto_import_locator" on-invalid="null"/>
     </service>
     <service id="stimulus.asset_mapper.auto_import_locator" class="Symfony\UX\StimulusBundle\AssetMapper\AutoImportLocator">
@@ -7923,7 +8028,7 @@
     <service id="monolog.processor.psr_log_message" class="Monolog\Processor\PsrLogMessageProcessor"/>
     <service id="monolog.handler.main" class="Monolog\Handler\StreamHandler">
       <tag name="kernel.reset" method="reset"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\log/dev.log</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\log/dev.log</argument>
       <argument>debug</argument>
       <argument>true</argument>
       <argument>null</argument>
@@ -7946,8 +8051,8 @@
       <argument type="service" id="filesystem"/>
       <argument type="service" id="maker.autoloader_util"/>
       <argument type="service" id="maker.file_link_formatter"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/templates</argument>
     </service>
     <service id="maker.autoloader_finder" class="Symfony\Bundle\MakerBundle\Util\ComposerAutoloaderFinder">
       <argument>App</argument>
@@ -8124,7 +8229,7 @@
     </service>
     <service id="maker.maker.make_migration" class="Symfony\Bundle\MakerBundle\Maker\MakeMigration">
       <tag name="maker.command"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <argument type="service" id="maker.file_link_formatter"/>
     </service>
     <service id="maker.maker.make_stimulus_controller" class="Symfony\Bundle\MakerBundle\Maker\MakeStimulusController">
@@ -8323,14 +8428,14 @@
       <tag name="container.hot_path"/>
     </service>
     <service id="tailwind.builder" class="Symfonycasts\TailwindBundle\TailwindBuilder">
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend</argument>
       <argument type="collection">
-        <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/assets/styles/app.css</argument>
+        <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/assets/styles/app.css</argument>
       </argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/var/tailwind</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/var/tailwind</argument>
       <argument>null</argument>
       <argument>v4.1.11</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/tailwind.config.js</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/tailwind.config.js</argument>
       <argument>null</argument>
       <argument>auto</argument>
     </service>
@@ -8360,6 +8465,63 @@
       <tag name="asset_mapper.compiler" priority="10"/>
       <argument type="service" id="tailwind.builder"/>
       <argument>true</argument>
+    </service>
+    <service id="Knp\Snappy\Pdf" class="Knp\Snappy\Pdf" public="true" autowire="true">
+      <tag name="monolog.logger" channel="snappy"/>
+      <argument>%env(WKHTMLTOPDF_PATH)%</argument>
+      <argument>%knp_snappy.pdf.options%</argument>
+      <argument type="collection"/>
+      <call method="setLogger">
+        <argument type="service" id="monolog.logger.snappy"/>
+      </call>
+    </service>
+    <service id="pagerfanta.route_generator_factory" class="BabDev\PagerfantaBundle\RouteGenerator\RequestAwareRouteGeneratorFactory">
+      <argument type="service" id="router.default"/>
+      <argument type="service" id="request_stack"/>
+      <argument type="service" id="property_accessor"/>
+    </service>
+    <service id="pagerfanta.view.default" class="Pagerfanta\View\DefaultView">
+      <tag name="pagerfanta.view" alias="default"/>
+    </service>
+    <service id="pagerfanta.view.foundation6" class="Pagerfanta\View\Foundation6View">
+      <tag name="pagerfanta.view" alias="foundation6"/>
+    </service>
+    <service id="pagerfanta.view.semantic_ui" class="Pagerfanta\View\SemanticUiView">
+      <tag name="pagerfanta.view" alias="semantic_ui"/>
+    </service>
+    <service id="pagerfanta.view.twitter_bootstrap" class="Pagerfanta\View\TwitterBootstrapView">
+      <tag name="pagerfanta.view" alias="twitter_bootstrap"/>
+    </service>
+    <service id="pagerfanta.view.twitter_bootstrap3" class="Pagerfanta\View\TwitterBootstrap3View">
+      <tag name="pagerfanta.view" alias="twitter_bootstrap3"/>
+    </service>
+    <service id="pagerfanta.view.twitter_bootstrap4" class="Pagerfanta\View\TwitterBootstrap4View">
+      <tag name="pagerfanta.view" alias="twitter_bootstrap4"/>
+    </service>
+    <service id="pagerfanta.view.twitter_bootstrap5" class="Pagerfanta\View\TwitterBootstrap5View">
+      <tag name="pagerfanta.view" alias="twitter_bootstrap5"/>
+    </service>
+    <service id="pagerfanta.view_factory" class="BabDev\PagerfantaBundle\View\ContainerBackedImmutableViewFactory">
+      <argument type="service" id=".service_locator.WdLVXFq"/>
+      <argument type="collection">
+        <argument key="default">pagerfanta.view.default</argument>
+        <argument key="foundation6">pagerfanta.view.foundation6</argument>
+        <argument key="semantic_ui">pagerfanta.view.semantic_ui</argument>
+        <argument key="twitter_bootstrap">pagerfanta.view.twitter_bootstrap</argument>
+        <argument key="twitter_bootstrap3">pagerfanta.view.twitter_bootstrap3</argument>
+        <argument key="twitter_bootstrap4">pagerfanta.view.twitter_bootstrap4</argument>
+        <argument key="twitter_bootstrap5">pagerfanta.view.twitter_bootstrap5</argument>
+      </argument>
+    </service>
+    <service id="pagerfanta.undefined_callable_handler" class="BabDev\PagerfantaBundle\Twig\UndefinedCallableHandler"/>
+    <service id="pagerfanta.serializer.normalizer" class="BabDev\PagerfantaBundle\Serializer\Normalizer\PagerfantaNormalizer">
+      <tag name="serializer.normalizer"/>
+    </service>
+    <service id="pagerfanta.event_listener.convert_not_valid_max_per_page_to_not_found" class="BabDev\PagerfantaBundle\EventListener\ConvertNotValidCurrentPageToNotFoundListener">
+      <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" priority="512"/>
+    </service>
+    <service id="pagerfanta.event_listener.convert_not_valid_current_page_to_not_found" class="BabDev\PagerfantaBundle\EventListener\ConvertNotValidMaxPerPageToNotFoundListener">
+      <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" priority="512"/>
     </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AdminController" class="App\Controller\AdminController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminController" class="App\Controller\AdminController" autowire="true" abstract="true"/>
@@ -8922,10 +9084,13 @@
         <argument key="tagRepository" type="service_closure" id="App\Repository\TagRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.oYWGn7R" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.DdNaYWT" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="article" type="service_closure" id=".errored..service_locator.oYWGn7R.App\Entity\Article"/>
+        <argument key="aiInsight" type="service_closure" id="App\Service\AiInsightService"/>
+        <argument key="article" type="service_closure" id=".errored..service_locator.DdNaYWT.App\Entity\Article"/>
+        <argument key="freesound" type="service_closure" id="App\Service\FreeSoundService"/>
+        <argument key="openLibrary" type="service_closure" id="App\Service\OpenLibraryService"/>
         <argument key="paRepository" type="service_closure" id="App\Repository\PathArticleRepository"/>
         <argument key="pathRepository" type="service_closure" id="App\Repository\LearningPathRepository"/>
         <argument key="tagRepository" type="service_closure" id="App\Repository\TagRepository"/>
@@ -8944,6 +9109,14 @@
       <argument type="collection">
         <argument key="article" type="service_closure" id=".errored..service_locator.1Czx5uA.App\Entity\Article"/>
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+      </argument>
+    </service>
+    <service id=".service_locator.ptjrVLN" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="article" type="service_closure" id=".errored..service_locator.ptjrVLN.App\Entity\Article"/>
+        <argument key="pdf" type="service_closure" id="Knp\Snappy\Pdf"/>
+        <argument key="twig" type="service_closure" id="twig"/>
       </argument>
     </service>
     <service id=".service_locator.DFyL8OH" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -9161,7 +9334,7 @@
         <argument key="emailSender" type="service_closure" id="App\Service\EmailSender"/>
       </argument>
     </service>
-    <service id=".service_locator.mKi6qh1" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.7kxD99B" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\AdminController::blockUser" type="service_closure" id=".service_locator.Hz5btge"/>
@@ -9170,12 +9343,12 @@
         <argument key="App\Controller\AdminController::removeChatLock" type="service_closure" id=".service_locator.9d8thgb"/>
         <argument key="App\Controller\AdminController::resolveReport" type="service_closure" id=".service_locator.j1cJA1M"/>
         <argument key="App\Controller\AdminController::updateUser" type="service_closure" id=".service_locator.Hz5btge"/>
-        <argument key="App\Controller\ArticleController::byTag" type="service_closure" id=".service_locator.gNyeJPK"/>
         <argument key="App\Controller\ArticleController::delete" type="service_closure" id=".service_locator.1Czx5uA"/>
         <argument key="App\Controller\ArticleController::edit" type="service_closure" id=".service_locator.u2bJXgz"/>
+        <argument key="App\Controller\ArticleController::exportPdf" type="service_closure" id=".service_locator.ptjrVLN"/>
         <argument key="App\Controller\ArticleController::index" type="service_closure" id=".service_locator.gNyeJPK"/>
         <argument key="App\Controller\ArticleController::new" type="service_closure" id=".service_locator.TGZ7oSM"/>
-        <argument key="App\Controller\ArticleController::show" type="service_closure" id=".service_locator.oYWGn7R"/>
+        <argument key="App\Controller\ArticleController::show" type="service_closure" id=".service_locator.DdNaYWT"/>
         <argument key="App\Controller\CategorieController::delete" type="service_closure" id=".service_locator.aw9RHlF"/>
         <argument key="App\Controller\CategorieController::edit" type="service_closure" id=".service_locator.aw9RHlF"/>
         <argument key="App\Controller\CategorieController::index" type="service_closure" id=".service_locator.DFyL8OH"/>
@@ -9248,12 +9421,12 @@
         <argument key="App\Controller\AdminController:removeChatLock" type="service_closure" id=".service_locator.9d8thgb"/>
         <argument key="App\Controller\AdminController:resolveReport" type="service_closure" id=".service_locator.j1cJA1M"/>
         <argument key="App\Controller\AdminController:updateUser" type="service_closure" id=".service_locator.Hz5btge"/>
-        <argument key="App\Controller\ArticleController:byTag" type="service_closure" id=".service_locator.gNyeJPK"/>
         <argument key="App\Controller\ArticleController:delete" type="service_closure" id=".service_locator.1Czx5uA"/>
         <argument key="App\Controller\ArticleController:edit" type="service_closure" id=".service_locator.u2bJXgz"/>
+        <argument key="App\Controller\ArticleController:exportPdf" type="service_closure" id=".service_locator.ptjrVLN"/>
         <argument key="App\Controller\ArticleController:index" type="service_closure" id=".service_locator.gNyeJPK"/>
         <argument key="App\Controller\ArticleController:new" type="service_closure" id=".service_locator.TGZ7oSM"/>
-        <argument key="App\Controller\ArticleController:show" type="service_closure" id=".service_locator.oYWGn7R"/>
+        <argument key="App\Controller\ArticleController:show" type="service_closure" id=".service_locator.DdNaYWT"/>
         <argument key="App\Controller\CategorieController:delete" type="service_closure" id=".service_locator.aw9RHlF"/>
         <argument key="App\Controller\CategorieController:edit" type="service_closure" id=".service_locator.aw9RHlF"/>
         <argument key="App\Controller\CategorieController:index" type="service_closure" id=".service_locator.DFyL8OH"/>
@@ -9343,6 +9516,10 @@
     </service>
     <service id=".debug.serializer.normalizer.serializer.denormalizer.unwrapping" class="Symfony\Component\Serializer\Debug\TraceableNormalizer">
       <argument type="service" id="serializer.denormalizer.unwrapping"/>
+      <argument type="service" id="serializer.data_collector"/>
+    </service>
+    <service id=".debug.serializer.normalizer.pagerfanta.serializer.normalizer" class="Symfony\Component\Serializer\Debug\TraceableNormalizer">
+      <argument type="service" id="pagerfanta.serializer.normalizer"/>
       <argument type="service" id="serializer.data_collector"/>
     </service>
     <service id=".debug.serializer.normalizer.serializer.normalizer.flatten_exception" class="Symfony\Component\Serializer\Debug\TraceableNormalizer">
@@ -9833,6 +10010,17 @@
       </call>
       <configurator service="debug.debug_logger_configurator" method="pushDebugLogger"/>
     </service>
+    <service id="monolog.logger.snappy" class="Monolog\Logger">
+      <tag name="monolog.channel_logger"/>
+      <argument>snappy</argument>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.console"/>
+      </call>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.main"/>
+      </call>
+      <configurator service="debug.debug_logger_configurator" method="pushDebugLogger"/>
+    </service>
     <service id="monolog.logger.deprecation" class="Monolog\Logger" public="true">
       <tag name="monolog.channel_logger"/>
       <argument>deprecation</argument>
@@ -9845,6 +10033,18 @@
       <configurator service="debug.debug_logger_configurator" method="pushDebugLogger"/>
     </service>
     <service id="monolog.handler.null_internal" class="Monolog\Handler\NullHandler"/>
+    <service id=".service_locator.WdLVXFq" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="default" type="service_closure" id="pagerfanta.view.default"/>
+        <argument key="foundation6" type="service_closure" id="pagerfanta.view.foundation6"/>
+        <argument key="semantic_ui" type="service_closure" id="pagerfanta.view.semantic_ui"/>
+        <argument key="twitter_bootstrap" type="service_closure" id="pagerfanta.view.twitter_bootstrap"/>
+        <argument key="twitter_bootstrap3" type="service_closure" id="pagerfanta.view.twitter_bootstrap3"/>
+        <argument key="twitter_bootstrap4" type="service_closure" id="pagerfanta.view.twitter_bootstrap4"/>
+        <argument key="twitter_bootstrap5" type="service_closure" id="pagerfanta.view.twitter_bootstrap5"/>
+      </argument>
+    </service>
     <service id=".service_locator.yY.p4P7" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -10435,7 +10635,7 @@
     <service id="asset_mapper.cached_mapped_asset_factory.inner" class="Symfony\Component\AssetMapper\Factory\MappedAssetFactory">
       <argument type="service" id="asset_mapper.public_assets_path_resolver"/>
       <argument type="service" id="asset_mapper_compiler"/>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend/assets/vendor</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend/assets/vendor</argument>
     </service>
     <service id="asset_mapper.asset_package.inner" class="Symfony\Component\Asset\PathPackage">
       <argument></argument>
@@ -10504,6 +10704,12 @@
         <argument type="service">
           <service class="Symfony\Component\Serializer\Debug\TraceableNormalizer">
             <argument type="service" id="serializer.denormalizer.unwrapping"/>
+            <argument type="service" id="serializer.data_collector"/>
+          </service>
+        </argument>
+        <argument type="service">
+          <service class="Symfony\Component\Serializer\Debug\TraceableNormalizer">
+            <argument type="service" id="pagerfanta.serializer.normalizer"/>
             <argument type="service" id="serializer.data_collector"/>
           </service>
         </argument>
@@ -10695,14 +10901,17 @@
     <service id=".errored..service_locator.9d8thgb.App\Entity\ChatLock" class="App\Entity\ChatLock">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.9d8thgb&quot;: it needs an instance of &quot;App\Entity\ChatLock&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
-    <service id=".errored..service_locator.oYWGn7R.App\Entity\Article" class="App\Entity\Article">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.oYWGn7R&quot;: it needs an instance of &quot;App\Entity\Article&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    <service id=".errored..service_locator.DdNaYWT.App\Entity\Article" class="App\Entity\Article">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.DdNaYWT&quot;: it needs an instance of &quot;App\Entity\Article&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.u2bJXgz.App\Entity\Article" class="App\Entity\Article">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.u2bJXgz&quot;: it needs an instance of &quot;App\Entity\Article&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.1Czx5uA.App\Entity\Article" class="App\Entity\Article">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.1Czx5uA&quot;: it needs an instance of &quot;App\Entity\Article&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.ptjrVLN.App\Entity\Article" class="App\Entity\Article">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ptjrVLN&quot;: it needs an instance of &quot;App\Entity\Article&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.j7wOkYK.App\Entity\Categorie" class="App\Entity\Categorie">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.j7wOkYK&quot;: it needs an instance of &quot;App\Entity\Categorie&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
@@ -11742,102 +11951,102 @@
       </argument>
     </service>
     <service id="cache.app.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
-      <argument>PZ7iZpUfq8</argument>
+      <argument>zbxOInLTxT</argument>
       <argument>0</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/app</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       </call>
     </service>
     <service id="cache.system.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>b+DBBwJXSY</argument>
+      <argument>KebxtuNoT6</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.validator.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>L6UnrJ00pU</argument>
+      <argument>HsF9Xw5+bo</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.serializer.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>jj1xurNhXo</argument>
+      <argument>BB7EcuBUJf</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.annotations.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>GpCyFobdCd</argument>
+      <argument>ktsOxfOvg9</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.property_info.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>n5I2d7Y3JC</argument>
+      <argument>yVzW9DUFd0</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.asset_mapper.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>Kck+8C0iBR</argument>
+      <argument>+OZa5mJjRc</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.messenger.restart_workers_signal.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
-      <argument>+Z4vN-szSy</argument>
+      <argument>7isfX7W0XX</argument>
       <argument>0</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/app</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       </call>
     </service>
     <service id="cache.validator_expression_language.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>MgBbf1Mwlv</argument>
+      <argument>vwDbM7GGQM</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.doctrine.orm.default.result.recorder_inner" class="Symfony\Component\Cache\Adapter\ArrayAdapter"/>
     <service id="cache.doctrine.orm.default.query.recorder_inner" class="Symfony\Component\Cache\Adapter\ArrayAdapter"/>
     <service id="cache.security_expression_language.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>hzhn4T0mGO</argument>
+      <argument>Js-jy1HSso</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.security_is_granted_attribute_expression_language.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>XTvD8r2Dl+</argument>
+      <argument>5WOnEYQ-lc</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.security_token_verifier.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>2eBJjaGQ+K</argument>
+      <argument>zQaAB+NMAh</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\Users\user\Documents\master\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
+      <argument>C:\Users\wiem\Desktop\SYmfonymerged\Esprit-PIDEV-3A11-2526-InnerTrack\backend\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12033,9 +12242,12 @@
     <service id="Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface" alias="lexik_jwt_authentication.encoder.lcobucci"/>
     <service id="lexik_jwt_authentication.key_loader" alias="lexik_jwt_authentication.key_loader.raw" public="true"/>
     <service id="SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface" alias="symfonycasts.verify_email.helper"/>
+    <service id="knp_snappy.pdf" alias="Knp\Snappy\Pdf" public="true"/>
+    <service id="Pagerfanta\RouteGenerator\RouteGeneratorFactoryInterface" alias="pagerfanta.route_generator_factory"/>
+    <service id="Pagerfanta\View\ViewFactoryInterface" alias="pagerfanta.view_factory"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.mKi6qh1"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.7kxD99B"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -12068,6 +12280,8 @@
     <service id="Psr\Log\LoggerInterface $debugLogger" alias="monolog.logger.debug"/>
     <service id=".Psr\Log\LoggerInterface $security.logger" alias="monolog.logger.security"/>
     <service id="Psr\Log\LoggerInterface $securityLogger" alias="monolog.logger.security"/>
+    <service id=".Psr\Log\LoggerInterface $snappy.logger" alias="monolog.logger.snappy"/>
+    <service id="Psr\Log\LoggerInterface $snappyLogger" alias="monolog.logger.snappy"/>
     <service id=".Psr\Log\LoggerInterface $deprecation.logger" alias="monolog.logger.deprecation"/>
     <service id="Psr\Log\LoggerInterface $deprecationLogger" alias="monolog.logger.deprecation"/>
     <service id=".service_locator.GsIjbjK" alias="messenger.receiver_locator"/>
@@ -12075,7 +12289,7 @@
     <service id=".service_locator.ZBZXtOS" alias=".service_locator.NZdAz3P"/>
     <service id=".service_locator.Bz31.6E" alias=".service_locator.WE5u2t6"/>
     <service id=".service_locator.bJ.4HC5" alias=".service_locator.w7.f4fT"/>
-    <service id=".service_locator.2gWaF1q" alias=".service_locator.oYWGn7R"/>
+    <service id=".service_locator.QLwmPIe" alias=".service_locator.DdNaYWT"/>
     <service id=".service_locator.vxqar68" alias=".service_locator.aOUxFCC"/>
     <service id=".service_locator.YhAlWIl" alias=".service_locator.mi6ClI3"/>
     <service id=".service_locator.SqiERsl" alias=".service_locator.esAKHBH"/>
@@ -12083,7 +12297,7 @@
     <service id=".service_locator.af5Pu8L" alias=".service_locator.xlPqeVi"/>
     <service id=".service_locator.InixgsZ" alias=".service_locator.wrYbiVS"/>
     <service id=".service_locator.RSnUuBg" alias=".service_locator.wBCwxMi"/>
-    <service id=".service_locator.fJlWBKm" alias=".service_locator.mKi6qh1"/>
+    <service id=".service_locator.orfbKKc" alias=".service_locator.7kxD99B"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
     <service id=".service_locator._4B5fp7" alias=".service_locator.ibX2Ulc"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>
@@ -12118,9 +12332,10 @@
     <service id=".service_locator.sm1LWi." alias=".service_locator.9d8thgb"/>
     <service id=".service_locator.69BkKOb" alias=".service_locator.gNyeJPK"/>
     <service id=".service_locator.J83fxCv" alias=".service_locator.TGZ7oSM"/>
-    <service id=".service_locator.IK9LwZS" alias=".service_locator.oYWGn7R"/>
+    <service id=".service_locator.19oF.Vp" alias=".service_locator.DdNaYWT"/>
     <service id=".service_locator.eGoiKRR" alias=".service_locator.u2bJXgz"/>
     <service id=".service_locator.CRDtpSJ" alias=".service_locator.1Czx5uA"/>
+    <service id=".service_locator.e7mkFwf" alias=".service_locator.ptjrVLN"/>
     <service id=".service_locator.J7lSc4B" alias=".service_locator.DFyL8OH"/>
     <service id=".service_locator.9e2t_lq" alias=".service_locator.CsMkqUa"/>
     <service id=".service_locator.2whhcc6" alias=".service_locator.j7wOkYK"/>

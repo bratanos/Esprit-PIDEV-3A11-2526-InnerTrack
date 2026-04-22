@@ -395,6 +395,6 @@ class __TwigTemplate_060923141dfec32bfe225c7fe67cf171 extends Template
         </div>
     </div>
 </main>
-{% endblock %}", "pages/signup.html.twig", "C:\\Users\\user\\Documents\\fuck2\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\signup.html.twig");
+{% endblock %}", "pages/signup.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\pages\\signup.html.twig");
     }
 }

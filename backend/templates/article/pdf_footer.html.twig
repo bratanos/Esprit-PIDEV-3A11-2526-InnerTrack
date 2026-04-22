@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+        }
+        .footer {
+            width: 100%;
+            background: #f8f9fa;
+            border-top: 2px solid #e9ecef;
+            padding: 8px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 9px;
+            color: #495057;
+            border-radius: 12px 12px 0 0;
+        }
+        .footer-title {
+            max-width: 70%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 500;
+        }
+        .page-info {
+            background: #e9ecef;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="footer">
+        <span class="footer-title">✨ {{ article.titre|slice(0,60) }}{% if article.titre|length > 60 %}…{% endif %}</span>
+        <span class="page-info">📄 Page <span class="page"></span> / <span class="topage"></span></span>
+    </div>
+    <script>
+        var vars = {};
+        var query = window.location.search.substring(1).split('&');
+        for (var i = 0; i < query.length; i++) {
+            var pair = query[i].split('=');
+            vars[pair[0]] = decodeURIComponent(pair[1]);
+        }
+        document.querySelector('.page').textContent = vars.page || '1';
+        document.querySelector('.topage').textContent = vars.topage || '1';
+    </script>
+</body>
+</html>

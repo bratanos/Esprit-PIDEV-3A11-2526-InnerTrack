@@ -14,7 +14,7 @@ use Twig\Source;
 use Twig\Template;
 use Twig\TemplateWrapper;
 
-/* journal/entree/index.html.twig */
+/* Journal/entree/index.html.twig */
 class __TwigTemplate_c33c2ef89d7d74dc5125beff51b35763 extends Template
 {
     private Source $source;
@@ -44,10 +44,10 @@ class __TwigTemplate_c33c2ef89d7d74dc5125beff51b35763 extends Template
     {
         $macros = $this->macros;
         $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
-        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "journal/entree/index.html.twig"));
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "Journal/entree/index.html.twig"));
 
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
-        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "journal/entree/index.html.twig"));
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "Journal/entree/index.html.twig"));
 
         $this->parent = $this->load("layouts/dashboard.html.twig", 1);
         yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
@@ -335,7 +335,7 @@ class __TwigTemplate_c33c2ef89d7d74dc5125beff51b35763 extends Template
      */
     public function getTemplateName(): string
     {
-        return "journal/entree/index.html.twig";
+        return "Journal/entree/index.html.twig";
     }
 
     /**
@@ -501,6 +501,6 @@ class __TwigTemplate_c33c2ef89d7d74dc5125beff51b35763 extends Template
 </div>
 {% endif %}
 
-{% endblock %}", "journal/entree/index.html.twig", "C:\\Users\\user\\Documents\\master\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\Journal\\entree\\index.html.twig");
+{% endblock %}", "Journal/entree/index.html.twig", "C:\\Users\\wiem\\Desktop\\SYmfonymerged\\Esprit-PIDEV-3A11-2526-InnerTrack\\backend\\templates\\Journal\\entree\\index.html.twig");
     }
 }
