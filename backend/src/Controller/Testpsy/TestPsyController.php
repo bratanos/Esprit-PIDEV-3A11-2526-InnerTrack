@@ -13,6 +13,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Repository\UserRepository;
+use App\Service\BrevoMailer;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
 #[Route('/testpsy')]
 class TestPsyController extends AbstractController
@@ -147,7 +154,7 @@ class TestPsyController extends AbstractController
         if ($request->isMethod('POST')) {
             $reponses = $request->request->all('reponses');
 
-            // Validation
+            
             $errors = [];
             foreach ($questions as $q) {
                 if (!isset($reponses[$q->getIdQuestion()])) {
@@ -287,6 +294,96 @@ class TestPsyController extends AbstractController
         return $this->render('pages/testpsy/resultat.html.twig', ['resultat' => $resultat]);
     }
 
+
+// ─────────────────────────────────────────────
+// EXPORT EXCEL 
+// ─────────────────────────────────────────────
+#[Route('/historique/excel', name: 'testpsy_historique_excel')]
+public function exporterExcel(EntityManagerInterface $em): Response
+{
+    /** @var \App\Entity\User $user */
+    $user   = $this->getUser();
+    $userId = $user?->getId();
+
+    $historiques = $userId
+        ? $em->getRepository(HistoriqueResultat::class)->findBy(
+            ['idUser' => $userId],
+            ['datePassage' => 'DESC']
+          )
+        : [];
+
+    $tests = $em->getRepository(TestPsychologique::class)->findAll();
+    $testsMap = [];
+    foreach ($tests as $t) {
+        $testsMap[$t->getIdTest()] = $t->getTitre();
+    }
+
+    // ── Création du fichier Excel ──────────────────────────────────────────
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setTitle('Mon Historique');
+
+    // ── Style header ───────────────────────────────────────────────────────
+    $headerStyle = [
+        'font'      => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF'], 'size' => 12],
+        'fill'      => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF4F46E5']],
+        'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+        'borders'   => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN, 'color' => ['argb' => 'FFE0E7FF']]],
+    ];
+
+    $rowStyle = [
+        'borders'   => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN, 'color' => ['argb' => 'FFE5E7EB']]],
+        'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+    ];
+
+    // ── En-têtes ───────────────────────────────────────────────────────────
+    $headers = ['#', 'Test', 'Date', 'Score', 'Résultat (%)', 'Niveau'];
+    foreach ($headers as $i => $header) {
+        $col = chr(65 + $i);
+        $sheet->setCellValue($col . '1', $header);
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+    $sheet->getStyle('A1:F1')->applyFromArray($headerStyle);
+    $sheet->getRowDimension(1)->setRowHeight(25);
+
+    // ── Données ────────────────────────────────────────────────────────────
+    foreach ($historiques as $i => $h) {
+        $row = $i + 2;
+        $sheet->setCellValue('A' . $row, $i + 1);
+        $sheet->setCellValue('B' . $row, $testsMap[$h->getIdTest()] ?? 'Test #' . $h->getIdTest());
+        $sheet->setCellValue('C' . $row, $h->getDatePassage()?->format('d/m/Y H:i') ?? '—');
+        $sheet->setCellValue('D' . $row, $h->getScore() ?? '—');
+        $sheet->setCellValue('E' . $row, $h->getPourcentage() ? round($h->getPourcentage()) . '%' : '—');
+        $sheet->setCellValue('F' . $row, $h->getNiveau() ?? 'N/A');
+
+        // Couleur alternée
+        if ($i % 2 === 0) {
+            $sheet->getStyle('A' . $row . ':F' . $row)->getFill()
+                ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                ->getStartColor()->setARGB('FFF5F3FF');
+        }
+        $sheet->getStyle('A' . $row . ':F' . $row)->applyFromArray($rowStyle);
+        $sheet->getRowDimension($row)->setRowHeight(20);
+    }
+
+    // ── Colonne B plus large ───────────────────────────────────────────────
+    $sheet->getColumnDimension('B')->setWidth(40);
+    $sheet->getColumnDimension('C')->setWidth(20);
+
+    // ── Téléchargement ─────────────────────────────────────────────────────
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+    $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($writer) {
+        $writer->save('php://output');
+    });
+
+    $filename = 'historique_innertrack_' . date('Y-m-d') . '.xlsx';
+    $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+    $response->headers->set('Cache-Control', 'max-age=0');
+
+    return $response;
+}
     // ─────────────────────────────────────────────
     // HISTORIQUE
     // ─────────────────────────────────────────────
@@ -417,90 +514,127 @@ class TestPsyController extends AbstractController
         ]);
     }
 
+
+
     // ─────────────────────────────────────────────
     // CREATE
     // ─────────────────────────────────────────────
     #[Route('/create', name: 'testpsy_create', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_PSYCHOLOGUE')]
-    public function create(Request $request, EntityManagerInterface $em): Response
-    {
-        $types  = $this->getTypes($em);
-        $errors = [];
-        $old    = [];
+    public function create(
+    Request                $request,
+    EntityManagerInterface $em,
+    BrevoMailer            $brevoMailer,
+    UserRepository         $userRepo,
+): Response {
+    $types  = $this->getTypes($em);
+    $errors = [];
+    $old    = [];
 
-        if ($request->isMethod('POST')) {
-            $titre       = trim($request->request->get('titre', ''));
-            $idType      = $request->request->get('id_type', '');
-            $description = trim($request->request->get('description', ''));
-            $questions   = array_filter(
-                array_map('trim', $request->request->all('questions')),
-                fn($q) => $q !== ''
-            );
+    if ($request->isMethod('POST')) {
+        $titre       = trim($request->request->get('titre', ''));
+        $idType      = $request->request->get('id_type', '');
+        $description = trim($request->request->get('description', ''));
+        $questions   = array_filter(
+            array_map('trim', $request->request->all('questions')),
+            fn($q) => $q !== ''
+        );
 
-            if ($titre === '') {
-                $errors['titre'] = 'Le titre est obligatoire.';
-            } elseif (mb_strlen($titre) < 3) {
-                $errors['titre'] = 'Le titre doit contenir au moins 3 caractères.';
-            } elseif (mb_strlen($titre) > 255) {
-                $errors['titre'] = 'Le titre ne peut pas dépasser 255 caractères.';
-            }
+        if ($titre === '') {
+            $errors['titre'] = 'Le titre est obligatoire.';
+        } elseif (mb_strlen($titre) < 3) {
+            $errors['titre'] = 'Le titre doit contenir au moins 3 caractères.';
+        } elseif (mb_strlen($titre) > 255) {
+            $errors['titre'] = 'Le titre ne peut pas dépasser 255 caractères.';
+        }
 
-            if ($idType === '') {
-                $errors['id_type'] = 'Veuillez sélectionner un type de test.';
-            } else {
-                $validIds = array_column($types, 'id_type');
-                if (!in_array((int) $idType, array_map('intval', $validIds))) {
-                    $errors['id_type'] = 'Type de test invalide.';
-                }
-            }
-
-            if ($description !== '' && mb_strlen($description) > 2000) {
-                $errors['description'] = 'La description ne peut pas dépasser 2000 caractères.';
-            }
-
-            if (count($questions) === 0) {
-                $errors['questions'] = 'Ajoutez au moins une question.';
-            }
-
-            $old = [
-                'titre'       => $titre,
-                'id_type'     => $idType,
-                'description' => $description,
-                'questions'   => array_values($questions),
-            ];
-
-            if (empty($errors)) {
-                $test = new TestPsychologique();
-                $test->setTitre($titre)
-                     ->setIdType((int) $idType)
-                     ->setDescription($description ?: null)
-                     ->setNombreQuestions(0);
-
-                $em->persist($test);
-                $em->flush();
-
-                $count = 0;
-                foreach ($questions as $contenu) {
-                    $q = new Question();
-                    $q->setTest($test)->setContenu($contenu);
-                    $em->persist($q);
-                    $count++;
-                }
-
-                $test->setNombreQuestions($count);
-                $em->flush();
-
-                $this->addFlash('success', 'Test créé avec succès !');
-                return $this->redirectToRoute('testpsy_index');
+        if ($idType === '') {
+            $errors['id_type'] = 'Veuillez sélectionner un type de test.';
+        } else {
+            $validIds = array_column($types, 'id_type');
+            if (!in_array((int) $idType, array_map('intval', $validIds))) {
+                $errors['id_type'] = 'Type de test invalide.';
             }
         }
 
-        return $this->render('pages/testpsy/create.html.twig', [
-            'types'  => $types,
-            'errors' => $errors,
-            'old'    => $old,
+        if ($description !== '' && mb_strlen($description) > 2000) {
+            $errors['description'] = 'La description ne peut pas dépasser 2000 caractères.';
+        }
+
+        if (count($questions) === 0) {
+            $errors['questions'] = 'Ajoutez au moins une question.';
+        }
+
+        $old = [
+            'titre'       => $titre,
+            'id_type'     => $idType,
+            'description' => $description,
+            'questions'   => array_values($questions),
+        ];
+
+        if (empty($errors)) {
+            $test = new TestPsychologique();
+            $test->setTitre($titre)
+                 ->setIdType((int) $idType)
+                 ->setDescription($description ?: null)
+                 ->setNombreQuestions(0);
+
+            $em->persist($test);
+            $em->flush();
+
+            $count = 0;
+            foreach ($questions as $contenu) {
+                $q = new Question();
+                $q->setTest($test)->setContenu($contenu);
+                $em->persist($q);
+                $count++;
+            }
+
+            $test->setNombreQuestions($count);
+            $em->flush();
+
+            // ✅ Récupérer le libellé du type
+            $typeLibelle = '';
+            foreach ($types as $t) {
+                if ((int) $t['id_type'] === (int) $idType) {
+                    $typeLibelle = $t['libelle'];
+                    break;
+                }
+            }
+
+            // ✅ Notifier tous les utilisateurs
+try {
+    $users = $userRepo->findAll();
+    foreach ($users as $user) {
+        if (!$user->getEmail()) continue;
+        $prenom = explode('@', $user->getEmail())[0];
+        $html = $this->renderView('emails/nouveau_test.html.twig', [
+            'titre_test' => $test->getTitre(),
+            'type_test'  => $typeLibelle,
+            'prenom'     => $prenom,
         ]);
+        $brevoMailer->sendEmail(
+            $user->getEmail(),
+            $prenom,
+            '🆕 Nouveau test disponible — ' . $test->getTitre(),
+            $html,
+        );
     }
+} catch (\Throwable $e) {
+    $this->addFlash('error', 'Erreur mail : ' . $e->getMessage());
+}
+
+            $this->addFlash('success', 'Test créé avec succès ! Tous les utilisateurs ont été notifiés.');
+            return $this->redirectToRoute('testpsy_index');
+        }
+    }
+
+    return $this->render('pages/testpsy/create.html.twig', [
+        'types'  => $types,
+        'errors' => $errors,
+        'old'    => $old,
+    ]);
+}
 
     // ─────────────────────────────────────────────
     // EDIT

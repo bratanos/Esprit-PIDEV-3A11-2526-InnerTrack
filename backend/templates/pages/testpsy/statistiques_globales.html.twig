@@ -1,9 +1,11 @@
+
 {% extends 'layouts/dashboard.html.twig' %}
 
 {% block header_title %}Statistiques Globales{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto pb-24">
+
     <!-- Header -->
     <div class="flex items-center justify-between mb-8">
         <div>
@@ -34,7 +36,7 @@
             </div>
             <div class="min-w-0">
                 <p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Test le plus Populaire</p>
-                <p class="text-xl font-extrabold text-on-surface font-headline truncate" title="{{ stats_globales.populaire ?: 'Aucun' }}">{{ stats_globales.populaire ?: 'Aucun test passé' }}</p>
+                <p class="text-xl font-extrabold text-on-surface font-headline truncate">{{ stats_globales.populaire ?: 'Aucun test passé' }}</p>
             </div>
         </div>
 
@@ -49,92 +51,185 @@
         </div>
     </div>
 
-    <!-- Charts Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-        <!-- Passages Chart -->
+    <!-- Charts Row 1 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+
+        <!-- Bar Chart : Passages -->
         <div class="bg-white rounded-[2rem] p-8 border border-outline/20 shadow-sm">
-            <h3 class="text-lg font-extrabold font-headline text-on-surface mb-6 flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary">bar_chart</span> Nombre de passages par test
+            <h3 class="text-lg font-extrabold font-headline text-on-surface mb-1 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">bar_chart</span>
+                Passages par test
             </h3>
-            <div class="relative h-72 w-full">
-                <canvas id="passagesChart"></canvas>
-            </div>
+            <p class="text-xs text-on-surface-variant mb-6">Nombre de fois que chaque test a été passé</p>
+            <div id="chart_passages" style="width:100%; height:320px;"></div>
         </div>
 
-        <!-- Moyennes Chart -->
+        <!-- Donut Chart : Moyennes -->
         <div class="bg-white rounded-[2rem] p-8 border border-outline/20 shadow-sm">
-            <h3 class="text-lg font-extrabold font-headline text-on-surface mb-6 flex items-center gap-2">
-                <span class="material-symbols-outlined text-green-600">pie_chart</span> Score moyen par test (%)
+            <h3 class="text-lg font-extrabold font-headline text-on-surface mb-1 flex items-center gap-2">
+                <span class="material-symbols-outlined text-green-600">pie_chart</span>
+                Score moyen par test
             </h3>
-            <div class="relative h-72 w-full">
-                <canvas id="moyennesChart"></canvas>
-            </div>
+            <p class="text-xs text-on-surface-variant mb-6">Pourcentage moyen obtenu par les utilisateurs</p>
+            <div id="chart_moyennes" style="width:100%; height:320px;"></div>
         </div>
+
     </div>
+
+    <!-- Combo Chart -->
+    <div class="bg-white rounded-[2rem] p-8 border border-outline/20 shadow-sm mb-10">
+        <h3 class="text-lg font-extrabold font-headline text-on-surface mb-1 flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-400">show_chart</span>
+            Comparaison passages vs score moyen
+        </h3>
+        <p class="text-xs text-on-surface-variant mb-6">Vue combinée pour identifier les tests les plus utilisés et performants</p>
+        <div id="chart_combo" style="width:100%; height:350px;"></div>
+    </div>
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Data injection from Twig
-    const passagesData = {{ passages|json_encode|raw }};
-    const moyennesData = {{ moyennes|json_encode|raw }};
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { packages: ['corechart', 'bar'] });
+    google.charts.setOnLoadCallback(drawCharts);
 
-    if(passagesData.length === 0) return;
+    const passagesRaw = {{ passages|json_encode|raw }};
+    const moyennesRaw = {{ moyennes|json_encode|raw }};
 
-    // Passages Chart
-    const labelsPassages = passagesData.map(item => item.titre.length > 20 ? item.titre.substring(0, 20) + '...' : item.titre);
-    const dataPassages = passagesData.map(item => parseInt(item.nb_passages));
+    function drawCharts() {
+        drawPassages();
+        drawMoyennes();
+        drawCombo();
+    }
 
-    new Chart(document.getElementById('passagesChart'), {
-        type: 'bar',
-        data: {
-            labels: labelsPassages,
-            datasets: [{
-                label: 'Passages',
-                data: dataPassages,
-                backgroundColor: 'rgba(99, 102, 241, 0.8)', // Primary color
-                borderRadius: 8,
-                barPercentage: 0.6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
-                x: { grid: { display: false } }
-            }
+    function drawPassages() {
+        if (!passagesRaw.length) {
+            document.getElementById('chart_passages').innerHTML = '<p class="text-center text-gray-400 mt-10">Aucune donnée disponible</p>';
+            return;
         }
-    });
 
-    // Moyennes Chart
-    const labelsMoyennes = moyennesData.map(item => item.titre.length > 20 ? item.titre.substring(0, 20) + '...' : item.titre);
-    const dataMoyennes = moyennesData.map(item => parseFloat(item.moyenne));
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Test');
+        data.addColumn('number', 'Passages');
+        data.addColumn({ type: 'string', role: 'style' });
+        data.addColumn({ type: 'string', role: 'tooltip' });
 
-    new Chart(document.getElementById('moyennesChart'), {
-        type: 'doughnut',
-        data: {
-            labels: labelsMoyennes,
-            datasets: [{
-                data: dataMoyennes,
-                backgroundColor: [
-                    '#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'
-                ],
-                borderWidth: 0,
-                hoverOffset: 10
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'right', labels: { boxWidth: 12, usePointStyle: true, font: { size: 10 } } }
+        const colors = ['#6366f1','#818cf8','#4f46e5','#7c3aed','#a78bfa','#c4b5fd','#8b5cf6','#ddd6fe'];
+        passagesRaw.forEach(function(item, i) {
+            data.addRow([
+                item.titre.length > 22 ? item.titre.substring(0, 22) + '…' : item.titre,
+                parseInt(item.nb_passages),
+                'color: ' + colors[i % colors.length],
+                item.titre + '\n' + item.nb_passages + ' passage(s)'
+            ]);
+        });
+
+        var options = {
+            chartArea: { left: 50, top: 20, right: 20, bottom: 80, width: '100%', height: '80%' },
+            legend: { position: 'none' },
+            bar: { groupWidth: '55%' },
+            vAxis: {
+                minValue: 0,
+                gridlines: { color: '#f3f4f6', count: 5 },
+                textStyle: { color: '#6b7280', fontSize: 11 }
             },
-            cutout: '65%'
+            hAxis: {
+                textStyle: { color: '#6b7280', fontSize: 10 },
+                slantedText: true,
+                slantedTextAngle: 30
+            },
+            animation: { startup: true, duration: 800, easing: 'out' },
+            backgroundColor: 'transparent',
+            fontName: 'Inter, Arial, sans-serif'
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_passages'));
+        chart.draw(data, options);
+    }
+
+    function drawMoyennes() {
+        if (!moyennesRaw.length) {
+            document.getElementById('chart_moyennes').innerHTML = '<p class="text-center text-gray-400 mt-10">Aucune donnée disponible</p>';
+            return;
         }
-    });
-});
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Test');
+        data.addColumn('number', 'Score moyen (%)');
+
+        moyennesRaw.forEach(function(item) {
+            data.addRow([item.titre, parseFloat(item.moyenne)]);
+        });
+
+        var options = {
+            chartArea: { left: 20, top: 20, right: 20, bottom: 20, width: '100%', height: '90%' },
+            pieHole: 0.45,
+            colors: ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6','#f97316'],
+            legend: {
+                position: 'right',
+                textStyle: { color: '#374151', fontSize: 11 },
+                alignment: 'center'
+            },
+            pieSliceTextStyle: { color: '#fff', fontSize: 11, bold: true },
+            tooltip: { showColorCode: true },
+            animation: { startup: true, duration: 800, easing: 'out' },
+            backgroundColor: 'transparent',
+            fontName: 'Inter, Arial, sans-serif'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('chart_moyennes'));
+        chart.draw(data, options);
+    }
+
+    function drawCombo() {
+        if (!passagesRaw.length) {
+            document.getElementById('chart_combo').innerHTML = '<p class="text-center text-gray-400 mt-10">Aucune donnée disponible</p>';
+            return;
+        }
+
+        var moyennesMap = {};
+        moyennesRaw.forEach(function(m) { moyennesMap[m.id_test] = parseFloat(m.moyenne); });
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Test');
+        data.addColumn('number', 'Passages');
+        data.addColumn('number', 'Score moyen (%)');
+
+        passagesRaw.forEach(function(item) {
+            data.addRow([
+                item.titre.length > 20 ? item.titre.substring(0, 20) + '…' : item.titre,
+                parseInt(item.nb_passages),
+                moyennesMap[item.id_test] || 0
+            ]);
+        });
+
+        var options = {
+            chartArea: { left: 60, top: 20, right: 60, bottom: 80, width: '100%', height: '75%' },
+            seriesType: 'bars',
+            series: {
+                0: { color: '#6366f1', targetAxisIndex: 0 },
+                1: { type: 'line', color: '#10b981', lineWidth: 3, pointSize: 7, targetAxisIndex: 1 }
+            },
+            vAxes: {
+                0: { title: 'Passages', textStyle: { color: '#6b7280', fontSize: 11 }, gridlines: { color: '#f3f4f6' } },
+                1: { title: 'Score (%)', textStyle: { color: '#6b7280', fontSize: 11 }, minValue: 0, maxValue: 100 }
+            },
+            hAxis: {
+                textStyle: { color: '#6b7280', fontSize: 10 },
+                slantedText: true,
+                slantedTextAngle: 30
+            },
+            legend: { position: 'top', textStyle: { color: '#374151', fontSize: 11 } },
+            bar: { groupWidth: '50%' },
+            animation: { startup: true, duration: 800, easing: 'out' },
+            backgroundColor: 'transparent',
+            fontName: 'Inter, Arial, sans-serif'
+        };
+
+        var chart = new google.visualization.ComboChart(document.getElementById('chart_combo'));
+        chart.draw(data, options);
+    }
+
+    window.addEventListener('resize', drawCharts);
 </script>
 {% endblock %}

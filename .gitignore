@@ -73,3 +73,7 @@ Thumbs.db
 # Large Models
 **/vosk-model-*
 **/vosk/
+
+
+backend/.env
+backend/var/

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\Testpsy;
+namespace App\Entity\Testpsy;
 
 class AIRecommandation
 {
@@ -29,6 +29,17 @@ class AIRecommandation
     public function setPlanSemaine(?string $v): self { $this->planSemaine = $v; return $this; }
     public function getAlertes(): array { return $this->alertes; }
     public function setAlertes(array $v): self { $this->alertes = $v; return $this; }
+
+    private array $votesModeles = [];
+private array $analyseFeatures = [];
+private string $niveauConfiance = '';
+
+public function getVotesModeles(): array { return $this->votesModeles; }
+public function setVotesModeles(array $v): self { $this->votesModeles = $v; return $this; }
+public function getAnalyseFeatures(): array { return $this->analyseFeatures; }
+public function setAnalyseFeatures(array $v): self { $this->analyseFeatures = $v; return $this; }
+public function getNiveauConfiance(): string { return $this->niveauConfiance; }
+public function setNiveauConfiance(string $v): self { $this->niveauConfiance = $v; return $this; }
 
     public function getCouleurCluster(): string
     {

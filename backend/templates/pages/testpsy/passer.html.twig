@@ -23,10 +23,29 @@
     </div>
 
     <h1 class="text-2xl font-extrabold font-headline tracking-tight text-on-surface mb-2">{{ test.titre }}</h1>
-    <p class="text-sm text-on-surface-variant mb-10">Répondez honnêtement à chaque question.</p>
+    <p class="text-sm text-on-surface-variant mb-4">Répondez honnêtement à chaque question.</p>
+
+    <!-- Bouton micro global -->
+    <div class="mb-8 flex items-center gap-3 bg-indigo-50 border border-indigo-100 rounded-2xl px-5 py-4">
+        <div class="flex flex-col flex-1">
+            <p class="text-sm font-bold text-indigo-700">🎙️ Mode vocal</p>
+            <p class="text-xs text-indigo-400 mt-0.5" x-text="voiceStatus"></p>
+        </div>
+        <button type="button"
+                @click="toggleVoice()"
+                :class="isListening ? 'bg-red-500 hover:bg-red-600 shadow-red-200' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'"
+                class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-bold shadow-lg transition-all active:scale-95">
+            <span class="material-symbols-outlined text-base" x-text="isListening ? 'mic_off' : 'mic'"></span>
+            <span x-text="isListening ? 'Arrêter' : 'Activer'"></span>
+            <!-- Pulse animation -->
+            <span x-show="isListening" class="relative flex h-2.5 w-2.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+            </span>
+        </button>
+    </div>
 
     <style>
-        /* Option par défaut */
         .answer-option {
             border: 1.5px solid rgba(0,0,0,0.08);
             border-radius: 1rem;
@@ -40,25 +59,18 @@
             overflow: hidden;
             user-select: none;
         }
-
-        /* Hover */
         .answer-option:hover {
             border-color: rgba(79, 70, 229, 0.4);
             background: rgba(79, 70, 229, 0.04);
             transform: translateY(-1px);
         }
-
-        /* Sélectionné — dégradé bleu */
         input[type="radio"]:checked + .answer-option {
             background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #3730a3 100%);
             border-color: transparent;
             color: white;
             transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 8px 24px -4px rgba(79, 70, 229, 0.45),
-                        0 4px 10px -2px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 8px 24px -4px rgba(79, 70, 229, 0.45), 0 4px 10px -2px rgba(79, 70, 229, 0.3);
         }
-
-        /* Ripple animation au clic */
         .answer-option::after {
             content: '';
             position: absolute;
@@ -67,23 +79,18 @@
             opacity: 0;
             transition: opacity 0.4s ease;
         }
-
-        input[type="radio"]:checked + .answer-option::after {
-            opacity: 1;
-        }
-
-        /* Animation pulse sur la carte question quand répondue */
+        input[type="radio"]:checked + .answer-option::after { opacity: 1; }
         .question-card.answered {
             border-color: rgba(79, 70, 229, 0.25);
             background: linear-gradient(135deg, #ffffff 0%, rgba(238, 242, 255, 0.4) 100%);
         }
+        .question-number { transition: color 0.3s ease; }
+        .question-card.answered .question-number { color: #4f46e5; }
 
-        /* Numéro de question animé */
-        .question-number {
-            transition: color 0.3s ease;
-        }
-        .question-card.answered .question-number {
-            color: #4f46e5;
+        /* Carte active (en cours d'écoute vocale) */
+        .question-card.voice-active {
+            border-color: rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
         }
     </style>
 
@@ -91,10 +98,19 @@
         <div class="space-y-6">
             {% for q in questions %}
             <div class="question-card bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline/20 transition-all duration-500"
-                 id="q{{ q.idQuestion }}">
-                <p class="text-base font-bold text-on-surface mb-6">
-                    <span class="question-number text-primary font-extrabold">{{ loop.index }}.</span> {{ q.contenu }}
-                </p>
+                 id="q{{ q.idQuestion }}"
+                 data-question-id="{{ q.idQuestion }}"
+                 data-question-index="{{ loop.index }}">
+                <div class="flex items-start justify-between mb-6 gap-4">
+                    <p class="text-base font-bold text-on-surface">
+                        <span class="question-number text-primary font-extrabold">{{ loop.index }}.</span> {{ q.contenu }}
+                    </p>
+                    <button type="button" @click.prevent="lireQuestion('{{ q.contenu|escape('js') }}')"
+                            class="shrink-0 p-2 text-on-surface-variant bg-gray-50 border border-outline/20 rounded-full hover:bg-primary hover:text-white transition-all active:scale-90"
+                            title="Écouter la question">
+                        <span class="material-symbols-outlined text-lg leading-none">volume_up</span>
+                    </button>
+                </div>
                 <div class="grid grid-cols-4 gap-3">
                     {% for val, label in {1: 'Jamais', 2: 'Parfois', 3: 'Souvent', 4: 'Toujours'} %}
                     <label class="cursor-pointer">
@@ -102,6 +118,7 @@
                                name="reponses[{{ q.idQuestion }}]"
                                value="{{ val }}"
                                class="sr-only"
+                               data-label="{{ label|lower }}"
                                @change="markAnswered('{{ q.idQuestion }}')">
                         <div class="answer-option">
                             <div class="text-lg font-extrabold mb-1">{{ val }}</div>
@@ -110,13 +127,19 @@
                     </label>
                     {% endfor %}
                 </div>
+
+                <!-- Indicateur vocal par question -->
+                <div class="mt-4 text-xs text-indigo-400 font-medium flex items-center gap-1 voice-hint hidden">
+                    <span class="material-symbols-outlined text-sm">mic</span>
+                    <span>Dites : <strong>jamais</strong>, <strong>parfois</strong>, <strong>souvent</strong> ou <strong>toujours</strong></span>
+                </div>
             </div>
             {% endfor %}
         </div>
 
         <div class="mt-10">
             <button type="submit"
-                    class="w-full py-4 text-base font-bold text-white rounded-2xl transition-all active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="w-full py-4 text-base font-bold text-white rounded-2xl transition-all active:scale-95 shadow-lg"
                     style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); box-shadow: 0 8px 24px -4px rgba(79,70,229,0.35);">
                 Soumettre mes réponses
             </button>
@@ -129,16 +152,172 @@ function testPsy() {
     return {
         answered: 0,
         answeredIds: new Set(),
+        isListening: false,
+        voiceStatus: 'Activez le micro pour répondre vocalement',
+        recognition: null,
+        currentQuestionIndex: 0,
+
+        // Mapping mots reconnus → valeur radio
+        voiceMap: {
+            'jamais': 1, 'never': 1,
+            'parfois': 2, 'sometimes': 2, 'par fois': 2,
+            'souvent': 3, 'often': 3,
+            'toujours': 4, 'always': 4, 'tout jours': 4, 'tout le temps': 4
+        },
+
+        init() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                this.voiceStatus = '⚠️ Reconnaissance vocale non supportée par ce navigateur';
+            }
+        },
+
+        toggleVoice() {
+            if (this.isListening) {
+                this.stopVoice();
+            } else {
+                this.startVoice();
+            }
+        },
+
+        startVoice() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert('Votre navigateur ne supporte pas la reconnaissance vocale. Utilisez Chrome.');
+                return;
+            }
+
+            this.recognition = new SpeechRecognition();
+            this.recognition.lang = 'fr-FR';
+            this.recognition.continuous = true;
+            this.recognition.interimResults = false;
+
+            this.isListening = true;
+            this.goToQuestion(this.currentQuestionIndex);
+
+            this.recognition.onresult = (event) => {
+                const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
+                this.voiceStatus = '🎙️ Entendu : "' + transcript + '"';
+                this.handleVoiceAnswer(transcript);
+            };
+
+            this.recognition.onerror = (e) => {
+                this.voiceStatus = '⚠️ Erreur : ' + e.error;
+            };
+
+            this.recognition.onend = () => {
+                // Relancer automatiquement si toujours en mode écoute
+                if (this.isListening) {
+                    this.recognition.start();
+                }
+            };
+
+            this.recognition.start();
+        },
+
+        stopVoice() {
+            this.isListening = false;
+            this.voiceStatus = 'Mode vocal arrêté';
+            if (this.recognition) this.recognition.stop();
+
+            // Retirer le style voice-active de toutes les cartes
+            document.querySelectorAll('.question-card').forEach(c => {
+                c.classList.remove('voice-active');
+            });
+            document.querySelectorAll('.voice-hint').forEach(h => h.classList.add('hidden'));
+        },
+
+        goToQuestion(index) {
+            const cards = document.querySelectorAll('.question-card');
+            if (index >= cards.length) {
+                this.voiceStatus = '✅ Toutes les questions ont été répondues !';
+                this.stopVoice();
+                return;
+            }
+
+            // Reset styles
+            cards.forEach(c => {
+                c.classList.remove('voice-active');
+            });
+            document.querySelectorAll('.voice-hint').forEach(h => h.classList.add('hidden'));
+
+            const card = cards[index];
+            card.classList.add('voice-active');
+            card.querySelector('.voice-hint')?.classList.remove('hidden');
+
+            // Scroll vers la question
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            const qId = card.dataset.questionId;
+            const qIndex = card.dataset.questionIndex;
+            this.voiceStatus = `🎙️ Question ${qIndex} — Dites : jamais, parfois, souvent ou toujours`;
+
+            // Lire la question automatiquement
+            const questionText = card.querySelector('p .question-number')?.parentElement?.textContent?.trim();
+            if (questionText) {
+                setTimeout(() => this.lireQuestion(questionText), 300);
+            }
+        },
+
+        handleVoiceAnswer(transcript) {
+            const cards = document.querySelectorAll('.question-card');
+            if (this.currentQuestionIndex >= cards.length) return;
+
+            const card = cards[this.currentQuestionIndex];
+            const qId = card.dataset.questionId;
+
+            // Chercher la correspondance
+            let matchedValue = null;
+            for (const [mot, val] of Object.entries(this.voiceMap)) {
+                if (transcript.includes(mot)) {
+                    matchedValue = val;
+                    break;
+                }
+            }
+
+            if (matchedValue === null) {
+                this.voiceStatus = '❓ Non reconnu. Dites : jamais, parfois, souvent ou toujours';
+                return;
+            }
+
+            // Sélectionner le radio correspondant
+            const radio = card.querySelector(`input[type="radio"][value="${matchedValue}"]`);
+            if (radio) {
+                radio.checked = true;
+                radio.dispatchEvent(new Event('change', { bubbles: true }));
+
+                const labelMap = { 1: 'Jamais', 2: 'Parfois', 3: 'Souvent', 4: 'Toujours' };
+                this.voiceStatus = `✅ "${labelMap[matchedValue]}" sélectionné !`;
+
+                // Passer à la question suivante après 1.2s
+                setTimeout(() => {
+                    this.currentQuestionIndex++;
+                    if (this.isListening) {
+                        this.goToQuestion(this.currentQuestionIndex);
+                    }
+                }, 1200);
+            }
+        },
+
         markAnswered(id) {
-            // Colorer la carte question
             const card = document.getElementById('q' + id);
             if (card) card.classList.add('answered');
-
             if (!this.answeredIds.has(id)) {
                 this.answeredIds.add(id);
                 this.answered++;
             }
         },
+
+        lireQuestion(texte) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(texte);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.95;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        },
+
         checkAll(e) {
             if (this.answered < {{ questions|length }}) {
                 e.preventDefault();
