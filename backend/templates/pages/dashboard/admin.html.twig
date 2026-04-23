@@ -287,6 +287,106 @@
                     <button @click="resolveReport({{ report.id }}, 'IGNORE')" class="flex-1 py-3.5 text-xs font-bold text-on-surface-variant bg-gray-50 border border-outline/30 rounded-2xl hover:bg-white hover:border-outline transition-all active:scale-95 uppercase tracking-wider">{{ 'dashboard.reports.dismiss'|trans }}</button>
                     <button @click="resolveReport({{ report.id }}, 'BLOCK_USER')" class="flex-2 py-3.5 px-8 text-xs font-bold text-white bg-red-500 rounded-2xl hover:bg-black transition-all active:scale-95 shadow-lg shadow-red-100 uppercase tracking-wider">{{ 'dashboard.reports.ban'|trans }}</button>
                 </div>
+
+                <!-- ── AI Chat Log Review ─────────────────────────────── -->
+                <div class="mt-3 pt-3 border-t border-outline/10">
+                    <button @click="analyzeReport({{ report.id }})"
+                            :disabled="aiLoading[{{ report.id }}]"
+                            class="w-full py-3 rounded-2xl border border-violet-200 text-violet-700 bg-violet-50 hover:bg-violet-100 text-xs font-bold flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-60">
+                        <span x-show="!aiLoading[{{ report.id }}]" class="material-symbols-outlined text-[18px]">smart_toy</span>
+                        <span x-show="aiLoading[{{ report.id }}]" class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
+                        <span x-text="aiLoading[{{ report.id }}] ? 'Analysing chat logs…' : 'AI Chat Log Review'"></span>
+                    </button>
+
+                    <!-- AI result panel -->
+                    <div x-show="aiResults[{{ report.id }}]" x-transition
+                         class="mt-3 rounded-2xl overflow-hidden border"
+                         :class="{
+                             'border-red-200    bg-red-50':    aiResults[{{ report.id }}]?.verdict === 'VALID',
+                             'border-green-200  bg-green-50':  aiResults[{{ report.id }}]?.verdict === 'INVALID',
+                             'border-amber-200  bg-amber-50':  aiResults[{{ report.id }}]?.verdict === 'UNCERTAIN',
+                             'border-gray-200   bg-gray-50':   aiResults[{{ report.id }}]?.error
+                         }">
+
+                        <!-- Error state -->
+                        <div x-show="aiResults[{{ report.id }}]?.error" class="flex items-center gap-2 p-4 text-red-600 text-xs font-bold">
+                            <span class="material-symbols-outlined text-lg">error</span>
+                            <span x-text="aiResults[{{ report.id }}]?.error"></span>
+                        </div>
+
+                        <!-- Success state -->
+                        <template x-if="aiResults[{{ report.id }}] && !aiResults[{{ report.id }}].error">
+                            <div class="p-4 space-y-3">
+
+                                <!-- Header: icon + verdict badge + meta -->
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                                             :class="{
+                                                 'bg-red-100':   aiResults[{{ report.id }}]?.verdict === 'VALID',
+                                                 'bg-green-100': aiResults[{{ report.id }}]?.verdict === 'INVALID',
+                                                 'bg-amber-100': aiResults[{{ report.id }}]?.verdict === 'UNCERTAIN'
+                                             }">
+                                            <span class="material-symbols-outlined text-[18px]"
+                                                  :class="{
+                                                      'text-red-600':   aiResults[{{ report.id }}]?.verdict === 'VALID',
+                                                      'text-green-600': aiResults[{{ report.id }}]?.verdict === 'INVALID',
+                                                      'text-amber-600': aiResults[{{ report.id }}]?.verdict === 'UNCERTAIN'
+                                                  }">smart_toy</span>
+                                        </div>
+                                        <div>
+                                            <div class="text-[9px] font-extrabold uppercase tracking-widest text-violet-600">AI Agent Review</div>
+                                            <div class="text-sm font-extrabold"
+                                                 :class="{
+                                                     'text-red-700':   aiResults[{{ report.id }}]?.verdict === 'VALID',
+                                                     'text-green-700': aiResults[{{ report.id }}]?.verdict === 'INVALID',
+                                                     'text-amber-700': aiResults[{{ report.id }}]?.verdict === 'UNCERTAIN'
+                                                 }"
+                                                 x-text="aiResults[{{ report.id }}]?.verdict === 'VALID'
+                                                    ? '🔴 Report VALID'
+                                                    : (aiResults[{{ report.id }}]?.verdict === 'INVALID'
+                                                        ? '🟢 Report INVALID'
+                                                        : '🟡 UNCERTAIN')"></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right shrink-0">
+                                        <div class="text-[9px] font-bold text-gray-500 uppercase">Confidence</div>
+                                        <div class="text-xs font-extrabold" x-text="aiResults[{{ report.id }}]?.confidence"></div>
+                                        <div class="text-[9px] text-gray-400 mt-0.5">
+                                            <span x-text="aiResults[{{ report.id }}]?.messagesAnalyzed"></span> msgs reviewed
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Summary -->
+                                <p class="text-[11px] text-on-surface-variant leading-relaxed"
+                                   x-text="aiResults[{{ report.id }}]?.summary"></p>
+
+                                <!-- Flagged messages -->
+                                <div x-show="aiResults[{{ report.id }}]?.flagged_messages?.length > 0">
+                                    <div class="text-[9px] font-extrabold uppercase tracking-widest text-red-500 mb-1.5">Flagged content</div>
+                                    <div class="space-y-1">
+                                        <template x-for="fmsg in (aiResults[{{ report.id }}]?.flagged_messages || [])" :key="fmsg">
+                                            <div class="px-3 py-2 bg-red-100/60 rounded-xl text-[10px] italic text-red-700 border-l-2 border-red-400"
+                                                 x-text="'« ' + fmsg + ' »'"></div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <!-- Admin recommendation -->
+                                <div class="px-3 py-2.5 bg-white/70 rounded-xl border border-violet-100 text-[10px] text-on-surface-variant">
+                                    <span class="font-extrabold text-violet-700">&#9889; Admin note: </span>
+                                    <span x-text="aiResults[{{ report.id }}]?.recommendation"></span>
+                                </div>
+
+                                <!-- Disclaimer -->
+                                <div class="text-[9px] text-gray-400 text-center font-medium">
+                                    AI analysis is advisory only &mdash; no automatic action has been taken
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
             </div>
             {% else %}
             <div class="lg:col-span-2 bg-gray-50/50 border border-dashed border-outline/30 rounded-[3rem] p-16 text-center">
@@ -690,6 +790,10 @@ function adminSystem() {
             name: ''
         },
 
+        // ── AI report review state ─────────────────────────────────
+        aiResults: {},
+        aiLoading: {},
+
         // ── Filter helper (called per row in the table) ───────────
         crudFilter(text, rolesJson, status) {
             const search = this.crudSearch.toLowerCase();
@@ -829,6 +933,23 @@ function adminSystem() {
                 }
             } catch (e) {
                 this.flashMsg('Erreur réseau.', 'error');
+            }
+        },
+
+        // ── AI Chat Log Review ────────────────────────────────────
+        async analyzeReport(reportId) {
+            this.aiLoading = { ...this.aiLoading, [reportId]: true };
+            try {
+                const res = await fetch(`/admin/reports/${reportId}/ai-review`, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await res.json();
+                this.aiResults = { ...this.aiResults, [reportId]: data };
+            } catch (e) {
+                this.aiResults = { ...this.aiResults, [reportId]: { error: 'Network error — please retry' } };
+            } finally {
+                this.aiLoading = { ...this.aiLoading, [reportId]: false };
             }
         },
 

@@ -232,6 +232,113 @@ class AdminController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
+    // ─────────────────────────────────────────────
+    //  AI REPORT REVIEW (Gemini 2.0 Flash)
+    // ─────────────────────────────────────────────
+
+    #[Route('/reports/{id}/ai-review', name: 'report_ai_review', methods: ['POST'])]
+    public function aiReviewReport(Report $report): JsonResponse
+    {
+        $reporter = $report->getReporter();
+        $reported = $report->getReported();
+
+        // ── Load conversation messages between the two users ──────────────
+        $conn = $this->em->getConnection();
+        $messages = $conn->executeQuery(
+            'SELECT m.content, m.sent_at, u.first_name, u.last_name
+             FROM message m
+             JOIN conversation c ON m.conversation_id = c.id
+             JOIN user u ON m.sender_id = u.id
+             WHERE (c.client_id = ? AND c.therapist_id = ?)
+                OR (c.client_id = ? AND c.therapist_id = ?)
+             ORDER BY m.sent_at ASC
+             LIMIT 80',
+            [
+                $reporter->getId(), $reported->getId(),
+                $reported->getId(), $reporter->getId(),
+            ]
+        )->fetchAllAssociative();
+
+        // ── Build chat log string ─────────────────────────────────────────
+        $chatLog = '';
+        foreach ($messages as $msg) {
+            $chatLog .= "[{$msg['sent_at']}] {$msg['first_name']} {$msg['last_name']}: {$msg['content']}\n";
+        }
+
+        // ── Build Gemini prompt ───────────────────────────────────────────
+        $prompt  = "You are a professional content moderation AI for InnerTrack, ";
+        $prompt .= "a mental health support platform connecting patients with licensed therapists.\n\n";
+        $prompt .= "A user has submitted a report. Analyze the conversation history between the two ";
+        $prompt .= "users and determine whether the report is justified.\n\n";
+        $prompt .= "REPORT DETAILS:\n";
+        $prompt .= "- Reporter: {$reporter->getFirstName()} {$reporter->getLastName()}\n";
+        $prompt .= "- Reported user: {$reported->getFirstName()} {$reported->getLastName()}\n";
+        $prompt .= "- Reason: {$report->getReason()}\n";
+        $prompt .= "- Details: " . ($report->getDetails() ?? 'None provided') . "\n\n";
+
+        if ($chatLog) {
+            $prompt .= "CONVERSATION HISTORY (" . count($messages) . " messages, oldest first):\n---\n";
+            $prompt .= $chatLog;
+            $prompt .= "---\n\n";
+        } else {
+            $prompt .= "CONVERSATION HISTORY: No messages found between these two users.\n\n";
+        }
+
+        $prompt .= "Respond ONLY with a valid JSON object — no markdown, no extra text:\n";
+        $prompt .= "{\n";
+        $prompt .= '  "verdict": "VALID" | "INVALID" | "UNCERTAIN",' . "\n";
+        $prompt .= '  "confidence": "HIGH" | "MEDIUM" | "LOW",' . "\n";
+        $prompt .= '  "summary": "2-3 sentence analysis explaining your verdict",' . "\n";
+        $prompt .= '  "flagged_messages": ["exact quote from chat"] or [],' . "\n";
+        $prompt .= '  "recommendation": "Short advisory note for the admin (no automatic action will be taken)"' . "\n";
+        $prompt .= "}";
+
+        // ── Call Gemini API ───────────────────────────────────────────────
+        $apiKey = $_ENV['GEMINI_API_KEY'] ?? '';
+        $url    = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={$apiKey}";
+
+        $payload = json_encode([
+            'contents'         => [['parts' => [['text' => $prompt]]]],
+            'generationConfig' => ['temperature' => 0.1, 'maxOutputTokens' => 1024],
+        ]);
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => $payload,
+            CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+            CURLOPT_TIMEOUT        => 30,
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if (!$response || $httpCode !== 200) {
+            return new JsonResponse(['error' => 'AI service unavailable (HTTP ' . $httpCode . ')'], 503);
+        }
+
+        // ── Parse Gemini response ─────────────────────────────────────────
+        $geminiData = json_decode($response, true);
+        $text       = $geminiData['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+        if (!$text) {
+            return new JsonResponse(['error' => 'Empty response from AI model'], 500);
+        }
+
+        // Strip possible markdown code fences
+        $text = trim(preg_replace('/^```(?:json)?\s*/m', '', preg_replace('/```$/m', '', $text)));
+
+        $aiResult = json_decode($text, true);
+        if (!$aiResult || !isset($aiResult['verdict'])) {
+            return new JsonResponse(['error' => 'Could not parse AI response', 'raw' => substr($text, 0, 300)], 500);
+        }
+
+        $aiResult['messagesAnalyzed'] = count($messages);
+
+        return new JsonResponse($aiResult);
+    }
+
     // ─── Admin: delete a community post as moderation action ─────────────
     #[Route('/community/post/{id}/delete', name: 'community_post_delete', methods: ['POST'])]
     public function deleteCommunityPost(int $id): JsonResponse
