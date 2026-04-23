@@ -1,4 +1,4 @@
-{% extends 'layouts/dashboard.html.twig' %}
+﻿{% extends 'layouts/dashboard.html.twig' %}
 
 {% block header_title %}Panneau d'Administration{% endblock %}
 
@@ -216,7 +216,7 @@
         </div>
     </div>
 
-    <div x-show="activeTab === 'messages'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
+    <div x-show="activeTab === 'messages'"    <div x-show="activeTab === 'community'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
         <div class="flex items-center justify-between mb-2">
             <h3 class="text-2xl font-extrabold font-headline tracking-tighter">{{ 'dashboard.tabs.messages'|trans }}</h3>
             <span class="text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1 rounded-full">Secure drop / Dépôt sécurisé</span>
@@ -235,6 +235,11 @@
                             <div class="text-xs font-bold text-red-600 tracking-wide">{{ report.reason }}</div>
                         </div>
                     </div>
+                    <button @click="openChatLog({{ report.id }}, {{ report.reported_user_id ?? 0 }}, '{{ report.reporter_first }} {{ report.reporter_last }}', '{{ report.reported_first }} {{ report.reported_last }}')"
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 border border-blue-100 text-blue-600 text-[10px] font-bold hover:bg-blue-100 active:scale-95 transition-all">
+                        <span class="material-symbols-outlined text-[15px]">chat</span>
+                        View Chat
+                    </button>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-6 mb-8 p-4 bg-gray-50/50 rounded-2xl border border-outline/10">
@@ -398,6 +403,110 @@
         </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════════════════
+         CHAT LOG SLIDE-OVER PANEL
+    ════════════════════════════════════════════════════════ -->
+    <div x-show="chatLog.open"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+         @click.self="chatLog.open = false">
+
+        <div x-show="chatLog.open"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="translate-x-full"
+             class="absolute right-0 top-0 h-full w-full max-w-xl bg-white shadow-2xl flex flex-col">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 py-5 border-b border-outline/20 shrink-0">
+                <div>
+                    <div class="text-[9px] font-extrabold uppercase tracking-widest text-violet-600 mb-0.5">Chat Log Viewer</div>
+                    <div class="text-sm font-extrabold" x-text="chatLog.reporterName + ' ↔ ' + chatLog.reportedName"></div>
+                    <div class="text-[10px] text-gray-400 mt-0.5">
+                        <span x-text="chatLog.count"></span> messages &middot; Report #<span x-text="chatLog.reportId"></span>
+                    </div>
+                </div>
+                <button @click="chatLog.open = false"
+                        class="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">close</span>
+                </button>
+            </div>
+
+            <!-- Legend -->
+            <div class="flex items-center justify-between px-6 py-2.5 bg-gray-50/80 border-b border-outline/10 text-[10px] font-bold shrink-0">
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                    <span x-text="chatLog.reporterName + ' (Reporter)'"></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span x-text="chatLog.reportedName + ' (Reported)'"></span>
+                    <div class="w-3 h-3 rounded-full bg-gray-400"></div>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="flex-1 overflow-y-auto px-4 py-4 space-y-2" id="chatlog-scroll">
+
+                <!-- Loading -->
+                <div x-show="chatLog.loading" class="flex items-center justify-center h-full">
+                    <div class="flex flex-col items-center gap-3 text-gray-400">
+                        <span class="material-symbols-outlined text-4xl animate-spin">progress_activity</span>
+                        <span class="text-xs font-semibold">Loading conversation&hellip;</span>
+                    </div>
+                </div>
+
+                <!-- Empty state -->
+                <div x-show="!chatLog.loading && chatLog.messages.length === 0"
+                     class="flex flex-col items-center justify-center h-full text-gray-400 gap-3">
+                    <span class="material-symbols-outlined text-5xl">chat_bubble</span>
+                    <span class="text-xs font-bold">No messages found between these users</span>
+                </div>
+
+                <!-- Message bubbles -->
+                <template x-for="msg in chatLog.messages" :key="msg.id">
+                    <div :class="msg.sender_id === chatLog.reporterId ? 'flex-row' : 'flex-row-reverse'"
+                         class="flex items-end gap-2">
+
+                        <!-- Avatar initial -->
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
+                             :class="msg.sender_id === chatLog.reporterId ? 'bg-blue-500' : 'bg-gray-400'">
+                            <span x-text="(msg.first_name[0] || '') + (msg.last_name[0] || '')"></span>
+                        </div>
+
+                        <!-- Bubble -->
+                        <div class="max-w-[75%]">
+                            <div class="text-[9px] font-bold mb-1"
+                                 :class="msg.sender_id === chatLog.reporterId ? 'text-blue-600 text-left' : 'text-gray-500 text-right'"
+                                 x-text="msg.first_name + ' ' + msg.last_name"></div>
+                            <div class="px-3 py-2 rounded-2xl text-[11px] leading-relaxed break-words"
+                                 :class="msg.sender_id === chatLog.reporterId
+                                    ? 'bg-blue-500 text-white rounded-bl-sm'
+                                    : 'bg-gray-100 text-on-surface rounded-br-sm'">
+                                <span x-text="msg.content"></span>
+                            </div>
+                            <div class="text-[9px] text-gray-400 mt-1"
+                                 :class="msg.sender_id === chatLog.reporterId ? 'text-left' : 'text-right'"
+                                 x-text="msg.sent_at"></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Footer note -->
+            <div class="px-6 py-3 bg-gray-50 border-t border-outline/10 text-[9px] text-gray-400 text-center font-medium shrink-0">
+                Read-only view &mdash; These logs are collected for moderation purposes only
+            </div>
+        </div>
+    </div>
+
     <div x-show="activeTab === 'community'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
         <div class="flex items-center justify-between mb-2">
             <h3 class="text-2xl font-extrabold font-headline tracking-tighter">Community Reports / Signalements communautaires</h3>
@@ -473,7 +582,7 @@
     <!-- ════════════════════════════════════════════════════════════
          CRUD TAB — User Management with input validation
          ════════════════════════════════════════════════════════════ -->
-    <div x-show="activeTab === 'crud'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
+    <div x-show="activeTab === 'crud'"    <div x-show="activeTab === 'community'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
 
         <!-- Header row -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -794,6 +903,18 @@ function adminSystem() {
         aiResults: {},
         aiLoading: {},
 
+        // ── Chat log viewer state ────────────────────────────────
+        chatLog: {
+            open:         false,
+            loading:      false,
+            reportId:     null,
+            reporterId:   null,
+            reporterName: '',
+            reportedName: '',
+            messages:     [],
+            count:        0,
+        },
+
         // ── Filter helper (called per row in the table) ───────────
         crudFilter(text, rolesJson, status) {
             const search = this.crudSearch.toLowerCase();
@@ -950,6 +1071,35 @@ function adminSystem() {
                 this.aiResults = { ...this.aiResults, [reportId]: { error: 'Network error — please retry' } };
             } finally {
                 this.aiLoading = { ...this.aiLoading, [reportId]: false };
+            }
+        },
+
+        // ── Open chat log viewer ─────────────────────────────────
+        async openChatLog(reportId, reporterId, reporterName, reportedName) {
+            this.chatLog = {
+                open: true, loading: true,
+                reportId, reporterId,
+                reporterName, reportedName,
+                messages: [], count: 0,
+            };
+            try {
+                const res = await fetch(`/admin/reports/${reportId}/chat-logs`, {
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await res.json();
+                this.chatLog.messages = data.messages || [];
+                this.chatLog.count    = data.count    || 0;
+                // Use server-side reporterId (most authoritative)
+                this.chatLog.reporterId = data.reporterId ?? reporterId;
+                // Scroll to bottom after render
+                this.$nextTick(() => {
+                    const el = document.getElementById('chatlog-scroll');
+                    if (el) el.scrollTop = el.scrollHeight;
+                });
+            } catch (e) {
+                this.chatLog.messages = [];
+            } finally {
+                this.chatLog.loading = false;
             }
         },
 

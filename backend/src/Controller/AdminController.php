@@ -293,7 +293,7 @@ class AdminController extends AbstractController
         $prompt .= '  "recommendation": "Short advisory note for the admin (no automatic action will be taken)"' . "\n";
         $prompt .= "}";
 
-        // ── Call Gemini API ───────────────────────────────────────────────
+        // ── Call Gemini API (retry up to 3x on 429 rate limit) ───────────
         $apiKey = $_ENV['GEMINI_API_KEY'] ?? '';
         $url    = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={$apiKey}";
 
@@ -302,17 +302,31 @@ class AdminController extends AbstractController
             'generationConfig' => ['temperature' => 0.1, 'maxOutputTokens' => 1024],
         ]);
 
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST           => true,
-            CURLOPT_POSTFIELDS     => $payload,
-            CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
-            CURLOPT_TIMEOUT        => 30,
-        ]);
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        $response = null;
+        $httpCode = 0;
+
+        for ($attempt = 0; $attempt < 3; $attempt++) {
+            if ($attempt > 0) {
+                sleep(4); // wait 4 s before each retry
+            }
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST           => true,
+                CURLOPT_POSTFIELDS     => $payload,
+                CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+                CURLOPT_TIMEOUT        => 30,
+            ]);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpCode !== 429) break;
+        }
+
+        if ($httpCode === 429) {
+            return new JsonResponse(['error' => 'AI rate limit reached — please wait a moment and try again'], 429);
+        }
 
         if (!$response || $httpCode !== 200) {
             return new JsonResponse(['error' => 'AI service unavailable (HTTP ' . $httpCode . ')'], 503);
@@ -352,5 +366,40 @@ class AdminController extends AbstractController
         $this->em->flush();
 
         return new JsonResponse(['success' => true]);
+    }
+
+    // ─── Admin: fetch raw chat logs for a report ──────────────────────────
+    #[Route('/reports/{id}/chat-logs', name: 'report_chat_logs', methods: ['GET'])]
+    public function reportChatLogs(Report $report): JsonResponse
+    {
+        $reporter = $report->getReporter();
+        $reported = $report->getReported();
+
+        $conn = $this->em->getConnection();
+        $messages = $conn->executeQuery(
+            'SELECT m.id, m.content, m.sent_at, m.is_read,
+                    u.id AS sender_id, u.first_name, u.last_name
+             FROM message m
+             JOIN conversation c ON m.conversation_id = c.id
+             JOIN user u ON m.sender_id = u.id
+             WHERE (c.client_id = ? AND c.therapist_id = ?)
+                OR (c.client_id = ? AND c.therapist_id = ?)
+             ORDER BY m.sent_at ASC
+             LIMIT 200',
+            [
+                $reporter->getId(), $reported->getId(),
+                $reported->getId(), $reporter->getId(),
+            ]
+        )->fetchAllAssociative();
+
+        return new JsonResponse([
+            'messages'     => $messages,
+            'count'        => count($messages),
+            'reporterId'   => $reporter->getId(),
+            'reporterName' => $reporter->getFirstName() . ' ' . $reporter->getLastName(),
+            'reportedName' => $reported->getFirstName() . ' ' . $reported->getLastName(),
+            'reason'       => $report->getReason(),
+            'details'      => $report->getDetails(),
+        ]);
     }
 }
