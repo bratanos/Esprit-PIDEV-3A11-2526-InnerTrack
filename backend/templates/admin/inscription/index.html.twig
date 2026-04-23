@@ -14,8 +14,54 @@
         </a>
     </div>
 
-    <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm overflow-hidden">
-        {% if inscriptions|length > 0 %}
+    {# ══════════════════════════════ FILTERS ══════════════════════════════ #}
+    <div class="bg-white rounded-[2.5rem] border border-outline/20 p-6 shadow-sm">
+        <form id="inscription-filter-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Search -->
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                <input type="text" name="q" placeholder="Nom ou email..." 
+                       class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+            </div>
+
+            <!-- Event Filter -->
+            <div>
+                <select name="event" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-600 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_auto] bg-no-repeat bg-[position:right:16px_center]">
+                    <option value="">Tous les événements</option>
+                    {% for event in events %}
+                        <option value="{{ event.id }}">{{ event.titre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div>
+                <select name="status" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-600 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_auto] bg-no-repeat bg-[position:right:16px_center]">
+                    <option value="">Tous les statuts</option>
+                    <option value="CONFIRMÉ">Confirmé</option>
+                    <option value="EN_ATTENTE">En attente</option>
+                    <option value="ANNULÉ">Annulé</option>
+                </select>
+            </div>
+
+            <!-- Sort -->
+            <div>
+                <select name="sort" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-600 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_auto] bg-no-repeat bg-[position:right:16px_center]">
+                    <option value="date_asc">Date (Ancien → Nouveau)</option>
+                    <option value="date_desc">Date (Nouveau → Ancien)</option>
+                    <option value="name_asc">Nom (A-Z)</option>
+                    <option value="name_desc">Nom (Z-A)</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm overflow-hidden relative min-h-[400px]">
+        {# Loading Overlay #}
+        <div id="table-loading" class="absolute inset-0 bg-white/60 backdrop-blur-sm z-20 flex flex-col items-center justify-center hidden">
+            <div class="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+        </div>
+
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-outline/20 text-[10px] font-bold uppercase tracking-[0.12em] text-on-surface-variant">
@@ -23,58 +69,54 @@
                     <th class="text-left px-4 py-5 hidden md:table-cell">Email</th>
                     <th class="text-left px-4 py-5 hidden lg:table-cell">Événement</th>
                     <th class="text-left px-4 py-5 hidden lg:table-cell">Date</th>
+                    <th class="text-left px-4 py-5">Statut</th>
                     <th class="text-right px-8 py-5">Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for insc in inscriptions %}
-                <tr class="border-b border-outline/10 hover:bg-gray-50 transition-colors group">
-                    <td class="px-8 py-5">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-sm shrink-0">
-                                {{ insc.nomParticipant|first|upper }}
-                            </div>
-                            <div class="font-bold text-on-surface">{{ insc.nomParticipant }}</div>
-                        </div>
-                    </td>
-                    <td class="px-4 py-5 text-on-surface-variant hidden md:table-cell text-xs">{{ insc.emailParticipant }}</td>
-                    <td class="px-4 py-5 hidden lg:table-cell">
-                        <span class="px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-indigo-50 text-indigo-600">
-                            {{ insc.evenement.titre }}
-                        </span>
-                    </td>
-                    <td class="px-4 py-5 text-on-surface-variant hidden lg:table-cell text-xs">{{ insc.dateInscription|date('d/m/Y') }}</td>
-                    <td class="px-8 py-5">
-                        <div class="flex justify-end gap-2 opacity-70 group-hover:opacity-100 transition-opacity">
-                            <a href="{{ path('admin_inscription_show', {id: insc.id}) }}"
-                               title="Voir" class="p-2.5 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors active:scale-90">
-                                <span class="material-symbols-outlined text-[18px]">visibility</span>
-                            </a>
-                            <a href="{{ path('admin_inscription_edit', {id: insc.id}) }}"
-                               title="Modifier" class="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors active:scale-90">
-                                <span class="material-symbols-outlined text-[18px]">edit</span>
-                            </a>
-                            <form method="post" action="{{ path('admin_inscription_delete', {id: insc.id}) }}"
-                                  onsubmit="return confirm('Supprimer cette inscription ?');" style="display:inline">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete_inscription_' ~ insc.id) }}">
-                                <button type="submit" title="Supprimer"
-                                        class="p-2.5 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 transition-colors active:scale-90">
-                                    <span class="material-symbols-outlined text-[18px]">delete</span>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
+            <tbody id="inscriptions-table-body">
+                {{ include('admin/inscription/_inscriptions_table.html.twig') }}
             </tbody>
         </table>
-        {% else %}
-        <div class="py-20 flex flex-col items-center justify-center text-center">
-            <span class="material-symbols-outlined text-6xl text-gray-200 mb-4">how_to_reg</span>
-            <h3 class="font-headline font-extrabold text-xl text-gray-400">Aucune inscription</h3>
-            <p class="text-xs text-gray-400 mt-2">Les inscriptions apparaîtront ici.</p>
-        </div>
-        {% endif %}
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('inscription-filter-form');
+    const tbody = document.getElementById('inscriptions-table-body');
+    const loading = document.getElementById('table-loading');
+    let timeoutId;
+
+    function fetchFilteredInscriptions() {
+        loading.classList.remove('hidden');
+        tbody.style.opacity = '0.5';
+
+        const params = new URLSearchParams(new FormData(form));
+        const url = `{{ path('admin_inscription_filter') }}?${params.toString()}`;
+
+        fetch(url, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.text())
+        .then(html => {
+            tbody.innerHTML = html;
+            loading.classList.add('hidden');
+            tbody.style.opacity = '1';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            loading.classList.add('hidden');
+            tbody.style.opacity = '1';
+        });
+    }
+
+    const inputs = form.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        input.addEventListener(input.type === 'text' ? 'input' : 'change', function() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(fetchFilteredInscriptions, 300);
+        });
+    });
+});
+</script>
 {% endblock %}

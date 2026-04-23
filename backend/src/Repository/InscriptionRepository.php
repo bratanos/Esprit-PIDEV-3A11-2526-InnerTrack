@@ -98,4 +98,41 @@ class InscriptionRepository extends ServiceEntityRepository
                 : 0,
         ], $results);
     }
+
+    /**
+     * Filter inscriptions based on search query, event, status, and sort criteria.
+     */
+     function filterInscriptions(?string $q, ?int $eventId, ?string $status, ?string $sortBy): array
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->leftJoin('i.evenement', 'e')
+            ->addSelect('e');
+
+        if (!empty($q)) {
+            $qb->andWhere('i.nomParticipant LIKE :q OR i.emailParticipant LIKE :q')
+               ->setParameter('q', '%' . $q . '%');
+        }
+
+        if (!empty($eventId)) {
+            $qb->andWhere('e.id = :eventId')
+               ->setParameter('eventId', $eventId);
+        }
+
+        if (!empty($status)) {
+            $qb->andWhere('i.statut = :status')
+               ->setParameter('status', $status);
+        }
+
+        if ($sortBy === 'name_asc') {
+            $qb->orderBy('i.nomParticipant', 'ASC');
+        } elseif ($sortBy === 'name_desc') {
+            $qb->orderBy('i.nomParticipant', 'DESC');
+        } elseif ($sortBy === 'date_desc') {
+            $qb->orderBy('i.dateInscription', 'DESC');
+        } else {
+            $qb->orderBy('i.dateInscription', 'ASC');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }
