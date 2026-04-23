@@ -194,7 +194,7 @@ class DashboardController extends AbstractController
             FROM report r
             JOIN user u1 ON r.reporter_id = u1.id
             JOIN user u2 ON r.reported_id = u2.id
-            WHERE r.status = 'PENDING' AND r.context = 'MESSAGING'
+            WHERE r.status NOT IN ('RESOLVED') AND r.context = 'MESSAGING'
             ORDER BY r.created_at DESC
             LIMIT 20
         ")->fetchAllAssociative();
@@ -210,7 +210,7 @@ class DashboardController extends AbstractController
             JOIN user u1 ON r.reporter_id = u1.id
             JOIN user u2 ON r.reported_id = u2.id
             LEFT JOIN community_comment cc ON cc.user_id = u2.id AND cc.content LIKE CONCAT('%', SUBSTRING(r.details, 1, 50), '%')
-            WHERE r.status = 'PENDING' AND r.context = 'COMMUNITY'
+            WHERE r.status NOT IN ('RESOLVED') AND r.context = 'COMMUNITY'
             ORDER BY r.created_at DESC
             LIMIT 20
         ")->fetchAllAssociative();

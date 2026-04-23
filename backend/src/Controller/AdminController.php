@@ -42,7 +42,7 @@ class AdminController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $action = $data['action'] ?? null;
 
-        if (!$report->isPending()) {
+        if ($report->getStatus() === 'RESOLVED') {
             return new JsonResponse(['error' => 'Déjà résolu'], 400);
         }
 
