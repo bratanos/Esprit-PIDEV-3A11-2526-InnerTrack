@@ -107,17 +107,17 @@
     {# ANALYSE IA #}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
         <div class="flex items-center justify-between mb-4">
-            <h2 class="text-sm font-bold text-gray-500">🤖 Analyse IA Personnalisée</h2>
+            <h2 class="text-sm font-bold text-gray-500"> Analyse Personnalisée</h2>
             <button id="btn-analyser"
                 onclick="lancerAnalyse()"
                 style="background:#5a3ea1; color:white; padding:8px 20px; border-radius:12px; border:none; cursor:pointer; font-size:14px; font-weight:600;">
-                ✨ Analyser avec Claude
+                ✨ Analyser Vos données
             </button>
         </div>
 
         <div id="ia-loading" class="hidden text-center py-8">
             <div class="text-4xl mb-3">🤔</div>
-            <p class="text-gray-500 text-sm loading-dots">Claude analyse vos données</p>
+            <p class="text-gray-500 text-sm loading-dots">Analyse vos données</p>
         </div>
 
         <div id="ia-result" class="hidden space-y-4">
@@ -157,7 +157,7 @@
 
         <div id="ia-placeholder" class="text-center py-8 text-gray-400">
             <div class="text-4xl mb-3">🧠</div>
-            <p class="text-sm">Cliquez sur "Analyser avec Claude" pour obtenir votre analyse personnalisée</p>
+            <p class="text-sm">Cliquez sur "Analyser vos données" pour obtenir votre analyse personnalisée</p>
         </div>
     </div>
 
@@ -224,7 +224,7 @@ console.log('API data:', data);
     }
 
     btn.disabled = false;
-    btn.textContent = '✨ Analyser avec Claude';
+    btn.textContent = '✨ Analyser vos données';
 }
 </script>
 {% endblock %}
