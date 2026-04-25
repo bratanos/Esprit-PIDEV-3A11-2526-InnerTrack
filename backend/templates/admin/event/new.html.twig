@@ -92,6 +92,19 @@
                 {% endif %}
             </div>
 
+            <!-- Add a new section for the Image Generation -->
+            <div>
+                <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Image générée pour l'événement</label>
+                <button type="button" id="generate_image_button" class="w-full px-4 py-3 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-indigo-700 active:scale-95 transition-all">
+                    Générer une image
+                </button>
+
+                <!-- Image preview -->
+                <div id="image_preview" class="mt-4">
+                    <!-- Image will be displayed here -->
+                </div>
+            </div>
+
             {# Submit #}
             <div class="flex gap-3 pt-4">
                 <a href="{{ path('admin_event_index') }}"
@@ -107,34 +120,130 @@
 
 <script>
 
-// Event listener to dynamically generate event description based on event name
-document.getElementById('event_titre').addEventListener('input', async function() {
-    const eventName = this.value;
-    if (eventName.length >= 2) {  // Trigger after at least 2 characters typed
-        const response = await fetch('http://127.0.0.1:8001/generate_event_description', {  // Make sure the URL uses port 8001
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                event_name: eventName,
-                session_id: 'some-session-id', // Make sure to pass the correct session ID
-            }),
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Event script initialized");
 
-        // Ensure the response is valid JSON
-        try {
-            const data = await response.json();
-            // Set the generated description in the description textarea
-            document.getElementById('event_description').value = data.description;
-        } catch (error) {
-            console.error("Error parsing JSON:", error);
-        }
+    // Event listener to dynamically generate event description based on event name
+    const titreInput = document.getElementById('event_titre');
+    if (titreInput) {
+        titreInput.addEventListener('input', async function() {
+            const eventName = this.value;
+            if (eventName.length >= 2) {
+                try {
+                    const response = await fetch('http://127.0.0.1:8001/generate_event_description', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            event_name: eventName,
+                            session_id: 'desc-gen-' + Date.now(),
+                        }),
+                    });
+                    const data = await response.json();
+                    if (data.description) {
+                        document.getElementById('event_description').value = data.description;
+                    }
+                } catch (error) {
+                    console.error("Error generating description:", error);
+                }
+            }
+        });
+    }
+
+    // Event listener to handle the image generation based on the description
+    const generateBtn = document.getElementById('generate_image_button');
+    if (generateBtn) {
+        generateBtn.addEventListener('click', async function() {
+            const descriptionInput = document.getElementById('event_description');
+            const description = descriptionInput ? descriptionInput.value.trim() : '';
+
+            const preview = document.getElementById('image_preview');
+            const btn = this;
+            const originalText = btn.innerHTML;
+            
+            if (description.length >= 10) {
+                btn.innerHTML = '<span class="inline-block animate-spin mr-2">⏳</span> Génération...';
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                preview.innerHTML = '<div class="mt-4 p-4 border-2 border-dashed border-primary/20 rounded-xl text-center text-xs text-on-surface-variant animate-pulse">L\'IA prépare votre image...</div>';
+
+                try {
+                    console.log("Fetching image for description:", description);
+                    const response = await fetch('http://127.0.0.1:8001/generate_event_image', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            description: description,
+                            session_id: 'img-gen-' + Date.now(),
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        const errBody = await response.json().catch(() => ({ detail: response.statusText }));
+                        throw new Error((errBody.detail || errBody.error || JSON.stringify(errBody)));
+                    }
+
+                    const data = await response.json();
+                    console.log("AI Response received:", data);
+                    const imageUrl = data.image_url || data.image_base64;
+
+                    if (imageUrl) {
+                        let imgSrc = imageUrl.trim();
+                        if (!imgSrc.startsWith('http') && !imgSrc.startsWith('data:image')) {
+                            imgSrc = 'data:image/png;base64,' + imgSrc;
+                        }
+
+                        console.log("Setting image source to:", imgSrc);
+
+                        // Show the image with diagnostic events
+                        preview.innerHTML = `
+                            <div class="mt-6 p-4 bg-gray-50 rounded-2xl border border-outline/10">
+                                <p class="text-[10px] font-bold text-primary uppercase tracking-tight mb-3">Aperçu de l'image générée :</p>
+                                <div class="relative min-h-[200px] flex items-center justify-center bg-gray-100 rounded-xl overflow-hidden">
+                                    <img src="${imgSrc}" 
+                                         alt="Generated Event Image" 
+                                         class="rounded-xl w-full h-auto shadow-sm transition-opacity duration-500 opacity-0" 
+                                         onload="this.classList.remove('opacity-0'); console.log('Image rendered successfully'); document.getElementById('img-status').style.display='none';" 
+                                         onerror="console.error('Image failed to load:', this.src); document.getElementById('img-status').innerHTML='⚠️ Erreur de chargement de l\\'image'; document.getElementById('img-status').className='text-red-500 text-xs font-bold';" />
+                                    <div id="img-status" class="absolute inset-0 flex items-center justify-center text-[10px] text-on-surface-variant font-medium animate-pulse">
+                                        Chargement du rendu...
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-[9px] text-gray-400 italic">Prompt optimisé par Claude · Image générée par Google Imagen</p>
+                            </div>
+                        `;
+
+                        let hiddenInput = document.getElementById('generated_image_url_input');
+                        if (!hiddenInput) {
+                            hiddenInput = document.createElement('input');
+                            hiddenInput.type = 'hidden';
+                            hiddenInput.id = 'generated_image_url_input';
+                            hiddenInput.name = 'generated_image_url';
+                            document.getElementById('eventForm').appendChild(hiddenInput);
+                        }
+                        hiddenInput.value = imageUrl;
+                    } else {
+                        throw new Error(data.error || 'Aucune image reçue');
+                    }
+                } catch (error) {
+                    console.error("AI Generation Error:", error);
+                    preview.innerHTML = `<div class="mt-4 p-4 bg-red-50 text-red-600 rounded-xl text-xs font-semibold border border-red-100">
+                        ⚠️ Erreur : ${error.message}. Vérifiez que l'agent IA est bien démarré.
+                    </div>`;
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            } else {
+                alert("Veuillez saisir une description d'au moins 10 caractères.");
+            }
+        });
     }
 });
 
 function validateEventForm(e) {
-    // Clear previous errors
+    // ... logic remains same, but we can keep it outside or inside. 
+    // Outside is fine since it's called by name in the HTML.
     document.querySelectorAll('.js-error-msg').forEach(el => el.remove());
     document.querySelectorAll('.border-red-400').forEach(el => el.classList.remove('border-red-400', 'ring-1', 'ring-red-300'));
     
@@ -142,49 +251,35 @@ function validateEventForm(e) {
 
     function showError(inputId, message) {
         const input = document.getElementById(inputId);
-        input.classList.add('border-red-400', 'ring-1', 'ring-red-300');
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'js-error-msg text-[10px] text-red-500 mt-1 font-semibold';
-        errorDiv.innerText = message;
-        input.parentNode.appendChild(errorDiv);
+        if (input) {
+            input.classList.add('border-red-400', 'ring-1', 'ring-red-300');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'js-error-msg text-[10px] text-red-500 mt-1 font-semibold';
+            errorDiv.innerText = message;
+            input.parentNode.appendChild(errorDiv);
+        }
         isValid = false;
     }
 
     const titre = document.getElementById('event_titre').value.trim();
-    if (titre.length < 2) {
-        showError('event_titre', 'Le titre est obligatoire et doit faire au moins 2 caractères.');
-    }
+    if (titre.length < 2) showError('event_titre', 'Le titre est obligatoire (min 2 car.).');
 
-    const description = document.getElementById('event_description').value.trim();
-    if (description.length > 0 && description.length < 10) {
-        showError('event_description', 'La description doit faire au moins 10 caractères.');
-    }
+    const desc = document.getElementById('event_description').value.trim();
+    if (desc.length > 0 && desc.length < 10) showError('event_description', 'La description est trop courte.');
 
     const dateStr = document.getElementById('event_date').value;
     if (!dateStr) {
-        showError('event_date', 'La date de l\'événement est obligatoire.');
+        showError('event_date', 'Date obligatoire.');
     } else {
-        const selectedDate = new Date(dateStr);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        if (selectedDate < today) {
-            showError('event_date', 'La date ne peut pas être dans le passé.');
-        }
+        if (new Date(dateStr) < new Date().setHours(0,0,0,0)) showError('event_date', 'Date passée.');
     }
 
-    const type = document.getElementById('event_type').value;
-    if (!type) {
-        showError('event_type', 'Veuillez sélectionner un type d\'événement.');
-    }
+    if (!document.getElementById('event_type').value) showError('event_type', 'Type obligatoire.');
+    
+    const cap = document.getElementById('event_capacite').value;
+    if (!cap || parseInt(cap) < 1) showError('event_capacite', 'Capacité invalide.');
 
-    const capacite = document.getElementById('event_capacite').value;
-    if (!capacite || parseInt(capacite) < 1) {
-        showError('event_capacite', 'La capacité doit être un nombre positif (1 ou plus).');
-    }
-
-    if (!isValid) {
-        e.preventDefault();
-    }
+    if (!isValid) e.preventDefault();
     return isValid;
 }
 </script>

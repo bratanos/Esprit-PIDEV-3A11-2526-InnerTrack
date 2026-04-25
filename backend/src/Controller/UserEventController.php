@@ -8,7 +8,6 @@ use App\Repository\EventRepository;
 use App\Repository\InscriptionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -19,7 +18,7 @@ use Dompdf\Options;
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
 class UserEventController extends AbstractController
 {
-    // ------------------------------------------------------------------ LIST
+    
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(EventRepository $eventRepo, InscriptionRepository $inscRepo): Response
     {
@@ -39,33 +38,6 @@ class UserEventController extends AbstractController
         ]);
     }
 
-    // ------------------------------------------------------------------ FILTER (AJAX)
-    #[Route('/filter', name: 'filter', methods: ['GET'])]
-    public function filter(Request $request, EventRepository $eventRepo, InscriptionRepository $inscRepo): Response
-    {
-        $q      = $request->query->get('q');
-        $type   = $request->query->get('type');
-        $period = $request->query->get('period');
-        $avail  = $request->query->get('avail');
-
-        $typeInt = $type ? (int)$type : null;
-
-        $events = $eventRepo->filterEvents($q, $typeInt, $period, $avail);
-
-        $user = $this->getUser();
-        $myInscriptions = $inscRepo->findBy(['emailParticipant' => $user->getEmail()]);
-        $registeredStatuses = [];
-        foreach ($myInscriptions as $insc) {
-            $registeredStatuses[$insc->getEvenement()->getId()] = $insc->getStatut();
-        }
-
-        return $this->render('pages/events/_events_grid.html.twig', [
-            'events'             => $events,
-            'registeredStatuses' => $registeredStatuses,
-        ]);
-    }
-
-    // ---------------------------------------------------------------- PARTICIPATE
     #[Route('/{id}/participate', name: 'participate', methods: ['POST'])]
     public function participate(Event $event, EntityManagerInterface $em, InscriptionRepository $inscRepo): Response
     {
@@ -102,7 +74,6 @@ class UserEventController extends AbstractController
             return $this->redirectToRoute('app_event_index');
         }
 
-        // Create inscription automatically from user info
         $inscription = new Inscription();
         $inscription->setEvenement($event);
         $inscription->setNomParticipant($user->getFullName());
@@ -116,7 +87,7 @@ class UserEventController extends AbstractController
         return $this->redirectToRoute('app_event_index');
     }
 
-    // ------------------------------------------------------------ CANCEL
+    
     #[Route('/{id}/cancel', name: 'cancel', methods: ['POST'])]
     public function cancel(Event $event, EntityManagerInterface $em, InscriptionRepository $inscRepo): Response
     {
@@ -135,7 +106,6 @@ class UserEventController extends AbstractController
         $em->remove($inscription);
         $em->flush();
         
-        // Promote next user in waiting list if any
         $oldestWaiting = $inscRepo->findOldestWaitingList($event);
         if ($oldestWaiting) {
             $oldestWaiting->setStatut(Inscription::STATUS_CONFIRMED);
@@ -146,7 +116,6 @@ class UserEventController extends AbstractController
         return $this->redirectToRoute('app_event_index');
     }
 
-    // ------------------------------------------------------------ CERTIFICATE
     #[Route('/{id}/certificate', name: 'certificate', methods: ['GET'])]
     public function certificate(Event $event, InscriptionRepository $inscRepo): Response
     {

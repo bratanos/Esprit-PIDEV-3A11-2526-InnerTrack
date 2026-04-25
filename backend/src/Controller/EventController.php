@@ -168,6 +168,8 @@ class EventController extends AbstractController
             $event->setStatut($statut === '1');
 
             $imageFile = $request->files->get('image');
+            $generatedImageUrl = $request->request->get('generated_image_url');
+
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = preg_replace('/[^a-zA-Z0-9_-]/', '', $originalFilename);
@@ -181,6 +183,23 @@ class EventController extends AbstractController
                     $event->setImage($newFilename);
                 } catch (\Exception $e) {
                     $errors['image'] = 'Erreur lors de l\'upload de l\'image.';
+                }
+            } elseif ($generatedImageUrl) {
+                try {
+                    $newFilename = 'ai-gen-'.uniqid().'.jpg';
+                    $uploadDir = $this->getParameter('kernel.project_dir').'/public/uploads/events';
+                    
+                    if (!file_exists($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+
+                    $content = file_get_contents($generatedImageUrl);
+                    if ($content !== false) {
+                        file_put_contents($uploadDir.'/'.$newFilename, $content);
+                        $event->setImage($newFilename);
+                    }
+                } catch (\Exception $e) {
+                    // Silently fail or add an error
                 }
             }
         }
