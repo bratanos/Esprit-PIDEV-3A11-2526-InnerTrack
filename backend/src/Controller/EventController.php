@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 #[Route('/admin/events', name: 'admin_event_')]
 #[IsGranted('ROLE_PSYCHOLOGUE')]
@@ -184,6 +186,20 @@ class EventController extends AbstractController
         }
 
         return $errors;
+    }
+
+    #[Route('/generate_event_description', name: 'generate_event_description', methods: ['POST'])]
+    public function generateEventDescription(Request $request)
+    {
+       // Parse the incoming JSON request
+        $data = json_decode($request->getContent(), true);
+        $eventName = $data['event_name'] ?? '';
+
+        // Example logic for generating description
+        $description = "Generated description for the event: $eventName";
+
+        // Return the generated description as JSON
+        return new JsonResponse(['description' => $description]);
     }
 }
 

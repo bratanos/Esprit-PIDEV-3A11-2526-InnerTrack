@@ -106,6 +106,33 @@
 </div>
 
 <script>
+
+// Event listener to dynamically generate event description based on event name
+document.getElementById('event_titre').addEventListener('input', async function() {
+    const eventName = this.value;
+    if (eventName.length >= 2) {  // Trigger after at least 2 characters typed
+        const response = await fetch('http://127.0.0.1:8001/generate_event_description', {  // Make sure the URL uses port 8001
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                event_name: eventName,
+                session_id: 'some-session-id', // Make sure to pass the correct session ID
+            }),
+        });
+
+        // Ensure the response is valid JSON
+        try {
+            const data = await response.json();
+            // Set the generated description in the description textarea
+            document.getElementById('event_description').value = data.description;
+        } catch (error) {
+            console.error("Error parsing JSON:", error);
+        }
+    }
+});
+
 function validateEventForm(e) {
     // Clear previous errors
     document.querySelectorAll('.js-error-msg').forEach(el => el.remove());
