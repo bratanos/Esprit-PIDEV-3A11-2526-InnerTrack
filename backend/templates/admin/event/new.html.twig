@@ -283,4 +283,104 @@ function validateEventForm(e) {
     return isValid;
 }
 </script>
+
+{# ── Image conflict modal ── #}
+<div id="image-choice-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-6" style="background:rgba(0,0,0,0.55);backdrop-filter:blur(6px)">
+    <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl overflow-hidden">
+
+        <div class="px-8 pt-8 pb-6 border-b border-outline/10 flex items-start justify-between gap-4">
+            <div>
+                <h3 class="text-2xl font-headline font-extrabold text-on-surface">Deux images détectées</h3>
+                <p class="text-sm text-on-surface-variant mt-1">Vous avez téléchargé un fichier <em>et</em> généré une image IA. Laquelle souhaitez-vous conserver ?</p>
+            </div>
+            <button type="button" id="modal-close-btn" class="shrink-0 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+                <span class="material-symbols-outlined text-on-surface-variant text-xl">close</span>
+            </button>
+        </div>
+
+        <div class="p-8 grid grid-cols-2 gap-6">
+            <div class="flex flex-col gap-4">
+                <div class="h-48 rounded-2xl overflow-hidden bg-gray-100 border-2 border-transparent" id="modal-uploaded-border">
+                    <img id="modal-uploaded-img" src="" alt="Fichier uploadé" class="w-full h-full object-cover">
+                </div>
+                <p class="text-center text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">Votre fichier</p>
+                <button type="button" id="choose-uploaded-btn"
+                        class="w-full py-3 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-indigo-700 active:scale-95 transition-all">
+                    Utiliser cette image
+                </button>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <div class="h-48 rounded-2xl overflow-hidden bg-gray-100 border-2 border-transparent">
+                    <img id="modal-ai-img" src="" alt="Image IA" class="w-full h-full object-cover">
+                </div>
+                <p class="text-center text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">Générée par l'IA</p>
+                <button type="button" id="choose-ai-btn"
+                        class="w-full py-3 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-indigo-700 active:scale-95 transition-all">
+                    Utiliser cette image
+                </button>
+            </div>
+        </div>
+
+        <div class="px-8 pb-8 text-center text-[10px] text-on-surface-variant">
+            <span class="material-symbols-outlined text-[13px] align-middle mr-1">info</span>
+            Seule l'image choisie sera enregistrée — l'autre sera ignorée.
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form      = document.getElementById('eventForm');
+    const modal     = document.getElementById('image-choice-modal');
+    let choiceDone  = false;
+
+    form.addEventListener('submit', function (e) {
+        if (e.defaultPrevented || choiceDone) return;
+
+        const fileInput  = document.getElementById('event_image');
+        const aiInput    = document.getElementById('generated_image_url_input');
+        const hasFile    = fileInput  && fileInput.files.length > 0;
+        const hasAI      = aiInput    && aiInput.value.length  > 0;
+
+        if (hasFile && hasAI) {
+            e.preventDefault();
+
+            // Preview uploaded file
+            const reader = new FileReader();
+            reader.onload = ev => { document.getElementById('modal-uploaded-img').src = ev.target.result; };
+            reader.readAsDataURL(fileInput.files[0]);
+
+            // Preview AI image
+            document.getElementById('modal-ai-img').src = aiInput.value;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    });
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+
+    document.getElementById('choose-uploaded-btn').addEventListener('click', function () {
+        document.getElementById('generated_image_url_input').value = '';
+        closeModal();
+        choiceDone = true;
+        form.submit();
+    });
+
+    document.getElementById('choose-ai-btn').addEventListener('click', function () {
+        const fileInput = document.getElementById('event_image');
+        fileInput.value = '';
+        try { fileInput.files = new DataTransfer().files; } catch (_) {}
+        closeModal();
+        choiceDone = true;
+        form.submit();
+    });
+});
+</script>
 {% endblock %}

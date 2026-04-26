@@ -188,18 +188,24 @@ class EventController extends AbstractController
                 try {
                     $newFilename = 'ai-gen-'.uniqid().'.jpg';
                     $uploadDir = $this->getParameter('kernel.project_dir').'/public/uploads/events';
-                    
+
                     if (!file_exists($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
                     }
 
-                    $content = file_get_contents($generatedImageUrl);
-                    if ($content !== false) {
+                    if (str_starts_with($generatedImageUrl, 'data:image')) {
+                        $base64 = preg_replace('/^data:image\/\w+;base64,/', '', $generatedImageUrl);
+                        $content = base64_decode($base64);
+                    } else {
+                        $content = file_get_contents($generatedImageUrl);
+                    }
+
+                    if ($content !== false && strlen($content) > 0) {
                         file_put_contents($uploadDir.'/'.$newFilename, $content);
                         $event->setImage($newFilename);
                     }
                 } catch (\Exception $e) {
-                    // Silently fail or add an error
+                    // silently fail
                 }
             }
         }
