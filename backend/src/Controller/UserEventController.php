@@ -21,21 +21,29 @@ class UserEventController extends AbstractController
 {
     
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(EventRepository $eventRepo, InscriptionRepository $inscRepo): Response
+    public function index(Request $request, EventRepository $eventRepo, InscriptionRepository $inscRepo): Response
     {
-        $user   = $this->getUser();
-        $events = $eventRepo->findBy(['statut' => true], ['date' => 'ASC']);
+        $q      = $request->query->get('q', '');
+        $type   = $request->query->get('type', '');
+        $period = $request->query->get('period', '');
+        $avail  = $request->query->get('avail', '');
 
-        // Find which events this user is already registered for
-        $myInscriptions = $inscRepo->findBy(['emailParticipant' => $user->getEmail()]);
+        $isFiltered = $q !== '' || $type !== '' || $period !== '' || $avail !== '';
+
+        $events = $isFiltered
+            ? $eventRepo->filterEvents($q, $type !== '' ? (int) $type : null, $period, $avail)
+            : $eventRepo->findBy(['statut' => true], ['date' => 'ASC']);
+
+        $user = $this->getUser();
         $registeredStatuses = [];
-        foreach ($myInscriptions as $insc) {
+        foreach ($inscRepo->findBy(['emailParticipant' => $user->getEmail()]) as $insc) {
             $registeredStatuses[$insc->getEvenement()->getId()] = $insc->getStatut();
         }
 
         return $this->render('pages/events/index.html.twig', [
             'events'             => $events,
             'registeredStatuses' => $registeredStatuses,
+            'filters'            => ['q' => $q, 'type' => $type, 'period' => $period, 'avail' => $avail],
         ]);
     }
 

@@ -17,22 +17,25 @@
 
     <!-- Filters Section -->
     <section class="bg-white rounded-[2rem] border border-outline/20 p-6 shadow-sm mb-8">
-        <form id="events-filter-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            
+        <form method="GET" action="{{ path('app_event_index') }}"
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
             <!-- Search -->
             <div class="relative">
                 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">search</span>
-                <input type="text" name="q" placeholder="Rechercher un événement..." class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+                <input type="text" name="q" value="{{ filters.q }}"
+                       placeholder="Rechercher un événement..."
+                       class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
             </div>
 
             <!-- Type Filter -->
             <div>
                 <select name="type" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-600 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_auto] bg-no-repeat bg-[position:right_16px_center]">
                     <option value="">Tous les types</option>
-                    <option value="1">Conférence</option>
-                    <option value="2">Atelier</option>
-                    <option value="3">Forum</option>
-                    <option value="4">Webinaire</option>
+                    <option value="1" {{ filters.type == '1' ? 'selected' : '' }}>Conférence</option>
+                    <option value="2" {{ filters.type == '2' ? 'selected' : '' }}>Atelier</option>
+                    <option value="3" {{ filters.type == '3' ? 'selected' : '' }}>Forum</option>
+                    <option value="4" {{ filters.type == '4' ? 'selected' : '' }}>Webinaire</option>
                 </select>
             </div>
 
@@ -40,101 +43,85 @@
             <div>
                 <select name="period" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-600 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_auto] bg-no-repeat bg-[position:right_16px_center]">
                     <option value="">Toutes les périodes</option>
-                    <option value="upcoming">À venir</option>
-                    <option value="past">Passés</option>
+                    <option value="upcoming" {{ filters.period == 'upcoming' ? 'selected' : '' }}>À venir</option>
+                    <option value="past"     {{ filters.period == 'past'     ? 'selected' : '' }}>Passés</option>
                 </select>
             </div>
 
-            <!-- Availability Filter -->
-            <div>
-                <select name="avail" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-600 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_auto] bg-no-repeat bg-[position:right_16px_center]">
+            <!-- Availability + Submit -->
+            <div class="flex gap-2">
+                <select name="avail" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-600 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_auto] bg-no-repeat bg-[position:right_16px_center]">
                     <option value="">Toute disponibilité</option>
-                    <option value="available">Places disponibles</option>
-                    <option value="full">Complet</option>
+                    <option value="available" {{ filters.avail == 'available' ? 'selected' : '' }}>Places disponibles</option>
+                    <option value="full"      {{ filters.avail == 'full'      ? 'selected' : '' }}>Complet</option>
                 </select>
+                <button type="submit"
+                        class="px-5 py-3 rounded-xl bg-primary text-white text-sm font-bold shadow-md shadow-primary/20 hover:bg-indigo-700 active:scale-95 transition-all flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[18px]">search</span>
+                </button>
+                {% if filters.q or filters.type or filters.period or filters.avail %}
+                <a href="{{ path('app_event_index') }}"
+                   class="px-4 py-3 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex items-center"
+                   title="Réinitialiser les filtres">
+                    <span class="material-symbols-outlined text-[18px]">close</span>
+                </a>
+                {% endif %}
             </div>
         </form>
     </section>
 
-    <!-- Events Grid Container (AJAX Target) -->
-    <div id="events-grid-container" class="relative min-h-[400px]">
-        <!-- Loading Overlay -->
-        <div id="events-loading" class="absolute inset-0 bg-white/60 backdrop-blur-sm z-20 flex flex-col items-center justify-center rounded-[3rem] hidden transition-opacity">
-            <div class="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-            <p class="mt-4 font-bold text-primary animate-pulse">Recherche en cours...</p>
-        </div>
-
-        <!-- The Grid -->
-        <div id="events-grid-content">
-            {{ include('pages/events/_events_grid.html.twig') }}
-        </div>
+    <!-- Events Grid -->
+    <div id="events-grid-content">
+        {{ include('pages/events/_events_grid.html.twig') }}
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('events-filter-form');
-    const container = document.getElementById('events-grid-content');
-    const loading = document.getElementById('events-loading');
-    
-    // Timeout for search debouncing (prevent requesting on every keypress immediately)
-    let timeoutId;
+$(document).ready(function () {
 
-    function fetchFilteredEvents() {
-        // Show loader
-        loading.classList.remove('hidden');
-        container.style.opacity = '0.5';
+    var debounceTimer;
 
-        // Prepare URL with query params
-        const params = new URLSearchParams(new FormData(form));
-        const url = `{{ path('app_event_filter') }}?${params.toString()}`;
+    function fetchEvents() {
+        var params = $('#events-filter-form').serialize();
 
-        // Fetch data
-        fetch(url, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+        $.ajax({
+            url: '{{ path('app_event_filter') }}',
+            type: 'GET',
+            data: params,
+            beforeSend: function () {
+                $('#events-grid-content').css('opacity', '0.4');
+            },
+            success: function (html) {
+                $('#events-grid-content').html(html).css('opacity', '1');
+                window.history.replaceState({}, '', '{{ path('app_event_index') }}?' + params);
+            },
+            error: function () {
+                $('#events-grid-content').css('opacity', '1');
             }
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.text();
-        })
-        .then(html => {
-            // Update the DOM
-            container.innerHTML = html;
-            
-            // Clean up loader
-            loading.classList.add('hidden');
-            container.style.opacity = '1';
-
-            // Optional: update URL in browser history silently
-            window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
-        })
-        .catch(error => {
-            console.error('Error fetching events:', error);
-            loading.classList.add('hidden');
-            container.style.opacity = '1';
         });
     }
 
-    // Attach event listeners to all form inputs
-    const inputs = form.querySelectorAll('input, select');
-    inputs.forEach(input => {
-        input.addEventListener(input.type === 'text' ? 'input' : 'change', function() {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(fetchFilteredEvents, 300); // 300ms debounce
-        });
+    // Submit button
+    $('#events-filter-form').on('submit', function (e) {
+        e.preventDefault();
+        fetchEvents();
     });
 
-    // Check if there are query params on initial load and set form values
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.toString().length > 0) {
-        for (const [key, value] of urlParams.entries()) {
-            const input = form.elements[key];
-            if (input) input.value = value;
-        }
-        fetchFilteredEvents();
-    }
+    // Live filter on select change
+    $('#events-filter-form select').on('change', function () {
+        fetchEvents();
+    });
+
+    // Debounced live search on text input
+    $('#events-filter-form input[name="q"]').on('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(fetchEvents, 350);
+    });
+
+});
+
+$(document).ready(function() {
     // Chatbot functionality
     const chatToggle = document.getElementById('chatbot-toggle');
     const chatWindow = document.getElementById('chatbot-window');
