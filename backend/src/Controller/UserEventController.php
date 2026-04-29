@@ -69,6 +69,21 @@ class UserEventController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}', name: 'show', methods: ['GET'])]
+    public function show(Event $event, InscriptionRepository $inscRepo): Response
+    {
+        $user = $this->getUser();
+        $inscription = $inscRepo->findOneBy([
+            'evenement'        => $event,
+            'emailParticipant' => $user->getEmail(),
+        ]);
+
+        return $this->render('pages/events/show.html.twig', [
+            'event'       => $event,
+            'inscription' => $inscription,
+        ]);
+    }
+
     #[Route('/{id}/participate', name: 'participate', methods: ['POST'])]
     public function participate(Event $event, EntityManagerInterface $em, InscriptionRepository $inscRepo): Response
     {

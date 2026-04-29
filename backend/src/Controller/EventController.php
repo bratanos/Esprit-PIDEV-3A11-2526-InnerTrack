@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 #[Route('/admin/events', name: 'admin_event_')]
@@ -211,6 +212,28 @@ class EventController extends AbstractController
         }
 
         return $errors;
+    }
+
+    #[Route('/{id}/qrcode', name: 'qrcode', methods: ['GET'])]
+    public function qrcode(Event $event): Response
+    {
+        $targetUrl = $this->generateUrl(
+            'app_event_show',
+            ['id' => $event->getId()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $apiUrl  = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($targetUrl);
+        $content = @file_get_contents($apiUrl);
+
+        if ($content === false) {
+            return new Response('QR generation failed', 502);
+        }
+
+        return new Response($content, 200, [
+            'Content-Type'        => 'image/png',
+            'Content-Disposition' => 'inline; filename="qrcode-event-' . $event->getId() . '.png"',
+        ]);
     }
 
     #[Route('/generate_event_description', name: 'generate_event_description', methods: ['POST'])]
