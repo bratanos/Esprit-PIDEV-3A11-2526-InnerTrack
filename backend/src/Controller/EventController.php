@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Event;
 use App\Entity\TypeEvent;
 use App\Repository\EventRepository;
+use App\Service\AiEventCopilotService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -91,8 +93,80 @@ class EventController extends AbstractController
         ]);
     }
 
+    // --------------------------------------------------------------- AI COPILOT
+    #[Route('/ai/generate', name: 'ai_generate', methods: ['POST'])]
+    public function aiGenerate(Request $request, AiEventCopilotService $copilot): JsonResponse
+    {
+        $idea = trim((string) ($request->toArray()['idea'] ?? ''));
+
+        if (strlen($idea) < 5) {
+            return $this->json(['error' => 'L\'idée est trop courte.'], 400);
+        }
+
+        try {
+            $start = microtime(true);
+            $data  = $copilot->generateEvent($idea);
+            $data['_elapsed_ms'] = (int) ((microtime(true) - $start) * 1000);
+
+            return $this->json($data);
+        } catch (\Throwable $e) {
+            return $this->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    #[Route('/ai/regenerate-field', name: 'ai_regenerate_field', methods: ['POST'])]
+    public function aiRegenerateField(Request $request, AiEventCopilotService $copilot): JsonResponse
+    {
+        $body         = $request->toArray();
+        $field        = $body['field']         ?? '';
+        $idea         = $body['idea']          ?? '';
+        $currentValue = $body['current_value'] ?? '';
+
+        $allowed = ['titre', 'description'];
+        if (!in_array($field, $allowed, true)) {
+            return $this->json(['error' => 'Champ non régénérable.'], 400);
+        }
+
+        try {
+            $value = $copilot->regenerateField($field, $idea, $currentValue);
+
+            return $this->json(['value' => $value]);
+        } catch (\Throwable $e) {
+            return $this->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    // --------------------------------------------------------------- AI STREAM
+    #[Route('/ai/stream', name: 'ai_stream', methods: ['POST'])]
+    public function aiStream(Request $request, AiEventCopilotService $copilot): StreamedResponse
+    {
+        $idea = trim((string) ($request->toArray()['idea'] ?? ''));
+
+        $headers = [
+            'Content-Type'      => 'text/event-stream',
+            'Cache-Control'     => 'no-cache',
+            'X-Accel-Buffering' => 'no',
+        ];
+
+        if (strlen($idea) < 5) {
+            return new StreamedResponse(function () {
+                echo 'data: ' . json_encode(['type' => 'error', 'message' => "L'idée est trop courte."]) . "\n\n";
+                ob_flush();
+                flush();
+            }, 200, $headers);
+        }
+
+        return new StreamedResponse(function () use ($idea, $copilot) {
+            foreach ($copilot->streamEvent($idea) as $event) {
+                echo 'data: ' . json_encode($event) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        }, 200, $headers);
+    }
+
     // ------------------------------------------------------------------ SHOW
-    #[Route('/{id}', name: 'show', methods: ['GET'])]
+    #[Route('/{id}', name: 'show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(Event $event): Response
     {
         return $this->render('admin/event/show.html.twig', [
@@ -101,7 +175,7 @@ class EventController extends AbstractController
     }
 
     // ------------------------------------------------------------------ EDIT
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, Event $event, EntityManagerInterface $em): Response
     {
         $errors = [];
@@ -124,7 +198,7 @@ class EventController extends AbstractController
     }
 
     // ---------------------------------------------------------------- DELETE
-    #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Event $event, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('delete_event_' . $event->getId(), $request->request->get('_token'))) {
@@ -214,7 +288,7 @@ class EventController extends AbstractController
         return $errors;
     }
 
-    #[Route('/{id}/qrcode', name: 'qrcode', methods: ['GET'])]
+    #[Route('/{id}/qrcode', name: 'qrcode', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function qrcode(Event $event): Response
     {
         $targetUrl = $this->generateUrl(

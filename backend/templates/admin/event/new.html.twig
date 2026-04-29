@@ -10,12 +10,51 @@
         <h2 class="text-3xl font-extrabold font-headline tracking-tighter">Nouvel événement</h2>
     </div>
 
+    {# ── AI COPILOT PANEL ── #}
+    <div id="copilot-panel" class="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-[2.5rem] border border-indigo-100 shadow-sm p-8">
+
+        <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
+                <span class="material-symbols-outlined text-white text-[18px]">auto_awesome</span>
+            </div>
+            <div>
+                <p class="text-sm font-extrabold text-on-surface leading-none">AI Event Copilot</p>
+                <p class="text-[10px] text-on-surface-variant mt-0.5">Décrivez votre idée — l'IA remplit le formulaire</p>
+            </div>
+            <div id="copilot-badge" class="ml-auto hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-bold">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span>
+                <span id="copilot-elapsed">Généré</span>
+            </div>
+        </div>
+
+        <div class="flex gap-3">
+            <input type="text" id="copilot-idea"
+                   placeholder="ex: Atelier sur la gestion du stress pour étudiants…"
+                   class="flex-1 px-4 py-3 rounded-xl border border-indigo-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary transition shadow-sm"
+                   autocomplete="off">
+            <button type="button" id="copilot-generate-btn"
+                    class="px-6 py-3 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/25 hover:bg-indigo-700 active:scale-95 transition-all whitespace-nowrap flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">bolt</span>
+                <span id="copilot-btn-label">Générer</span>
+            </button>
+        </div>
+
+        {# Error #}
+        <div id="copilot-error" class="hidden mt-4 p-3 bg-red-50 text-red-600 rounded-xl text-xs font-semibold border border-red-100"></div>
+    </div>
+
+    {# ── EVENT FORM ── #}
     <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm p-8 lg:p-10">
         <form method="post" action="{{ path('admin_event_new') }}" class="space-y-6" id="eventForm" enctype="multipart/form-data" novalidate onsubmit="return validateEventForm(event)">
 
             {# Titre #}
             <div>
-                <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Titre *</label>
+                <div class="flex items-center justify-between mb-1">
+                    <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant block">Titre *</label>
+                    <button type="button" class="copilot-regen-btn hidden text-[10px] font-bold text-primary hover:text-indigo-700 flex items-center gap-1 transition-colors" data-field="titre">
+                        <span class="material-symbols-outlined text-[13px]">refresh</span> Régénérer
+                    </button>
+                </div>
                 <input type="text" name="titre" id="event_titre" value="{{ event.titre }}"
                        class="w-full px-4 py-3 rounded-xl border {{ errors.titre is defined ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-primary' }} bg-gray-50 text-sm focus:outline-none focus:ring-2 transition"
                        placeholder="Nom de l'événement">
@@ -26,7 +65,12 @@
 
             {# Description #}
             <div>
-                <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Description</label>
+                <div class="flex items-center justify-between mb-1">
+                    <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant block">Description</label>
+                    <button type="button" class="copilot-regen-btn hidden text-[10px] font-bold text-primary hover:text-indigo-700 flex items-center gap-1 transition-colors" data-field="description">
+                        <span class="material-symbols-outlined text-[13px]">refresh</span> Régénérer
+                    </button>
+                </div>
                 <textarea name="description" id="event_description" rows="4"
                           class="w-full px-4 py-3 rounded-xl border border-outline/30 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition"
                           placeholder="Décrivez l'événement…">{{ event.description }}</textarea>
@@ -92,17 +136,13 @@
                 {% endif %}
             </div>
 
-            <!-- Add a new section for the Image Generation -->
+            {# AI Image Generation #}
             <div>
                 <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Image générée pour l'événement</label>
                 <button type="button" id="generate_image_button" class="w-full px-4 py-3 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-indigo-700 active:scale-95 transition-all">
                     Générer une image
                 </button>
-
-                <!-- Image preview -->
-                <div id="image_preview" class="mt-4">
-                    <!-- Image will be displayed here -->
-                </div>
+                <div id="image_preview" class="mt-4"></div>
             </div>
 
             {# Submit #}
@@ -119,144 +159,256 @@
 </div>
 
 <script>
+// ── AI Copilot ────────────────────────────────────────────────────────────────
+(function () {
+    const streamUrl     = '{{ path("admin_event_ai_stream") }}';
+    const regenerateUrl = '{{ path("admin_event_ai_regenerate_field") }}';
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("Event script initialized");
+    let lastIdea = '';
 
-    // Event listener to dynamically generate event description based on event name
-    const titreInput = document.getElementById('event_titre');
-    if (titreInput) {
-        titreInput.addEventListener('input', async function() {
-            const eventName = this.value;
-            if (eventName.length >= 2) {
-                try {
-                    const response = await fetch('http://127.0.0.1:8001/generate_event_description', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            event_name: eventName,
-                            session_id: 'desc-gen-' + Date.now(),
-                        }),
-                    });
-                    const data = await response.json();
-                    if (data.description) {
-                        document.getElementById('event_description').value = data.description;
-                    }
-                } catch (error) {
-                    console.error("Error generating description:", error);
-                }
-            }
-        });
+    const ideaInput   = document.getElementById('copilot-idea');
+    const generateBtn = document.getElementById('copilot-generate-btn');
+    const btnLabel    = document.getElementById('copilot-btn-label');
+    const badge       = document.getElementById('copilot-badge');
+    const elapsedSpan = document.getElementById('copilot-elapsed');
+    const errorDiv    = document.getElementById('copilot-error');
+    const regenBtns   = document.querySelectorAll('.copilot-regen-btn');
+
+    function setLoading(on) {
+        generateBtn.disabled = on;
+        btnLabel.textContent = on ? 'Génération…' : 'Générer';
+        generateBtn.classList.toggle('opacity-60', on);
     }
 
-    // Event listener to handle the image generation based on the description
-    const generateBtn = document.getElementById('generate_image_button');
-    if (generateBtn) {
-        generateBtn.addEventListener('click', async function() {
-            const descriptionInput = document.getElementById('event_description');
-            const description = descriptionInput ? descriptionInput.value.trim() : '';
+    function showError(msg) {
+        errorDiv.textContent = '⚠️ ' + msg;
+        errorDiv.classList.remove('hidden');
+    }
 
-            const preview = document.getElementById('image_preview');
-            const btn = this;
-            const originalText = btn.innerHTML;
-            
-            if (description.length >= 10) {
-                btn.innerHTML = '<span class="inline-block animate-spin mr-2">⏳</span> Génération...';
-                btn.disabled = true;
-                btn.classList.add('opacity-50', 'cursor-not-allowed');
-                preview.innerHTML = '<div class="mt-4 p-4 border-2 border-dashed border-primary/20 rounded-xl text-center text-xs text-on-surface-variant animate-pulse">L\'IA prépare votre image...</div>';
+    function clearError() {
+        errorDiv.classList.add('hidden');
+        errorDiv.textContent = '';
+    }
 
-                try {
-                    console.log("Fetching image for description:", description);
-                    const response = await fetch('http://127.0.0.1:8001/generate_event_image', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            description: description,
-                            session_id: 'img-gen-' + Date.now(),
-                        }),
-                    });
+    function flashField(el) {
+        el.classList.add('ring-2', 'ring-primary');
+        setTimeout(() => el.classList.remove('ring-2', 'ring-primary'), 1500);
+    }
 
-                    if (!response.ok) {
-                        const errBody = await response.json().catch(() => ({ detail: response.statusText }));
-                        throw new Error((errBody.detail || errBody.error || JSON.stringify(errBody)));
-                    }
+    function fillMeta(data) {
+        const titreEl    = document.getElementById('event_titre');
+        const capaciteEl = document.getElementById('event_capacite');
+        const typeEl     = document.getElementById('event_type');
 
-                    const data = await response.json();
-                    console.log("AI Response received:", data);
-                    const imageUrl = data.image_url || data.image_base64;
-
-                    if (imageUrl) {
-                        let imgSrc = imageUrl.trim();
-                        if (!imgSrc.startsWith('http') && !imgSrc.startsWith('data:image')) {
-                            imgSrc = 'data:image/png;base64,' + imgSrc;
-                        }
-
-                        console.log("Setting image source to:", imgSrc);
-
-                        // Show the image with diagnostic events
-                        preview.innerHTML = `
-                            <div class="mt-6 p-4 bg-gray-50 rounded-2xl border border-outline/10">
-                                <p class="text-[10px] font-bold text-primary uppercase tracking-tight mb-3">Aperçu de l'image générée :</p>
-                                <div class="relative min-h-[200px] flex items-center justify-center bg-gray-100 rounded-xl overflow-hidden">
-                                    <img src="${imgSrc}" 
-                                         alt="Generated Event Image" 
-                                         class="rounded-xl w-full h-auto shadow-sm transition-opacity duration-500 opacity-0" 
-                                         onload="this.classList.remove('opacity-0'); console.log('Image rendered successfully'); document.getElementById('img-status').style.display='none';" 
-                                         onerror="console.error('Image failed to load:', this.src); document.getElementById('img-status').innerHTML='⚠️ Erreur de chargement de l\\'image'; document.getElementById('img-status').className='text-red-500 text-xs font-bold';" />
-                                    <div id="img-status" class="absolute inset-0 flex items-center justify-center text-[10px] text-on-surface-variant font-medium animate-pulse">
-                                        Chargement du rendu...
-                                    </div>
-                                </div>
-                                <p class="mt-2 text-[9px] text-gray-400 italic">Prompt optimisé par Claude · Image générée par Google Imagen</p>
-                            </div>
-                        `;
-
-                        let hiddenInput = document.getElementById('generated_image_url_input');
-                        if (!hiddenInput) {
-                            hiddenInput = document.createElement('input');
-                            hiddenInput.type = 'hidden';
-                            hiddenInput.id = 'generated_image_url_input';
-                            hiddenInput.name = 'generated_image_url';
-                            document.getElementById('eventForm').appendChild(hiddenInput);
-                        }
-                        hiddenInput.value = imageUrl;
-                    } else {
-                        throw new Error(data.error || 'Aucune image reçue');
-                    }
-                } catch (error) {
-                    console.error("AI Generation Error:", error);
-                    preview.innerHTML = `<div class="mt-4 p-4 bg-red-50 text-red-600 rounded-xl text-xs font-semibold border border-red-100">
-                        ⚠️ Erreur : ${error.message}. Vérifiez que l'agent IA est bien démarré.
-                    </div>`;
-                } finally {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                }
-            } else {
-                alert("Veuillez saisir une description d'au moins 10 caractères.");
+        if (data.titre)    { titreEl.value    = data.titre;    flashField(titreEl); }
+        if (data.capacite) { capaciteEl.value = data.capacite; flashField(capaciteEl); }
+        if (data.type) {
+            for (const opt of typeEl.options) {
+                if (opt.value == data.type) { opt.selected = true; break; }
             }
+            flashField(typeEl);
+        }
+    }
+
+    async function generate() {
+        const idea = ideaInput.value.trim();
+        if (idea.length < 5) { showError('Décrivez votre idée en au moins 5 caractères.'); return; }
+
+        clearError();
+        setLoading(true);
+        badge.classList.add('hidden');
+
+        const descEl = document.getElementById('event_description');
+        descEl.value = '';
+
+        const startMs = Date.now();
+
+        try {
+            const response = await fetch(streamUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idea }),
+            });
+
+            if (!response.ok) throw new Error('Erreur serveur ' + response.status);
+
+            const reader  = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+            let description = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() ?? '';
+
+                for (const line of lines) {
+                    if (!line.startsWith('data: ')) continue;
+                    const raw = line.slice(6).trim();
+                    if (!raw) continue;
+
+                    let event;
+                    try { event = JSON.parse(raw); } catch { continue; }
+
+                    if (event.type === 'meta') {
+                        fillMeta(event.data);
+
+                    } else if (event.type === 'chunk') {
+                        description += event.text;
+                        descEl.value = description;
+                        descEl.scrollTop = descEl.scrollHeight;
+
+                    } else if (event.type === 'done') {
+                        lastIdea = idea;
+                        const ms = Date.now() - startMs;
+                        elapsedSpan.textContent = 'Généré en ' + (ms / 1000).toFixed(1) + 's';
+                        badge.classList.remove('hidden');
+                        badge.classList.add('flex');
+                        regenBtns.forEach(btn => btn.classList.remove('hidden'));
+                        autoGenerateImage(description);
+
+                    } else if (event.type === 'error') {
+                        throw new Error(event.message);
+                    }
+                }
+            }
+        } catch (err) {
+            showError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    generateBtn.addEventListener('click', generate);
+    ideaInput.addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
+
+    regenBtns.forEach(btn => {
+        btn.addEventListener('click', async function () {
+            const field   = this.dataset.field;
+            const inputEl = field === 'titre'
+                ? document.getElementById('event_titre')
+                : document.getElementById('event_description');
+            const orig = this.innerHTML;
+            this.innerHTML = '<span class="material-symbols-outlined text-[13px] animate-spin">refresh</span> Régénération…';
+            this.disabled = true;
+            try {
+                const res = await fetch(regenerateUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ field, idea: lastIdea || ideaInput.value.trim(), current_value: inputEl.value }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Erreur');
+                inputEl.value = data.value;
+                flashField(inputEl);
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                this.innerHTML = orig;
+                this.disabled = false;
+            }
+        });
+    });
+})();
+
+// ── Shared image generator (used by copilot auto-trigger + manual button) ─────
+async function autoGenerateImage(description) {
+    const preview = document.getElementById('image_preview');
+    if (!description || description.trim().length < 10) return;
+
+    preview.innerHTML = `
+        <div class="mt-4 p-4 border-2 border-dashed border-primary/20 rounded-xl text-center text-xs text-on-surface-variant">
+            <span class="inline-block animate-spin mr-1">⏳</span> L'IA génère l'image…
+        </div>`;
+
+    try {
+        const response = await fetch('http://127.0.0.1:8001/generate_event_image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ description: description.trim(), session_id: 'img-' + Date.now() }),
+        });
+
+        if (!response.ok) {
+            const err = await response.json().catch(() => ({ detail: response.statusText }));
+            throw new Error(err.detail || err.error || 'Erreur image');
+        }
+
+        const data     = await response.json();
+        const imageUrl = data.image_url || data.image_base64;
+        if (!imageUrl) throw new Error('Aucune image reçue');
+
+        let imgSrc = imageUrl.trim();
+        if (!imgSrc.startsWith('http') && !imgSrc.startsWith('data:image')) {
+            imgSrc = 'data:image/png;base64,' + imgSrc;
+        }
+
+        preview.innerHTML = `
+            <div class="mt-6 p-4 bg-gray-50 rounded-2xl border border-outline/10">
+                <p class="text-[10px] font-bold text-primary uppercase tracking-tight mb-3">Image générée :</p>
+                <div class="relative min-h-[200px] flex items-center justify-center bg-gray-100 rounded-xl overflow-hidden">
+                    <img src="${imgSrc}" alt="Event image"
+                         class="rounded-xl w-full h-auto shadow-sm transition-opacity duration-500 opacity-0"
+                         onload="this.classList.remove('opacity-0'); document.getElementById('img-status').style.display='none';"
+                         onerror="document.getElementById('img-status').textContent='⚠️ Erreur de rendu';" />
+                    <div id="img-status" class="absolute inset-0 flex items-center justify-center text-[10px] text-on-surface-variant animate-pulse">Chargement…</div>
+                </div>
+                <div class="mt-3 flex items-center justify-between">
+                    <p class="text-[9px] text-gray-400 italic">Généré par Google Imagen via Claude prompt</p>
+                    <button type="button" onclick="autoGenerateImage(document.getElementById('event_description').value)"
+                            class="text-[10px] font-bold text-primary hover:text-indigo-700 flex items-center gap-1 transition-colors">
+                        <span class="material-symbols-outlined text-[13px]">refresh</span> Régénérer
+                    </button>
+                </div>
+            </div>`;
+
+        let hiddenInput = document.getElementById('generated_image_url_input');
+        if (!hiddenInput) {
+            hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.id   = 'generated_image_url_input';
+            hiddenInput.name = 'generated_image_url';
+            document.getElementById('eventForm').appendChild(hiddenInput);
+        }
+        hiddenInput.value = imageUrl;
+
+    } catch (err) {
+        preview.innerHTML = `<div class="mt-4 p-4 bg-red-50 text-red-600 rounded-xl text-xs font-semibold border border-red-100">⚠️ Image: ${err.message}</div>`;
+    }
+}
+
+// ── Manual image button ───────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('generate_image_button');
+    if (btn) {
+        btn.addEventListener('click', function () {
+            const description = (document.getElementById('event_description').value || '').trim();
+            if (description.length < 10) {
+                alert('Veuillez saisir une description d\'au moins 10 caractères.');
+                return;
+            }
+            autoGenerateImage(description);
         });
     }
 });
 
+// ── Form Validation ───────────────────────────────────────────────────────────
 function validateEventForm(e) {
-    // ... logic remains same, but we can keep it outside or inside. 
-    // Outside is fine since it's called by name in the HTML.
     document.querySelectorAll('.js-error-msg').forEach(el => el.remove());
     document.querySelectorAll('.border-red-400').forEach(el => el.classList.remove('border-red-400', 'ring-1', 'ring-red-300'));
-    
+
     let isValid = true;
 
     function showError(inputId, message) {
         const input = document.getElementById(inputId);
         if (input) {
             input.classList.add('border-red-400', 'ring-1', 'ring-red-300');
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'js-error-msg text-[10px] text-red-500 mt-1 font-semibold';
-            errorDiv.innerText = message;
-            input.parentNode.appendChild(errorDiv);
+            const div = document.createElement('div');
+            div.className = 'js-error-msg text-[10px] text-red-500 mt-1 font-semibold';
+            div.innerText = message;
+            input.parentNode.appendChild(div);
         }
         isValid = false;
     }
@@ -270,12 +422,12 @@ function validateEventForm(e) {
     const dateStr = document.getElementById('event_date').value;
     if (!dateStr) {
         showError('event_date', 'Date obligatoire.');
-    } else {
-        if (new Date(dateStr) < new Date().setHours(0,0,0,0)) showError('event_date', 'Date passée.');
+    } else if (new Date(dateStr) < new Date().setHours(0, 0, 0, 0)) {
+        showError('event_date', 'Date passée.');
     }
 
     if (!document.getElementById('event_type').value) showError('event_type', 'Type obligatoire.');
-    
+
     const cap = document.getElementById('event_capacite').value;
     if (!cap || parseInt(cap) < 1) showError('event_capacite', 'Capacité invalide.');
 
@@ -300,7 +452,7 @@ function validateEventForm(e) {
 
         <div class="p-8 grid grid-cols-2 gap-6">
             <div class="flex flex-col gap-4">
-                <div class="h-48 rounded-2xl overflow-hidden bg-gray-100 border-2 border-transparent" id="modal-uploaded-border">
+                <div class="h-48 rounded-2xl overflow-hidden bg-gray-100 border-2 border-transparent">
                     <img id="modal-uploaded-img" src="" alt="Fichier uploadé" class="w-full h-full object-cover">
                 </div>
                 <p class="text-center text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">Votre fichier</p>
@@ -331,29 +483,23 @@ function validateEventForm(e) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const form      = document.getElementById('eventForm');
-    const modal     = document.getElementById('image-choice-modal');
-    let choiceDone  = false;
+    const form     = document.getElementById('eventForm');
+    const modal    = document.getElementById('image-choice-modal');
+    let choiceDone = false;
 
     form.addEventListener('submit', function (e) {
         if (e.defaultPrevented || choiceDone) return;
-
-        const fileInput  = document.getElementById('event_image');
-        const aiInput    = document.getElementById('generated_image_url_input');
-        const hasFile    = fileInput  && fileInput.files.length > 0;
-        const hasAI      = aiInput    && aiInput.value.length  > 0;
+        const fileInput = document.getElementById('event_image');
+        const aiInput   = document.getElementById('generated_image_url_input');
+        const hasFile   = fileInput && fileInput.files.length > 0;
+        const hasAI     = aiInput   && aiInput.value.length  > 0;
 
         if (hasFile && hasAI) {
             e.preventDefault();
-
-            // Preview uploaded file
             const reader = new FileReader();
             reader.onload = ev => { document.getElementById('modal-uploaded-img').src = ev.target.result; };
             reader.readAsDataURL(fileInput.files[0]);
-
-            // Preview AI image
             document.getElementById('modal-ai-img').src = aiInput.value;
-
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
