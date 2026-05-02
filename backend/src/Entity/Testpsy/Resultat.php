@@ -11,6 +11,7 @@ class Resultat
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_resultat', type: 'integer')]
+    /** @phpstan-ignore property.onlyRead */
     private int $idResultat;
 
     #[ORM\Column(name: 'id_test', type: 'integer')]

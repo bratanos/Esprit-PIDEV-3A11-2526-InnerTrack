@@ -13,6 +13,7 @@ class TestPsychologique
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_test', type: 'integer')]
+    /** @phpstan-ignore property.onlyRead */
     private int $idTest;
 
     #[ORM\Column(name: 'titre', type: 'string', length: 255)]
@@ -27,9 +28,11 @@ class TestPsychologique
     #[ORM\Column(name: 'nombre_questions', type: 'integer')]
     private int $nombreQuestions;
 
+    /** @var Collection<int, Question> */
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class)]
     private Collection $questions;
 
+    /** @var Collection<int, TrancheResultat> */
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: TrancheResultat::class)]
     private Collection $tranches;
 
@@ -48,6 +51,10 @@ class TestPsychologique
     public function setDescription(?string $description): self { $this->description = $description; return $this; }
     public function getNombreQuestions(): int { return $this->nombreQuestions; }
     public function setNombreQuestions(int $n): self { $this->nombreQuestions = $n; return $this; }
+
+    /** @return Collection<int, Question> */
     public function getQuestions(): Collection { return $this->questions; }
+
+    /** @return Collection<int, TrancheResultat> */
     public function getTranches(): Collection { return $this->tranches; }
 }

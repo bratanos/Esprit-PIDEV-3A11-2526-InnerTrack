@@ -9,6 +9,7 @@ use Doctrine\DBAL\Connection;
 use App\Entity\Testpsy\Resultat;
 use App\Entity\Testpsy\AIRecommandation;
 
+
 class PredectionController extends AbstractController
 {
     private const NB_FEATURES  = 7;
@@ -17,7 +18,10 @@ class PredectionController extends AbstractController
     private const NB_ITERATIONS = 1000;
     private const LABELS = ["Fragile", "Stable", "Résilient"];
 
+    /** @var array<int, array<int, float>> */
     private array $poids = [];
+
+    /** @var array<int, float> */
     private array $biais = [];
     private Connection $connection;
 
@@ -171,6 +175,9 @@ class PredectionController extends AbstractController
     // ─────────────────────────────────────────────────────────────────────────
     // MODÈLE 2 : K-NEAREST NEIGHBORS
     // ─────────────────────────────────────────────────────────────────────────
+    //private function knn(array $features, int $k): int
+
+    /** @param array<int, float> $features */
     private function knn(array $features, int $k): int
     {
         $distances = [];
@@ -193,6 +200,7 @@ class PredectionController extends AbstractController
     // ─────────────────────────────────────────────────────────────────────────
     // MODÈLE 3 : ARBRE DE DÉCISION
     // ─────────────────────────────────────────────────────────────────────────
+    /** @param array<int, float> $f */
     private function arbreDecision(array $f, bool $positif): int
     {
         // f[0] = score normalisé, f[1] = variabilité, f[2] = cohérence,
@@ -213,6 +221,12 @@ class PredectionController extends AbstractController
     // ─────────────────────────────────────────────────────────────────────────
     // ANALYSE DÉTAILLÉE DES 7 FEATURES
     // ─────────────────────────────────────────────────────────────────────────
+    //private function analyserFeatures(array $f, bool $positif): array
+
+    /**
+    * @param array<int, float> $f
+    * @return array<int, array<string, mixed>>
+    */
     private function analyserFeatures(array $f, bool $positif): array
     {
         $noms = [
@@ -271,11 +285,17 @@ class PredectionController extends AbstractController
     // ─────────────────────────────────────────────────────────────────────────
     // ANALYSE GLOBALE ENRICHIE
     // ─────────────────────────────────────────────────────────────────────────
-    private function analyse(int $cl, Resultat $r, array $p, string $titre, bool $positif, string $accord, array $votes): string
+    //private function analyse(int $cl, Resultat $r, array $p, string $titre, bool $positif, string $accord, array $votes): string
+
+    /**
+    * @param array<int, float> $p
+    * @param array<int, array<string, string>> $votes
+    */
+    private function analyse(int $cl, Resultat $r, array $p, string $titre, bool $positif, string $accord, array $votes): string    
     {
         $pct      = sprintf("%.0f%%", $r->getPourcentage());
         $conf     = sprintf("%.0f%%", $p[$cl] * 100);
-$unanime  = $accord === 'total' ? "Analyse effectuée avec une très haute fiabilité." : ($accord === 'partiel' ? "Analyse effectuée avec une fiabilité élevée." : "Résultat à interpréter avec nuance.");
+        $unanime  = $accord === 'total' ? "Analyse effectuée avec une très haute fiabilité." : ($accord === 'partiel' ? "Analyse effectuée avec une fiabilité élevée." : "Résultat à interpréter avec nuance.");
         if ($positif) {
             return match($cl) {
                 2 => "Analyse  — Test « {$titre} » | Score : {$pct} | Confiance  : {$conf}\n\n{$unanime}\n\nVotre profil est classé RÉSILIENT sur ce domaine. On détecte une grande cohérence dans vos réponses (peu de variabilité, fort maintien de l'attention) — signature caractéristique d'une compétence réellement intégrée et non superficielle. Votre score de {$pct} place votre profil dans le quartile supérieur. Continuez à relever des défis à la hauteur de votre niveau pour éviter la stagnation.",
@@ -320,6 +340,11 @@ $unanime  = $accord === 'total' ? "Analyse effectuée avec une très haute fiabi
         }
     }
 
+    //private function softmax(array $x): array
+    /**
+    * @param array<int, float> $x
+    * @return array<int, float>
+    */
     private function softmax(array $x): array
     {
         $lg = []; $mx = -INF;
@@ -334,6 +359,8 @@ $unanime  = $accord === 'total' ? "Analyse effectuée avec une très haute fiabi
         return $p;
     }
 
+    //private function argmax(array $a): int
+    /** @param array<int, float|int> $a */
     private function argmax(array $a): int
     {
         $m = 0;
@@ -347,6 +374,8 @@ $unanime  = $accord === 'total' ? "Analyse effectuée avec une très haute fiabi
     private function estPositif(string $t): bool { foreach (self::TESTS_POSITIFS as $m) if (str_contains($t, $m)) return true; return false; }
     private function estSymptome(string $t): bool { foreach (self::TESTS_SYMPTOMES as $m) if (str_contains($t, $m)) return true; return false; }
 
+    //private function recupererInfosTest(int $idTest): array
+    /** @return array<string, string> */
     private function recupererInfosTest(int $idTest): array
     {
         $row = $this->connection->executeQuery(
@@ -356,6 +385,8 @@ $unanime  = $accord === 'total' ? "Analyse effectuée avec une très haute fiabi
         return $row ?: ['titre' => 'Test inconnu', 'nom_type' => ''];
     }
 
+    //private function extraireFeatures(Resultat $r, int $idU): array
+    /** @return array<int, float> */
     private function extraireFeatures(Resultat $r, int $idU): array
     {
         $f = array_fill(0, self::NB_FEATURES, 0.5);
@@ -402,6 +433,11 @@ $unanime  = $accord === 'total' ? "Analyse effectuée avec une très haute fiabi
     // ─────────────────────────────────────────────────────────────────────────
     // HABITUDES — (identiques à l'original, conservées)
     // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function habitudes(int $cl, array $f, string $tl): array
     {
         if (str_contains($tl, "anxiét") || str_contains($tl, "anxiet")) return $this->hAnxiete($cl, $f);
@@ -417,11 +453,16 @@ $unanime  = $accord === 'total' ? "Analyse effectuée avec une très haute fiabi
         return $this->hGenerique($cl, $f);
     }
 
+    /** @return array<string, string> */
     private function H(string $e, string $t, string $d, string $fr, string $c, string $i): array
     {
         return ['emoji'=>$e,'titre'=>$t,'description'=>$d,'frequence'=>$fr,'categorie'=>$c,'impact'=>$i];
     }
 
+    /**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function hAnxiete(int $cl, array $f): array {
         $h = [];
         if ($cl==0) {
@@ -449,6 +490,10 @@ $h[] = $this->H("🎨","Activité créative","Dessin, musique, écriture : 20 mi
         return $h;
     }
 
+    /**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function hBPD(int $cl, array $f): array {
         $h = [];
         if ($cl==0) {
@@ -472,7 +517,10 @@ $h[] = $this->H("🤝","Communauté ADHD","Rejoignez un groupe de soutien ADHD. 
         }
         return $h;
     }
-
+    /**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function hADHD(int $cl, array $f): array {
         $h = [];
         if ($cl==0) {
@@ -494,6 +542,10 @@ $h[] = $this->H("🤝","Communauté ADHD","Rejoignez un groupe de soutien ADHD. 
         return $h;
     }
 
+    /**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function hPTSD(int $cl, array $f): array {
         $h = [];
         if ($cl==0) {
@@ -516,6 +568,11 @@ $h[] = $this->H("🌍","Engagement communautaire","Aidez d'autres survivants : t
         return $h;
     }
 
+
+    /**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function hSchizo(int $cl, array $f): array {
         $h = [];
         if ($cl==0) {
@@ -538,6 +595,11 @@ $h[] = $this->H("👥","Groupe de pairs","Groupes d'entraide pour personnes conc
         return $h;
     }
 
+
+    /**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function hResilience(int $cl, array $f): array {
         $h = [];
         if ($cl==2) {
@@ -561,6 +623,11 @@ $h[] = $this->H("📞","Ligne d'écoute","Si vous vous sentez submergé(e) : 311
         return $h;
     }
 
+
+    /**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function hEstime(int $cl, array $f): array {
         $h = [];
         if ($cl==2) {
@@ -583,6 +650,10 @@ $h[] = $this->H("👥","Environnement bienveillant","Réduisez le temps avec les
         return $h;
     }
 
+    /**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function hIE(int $cl, array $f): array {
         $h = [];
         if ($cl==2) {
@@ -604,6 +675,10 @@ $h[] = $this->H("🤝","Conversation profonde","1 conversation authentique/semai
         return $h;
     }
 
+    /**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function hCognitif(int $cl, array $f): array {
         $h = [];
         if ($cl==2) {
@@ -624,6 +699,11 @@ $h[] = $this->H("🌱","Acceptation de votre type","Votre type n'est pas une lim
         return $h;
     }
 
+
+    /**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function hMBTI(int $cl, array $f): array {
         $h = [];
         if ($cl==2) {
@@ -643,7 +723,10 @@ $h[] = $this->H("🌱","Acceptation de votre type","Votre type n'est pas une lim
         }
         return $h;
     }
-
+/**
+ * @param array<int, float> $f
+ * @return array<int, array<string, string>>
+ */
     private function hGenerique(int $cl, array $f): array {
         $h = [];
         if ($cl==0) {
@@ -678,6 +761,10 @@ $h[] = $this->H("💪","Défi personnel","1 défi significatif par trimestre hor
         return "📅 PLAN DE DÉMARRAGE\nLun : 1 seule habitude, 5 minutes — pas plus\nMar : Répétez + ajoutez 1 min\nMer : Contact avec un proche de confiance\nJeu : Répétez votre habitude de base\nVen : Bilan : comment vous sentez-vous ?\nSam : Activité plaisir simple, sans pression\nDim : Préparation + si besoin, RDV médical\n⚠️ Commencez micro. 2 min suffisent pour créer une habitude.";
     }
 
+    /**
+ * @param array<int, float> $f
+ * @return array<int, string>
+ */
     private function alertes(int $cl, array $f, bool $positif): array {
         $a = [];
         if ($cl==0) {

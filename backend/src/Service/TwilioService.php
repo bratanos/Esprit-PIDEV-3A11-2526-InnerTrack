@@ -13,9 +13,7 @@ class TwilioService
         private readonly string $fromNumber,
     ) {}
 
-    // ══════════════════════════════════════════
-    // MÉTHODE DE BASE — WhatsApp
-    // ══════════════════════════════════════════
+    /** @return array<string, mixed> */
     public function envoyerWhatsApp(string $numero, string $message): array
     {
         $url = "https://api.twilio.com/2010-04-01/Accounts/{$this->accountSid}/Messages.json";
@@ -38,9 +36,7 @@ class TwilioService
         return $data;
     }
 
-    // ══════════════════════════════════════════
-    // ALERTE NOUVEAU TEST
-    // ══════════════════════════════════════════
+    /** @return array<string, mixed> */
     public function envoyerAlerteNouveauTest(string $numero, string $prenom, string $titreTest, string $typeTest): array
     {
         $message = sprintf(
@@ -56,9 +52,7 @@ class TwilioService
         return $this->envoyerWhatsApp($numero, $message);
     }
 
-    // ══════════════════════════════════════════
-    // RÉSULTAT DE TEST
-    // ══════════════════════════════════════════
+    /** @return array<string, mixed> */
     public function envoyerResultatTest(
         string $numero,
         string $prenom,
@@ -83,9 +77,7 @@ class TwilioService
         return $this->envoyerWhatsApp($numero, $message);
     }
 
-    // ══════════════════════════════════════════
-    // RAPPEL J+30
-    // ══════════════════════════════════════════
+    /** @return array<string, mixed> */
     public function envoyerRappel(string $numero, string $prenom, string $titreTest, string $dateTest): array
     {
         $message = sprintf(

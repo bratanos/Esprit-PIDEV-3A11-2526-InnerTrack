@@ -11,6 +11,7 @@ class TrancheResultat
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_tranche', type: 'integer')]
+    /** @phpstan-ignore property.onlyRead */
     private int $idTranche;
 
     #[ORM\ManyToOne(targetEntity: TestPsychologique::class, inversedBy: 'tranches')]
