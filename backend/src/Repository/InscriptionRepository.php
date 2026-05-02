@@ -6,6 +6,7 @@ use App\Entity\Inscription;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<Inscription> */
 class InscriptionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -30,6 +31,7 @@ class InscriptionRepository extends ServiceEntityRepository
      * Count inscriptions grouped by status (for Doughnut Chart).
      * Returns: [['status' => 'CONFIRMÉ', 'count' => 15], ...]
      */
+    /** @return array<int, array<string, mixed>> */
     public function countByStatus(): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -44,6 +46,7 @@ class InscriptionRepository extends ServiceEntityRepository
      * Count inscriptions per month (last 6 months) for Line Chart.
      * Returns: [['month' => 'Jan 2026', 'count' => 8], ...]
      */
+    /** @return array<int, array<string, mixed>> */
     public function countByMonth(): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -60,6 +63,7 @@ class InscriptionRepository extends ServiceEntityRepository
      * Get top N events by number of inscriptions (for Horizontal Bar Chart).
      * Returns: [['titre' => 'Event Name', 'total' => 12], ...]
      */
+    /** @return array<int, array<string, mixed>> */
     public function getTopEvents(int $limit = 5): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -77,6 +81,7 @@ class InscriptionRepository extends ServiceEntityRepository
      * Get occupancy rates per event (confirmed / capacity).
      * Returns: [['titre' => 'Event', 'confirmed' => 8, 'capacite' => 10, 'rate' => 80.0], ...]
      */
+    /** @return array<int, array<string, mixed>> */
     public function getOccupancyRates(): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -102,7 +107,8 @@ class InscriptionRepository extends ServiceEntityRepository
     /**
      * Filter inscriptions based on search query, event, status, and sort criteria.
      */
-     function filterInscriptions(?string $q, ?int $eventId, ?string $status, ?string $sortBy): array
+    /** @return array<int, Inscription> */
+    public function filterInscriptions(?string $q, ?int $eventId, ?string $status, ?string $sortBy): array
     {
         $qb = $this->createQueryBuilder('i')
             ->leftJoin('i.evenement', 'e')

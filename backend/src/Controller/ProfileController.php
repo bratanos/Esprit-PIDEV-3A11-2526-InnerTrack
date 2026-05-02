@@ -13,6 +13,7 @@ class ProfileController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function profile(): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         return $this->json([
@@ -21,11 +22,12 @@ class ProfileController extends AbstractController
             'roles' => $user->getRoles(),
         ]);
     }
-    
+
     #[Route('/api/me', name: 'api_me', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function me(): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         return $this->json([

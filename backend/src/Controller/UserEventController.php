@@ -34,6 +34,7 @@ class UserEventController extends AbstractController
             ? $eventRepo->filterEvents($q, $type !== '' ? (int) $type : null, $period, $avail)
             : $eventRepo->findBy(['statut' => true], ['date' => 'ASC']);
 
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $registeredStatuses = [];
         foreach ($inscRepo->findBy(['emailParticipant' => $user->getEmail()]) as $insc) {
@@ -57,6 +58,7 @@ class UserEventController extends AbstractController
             $request->query->get('avail'),
         );
 
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $registeredStatuses = [];
         foreach ($inscRepo->findBy(['emailParticipant' => $user->getEmail()]) as $insc) {
@@ -72,6 +74,7 @@ class UserEventController extends AbstractController
     #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(Event $event, InscriptionRepository $inscRepo): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $inscription = $inscRepo->findOneBy([
             'evenement'        => $event,
@@ -87,6 +90,7 @@ class UserEventController extends AbstractController
     #[Route('/{id}/participate', name: 'participate', methods: ['POST'])]
     public function participate(Event $event, EntityManagerInterface $em, InscriptionRepository $inscRepo): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         // Check if already registered
@@ -137,6 +141,7 @@ class UserEventController extends AbstractController
     #[Route('/{id}/cancel', name: 'cancel', methods: ['POST'])]
     public function cancel(Event $event, EntityManagerInterface $em, InscriptionRepository $inscRepo): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         $inscription = $inscRepo->findOneBy([
@@ -165,6 +170,7 @@ class UserEventController extends AbstractController
     #[Route('/{id}/certificate', name: 'certificate', methods: ['GET'])]
     public function certificate(Event $event, InscriptionRepository $inscRepo): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $inscription = $inscRepo->findOneBy([
             'evenement' => $event,

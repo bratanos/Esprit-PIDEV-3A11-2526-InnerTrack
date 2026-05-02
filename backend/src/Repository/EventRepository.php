@@ -6,6 +6,7 @@ use App\Entity\Event;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<Event> */
 class EventRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,6 +17,7 @@ class EventRepository extends ServiceEntityRepository
     /**
      * Filter events based on criteria from AJAX request.
      */
+    /** @return array<int, Event> */
     public function filterEvents(?string $q, ?int $type, ?string $period, ?string $avail): array
     {
         $qb = $this->createQueryBuilder('e')
@@ -69,6 +71,7 @@ class EventRepository extends ServiceEntityRepository
      * Count events grouped by TypeEvent (for Pie Chart).
      * Returns: [['type' => 'Conférence', 'count' => 5], ...]
      */
+    /** @return array<int, array<string, mixed>> */
     public function countByType(): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -90,6 +93,7 @@ class EventRepository extends ServiceEntityRepository
      * Count events created per month (last 6 months) for Bar Chart.
      * Returns: [['month' => 'Jan 2026', 'count' => 3], ...]
      */
+    /** @return array<int, array<string, mixed>> */
     public function countByMonth(): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -106,6 +110,7 @@ class EventRepository extends ServiceEntityRepository
      * Count active vs inactive events (for Doughnut Chart).
      * Returns: ['active' => 10, 'inactive' => 3]
      */
+    /** @return array<string, int> */
     public function countActiveVsInactive(): array
     {
         $conn = $this->getEntityManager()->getConnection();

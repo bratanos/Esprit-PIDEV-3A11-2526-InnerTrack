@@ -46,6 +46,7 @@ class Event
     #[ORM\Column(name: 'image', type: Types::STRING, length: 255, nullable: true)]
     private ?string $image = null;
 
+    /** @var Collection<int, Inscription> */
     #[ORM\OneToMany(mappedBy: 'evenement', targetEntity: Inscription::class, cascade: ['persist', 'remove'])]
     private Collection $inscriptions;
 
@@ -81,5 +82,6 @@ class Event
     public function getImage(): ?string { return $this->image; }
     public function setImage(?string $image): static { $this->image = $image; return $this; }
 
+    /** @return Collection<int, Inscription> */
     public function getInscriptions(): Collection { return $this->inscriptions; }
 }

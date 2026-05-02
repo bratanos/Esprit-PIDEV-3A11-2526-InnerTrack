@@ -41,7 +41,7 @@ class EventController extends AbstractController
                 'title' => $event->getTitre(),
                 'start' => $event->getDate()->format('Y-m-d'),
                 'url'   => $this->generateUrl('admin_event_show', ['id' => $event->getId()]),
-                'color' => $typeColors[$event->getType()->value] ?? '#6b7280',
+                'color' => $typeColors[$event->getType()->value],
                 'extendedProps' => [
                     'type'     => $event->getType()->label(),
                     'capacite' => $event->getCapacite(),
@@ -210,6 +210,7 @@ class EventController extends AbstractController
         return $this->redirectToRoute('admin_event_index');
     }
 
+    /** @return array<string, string> */
     private function processForm(Request $request, Event $event): array
     {
         $errors = [];
@@ -311,7 +312,7 @@ class EventController extends AbstractController
     }
 
     #[Route('/generate_event_description', name: 'generate_event_description', methods: ['POST'])]
-    public function generateEventDescription(Request $request)
+    public function generateEventDescription(Request $request): JsonResponse
     {
        // Parse the incoming JSON request
         $data = json_decode($request->getContent(), true);

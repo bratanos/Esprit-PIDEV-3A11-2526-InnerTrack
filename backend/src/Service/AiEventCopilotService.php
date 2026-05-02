@@ -9,6 +9,7 @@ class AiEventCopilotService
         private OpenAiClientService  $client,
     ) {}
 
+    /** @return array<string, mixed> */
     public function generateEvent(string $idea): array
     {
         $prompt  = $this->promptBuilder->buildEventCopilotPrompt($idea);
@@ -26,7 +27,7 @@ class AiEventCopilotService
     /**
      * Yields SSE-ready events: meta → chunks → done.
      *
-     * @return \Generator<array>
+     * @return \Generator<int, array<string, mixed>, mixed, void>
      */
     public function streamEvent(string $idea): \Generator
     {

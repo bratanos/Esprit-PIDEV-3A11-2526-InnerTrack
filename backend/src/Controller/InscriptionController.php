@@ -114,6 +114,7 @@ class InscriptionController extends AbstractController
     }
 
     // --------------------------------------------------------- HELPER
+    /** @return array<string, string> */
     private function processForm(Request $request, Inscription $inscription, EventRepository $eventRepo): array
     {
         $errors = [];

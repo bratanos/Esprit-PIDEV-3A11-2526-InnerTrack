@@ -15,7 +15,7 @@ class LocaleController extends AbstractController
         if (in_array($locale, ['en', 'fr'])) {
             $request->getSession()->set('_locale', $locale);
             
-            /** @var \App\Entity\User $user */
+            /** @var \App\Entity\User|null $user */
             $user = $this->getUser();
             if ($user) {
                 $settings = $user->getSettings();

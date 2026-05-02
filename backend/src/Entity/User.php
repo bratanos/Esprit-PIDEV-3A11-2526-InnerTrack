@@ -26,6 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 20)]
     private string $status = 'PENDING';
 
+    /** @var array<int, string> */
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
@@ -76,12 +77,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getEmail(): string { return $this->email; }
     public function setEmail(string $email): self { $this->email = $email; return $this; }
 
+    /** @return array<int, string> */
     public function getRoles(): array
     {
-        return array_unique(array_merge(['ROLE_USER'], $this->roles));
+        return array_values(array_unique(array_merge(['ROLE_USER'], $this->roles)));
     }
+
+    /** @param array<int, string> $roles */
     public function setRoles(array $roles): self { $this->roles = $roles; return $this; }
 
+    /** @return array<int, string> */
     public function getRawRoles(): array { return $this->roles; }
 
     public function getPrimaryRole(): string
@@ -126,6 +131,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPhoneNumber(): ?string { return $this->phoneNumber; }
     public function setPhoneNumber(?string $phoneNumber): self { $this->phoneNumber = $phoneNumber; return $this; }
 
+    /** @return Collection<int, EmailVerificationCode> */
     public function getCode(): Collection { return $this->code; }
     public function getClientProfile(): ?ClientProfile { return $this->clientProfile; }
     public function getTherapistProfile(): ?TherapistProfile { return $this->therapistProfile; }
