@@ -246,6 +246,10 @@
         <configuration>
           <source>17</source>
           <target>17</target>
+          <excludes>
+            <exclude>com/innertrack/dao/EvenementDao.java</exclude>
+            <exclude>com/innertrack/controller/admin/AdminDashboardController.java</exclude>
+          </excludes>
         </configuration>
       </plugin>
       <plugin>

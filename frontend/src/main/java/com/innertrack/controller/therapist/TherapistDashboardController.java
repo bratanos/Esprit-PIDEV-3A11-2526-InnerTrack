@@ -128,7 +128,7 @@ public class TherapistDashboardController {
 
     @FXML
     private void handleGoToEvents() {
-        ViewManager.loadView("event/AfficherEvenement");
+        ViewManager.loadView("psychologue/evenements");
     }
 
     @FXML

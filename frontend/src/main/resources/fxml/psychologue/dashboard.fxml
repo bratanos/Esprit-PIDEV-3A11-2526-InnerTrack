@@ -38,7 +38,11 @@
                     <graphic><FontIcon iconLiteral="fas-home" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
 
-                <Button text="%sidebar.psy.profile" onAction="#handleGoToProfile"
+                <Button text="Événements" onAction="#handleGoToEvents"
+                        styleClass="sidebar-button" maxWidth="Infinity">
+                </Button>
+
+                <Button text="TEST PROFILE" onAction="#handleGoToProfile"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-id-card" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
@@ -80,17 +84,12 @@
                     <graphic><FontIcon iconLiteral="fas-users" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
 
-                <Button text="📰 Articles" onAction="#handleGoToArticles"
+                <Button text="Articles" onAction="#handleGoToArticles"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-newspaper" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>
 
-                <Button text="📅 Events" onAction="#handleGoToEvents"
-                        styleClass="sidebar-button" maxWidth="Infinity">
-                    <graphic><FontIcon iconLiteral="far-calendar-alt" iconSize="18" iconColor="#ffffff"/></graphic>
-                </Button>
-
-                <Button text="🤖 Chatbot" onAction="#handleGoToChatbot"
+                <Button text="Chatbot" onAction="#handleGoToChatbot"
                         styleClass="sidebar-button" maxWidth="Infinity">
                     <graphic><FontIcon iconLiteral="fas-robot" iconSize="18" iconColor="#ffffff"/></graphic>
                 </Button>

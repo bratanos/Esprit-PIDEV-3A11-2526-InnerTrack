@@ -29,6 +29,7 @@ class Conversation
     #[ORM\Column(name: 'created_at', type: 'datetime')]
     private \DateTimeInterface $createdAt;
 
+    /** @var Collection<int, Message> */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'conversation')]
     private Collection $messages;
 
@@ -38,6 +39,7 @@ class Conversation
         $this->messages = new ArrayCollection();
     }
 
+    /** @return Collection<int, Message> */
     public function getMessages(): Collection { return $this->messages; }
 
     public function getId(): ?int { return $this->id; }

@@ -59,7 +59,7 @@ class SettingsController extends AbstractController
     #[Route('/_internal/settings/theme', name: 'api_settings_theme', methods: ['POST'])]
     public function updateTheme(Request $request): \Symfony\Component\HttpFoundation\JsonResponse
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
         if (!$user) return new \Symfony\Component\HttpFoundation\JsonResponse(['error' => 'Not logged in'], 401);
 

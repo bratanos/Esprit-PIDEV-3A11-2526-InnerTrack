@@ -7,7 +7,7 @@ use App\Repository\Journal\EntreeJournalRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EntreeJournalRepository::class)]
-#[ORM\Table(name: 'journalemotionelle')]
+#[ORM\Table(name: 'journal_emotionnel')]
 class EntreeJournal
 {
     #[ORM\Id]

@@ -161,6 +161,9 @@ class MessagingController extends AbstractController
     #[Route('/api/report', name: 'api_report_user', methods: ['POST'])]
     public function reportUser(Request $request): JsonResponse
     {
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
         $data = json_decode($request->getContent(), true);
         $reportedId = $data['reportedId'] ?? null;
         $reason = $data['reason'] ?? 'OTHER';
@@ -176,7 +179,7 @@ class MessagingController extends AbstractController
         }
 
         $report = new Report();
-        $report->setReporter($this->getUser());
+        $report->setReporter($currentUser);
         $report->setReported($reported);
         $report->setReason($reason);
         $report->setDetails($details);
@@ -190,7 +193,7 @@ class MessagingController extends AbstractController
             $notif = new Notification();
             $notif->setUser($admin);
             $notif->setTitle('Nouveau signalement');
-            $notif->setBody($this->getUser()->getFullName() . ' a signalé un utilisateur.');
+            $notif->setBody($currentUser->getFullName() . ' a signalé un utilisateur.');
             $this->em->persist($notif);
         }
 

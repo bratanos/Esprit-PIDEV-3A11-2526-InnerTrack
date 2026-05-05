@@ -48,6 +48,11 @@
                     <graphic><FontIcon iconLiteral="fas-newspaper" iconSize="16" iconColor="#ffffff"/></graphic>
                 </Button>
 
+                <Button fx:id="btnEvenements" text="Événements"
+                        styleClass="sidebar-button" maxWidth="Infinity" onAction="#showEvenements">
+                    <graphic><FontIcon iconLiteral="fas-calendar-alt" iconSize="16" iconColor="#ffffff"/></graphic>
+                </Button>
+
                 <!-- Reports button with pending count badge -->
                 <StackPane maxWidth="Infinity">
                     <Button fx:id="btnReports" text="Reports"
@@ -264,6 +269,57 @@
                         </Tab>
                     </tabs>
                 </TabPane>
+            </VBox>
+
+            <!-- Evenements pane -->
+            <VBox fx:id="evenementsPane" visible="false"
+                  style="-fx-background-color: #f4f7f6; -fx-padding: 25.6 32;" spacing="16">
+
+                <HBox spacing="9.6" alignment="CENTER_LEFT">
+                    <Label text="Gestion des Événements"
+                           style="-fx-font-size:17.6px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Nouvel Événement" onAction="#createEvenement"
+                            style="-fx-background-color: #27ae60; -fx-text-fill:white;
+                                   -fx-background-radius:5; -fx-padding:6.4 11.2; -fx-cursor:hand;">
+                        <graphic><FontIcon iconLiteral="fas-plus" iconSize="14" iconColor="white"/></graphic>
+                    </Button>
+                </HBox>
+
+                <HBox spacing="9.6" alignment="CENTER_LEFT">
+                    <TextField fx:id="evenementSearchField" promptText="Rechercher un événement..."
+                               prefWidth="200" onAction="#handleEvenementSearch"/>
+                    <Button text="Rechercher" onAction="#handleEvenementSearch"
+                            style="-fx-background-color: #1d7bed; -fx-text-fill:white;
+                                   -fx-background-radius:5; -fx-padding:6.4 11.2; -fx-cursor:hand;"/>
+                    <ComboBox fx:id="evenementStatutCombo" promptText="Statut"
+                              prefWidth="120" onAction="#handleEvenementSearch"/>
+                    <Button text="Réinitialiser" onAction="#resetEvenementFilters"
+                            style="-fx-background-color:#f1f1f1; -fx-text-fill:#2c3e50;
+                                   -fx-background-radius:5; -fx-padding:6.4 11.2; -fx-cursor:hand;"/>
+                </HBox>
+
+                <TableView fx:id="evenementsTable" VBox.vgrow="ALWAYS"
+                           style="-fx-background-color:white; -fx-background-radius:10;">
+                    <columns>
+                        <TableColumn fx:id="colEvenementId"      text="ID"      prefWidth="40"/>
+                        <TableColumn fx:id="colEvenementTitre"   text="Titre"   prefWidth="150"/>
+                        <TableColumn fx:id="colEvenementDate"    text="Date"    prefWidth="120"/>
+                        <TableColumn fx:id="colEvenementLieu"    text="Lieu"    prefWidth="100"/>
+                        <TableColumn fx:id="colEvenementStatut"  text="Statut"  prefWidth="80"/>
+                        <TableColumn fx:id="colEvenementParticipants" text="Participants" prefWidth="100"/>
+                        <TableColumn fx:id="colEvenementActions" text="Actions" prefWidth="180"/>
+                    </columns>
+                </TableView>
+
+                <HBox spacing="9.6" alignment="CENTER">
+                    <Button text="Précédent" onAction="#handleEvenementPrevPage"
+                            style="-fx-background-color:#f1f1f1; -fx-padding:4.8 9.6; -fx-cursor:hand;"/>
+                    <Label fx:id="evenementPageLabel" text="Page 1" style="-fx-text-fill:#7f8c8d;"/>
+                    <Button text="Suivant" onAction="#handleEvenementNextPage"
+                            style="-fx-background-color:#f1f1f1; -fx-padding:4.8 9.6; -fx-cursor:hand;"/>
+                    <Label fx:id="evenementTotalLabel" text="" style="-fx-text-fill:#7f8c8d;"/>
+                </HBox>
             </VBox>
 
         </StackPane>

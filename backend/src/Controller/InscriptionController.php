@@ -17,10 +17,29 @@ class InscriptionController extends AbstractController
 {
     // ------------------------------------------------------------------ LIST
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(InscriptionRepository $repo): Response
+    public function index(InscriptionRepository $repo, EventRepository $eventRepo): Response
     {
         return $this->render('admin/inscription/index.html.twig', [
             'inscriptions' => $repo->findAll(),
+            'events'       => $eventRepo->findAll(),
+        ]);
+    }
+
+    // ------------------------------------------------------------------ FILTER (AJAX)
+    #[Route('/filter', name: 'filter', methods: ['GET'])]
+    public function filter(Request $request, InscriptionRepository $repo): Response
+    {
+        $q       = $request->query->get('q');
+        $eventId = $request->query->get('event');
+        $status  = $request->query->get('status');
+        $sortBy  = $request->query->get('sort');
+
+        $eventIdInt = $eventId ? (int)$eventId : null;
+
+        $inscriptions = $repo->filterInscriptions($q, $eventIdInt, $status, $sortBy);
+
+        return $this->render('admin/inscription/_inscriptions_table.html.twig', [
+            'inscriptions' => $inscriptions,
         ]);
     }
 
@@ -95,6 +114,7 @@ class InscriptionController extends AbstractController
     }
 
     // --------------------------------------------------------- HELPER
+    /** @return array<string, string> */
     private function processForm(Request $request, Inscription $inscription, EventRepository $eventRepo): array
     {
         $errors = [];

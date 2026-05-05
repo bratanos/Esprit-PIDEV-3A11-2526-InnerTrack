@@ -54,6 +54,30 @@
         </div>
         {% endif %}
 
+        {# QR Code #}
+        <div class="border-t border-outline/20 pt-6">
+            <div class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-4">QR Code de l'événement</div>
+            <div class="flex flex-col sm:flex-row items-center gap-6">
+                <div class="p-4 bg-gray-50 rounded-2xl border border-outline/20 inline-block">
+                    <img src="{{ path('admin_event_qrcode', {id: event.id}) }}"
+                         alt="QR Code – {{ event.titre }}"
+                         class="w-40 h-40 block">
+                </div>
+                <div class="space-y-3 text-center sm:text-left">
+                    <p class="text-sm text-on-surface-variant leading-relaxed">
+                        Partagez ce QR code lors de l'événement.<br>
+                        Les participants le scannent pour accéder<br>à la page de détail et confirmer leur présence.
+                    </p>
+                    <a href="{{ path('admin_event_qrcode', {id: event.id}) }}"
+                       download="qrcode-event-{{ event.id }}.png"
+                       class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-md shadow-primary/20 hover:bg-indigo-700 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">download</span>
+                        Télécharger le QR Code
+                    </a>
+                </div>
+            </div>
+        </div>
+
         {# Actions #}
         <div class="flex gap-3 pt-4 border-t border-outline/20">
             <a href="{{ path('admin_event_edit', {id: event.id}) }}"

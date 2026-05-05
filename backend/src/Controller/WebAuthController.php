@@ -110,7 +110,7 @@ class WebAuthController extends AbstractController
             $this->em->persist($user);
 
             // Create verification code
-            $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             $verificationCode = new EmailVerificationCode();
             $verificationCode->setUser($user);
             $verificationCode->setCode($code);
@@ -189,7 +189,7 @@ class WebAuthController extends AbstractController
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
         
         if ($user) {
-            $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             $verificationCode = new EmailVerificationCode();
             $verificationCode->setUser($user);
             $verificationCode->setCode($code);
@@ -218,7 +218,7 @@ class WebAuthController extends AbstractController
             $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
 
             if ($user) {
-                $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+                $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
                 $resetCode = new PasswordResetCode();
                 $resetCode->setUser($user);
                 $resetCode->setCode($code);

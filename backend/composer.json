@@ -12,8 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.7",
         "doctrine/orm": "^3.6",
         "dompdf/dompdf": "^3.1",
-        "endroid/qr-code": "4.0",
-        "knplabs/knp-snappy-bundle": "*",
+        "endroid/qr-code": "^6.0",
         "lexik/jwt-authentication-bundle": "^3.2",
         "nelmio/cors-bundle": "^2.6",
         "pagerfanta/doctrine-orm-adapter": "^4.8",
@@ -108,6 +107,7 @@
         }
     },
     "require-dev": {
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^11.5",
         "symfony/browser-kit": "6.4.*",
         "symfony/css-selector": "6.4.*",

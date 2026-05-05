@@ -36,112 +36,55 @@
 	}
 
 	/* Dark Mode Core Overrides */
-	.dark .bg-white {
-		background-color: var(--card) !important;
-	}
-	.dark .bg-surface {
-		background-color: var(--surface) !important;
-	}
-	.dark aside {
-		background-color: var(--sidebar) !important;
-		border-right-color: var(--outline) !important;
-	}
-	.dark header {
-		background-color: var(--sidebar) !important;
-		border-bottom-color: var(--outline) !important;
-	}
-	.dark footer {
-		background-color: var(--sidebar) !important;
-		border-top-color: var(--outline) !important;
-	}
-
-	.dark .text-on-surface {
-		color: var(--on-surface) !important;
-	}
-	.dark .text-on-surface-variant {
-		color: var(--on-surface-variant) !important;
-	}
-	.dark .border-outline {
-		border-color: var(--outline) !important;
-	}
-
-	/* Brand Color Text Overrides (Lifting dark text to light) */
-	.dark .text-[#0e1e1e],
-	.dark .text-[#3c494c],
-	.dark .text-[#006876],
-	.dark .text-slate-900,
-	.dark .text-slate-800,
-	.dark .text-slate-700 {
-		color: #f1f5f9 !important;
-	}
-
-	/* Secondary Text Overrides */
-	.dark .text-slate-600,
-	.dark .text-slate-500,
-	.dark .text-slate-400 {
-		color: #94a3b8 !important;
-	}
-
-	/* Background & Border Remapping */
-	.dark .bg-slate-50,
-	.dark .bg-gray-100,
-	.dark .bg-gray-50,
-	.dark .bg-cyan-50,
-	.dark .bg-emerald-50 {
-		background-color: rgba(30, 41, 59, 0.5) !important;
-	}
-	.dark .border-slate-100,
-	.dark .border-[#e5f7f6],
-	.dark .border-slate-200,
-	.dark .border-gray-100 {
-		border-color: #1e293b !important;
-	}
-
-	/* Sidebar & Navigation */
-	.dark .bg-primary {
-		background-color: var(--primary) !important;
-		color: white !important;
-	}
-
-	/* Components */
-	.dark input,
-	.dark select,
-	.dark textarea {
+	.dark .bg-white { background-color: var(--card) !important; }
+	.dark .bg-surface { background-color: var(--surface) !important; }
+	.dark aside { background-color: var(--sidebar) !important; border-right-color: var(--outline) !important; }
+	.dark header { background-color: var(--sidebar) !important; border-bottom-color: var(--outline) !important; }
+	.dark footer { background-color: var(--sidebar) !important; border-top-color: var(--outline) !important; }
+	.dark .text-on-surface { color: var(--on-surface) !important; }
+	.dark .text-on-surface-variant { color: var(--on-surface-variant) !important; }
+	.dark .border-outline { border-color: var(--outline) !important; }
+	.dark .text-[#0e1e1e], .dark .text-[#3c494c], .dark .text-[#006876],
+	.dark .text-slate-900, .dark .text-slate-800, .dark .text-slate-700 { color: #f1f5f9 !important; }
+	.dark .text-slate-600, .dark .text-slate-500, .dark .text-slate-400 { color: #94a3b8 !important; }
+	.dark .bg-slate-50, .dark .bg-gray-100, .dark .bg-gray-50,
+	.dark .bg-cyan-50, .dark .bg-emerald-50 { background-color: rgba(30, 41, 59, 0.5) !important; }
+	.dark .border-slate-100, .dark .border-[#e5f7f6],
+	.dark .border-slate-200, .dark .border-gray-100 { border-color: #1e293b !important; }
+	.dark .bg-primary { background-color: var(--primary) !important; color: white !important; }
+	.dark input, .dark select, .dark textarea {
 		background-color: #0f172a !important;
 		border-color: #334155 !important;
 		color: #f1f5f9 !important;
 	}
-
 	.dark .peer-checked\:bg-cyan-50,
-	.dark .peer-checked\:bg-emerald-50 {
-		background-color: rgba(37, 99, 235, 0.1) !important;
-	}
+	.dark .peer-checked\:bg-emerald-50 { background-color: rgba(37, 99, 235, 0.1) !important; }
+	.dark #map { border-color: var(--sidebar) !important; filter: brightness(0.8) contrast(1.1); }
 
-	/* Map & Interaction */
-	.dark #map {
-		border-color: var(--sidebar) !important; filter: brightness(0.8) contrast(1.1);
-	}
+	.serene-gradient { background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%); }
+	.soft-elevation { box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05), 0 2px 10px -2px rgba(0,0,0,0.03); }
+</style>
+{% endblock %}
 
-	.serene-gradient {
-		background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
-	}
-	.soft-elevation {
-		box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 10px -2px rgba(0, 0, 0, 0.03);
-	}
-</style>{% endblock %}{% block body_class %}
-{% if app.user and app.user.settings and app.user.settings.isDarkMode %}dark
-{% endif %}
-min-h-screen flex flex-col pointer-events-auto{% endblock %}{% block layout %}
-<div
-	class="bg-surface font-body text-on-surface antialiased flex w-full h-screen overflow-hidden">
-	<!-- Navigation Sidebar -->
+{% block body_class %}
+{% if app.user and app.user.settings and app.user.settings.isDarkMode %}dark{% endif %}
+min-h-screen flex flex-col pointer-events-auto
+{% endblock %}
+
+{% block layout %}
+<div class="bg-surface font-body text-on-surface antialiased flex w-full h-screen overflow-hidden">
+
+	<!-- ═══════════════════════════ SIDEBAR ═══════════════════════════ -->
 	<aside class="w-72 hidden md:flex flex-shrink-0 flex-col py-10 px-6 border-r border-outline bg-white z-50 h-full overflow-y-auto">
+
 		<div class="mb-14 px-2">
 			<h1 class="text-2xl font-extrabold text-primary tracking-tight font-headline">InnerTrack</h1>
 			<p class="text-[10px] text-on-surface-variant font-bold tracking-[0.2em] uppercase mt-1">Digital Sanctuary</p>
 		</div>
 
-		<nav class="flex-1 space-y-2">
+		<nav class="flex-1 space-y-1">
+
+			{# ── Core navigation ── #}
 			{% if 'ROLE_ADMIN' in app.user.roles %}
 				{{ _self.nav_link(path('app_dashboard'), 'Console Admin', 'admin_panel_settings', app.request.get('_route') == 'app_dashboard') }}
 			{% else %}
@@ -155,11 +98,9 @@ min-h-screen flex flex-col pointer-events-auto{% endblock %}{% block layout %}
 				{{ _self.nav_link(path('app_event_index'), 'Événements', 'event', app.request.get('_route') starts with 'app_event') }}
 				{{ _self.nav_link(path('app_article_index'), 'Articles'|trans, 'article', app.request.get('_route') starts with 'app_article') }}
 			{% endif %}
-			{{ _self.nav_link(path('app_community_index'), 'community'|trans, 'forum', app.request.get('_route') == 'app_community_index') }}			
-			{{ _self.nav_link(path('app_notifications'), 'nav.notifications'|trans, 'notifications', app.request.get('_route') == 'app_notifications', unread_notifications_count) }}
-			{{ _self.nav_link(path('app_profile'), 'nav.profile'|trans, 'person', app.request.get('_route') == 'app_profile') }}
-			{{ _self.nav_link(path('app_settings'), 'nav.settings'|trans, 'settings', app.request.get('_route') == 'app_settings') }}
+			{{ _self.nav_link(path('app_community_index'), 'community'|trans, 'forum', app.request.get('_route') == 'app_community_index') }}
 
+			{# ── Section Gestion : Admin + Psychologue ── #}
 			{% if 'ROLE_ADMIN' in app.user.roles or 'ROLE_PSYCHOLOGUE' in app.user.roles %}
 				<div class="pt-4 pb-1 px-2">
 					<p class="text-[9px] font-bold tracking-[0.18em] uppercase text-on-surface-variant opacity-50 select-none">
@@ -180,41 +121,55 @@ min-h-screen flex flex-col pointer-events-auto{% endblock %}{% block layout %}
 				) }}
 			{% endif %}
 
+			{# ── Shared bottom links ── #}
+			<div class="pt-4 pb-1 px-2">
+				<p class="text-[9px] font-bold tracking-[0.18em] uppercase text-on-surface-variant opacity-50 select-none">
+					Compte
+				</p>
+			</div>
+			{{ _self.nav_link(path('app_notifications'), 'nav.notifications'|trans, 'notifications', app.request.get('_route') == 'app_notifications', unread_notifications_count) }}
+			{{ _self.nav_link(path('app_profile'), 'nav.profile'|trans, 'person', app.request.get('_route') == 'app_profile') }}
+			{{ _self.nav_link(path('app_settings'), 'nav.settings'|trans, 'settings', app.request.get('_route') == 'app_settings') }}
+
 		</nav>
 
-		<div class="mt-8 space-y-4">
-			<a href="{{ path('app_logout') }}" class="w-full text-on-surface-variant hover:bg-red-50 hover:text-red-500 py-3 rounded-xl font-bold text-sm tracking-wide transition-all flex items-center gap-3 justify-center">
-				<span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+		<div class="mt-8">
+			<a href="{{ path('app_logout') }}"
+			   class="w-full text-on-surface-variant hover:bg-red-50 hover:text-red-500 py-3 rounded-xl font-bold text-sm tracking-wide transition-all flex items-center gap-3 justify-center">
+				<span class="material-symbols-outlined text-[20px]">logout</span>
 				Log Out
 			</a>
 		</div>
 	</aside>
 
-	<!-- Main Content Canvas -->
-	<div
-		class="flex-1 flex flex-col relative w-full h-full bg-surface">
+	<!-- ═══════════════════════════ MAIN CANVAS ═══════════════════════════ -->
+	<div class="flex-1 flex flex-col relative w-full h-full bg-surface">
+
 		<!-- Top Navigation Bar -->
 		<header class="flex-shrink-0 flex justify-between items-center h-20 px-6 lg:px-12 bg-white/80 backdrop-blur-md border-b border-outline/50 z-40">
 			<div class="flex items-center gap-4 bg-gray-100/80 px-4 lg:px-6 py-2.5 rounded-full w-full max-w-[440px] border border-transparent focus-within:border-primary/20 transition-all">
-				<span class="material-symbols-outlined text-gray-400 text-xl" data-icon="search">search</span>
-				<input type="text" placeholder="Search resources..." class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-gray-500 font-medium outline-none"/>
+				<span class="material-symbols-outlined text-gray-400 text-xl">search</span>
+				<input type="text" placeholder="Search resources..."
+				       class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-gray-500 font-medium outline-none"/>
 			</div>
 
 			<div class="flex items-center gap-4 lg:gap-8 ml-4">
 				<div class="hidden lg:flex gap-4">
 					<div class="flex items-center bg-gray-100 rounded-full px-2 overflow-hidden border border-outline">
-						<a href="{{ path('app_change_locale', {'locale': 'en'}) }}" class="p-1.5 hover:bg-white rounded-full transition-all {{ app.request.locale == 'en' ? 'bg-white shadow-sm' : '' }}">
+						<a href="{{ path('app_change_locale', {'locale': 'en'}) }}"
+						   class="p-1.5 hover:bg-white rounded-full transition-all {{ app.request.locale == 'en' ? 'bg-white shadow-sm' : '' }}">
 							<img src="https://flagcdn.com/w20/gb.png" class="w-4" alt="EN">
 						</a>
-						<a href="{{ path('app_change_locale', {'locale': 'fr'}) }}" class="p-1.5 hover:bg-white rounded-full transition-all {{ app.request.locale == 'fr' ? 'bg-white shadow-sm' : '' }}">
+						<a href="{{ path('app_change_locale', {'locale': 'fr'}) }}"
+						   class="p-1.5 hover:bg-white rounded-full transition-all {{ app.request.locale == 'fr' ? 'bg-white shadow-sm' : '' }}">
 							<img src="https://flagcdn.com/w20/fr.png" class="w-4" alt="FR">
 						</a>
 					</div>
 					<button class="p-2 rounded-full text-on-surface-variant hover:bg-gray-100 transition-colors">
-						<span class="material-symbols-outlined" data-icon="help">help</span>
+						<span class="material-symbols-outlined">help</span>
 					</button>
 					<button id="theme-toggle" class="p-2 rounded-full text-on-surface-variant hover:bg-gray-100 transition-colors">
-						<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+						<span class="material-symbols-outlined">dark_mode</span>
 					</button>
 				</div>
 				<div class="hidden lg:block h-8 w-px bg-outline"></div>
@@ -243,9 +198,7 @@ min-h-screen flex flex-col pointer-events-auto{% endblock %}{% block layout %}
 				{% block content %}{% endblock %}
 			</div>
 
-			<!-- Footer -->
 			<footer class="px-8 lg:px-12 py-8 border-t border-outline flex flex-col md:flex-row justify-between items-center gap-6 bg-white shrink-0">
-
 				<div class="flex items-center gap-6">
 					<a href="#" class="text-xs font-bold text-gray-400 hover:text-primary transition-colors">Privacy</a>
 					<a href="#" class="text-xs font-bold text-gray-400 hover:text-primary transition-colors">Support</a>
@@ -257,51 +210,42 @@ min-h-screen flex flex-col pointer-events-auto{% endblock %}{% block layout %}
 </div>
 
 <script>
-	(function () {
-const toggle = document.getElementById('theme-toggle');
-const body = document.body;
+(function () {
+	const toggle = document.getElementById('theme-toggle');
+	const body   = document.body;
+	const local  = localStorage.getItem('theme');
+	if (local) body.classList.toggle('dark', local === 'dark');
 
-// Local preference overrides DB (for guest or multi-device)
-const localTheme = localStorage.getItem('theme');
-if (localTheme) {
-if (localTheme === 'dark') 
-body.classList.add('dark');
- else 
-body.classList.remove('dark');
-
-
-
-}
-
-if (toggle) {
-toggle.addEventListener('click', () => {
-body.classList.toggle('dark');
-const theme = body.classList.contains('dark') ? 'DARK' : 'LIGHT';
-localStorage.setItem('theme', theme.toLowerCase());
-
-// Persistence to DB
-fetch('/_internal/settings/theme', {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json'
-},
-body: JSON.stringify(
-{theme: theme}
-)
-});
-});
-}
+	if (toggle) {
+		toggle.addEventListener('click', () => {
+			body.classList.toggle('dark');
+			const theme = body.classList.contains('dark') ? 'DARK' : 'LIGHT';
+			localStorage.setItem('theme', theme.toLowerCase());
+			fetch('/_internal/settings/theme', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ theme })
+			});
+		});
+	}
 })();
 </script>
 
 {% macro nav_link(url, text, icon, active, badge_count = 0) %}
-	<a href="{{ url }}" class="flex items-center gap-4 px-4 lg:px-5 py-3 rounded-xl transition-all font-medium {{ active ? 'bg-primary text-white font-semibold shadow-md shadow-primary/20' : 'text-on-surface-variant hover:bg-gray-50 hover:text-primary' }} relative">
-		<span class="material-symbols-outlined text-xl" data-icon="{{ icon }}">{{ icon }}</span>
-		<span class="text-sm flex-1">{{ text }}</span>
-		{% if badge_count > 0 %}
-			<span class="absolute right-3 top-3 w-4 h-4 bg-red-500 text-[10px] text-white flex items-center justify-center rounded-full animate-pulse border-2 border-white">
-				{{ badge_count > 9 ? '9+' : badge_count }}
-			</span>
-		{% endif %}
-	</a>
-{% endmacro %}{% endblock %}
+<a href="{{ url }}"
+   class="flex items-center gap-4 px-4 lg:px-5 py-3 rounded-xl transition-all font-medium relative
+          {{ active
+             ? 'bg-primary text-white font-semibold shadow-md shadow-primary/20'
+             : 'text-on-surface-variant hover:bg-gray-50 hover:text-primary' }}">
+	<span class="material-symbols-outlined text-xl">{{ icon }}</span>
+	<span class="text-sm flex-1">{{ text }}</span>
+	{% if badge_count > 0 %}
+		<span class="absolute right-3 top-3 w-4 h-4 bg-red-500 text-[10px] text-white flex items-center justify-center rounded-full animate-pulse border-2 border-white">
+			{{ badge_count > 9 ? '9+' : badge_count }}
+		</span>
+	{% endif %}
+</a>
+{% endmacro %}
+
+{% block body_end %}{% endblock %}
+{% endblock %}

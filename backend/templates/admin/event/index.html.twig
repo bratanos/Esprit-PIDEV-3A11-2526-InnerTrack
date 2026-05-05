@@ -1,7 +1,9 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
+{% block title %}Événements - Administration{% endblock %}
+
 {% block content %}
-<div class="max-w-7xl mx-auto pb-24 space-y-8">
+<div class="max-w-7xl mx-auto pb-24 space-y-8" x-data="{ activeTab: 'list' }">
 
     {# ── Header ── #}
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -15,75 +17,658 @@
         </a>
     </div>
 
-    {# ── Table ── #}
-    <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm overflow-hidden">
-        {% if events|length > 0 %}
-        <table class="w-full text-sm">
-            <thead>
-                <tr class="border-b border-outline/20 text-[10px] font-bold uppercase tracking-[0.12em] text-on-surface-variant">
-                    <th class="text-left px-8 py-5">Titre</th>
-                    <th class="text-left px-4 py-5 hidden md:table-cell">Type</th>
-                    <th class="text-left px-4 py-5 hidden lg:table-cell">Date</th>
-                    <th class="text-left px-4 py-5 hidden lg:table-cell">Capacité</th>
-                    <th class="text-left px-4 py-5">Statut</th>
-                    <th class="text-right px-8 py-5">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for event in events %}
-                <tr class="border-b border-outline/10 hover:bg-gray-50 transition-colors group">
-                    <td class="px-8 py-5">
-                        <div class="font-bold text-on-surface">{{ event.titre }}</div>
-                        <div class="text-[10px] text-on-surface-variant mt-0.5 md:hidden">{{ event.type.label() }}</div>
-                    </td>
-                    <td class="px-4 py-5 hidden md:table-cell">
-                        <span class="px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-indigo-50 text-indigo-600">
-                            {{ event.type.label() }}
-                        </span>
-                    </td>
-                    <td class="px-4 py-5 text-on-surface-variant hidden lg:table-cell text-xs">
-                        {{ event.date|date('d/m/Y') }}
-                    </td>
-                    <td class="px-4 py-5 text-on-surface-variant hidden lg:table-cell text-xs font-bold">
-                        {{ event.capacite }}
-                    </td>
-                    <td class="px-4 py-5">
-                        <span class="flex items-center gap-1.5 text-[10px] font-bold {{ event.statut ? 'text-green-600' : 'text-red-500' }}">
-                            <span class="w-1.5 h-1.5 rounded-full {{ event.statut ? 'bg-green-500' : 'bg-red-500' }}"></span>
-                            {{ event.statut ? 'Actif' : 'Inactif' }}
-                        </span>
-                    </td>
-                    <td class="px-8 py-5">
-                        <div class="flex justify-end gap-2 opacity-70 group-hover:opacity-100 transition-opacity">
-                            <a href="{{ path('admin_event_show', {id: event.id}) }}"
-                               title="Voir" class="p-2.5 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors active:scale-90">
-                                <span class="material-symbols-outlined text-[18px]">visibility</span>
-                            </a>
-                            <a href="{{ path('admin_event_edit', {id: event.id}) }}"
-                               title="Modifier" class="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors active:scale-90">
-                                <span class="material-symbols-outlined text-[18px]">edit</span>
-                            </a>
-                            <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}"
-                                  onsubmit="return confirm('Supprimer cet événement ?');" style="display:inline">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
-                                <button type="submit" title="Supprimer"
-                                        class="p-2.5 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 transition-colors active:scale-90">
-                                    <span class="material-symbols-outlined text-[18px]">delete</span>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <div class="py-20 flex flex-col items-center justify-center text-center">
-            <span class="material-symbols-outlined text-6xl text-gray-200 mb-4">event_busy</span>
-            <h3 class="font-headline font-extrabold text-xl text-gray-400">Aucun événement</h3>
-            <p class="text-xs text-gray-400 mt-2">Commencez par créer votre premier événement.</p>
+    {# ══════════════════════════════ TAB BAR ══════════════════════════════ #}
+    <div class="sticky top-0 z-30 -mx-2">
+        <div class="bg-white/70 backdrop-blur-xl border border-white/20 rounded-[2.5rem] p-1.5 shadow-sm inline-flex items-center gap-1 mx-2">
+            <button @click="activeTab = 'list'"
+                :class="activeTab === 'list' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-on-surface-variant hover:bg-gray-50 hover:text-primary'"
+                class="px-8 py-3 rounded-[2rem] text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                <span class="material-symbols-outlined text-xl">list</span> Liste
+            </button>
+            <button @click="activeTab = 'calendar'"
+                :class="activeTab === 'calendar' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-on-surface-variant hover:bg-gray-50 hover:text-primary'"
+                class="px-8 py-3 rounded-[2rem] text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                <span class="material-symbols-outlined text-xl">calendar_month</span> Calendrier
+            </button>
+            <button @click="activeTab = 'stats'"
+                :class="activeTab === 'stats' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-on-surface-variant hover:bg-gray-50 hover:text-primary'"
+                class="px-8 py-3 rounded-[2rem] text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                <span class="material-symbols-outlined text-xl">bar_chart</span> Statistiques
+            </button>
         </div>
-        {% endif %}
+    </div>
+
+    {# ══════════════════════════════ TAB 1 : LIST ══════════════════════════════ #}
+    <div x-show="activeTab === 'list'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4">
+        <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm overflow-hidden">
+            {% if events|length > 0 %}
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-outline/20 text-[10px] font-bold uppercase tracking-[0.12em] text-on-surface-variant">
+                        <th class="text-left px-8 py-5">Titre</th>
+                        <th class="text-left px-4 py-5 hidden md:table-cell">Type</th>
+                        <th class="text-left px-4 py-5 hidden lg:table-cell">Date</th>
+                        <th class="text-left px-4 py-5 hidden lg:table-cell">Capacité</th>
+                        <th class="text-left px-4 py-5">Statut</th>
+                        <th class="text-right px-8 py-5">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr class="border-b border-outline/10 hover:bg-gray-50 transition-colors group">
+                        <td class="px-8 py-5">
+                            <div class="font-bold text-on-surface">{{ event.titre }}</div>
+                            <div class="text-[10px] text-on-surface-variant mt-0.5 md:hidden">{{ event.type.label() }}</div>
+                        </td>
+                        <td class="px-4 py-5 hidden md:table-cell">
+                            <span class="px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider
+                                {% if event.type.value == 1 %}bg-blue-50 text-blue-600
+                                {% elseif event.type.value == 2 %}bg-green-50 text-green-600
+                                {% elseif event.type.value == 3 %}bg-purple-50 text-purple-600
+                                {% elseif event.type.value == 4 %}bg-orange-50 text-orange-600
+                                {% else %}bg-indigo-50 text-indigo-600{% endif %}">
+                                {{ event.type.label() }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-5 text-on-surface-variant hidden lg:table-cell text-xs">
+                            {{ event.date|date('d/m/Y') }}
+                        </td>
+                        <td class="px-4 py-5 text-on-surface-variant hidden lg:table-cell text-xs font-bold">
+                            {{ event.capacite }}
+                        </td>
+                        <td class="px-4 py-5">
+                            <span class="flex items-center gap-1.5 text-[10px] font-bold {{ event.statut ? 'text-green-600' : 'text-red-500' }}">
+                                <span class="w-1.5 h-1.5 rounded-full {{ event.statut ? 'bg-green-500' : 'bg-red-500' }}"></span>
+                                {{ event.statut ? 'Actif' : 'Inactif' }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <div class="flex justify-end gap-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                                <a href="{{ path('admin_event_show', {id: event.id}) }}"
+                                   title="Voir" class="p-2.5 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors active:scale-90">
+                                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                </a>
+                                <a href="{{ path('admin_event_edit', {id: event.id}) }}"
+                                   title="Modifier" class="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors active:scale-90">
+                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                </a>
+                                <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}"
+                                      onsubmit="return confirm('Supprimer cet événement ?');" style="display:inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
+                                    <button type="submit" title="Supprimer"
+                                            class="p-2.5 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 transition-colors active:scale-90">
+                                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="py-20 flex flex-col items-center justify-center text-center">
+                <span class="material-symbols-outlined text-6xl text-gray-200 mb-4">event_busy</span>
+                <h3 class="font-headline font-extrabold text-xl text-gray-400">Aucun événement</h3>
+                <p class="text-xs text-gray-400 mt-2">Commencez par créer votre premier événement.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# ══════════════════════════════ TAB 2 : CALENDAR ══════════════════════════════ #}
+    <div x-show="activeTab === 'calendar'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
+
+        {# ── Legend ── #}
+        <div class="flex flex-wrap gap-4 items-center">
+            <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Légende :</span>
+            <span class="flex items-center gap-1.5 text-xs font-bold"><span class="w-3 h-3 rounded-full bg-blue-500"></span> Conférence</span>
+            <span class="flex items-center gap-1.5 text-xs font-bold"><span class="w-3 h-3 rounded-full bg-green-500"></span> Atelier</span>
+            <span class="flex items-center gap-1.5 text-xs font-bold"><span class="w-3 h-3 rounded-full bg-purple-500"></span> Forum</span>
+            <span class="flex items-center gap-1.5 text-xs font-bold"><span class="w-3 h-3 rounded-full bg-orange-500"></span> Webinaire</span>
+        </div>
+
+        {# ── Calendar Container ── #}
+        <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm p-6 lg:p-10">
+            <div id="fullcalendar" class="min-h-[600px]"></div>
+        </div>
+    </div>
+
+    {# ══════════════════════════════ TAB 3 : STATISTICS ══════════════════════════════ #}
+    <div x-show="activeTab === 'stats'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-8">
+
+        {# ── KPI Cards ── #}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {# Total Events #}
+            <div class="bg-gradient-to-br from-primary/10 to-indigo-50/50 rounded-[2rem] p-1">
+                <div class="bg-white rounded-[1.9rem] p-7 h-full">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary text-xl">event</span>
+                        </div>
+                        <div class="text-[10px] font-bold text-on-surface-variant tracking-[0.15em] uppercase">Total Événements</div>
+                    </div>
+                    <div class="text-4xl font-extrabold text-primary font-headline tracking-tighter">{{ events|length }}</div>
+                </div>
+            </div>
+            {# Active Events #}
+            <div class="bg-gradient-to-br from-green-500/10 to-emerald-50/50 rounded-[2rem] p-1">
+                <div class="bg-white rounded-[1.9rem] p-7 h-full">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-green-600 text-xl">check_circle</span>
+                        </div>
+                        <div class="text-[10px] font-bold text-on-surface-variant tracking-[0.15em] uppercase">Actifs</div>
+                    </div>
+                    <div class="text-4xl font-extrabold text-green-600 font-headline tracking-tighter">{{ stats.activeVsInactive.active }}</div>
+                </div>
+            </div>
+            {# Inactive Events #}
+            <div class="bg-gradient-to-br from-red-500/10 to-rose-50/50 rounded-[2rem] p-1">
+                <div class="bg-white rounded-[1.9rem] p-7 h-full">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-red-500 text-xl">cancel</span>
+                        </div>
+                        <div class="text-[10px] font-bold text-on-surface-variant tracking-[0.15em] uppercase">Inactifs</div>
+                    </div>
+                    <div class="text-4xl font-extrabold text-red-500 font-headline tracking-tighter">{{ stats.activeVsInactive.inactive }}</div>
+                </div>
+            </div>
+            {# Avg Occupancy #}
+            {% set totalRate = 0 %}
+            {% set rateCount = stats.occupancyRates|length %}
+            {% for r in stats.occupancyRates %}{% set totalRate = totalRate + r.rate %}{% endfor %}
+            {% set avgRate = rateCount > 0 ? (totalRate / rateCount)|round(1) : 0 %}
+            <div class="bg-gradient-to-br from-amber-500/10 to-yellow-50/50 rounded-[2rem] p-1">
+                <div class="bg-white rounded-[1.9rem] p-7 h-full">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-amber-600 text-xl">trending_up</span>
+                        </div>
+                        <div class="text-[10px] font-bold text-on-surface-variant tracking-[0.15em] uppercase">Taux Remplissage</div>
+                    </div>
+                    <div class="text-4xl font-extrabold text-amber-600 font-headline tracking-tighter">{{ avgRate }}%</div>
+                </div>
+            </div>
+        </div>
+
+        {# ── Charts Grid ── #}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            {# Chart 1: Events by Type — Pie #}
+            <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm p-8 lg:p-10">
+                <h4 class="text-lg font-extrabold font-headline tracking-tight mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">pie_chart</span> Événements par type
+                </h4>
+                <div class="relative h-72 flex items-center justify-center">
+                    <canvas id="chartEventsByType"></canvas>
+                </div>
+            </div>
+
+            {# Chart 2: Events by Month — Bar #}
+            <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm p-8 lg:p-10">
+                <h4 class="text-lg font-extrabold font-headline tracking-tight mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">bar_chart</span> Événements par mois
+                </h4>
+                <div class="relative h-72">
+                    <canvas id="chartEventsByMonth"></canvas>
+                </div>
+            </div>
+
+            {# Chart 3: Inscriptions by Status — Doughnut #}
+            <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm p-8 lg:p-10">
+                <h4 class="text-lg font-extrabold font-headline tracking-tight mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">donut_large</span> Inscriptions par statut
+                </h4>
+                <div class="relative h-72 flex items-center justify-center">
+                    <canvas id="chartInscriptionsByStatus"></canvas>
+                </div>
+            </div>
+
+            {# Chart 4: Top Events — Horizontal Bar #}
+            <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm p-8 lg:p-10">
+                <h4 class="text-lg font-extrabold font-headline tracking-tight mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">leaderboard</span> Top 5 événements (inscrits)
+                </h4>
+                <div class="relative h-72">
+                    <canvas id="chartTopEvents"></canvas>
+                </div>
+            </div>
+        </div>
+
+        {# ── Occupancy Rates Table ── #}
+        <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm overflow-hidden">
+            <div class="px-8 lg:px-10 pt-8 lg:pt-10 pb-4">
+                <h4 class="text-lg font-extrabold font-headline tracking-tight flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">analytics</span> Taux de remplissage par événement
+                </h4>
+            </div>
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-outline/20 text-[10px] font-bold uppercase tracking-[0.12em] text-on-surface-variant">
+                        <th class="text-left px-8 lg:px-10 py-4">Événement</th>
+                        <th class="text-left px-4 py-4">Confirmés</th>
+                        <th class="text-left px-4 py-4">Capacité</th>
+                        <th class="text-left px-4 py-4">Taux</th>
+                        <th class="text-left px-8 lg:px-10 py-4 w-48">Progression</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in stats.occupancyRates %}
+                    <tr class="border-b border-outline/10 hover:bg-gray-50 transition-colors">
+                        <td class="px-8 lg:px-10 py-4 font-bold text-on-surface">{{ row.titre }}</td>
+                        <td class="px-4 py-4 text-on-surface-variant">{{ row.confirmed }}</td>
+                        <td class="px-4 py-4 text-on-surface-variant">{{ row.capacite }}</td>
+                        <td class="px-4 py-4">
+                            <span class="font-extrabold text-xs
+                                {% if row.rate >= 90 %}text-red-500
+                                {% elseif row.rate >= 70 %}text-orange-500
+                                {% elseif row.rate >= 40 %}text-primary
+                                {% else %}text-gray-400{% endif %}">
+                                {{ row.rate }}%
+                            </span>
+                        </td>
+                        <td class="px-8 lg:px-10 py-4">
+                            <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                                <div class="h-full rounded-full transition-all duration-1000
+                                    {% if row.rate >= 90 %}bg-red-500
+                                    {% elseif row.rate >= 70 %}bg-orange-400
+                                    {% elseif row.rate >= 40 %}bg-primary
+                                    {% else %}bg-gray-300{% endif %}"
+                                    style="width: {{ row.rate }}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="px-8 py-12 text-center text-gray-400 text-sm">Aucune donnée disponible.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{# ══════════════════════════════ SCRIPTS ══════════════════════════════ #}
+
+{# ── FullCalendar v6 CDN ── #}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+{# ── Chart.js v4 CDN ── #}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // ═══════════════════════════════════════════════════
+    // FULLCALENDAR
+    // ═══════════════════════════════════════════════════
+    const calendarEl = document.getElementById('fullcalendar');
+    if (calendarEl) {
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'fr',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,listWeek'
+            },
+            buttonText: {
+                today: "Aujourd'hui",
+                month: 'Mois',
+                week:  'Semaine',
+                list:  'Liste'
+            },
+            events: {{ calendarEvents|raw }},
+            eventDisplay: 'block',
+            dayMaxEvents: 3,
+            height: 'auto',
+            eventDidMount: function(info) {
+                // Tooltip on hover
+                const props = info.event.extendedProps;
+                info.el.title = info.event.title
+                    + '\nType: ' + props.type
+                    + '\nCapacité: ' + props.capacite
+                    + '\nStatut: ' + (props.statut ? 'Actif' : 'Inactif');
+
+                // Style events
+                info.el.style.borderRadius = '8px';
+                info.el.style.padding = '2px 8px';
+                info.el.style.fontSize = '12px';
+                info.el.style.fontWeight = '700';
+                info.el.style.border = 'none';
+            }
+        });
+        calendar.render();
+    }
+
+    // ═══════════════════════════════════════════════════
+    // CHART.JS SETUP
+    // ═══════════════════════════════════════════════════
+    const isDark = document.body.classList.contains('dark');
+    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+    const textColor = isDark ? '#94a3b8' : '#64748b';
+
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = textColor;
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    Chart.defaults.plugins.legend.labels.padding = 16;
+
+    // ── Chart 1: Events by Type (Pie) ──
+    const typeData = {{ stats.eventsByType|json_encode|raw }};
+    new Chart(document.getElementById('chartEventsByType'), {
+        type: 'pie',
+        data: {
+            labels: typeData.map(d => d.type),
+            datasets: [{
+                data: typeData.map(d => d.count),
+                backgroundColor: ['#3b82f6', '#22c55e', '#a855f7', '#f97316'],
+                borderWidth: 3,
+                borderColor: isDark ? '#111827' : '#ffffff',
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // ── Chart 2: Events by Month (Bar) ──
+    const monthData = {{ stats.eventsByMonth|json_encode|raw }};
+    new Chart(document.getElementById('chartEventsByMonth'), {
+        type: 'bar',
+        data: {
+            labels: monthData.map(d => d.month),
+            datasets: [{
+                label: 'Événements créés',
+                data: monthData.map(d => parseInt(d.count)),
+                backgroundColor: 'rgba(79, 70, 229, 0.15)',
+                borderColor: '#4f46e5',
+                borderWidth: 2,
+                borderRadius: 12,
+                borderSkipped: false,
+                hoverBackgroundColor: 'rgba(79, 70, 229, 0.3)',
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, precision: 0 },
+                    grid: { color: gridColor }
+                },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // ── Chart 3: Inscriptions by Status (Doughnut) ──
+    const statusData = {{ stats.inscriptionsByStatus|json_encode|raw }};
+    const statusColors = {
+        'CONFIRMÉ': '#22c55e',
+        'EN_ATTENTE': '#f59e0b',
+        'ANNULÉ': '#ef4444'
+    };
+    const statusLabels = {
+        'CONFIRMÉ': 'Confirmé',
+        'EN_ATTENTE': 'En attente',
+        'ANNULÉ': 'Annulé'
+    };
+    new Chart(document.getElementById('chartInscriptionsByStatus'), {
+        type: 'doughnut',
+        data: {
+            labels: statusData.map(d => statusLabels[d.status] || d.status),
+            datasets: [{
+                data: statusData.map(d => parseInt(d.count)),
+                backgroundColor: statusData.map(d => statusColors[d.status] || '#6b7280'),
+                borderWidth: 3,
+                borderColor: isDark ? '#111827' : '#ffffff',
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // ── Chart 4: Top Events (Horizontal Bar) ──
+    const topData = {{ stats.topEvents|json_encode|raw }};
+    new Chart(document.getElementById('chartTopEvents'), {
+        type: 'bar',
+        data: {
+            labels: topData.map(d => d.titre.length > 25 ? d.titre.substring(0, 25) + '…' : d.titre),
+            datasets: [{
+                label: 'Inscriptions',
+                data: topData.map(d => parseInt(d.total)),
+                backgroundColor: [
+                    'rgba(79, 70, 229, 0.20)',
+                    'rgba(34, 197, 94, 0.20)',
+                    'rgba(168, 85, 247, 0.20)',
+                    'rgba(249, 115, 22, 0.20)',
+                    'rgba(59, 130, 246, 0.20)'
+                ],
+                borderColor: ['#4f46e5', '#22c55e', '#a855f7', '#f97316', '#3b82f6'],
+                borderWidth: 2,
+                borderRadius: 12,
+                borderSkipped: false,
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, precision: 0 },
+                    grid: { color: gridColor }
+                },
+                y: { grid: { display: false } }
+            }
+        }
+    });
+});
+</script>
+
+{# ── Calendar Dark Mode + Style Overrides ── #}
+<style>
+    /* FullCalendar theme overrides */
+    .fc {
+        --fc-border-color: var(--outline);
+        --fc-today-bg-color: rgba(79, 70, 229, 0.06);
+        --fc-neutral-bg-color: transparent;
+    }
+    .fc .fc-toolbar-title {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: 1.4rem;
+        letter-spacing: -0.03em;
+    }
+    .fc .fc-button {
+        border-radius: 12px !important;
+        padding: 6px 16px !important;
+        font-weight: 700 !important;
+        font-size: 12px !important;
+        text-transform: capitalize !important;
+        border: 1px solid var(--outline) !important;
+        background: white !important;
+        color: var(--on-surface) !important;
+        box-shadow: none !important;
+        transition: all 0.2s !important;
+    }
+    .fc .fc-button:hover {
+        background: #f1f5f9 !important;
+    }
+    .fc .fc-button-active {
+        background: var(--primary) !important;
+        color: white !important;
+        border-color: var(--primary) !important;
+    }
+    .fc .fc-col-header-cell {
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        padding: 12px 0;
+    }
+    .fc .fc-daygrid-day-number {
+        font-weight: 700;
+        font-size: 13px;
+        padding: 8px;
+    }
+    .fc .fc-scrollgrid {
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    /* Dark mode overrides */
+    .dark .fc { --fc-border-color: #1e293b; --fc-today-bg-color: rgba(37, 99, 235, 0.1); }
+    .dark .fc .fc-button { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+    .dark .fc .fc-button:hover { background: #334155 !important; }
+    .dark .fc .fc-button-active { background: var(--primary) !important; border-color: var(--primary) !important; }
+    .dark .fc .fc-toolbar-title { color: #f1f5f9; }
+    .dark .fc .fc-col-header-cell { color: #94a3b8; }
+    .dark .fc .fc-daygrid-day-number { color: #e2e8f0; }
+    .dark .fc .fc-daygrid-day.fc-day-today { background: rgba(37, 99, 235, 0.08); }
+</style>
+{% endblock %}
+
+{% block body_end %}
+    {{ parent() }}
+<!-- Chatbot Widget -->
+<div id="chatbot-widget" class="fixed z-50" style="bottom: 1.5rem; right: 1.5rem;">
+    <button id="chatbot-toggle" class="bg-primary text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-primary/90 transition-colors">
+        <span class="material-symbols-outlined text-3xl">chat</span>
+    </button>
+
+    <div id="chatbot-window" class="hidden absolute w-80 md:w-96 bg-white rounded-[2rem] shadow-2xl border border-gray-100 overflow-hidden flex-col h-[500px]" style="bottom: 4rem; right: 0;">
+        <div class="bg-primary text-white p-5 flex justify-between items-center shadow-sm z-10">
+            <h3 class="font-bold flex items-center gap-2 font-headline tracking-wide">
+                <span class="material-symbols-outlined">smart_toy</span> Agent InnerTrack
+            </h3>
+            <button id="chatbot-close" class="text-white hover:text-gray-200 transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <div id="chatbot-messages" class="flex-1 p-5 overflow-y-auto bg-gray-50 flex flex-col gap-3 font-body">
+            <div class="bg-white text-gray-800 border border-gray-100 self-start p-3.5 rounded-2xl rounded-tl-sm max-w-[85%] text-sm shadow-sm leading-relaxed">
+                Bonjour! Je suis l'assistant AI d'InnerTrack. Comment puis-je vous aider avec la gestion de vos événements aujourd'hui ?
+            </div>
+        </div>
+
+        <div class="p-4 bg-white border-t border-gray-100 flex gap-2 shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)] relative z-10">
+            <input type="text" id="chatbot-input" class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none" placeholder="Posez votre question...">
+            <button id="chatbot-send" class="bg-primary text-white w-12 flex items-center justify-center rounded-xl hover:bg-primary/90 transition-all shadow-md shadow-primary/20 hover:scale-105 active:scale-95 text-xl">
+                <span class="material-symbols-outlined">send</span>
+            </button>
+        </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatToggle = document.getElementById('chatbot-toggle');
+    const chatWindow = document.getElementById('chatbot-window');
+    const chatClose = document.getElementById('chatbot-close');
+    const chatInput = document.getElementById('chatbot-input');
+    const chatSend = document.getElementById('chatbot-send');
+    const chatMessages = document.getElementById('chatbot-messages');
+
+    // Create unique session ID
+    const sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+
+    function toggleChat() {
+        chatWindow.classList.toggle('hidden');
+        chatWindow.classList.toggle('flex');
+        if (!chatWindow.classList.contains('hidden')) {
+            chatInput.focus();
+        }
+    }
+
+    if(chatToggle) chatToggle.addEventListener('click', toggleChat);
+    if(chatClose) chatClose.addEventListener('click', toggleChat);
+
+    function addMessage(text, isUser = false) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = isUser
+            ? 'bg-primary text-white self-end p-3.5 rounded-2xl rounded-tr-sm max-w-[85%] text-sm shadow-sm leading-relaxed whitespace-pre-wrap'
+            : 'bg-white text-gray-800 border border-gray-100 self-start p-3.5 rounded-2xl rounded-tl-sm max-w-[85%] text-sm shadow-sm leading-relaxed whitespace-pre-wrap';
+        msgDiv.textContent = text;
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        // Disable input
+        chatInput.disabled = true;
+        chatSend.disabled = true;
+        chatSend.style.opacity = '0.5';
+
+        addMessage(message, true);
+        chatInput.value = '';
+
+        // Typing indicator
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'bg-white text-gray-800 border border-gray-100 self-start p-3.5 rounded-2xl rounded-tl-sm max-w-[85%] text-sm shadow-sm flex gap-1 items-center';
+        typingDiv.id = 'typing-indicator';
+        typingDiv.innerHTML = '<span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span><span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span><span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>';
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        try {
+            const response = await fetch('http://127.0.0.1:8001/interact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    message: message
+                })
+            });
+
+            const data = await response.json();
+            const ind = document.getElementById('typing-indicator');
+            if (ind) ind.remove();
+
+            addMessage(data.response, false);
+
+        } catch (error) {
+            const ind = document.getElementById('typing-indicator');
+            if (ind) ind.remove();
+            addMessage("Erreur: Impossible de contacter l'agent intelligent. Assurez-vous que FastAPI tourne sur le port 8001 (uvicorn agent:app --port 8001 --reload).", false);
+        } finally {
+            // Re-enable input
+            chatInput.disabled = false;
+            chatSend.disabled = false;
+            chatSend.style.opacity = '1';
+            chatInput.focus();
+        }
+    }
+
+    if(chatSend) chatSend.addEventListener('click', sendMessage);
+    if(chatInput) chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+});
+</script>
 {% endblock %}
