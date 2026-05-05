@@ -1,4 +1,4 @@
-﻿{% extends 'layouts/dashboard.html.twig' %}
+{% extends 'layouts/dashboard.html.twig' %}
 
 {% block header_title %}Panneau d'Administration{% endblock %}
 
@@ -224,7 +224,7 @@
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {% for report in messagingReports %}
-            <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline/20 group hover:shadow-md transition-all">
+            <div x-show="!resolvedReportIds.has({{ report.id }})" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline/20 group hover:shadow-md transition-all">
                 <div class="flex items-start justify-between mb-6">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center group-hover:rotate-12 transition-transform">
@@ -290,7 +290,24 @@
                 
                 <div class="flex items-center gap-3">
                     <button @click="resolveReport({{ report.id }}, 'IGNORE')" class="flex-1 py-3.5 text-xs font-bold text-on-surface-variant bg-gray-50 border border-outline/30 rounded-2xl hover:bg-white hover:border-outline transition-all active:scale-95 uppercase tracking-wider">{{ 'dashboard.reports.dismiss'|trans }}</button>
-                    <button @click="resolveReport({{ report.id }}, 'BLOCK_USER')" class="flex-2 py-3.5 px-8 text-xs font-bold text-white bg-red-500 rounded-2xl hover:bg-black transition-all active:scale-95 shadow-lg shadow-red-100 uppercase tracking-wider">{{ 'dashboard.reports.ban'|trans }}</button>
+                    <div class="relative">
+                        <button @click="banMenuOpen = banMenuOpen === {{ report.id }} ? null : {{ report.id }}"
+                                class="py-3.5 px-6 text-xs font-bold text-white bg-red-500 rounded-2xl hover:bg-red-600 transition-all active:scale-95 shadow-lg shadow-red-100 uppercase tracking-wider flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[15px]">block</span>
+                            {{ 'dashboard.reports.ban'|trans }}
+                            <span class="material-symbols-outlined text-[14px]" x-text="banMenuOpen === {{ report.id }} ? 'expand_less' : 'expand_more'"></span>
+                        </button>
+                        <div x-show="banMenuOpen === {{ report.id }}" x-transition @click.outside="banMenuOpen = null"
+                             class="absolute bottom-full mb-2 right-0 z-20 bg-white border border-outline/20 rounded-2xl shadow-xl p-2 min-w-[210px] space-y-0.5">
+                            <div class="text-[9px] font-extrabold uppercase tracking-widest text-gray-400 px-3 py-2">Timeout duration</div>
+                            <button @click="applyBan({{ report.id }}, 1)"   class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-amber-50 text-xs font-bold text-amber-700 flex items-center gap-2"><span class="material-symbols-outlined text-[15px]">timer</span> 1-hour timeout</button>
+                            <button @click="applyBan({{ report.id }}, 24)"  class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-amber-50 text-xs font-bold text-amber-700 flex items-center gap-2"><span class="material-symbols-outlined text-[15px]">timer</span> 24-hour timeout</button>
+                            <button @click="applyBan({{ report.id }}, 168)" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-amber-50 text-xs font-bold text-amber-700 flex items-center gap-2"><span class="material-symbols-outlined text-[15px]">timer</span> 7-day timeout</button>
+                            <button @click="applyBan({{ report.id }}, 720)" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-amber-50 text-xs font-bold text-amber-700 flex items-center gap-2"><span class="material-symbols-outlined text-[15px]">timer</span> 30-day timeout</button>
+                            <div class="h-px bg-outline/20 mx-3 my-1"></div>
+                            <button @click="applyBan({{ report.id }}, null)" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-red-50 text-xs font-bold text-red-600 flex items-center gap-2"><span class="material-symbols-outlined text-[15px]">block</span> Permanent ban</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- ── AI Chat Log Review ─────────────────────────────── -->
@@ -515,7 +532,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {% for report in communityReports %}
-            <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline/20 group hover:shadow-md transition-all">
+            <div x-show="!resolvedReportIds.has({{ report.id }})" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline/20 group hover:shadow-md transition-all">
                 <div class="flex items-start justify-between mb-5">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center group-hover:rotate-12 transition-transform">
@@ -563,10 +580,24 @@
                         {{ 'dashboard.reports.delete_post'|trans }}
                     </button>
                     {% endif %}
-                    <button @click="resolveReport({{ report.id }}, 'BLOCK_USER')"
-                            class="flex-1 py-3 text-xs font-bold text-white bg-red-500 rounded-2xl hover:bg-black transition-all active:scale-95 shadow-md shadow-red-100 uppercase tracking-wider">
-                        {{ 'dashboard.reports.ban'|trans }}
-                    </button>
+                    <div class="relative">
+                        <button @click="banMenuOpen = banMenuOpen === {{ report.id }} ? null : {{ report.id }}"
+                                class="py-3 px-5 text-xs font-bold text-white bg-red-500 rounded-2xl hover:bg-red-600 transition-all active:scale-95 shadow-md shadow-red-100 uppercase tracking-wider flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[15px]">block</span>
+                            {{ 'dashboard.reports.ban'|trans }}
+                            <span class="material-symbols-outlined text-[14px]" x-text="banMenuOpen === {{ report.id }} ? 'expand_less' : 'expand_more'"></span>
+                        </button>
+                        <div x-show="banMenuOpen === {{ report.id }}" x-transition @click.outside="banMenuOpen = null"
+                             class="absolute bottom-full mb-2 right-0 z-20 bg-white border border-outline/20 rounded-2xl shadow-xl p-2 min-w-[210px] space-y-0.5">
+                            <div class="text-[9px] font-extrabold uppercase tracking-widest text-gray-400 px-3 py-2">Timeout duration</div>
+                            <button @click="applyBan({{ report.id }}, 1)"   class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-amber-50 text-xs font-bold text-amber-700 flex items-center gap-2"><span class="material-symbols-outlined text-[15px]">timer</span> 1-hour timeout</button>
+                            <button @click="applyBan({{ report.id }}, 24)"  class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-amber-50 text-xs font-bold text-amber-700 flex items-center gap-2"><span class="material-symbols-outlined text-[15px]">timer</span> 24-hour timeout</button>
+                            <button @click="applyBan({{ report.id }}, 168)" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-amber-50 text-xs font-bold text-amber-700 flex items-center gap-2"><span class="material-symbols-outlined text-[15px]">timer</span> 7-day timeout</button>
+                            <button @click="applyBan({{ report.id }}, 720)" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-amber-50 text-xs font-bold text-amber-700 flex items-center gap-2"><span class="material-symbols-outlined text-[15px]">timer</span> 30-day timeout</button>
+                            <div class="h-px bg-outline/20 mx-3 my-1"></div>
+                            <button @click="applyBan({{ report.id }}, null)" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-red-50 text-xs font-bold text-red-600 flex items-center gap-2"><span class="material-symbols-outlined text-[15px]">block</span> Permanent ban</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             {% else %}
@@ -859,19 +890,16 @@ function adminSystem() {
     return {
         activeTab: 'overview',
 
+        // ── Resolved report IDs (for instant DOM removal without page reload) ──
+        resolvedReportIds: new Set(),
+
+        // ── Ban dropdown — which report card is open ────────────────────
+        banMenuOpen: null,
+
         // ── Existing actions ──────────────────────────────────────
         async blockUser(userId) {
             if (!confirm('Changer le statut de cet utilisateur ?')) return;
             const res = await fetch(`/admin/users/block/${userId}`, { method: 'POST' });
-            if (await res.json()) window.location.reload();
-        },
-        async resolveReport(reportId, action) {
-            if (!confirm(`Action : ${action} ?`)) return;
-            const res = await fetch(`/admin/reports/${reportId}/resolve`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: action })
-            });
             if (await res.json()) window.location.reload();
         },
 
@@ -1036,7 +1064,7 @@ function adminSystem() {
             }
         },
 
-        // ── Resolve Report ──────────────────────────────────────────
+        // ── Resolve Report (no page reload — removes card instantly) ──────────
         async resolveReport(reportId, action) {
             if (!confirm('Êtes-vous sûr de vouloir effectuer cette action sur ce signalement ?')) return;
             try {
@@ -1047,8 +1075,37 @@ function adminSystem() {
                 });
                 const data = await res.json();
                 if (data.success) {
+                    // Remove the card instantly without reloading the page
+                    this.resolvedReportIds = new Set([...this.resolvedReportIds, reportId]);
                     this.flashMsg('Signalement traité.');
-                    setTimeout(() => window.location.reload(), 1200);
+                } else {
+                    this.flashMsg(data.error || 'Erreur lors du traitement.', 'error');
+                }
+            } catch (e) {
+                this.flashMsg('Erreur réseau.', 'error');
+            }
+        },
+
+        // ── Apply ban / timeout ────────────────────────────────────────────
+        async applyBan(reportId, durationHours) {
+            const label = durationHours
+                ? (durationHours === 1   ? '1-hour timeout'
+                :  durationHours === 24  ? '24-hour timeout'
+                :  durationHours === 168 ? '7-day timeout'
+                :                         '30-day timeout')
+                : 'PERMANENT ban';
+            if (!confirm(`Apply ${label} to this user?`)) return;
+            this.banMenuOpen = null;
+            try {
+                const res = await fetch(`/admin/reports/${reportId}/resolve`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ action: 'BLOCK_USER', durationHours })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    this.resolvedReportIds = new Set([...this.resolvedReportIds, reportId]);
+                    this.flashMsg(durationHours ? `Timeout applied (${label}).` : 'User permanently banned.');
                 } else {
                     this.flashMsg(data.error || 'Erreur lors du traitement.', 'error');
                 }
@@ -1123,8 +1180,9 @@ function adminSystem() {
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ action: 'IGNORE' })
                 });
+                // Remove the card instantly without reloading the page
+                this.resolvedReportIds = new Set([...this.resolvedReportIds, reportId]);
                 this.flashMsg('Post deleted and report resolved. / Post supprimé et signalement clôturé.');
-                setTimeout(() => window.location.reload(), 1200);
             } catch (e) {
                 this.flashMsg('Network error / Erreur réseau.', 'error');
             }
