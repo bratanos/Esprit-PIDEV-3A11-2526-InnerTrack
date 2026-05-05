@@ -11,11 +11,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class DashboardController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $em,
+        private CacheInterface $cache,
     ) {}
 
     #[Route('/dashboard', name: 'app_dashboard')]
@@ -39,37 +42,45 @@ class DashboardController extends AbstractController
     {
         $userId = $user->getId();
 
-        // Count active conversations
-        $conversationCount = $this->em->createQuery(
-            'SELECT COUNT(c) FROM App\Entity\Conversation c
-             WHERE (c.client = :uid OR c.therapist = :uid) AND c.status = :status'
-        )->setParameter('uid', $userId)->setParameter('status', 'ACTIVE')->getSingleScalarResult();
+        // Cache all dashboard stats for 5 minutes to prevent expensive queries on every navigation
+        $stats = $this->cache->get('user_dashboard_stats_' . $userId, function (ItemInterface $item) use ($userId) {
+            $item->expiresAfter(300); // 5 minutes
 
-        // Count unread notifications
-        $unreadNotifs = $this->em->createQuery(
-            'SELECT COUNT(n) FROM App\Entity\Notification n WHERE n.user = :uid AND n.isRead = false'
-        )->setParameter('uid', $userId)->getSingleScalarResult();
+            $conversationCount = $this->em->createQuery(
+                'SELECT COUNT(c) FROM App\Entity\Conversation c
+                 WHERE (c.client = :uid OR c.therapist = :uid) AND c.status = :status'
+            )->setParameter('uid', $userId)->setParameter('status', 'ACTIVE')->getSingleScalarResult();
 
-        // Count unread messages
-        $unreadMessages = $this->em->getConnection()->executeQuery(
-            'SELECT COUNT(*) FROM message m
-             JOIN conversation c ON m.conversation_id = c.id
-             WHERE (c.client_id = ? OR c.therapist_id = ?) AND m.sender_id != ? AND m.is_read = 0',
-            [$userId, $userId, $userId]
-        )->fetchOne();
+            $unreadNotifs = $this->em->createQuery(
+                'SELECT COUNT(n) FROM App\Entity\Notification n WHERE n.user = :uid AND n.isRead = false'
+            )->setParameter('uid', $userId)->getSingleScalarResult();
 
-        // Fetch therapists this user is interacting with
-        $therapists = $this->em->createQuery(
-            'SELECT DISTINCT u FROM App\Entity\User u
-             JOIN App\Entity\Conversation c WITH (c.therapist = u)
-             WHERE c.client = :uid AND c.status = :status'
-        )->setParameter('uid', $userId)->setParameter('status', 'ACTIVE')->getResult();
+            $unreadMessages = $this->em->getConnection()->executeQuery(
+                'SELECT COUNT(*) FROM message m
+                 JOIN conversation c ON m.conversation_id = c.id
+                 WHERE (c.client_id = ? OR c.therapist_id = ?) AND m.sender_id != ? AND m.is_read = 0',
+                [$userId, $userId, $userId]
+            )->fetchOne();
+
+            $therapists = $this->em->createQuery(
+                'SELECT DISTINCT u FROM App\Entity\User u
+                 JOIN App\Entity\Conversation c WITH (c.therapist = u)
+                 WHERE c.client = :uid AND c.status = :status'
+            )->setParameter('uid', $userId)->setParameter('status', 'ACTIVE')->getResult();
+
+            return [
+                'conversationCount' => $conversationCount,
+                'unreadNotifs'      => $unreadNotifs,
+                'unreadMessages'    => $unreadMessages,
+                'therapists'        => $therapists,
+            ];
+        });
 
         return $this->render('pages/dashboard/user.html.twig', [
-            'conversationCount' => $conversationCount,
-            'unreadNotifs'      => $unreadNotifs,
-            'unreadMessages'    => $unreadMessages,
-            'therapists'        => $therapists,
+            'conversationCount' => $stats['conversationCount'],
+            'unreadNotifs'      => $stats['unreadNotifs'],
+            'unreadMessages'    => $stats['unreadMessages'],
+            'therapists'        => $stats['therapists'],
         ]);
     }
 
@@ -215,7 +226,23 @@ class DashboardController extends AbstractController
             LIMIT 20
         ")->fetchAllAssociative();
 
+        // ── Sanctions (Blocked users + Chat Locks) ───────────────────────
+        $sanctions = $conn->executeQuery("
+            SELECT u.id as user_id, u.id as sanction_id, u.first_name, u.last_name, u.email, u.profile_picture, u.status,
+                   'ACCOUNT_BAN' as type, 'Permanent Ban' as reason, u.created_at as punished_at, NULL as punished_until
+            FROM user u
+            WHERE u.status = 'BLOCKED'
+            UNION ALL
+            SELECT u.id as user_id, cl.id as sanction_id, u.first_name, u.last_name, u.email, u.profile_picture, u.status,
+                   'CHAT_LOCK' as type, cl.reason, cl.locked_at as punished_at, cl.locked_until as punished_until
+            FROM chat_lock cl
+            JOIN user u ON cl.user_id = u.id
+            WHERE cl.is_active = 1
+            ORDER BY punished_at DESC
+        ")->fetchAllAssociative();
+
         return $this->render('pages/dashboard/admin.html.twig', [
+            'sanctions'        => $sanctions,
             // User analytics
             'totalUsers'      => $stats['totalUsers'],
             'totalClients'    => $stats['totalClients'],

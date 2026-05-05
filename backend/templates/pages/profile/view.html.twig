@@ -90,7 +90,7 @@
                 <div class="space-y-2 mb-6">
                     <label class="block text-sm font-medium text-slate-700 ml-1">Bio</label>
                     <textarea name="bio" rows="4"
-                              class="w-full bg-slate-50 border-0 rounded-xl p-4 text-slate-800 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all resize-none">{{ isTherapist ? user.therapistProfile.bio : user.clientProfile.bio }}</textarea>
+                              class="w-full bg-slate-50 border-0 rounded-xl p-4 text-slate-800 focus:ring-2 focus:ring-cyan-400 focus:bg-white transition-all resize-none">{% if isTherapist %}{{ user.therapistProfile.bio }}{% else %}{{ user.clientProfile is not null ? user.clientProfile.bio : '' }}{% endif %}</textarea>
                 </div>
 
                 {% if isTherapist %}

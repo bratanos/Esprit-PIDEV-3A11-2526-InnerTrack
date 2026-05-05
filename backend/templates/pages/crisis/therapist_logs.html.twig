@@ -1,0 +1,65 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+{% block header_title %}{{ 'Patient Crisis Logs'|trans }}{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto pb-24">
+    
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h2 class="text-3xl font-extrabold font-headline">{{ 'Crisis Events'|trans }}</h2>
+            <p class="text-on-surface-variant text-sm mt-1">{{ 'Logs of severe anxiety or grounding sessions from your patients.'|trans }}</p>
+        </div>
+        <div class="bg-amber-100 text-amber-700 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">visibility</span>
+            {{ 'Viewing logs for ' ~ clientCount ~ ' accepted patients' }}
+        </div>
+    </div>
+
+    {% if logs is empty %}
+        <div class="bg-white rounded-[2.5rem] p-12 text-center shadow-sm border border-outline/20">
+            <div class="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="material-symbols-outlined text-3xl">check_circle</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">{{ 'No crisis logs'|trans }}</h3>
+            <p class="text-slate-400 text-sm">{{ "Your patients haven't logged any recent crisis events."|trans }}</p>
+        </div>
+    {% else %}
+        <div class="space-y-4">
+            {% for log in logs %}
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-outline/20 flex gap-6 items-start transition-all hover:shadow-md">
+                <div class="w-12 h-12 rounded-full {{ log.resolvedAt ? 'bg-green-50 text-green-500' : 'bg-red-50 text-red-500' }} flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined">{{ log.resolvedAt ? 'health_and_safety' : 'emergency' }}</span>
+                </div>
+                
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-1">
+                        <h4 class="font-bold text-lg text-on-surface">{{ log.user.firstName }} {{ log.user.lastName }}</h4>
+                        <span class="text-xs font-bold text-slate-400">{{ log.triggeredAt|date('M d, Y H:i') }}</span>
+                    </div>
+                    
+                    <div class="text-sm text-slate-500 mb-3">
+                        <span class="font-semibold">{{ 'Mechanism Used:'|trans }}</span> {{ log.copingMechanismUsed }}
+                    </div>
+                    
+                    {% if log.notes %}
+                    <div class="bg-slate-50 p-3 rounded-xl text-xs text-slate-600 border border-slate-100 italic">
+                        "{{ log.notes }}"
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="shrink-0 flex flex-col items-end gap-2">
+                    {% if log.resolvedAt %}
+                        <span class="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-wider">{{ 'Resolved'|trans }}</span>
+                    {% else %}
+                        <span class="px-3 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> {{ 'Ongoing / Unresolved'|trans }}</span>
+                    {% endif %}
+                    <a href="mailto:{{ log.user.email }}" class="text-xs text-primary font-bold hover:underline">{{ 'Contact Patient'|trans }}</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

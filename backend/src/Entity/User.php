@@ -39,6 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'last_name', length: 255)]
     private ?string $lastName = null;
 
+
+
+
     #[ORM\Column(name: 'profile_picture', length: 255, nullable: true)]
     private ?string $profilePicture = null;
 
@@ -97,8 +100,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return 'ROLE_USER';
     }
 
-    public function getStatus(): string { return $this->status; }
-    public function setStatus(string $status): self { $this->status = $status; return $this; }
+    public function getStatus(): ?string { return $this->status; }
+    public function setStatus(string $status): static { $this->status = $status; return $this; }
 
     public function getPassword(): string { return $this->password; }
     public function setPassword(string $password): self { $this->password = $password; return $this; }

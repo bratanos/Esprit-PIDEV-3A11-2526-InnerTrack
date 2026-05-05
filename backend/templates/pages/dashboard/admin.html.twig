@@ -30,6 +30,12 @@
                 <span class="material-symbols-outlined text-xl">forum</span> {{ 'dashboard.tabs.community'|trans }}
                 {% if communityReports|length > 0 %}<span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse absolute -right-0 top-3"></span>{% endif %}
             </button>
+            <button @click="activeTab = 'sanctions'" 
+                :class="activeTab === 'sanctions' ? 'bg-red-500 text-white shadow-md shadow-red-200' : 'text-on-surface-variant hover:bg-gray-50 hover:text-red-500'"
+                class="px-8 py-3 rounded-[2rem] text-sm font-bold transition-all duration-300 flex items-center gap-2 relative">
+                <span class="material-symbols-outlined text-xl">gavel</span> Sanctions
+                {% if sanctions|length > 0 %}<span class="w-2 h-2 bg-red-500 rounded-full animate-pulse absolute -right-0 top-3"></span>{% endif %}
+            </button>
             <button @click="activeTab = 'crud'" 
                 :class="activeTab === 'crud' ? 'bg-amber-500 text-white shadow-md shadow-amber-200' : 'text-amber-600 hover:bg-amber-50'"
                 class="px-8 py-3 rounded-[2rem] text-sm font-bold transition-all duration-300 flex items-center gap-2">
@@ -133,7 +139,7 @@
             <div class="absolute inset-0 bg-primary/5 [mask-image:radial-gradient(ellipse_at_top_right,black,transparent)]"></div>
             <div class="relative">
                 <div class="flex items-baseline justify-between mb-8">
-                    <h3 class="text-2xl font-extrabold tracking-tight font-headline">Monthly Signups / Inscriptions mensuelles</h3>
+                    <h3 class="text-2xl font-extrabold tracking-tight font-headline">{{ 'Monthly Signups'|trans }}</h3>
                     <span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Last 6 months</span>
                 </div>
                 {% if monthly|length > 0 %}
@@ -151,7 +157,7 @@
                 </div>
                 {% else %}
                 <div class="h-64 flex items-center justify-center text-on-surface-variant text-sm">
-                    No registration data yet / Aucune inscription enregistrée
+                    {{ 'No registration data yet'|trans }}
                 </div>
                 {% endif %}
             </div>
@@ -216,10 +222,10 @@
         </div>
     </div>
 
-    <div x-show="activeTab === 'messages'"    <div x-show="activeTab === 'community'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
+    <div x-show="activeTab === 'messages'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
         <div class="flex items-center justify-between mb-2">
             <h3 class="text-2xl font-extrabold font-headline tracking-tighter">{{ 'dashboard.tabs.messages'|trans }}</h3>
-            <span class="text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1 rounded-full">Secure drop / Dépôt sécurisé</span>
+            <span class="text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1 rounded-full">{{ 'Secure drop'|trans }}</span>
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -261,7 +267,7 @@
                         </div>
                     </div>
                     <div>
-                        <div class="text-[9px] font-bold text-gray-400 uppercase mb-1">Target / Cible</div>
+                        <div class="text-[9px] font-bold text-gray-400 uppercase mb-1">{{ 'Target'|trans }}</div>
                         <div class="flex items-center gap-2">
                             {% set trg_pfp = report.reported_pfp %}
                             {% set trg_url = null %}
@@ -526,7 +532,7 @@
 
     <div x-show="activeTab === 'community'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
         <div class="flex items-center justify-between mb-2">
-            <h3 class="text-2xl font-extrabold font-headline tracking-tighter">Community Reports / Signalements communautaires</h3>
+            <h3 class="text-2xl font-extrabold font-headline tracking-tighter">{{ 'Community Reports'|trans }}</h3>
             <span class="text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1 rounded-full">{{ communityReports|length }} pending</span>
         </div>
 
@@ -553,7 +559,7 @@
                         <div class="text-sm font-extrabold">{{ report.reporter_first }} {{ report.reporter_last }}</div>
                     </div>
                     <div>
-                        <div class="text-[9px] font-bold text-gray-400 uppercase mb-1">Reported user / Cible</div>
+                        <div class="text-[9px] font-bold text-gray-400 uppercase mb-1">{{ 'Reported user'|trans }}</div>
                         <div class="text-sm font-extrabold">{{ report.reported_first }} {{ report.reported_last }}</div>
                     </div>
                 </div>
@@ -563,7 +569,7 @@
                 <div class="mb-5 rounded-2xl overflow-hidden relative">
                     <div class="absolute top-0 left-0 w-1 h-full bg-amber-400/30"></div>
                     <div class="bg-amber-50/30 p-4 text-[11px] text-on-surface-variant leading-relaxed">
-                        <div class="text-[9px] font-bold text-gray-400 uppercase mb-1">{% if report.post_title %}{{ report.post_title }} &mdash; {% endif %}Post content / Contenu</div>
+                        <div class="text-[9px] font-bold text-gray-400 uppercase mb-1">{% if report.post_title %}{{ report.post_title }} &mdash; {% endif %}{{ 'Post content'|trans }}</div>
                         {{ (report.post_content ?? report.details)|slice(0, 200) }}{% if (report.post_content ?? report.details)|length > 200 %}…{% endif %}
                     </div>
                 </div>
@@ -611,9 +617,106 @@
     </div>
 
     <!-- ════════════════════════════════════════════════════════════
+         SANCTIONS TAB — Manage punishments and bans
+         ════════════════════════════════════════════════════════════ -->
+    <div x-show="activeTab === 'sanctions'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
+        <div class="flex items-center justify-between mb-2">
+            <div>
+                <h3 class="text-3xl font-extrabold font-headline tracking-tighter text-on-surface">Punished Users</h3>
+                <p class="text-sm text-on-surface-variant mt-1">Review and manage active account bans and chat restrictions.</p>
+            </div>
+            <div class="px-6 py-3 rounded-2xl bg-red-50 border border-red-100 flex items-center gap-3">
+                <span class="material-symbols-outlined text-red-500">gavel</span>
+                <span class="text-sm font-bold text-red-700">{{ sanctions|length }} Active Punishments</span>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-[2.5rem] border border-outline/20 shadow-sm overflow-hidden">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-outline/20 text-[10px] font-bold uppercase tracking-[0.12em] text-on-surface-variant">
+                        <th class="text-left px-8 py-5">User</th>
+                        <th class="text-left px-4 py-5">Type</th>
+                        <th class="text-left px-4 py-5">Reason</th>
+                        <th class="text-left px-4 py-5">Since</th>
+                        <th class="text-left px-4 py-5">Until</th>
+                        <th class="text-right px-8 py-5">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sanction in sanctions %}
+                    <tr class="border-b border-outline/10 hover:bg-gray-50 transition-colors group">
+                        <td class="px-8 py-5">
+                            <div class="flex items-center gap-3">
+                                {% set pfp = sanction.profile_picture %}
+                                {% set pfp_url = null %}
+                                {% if pfp %}
+                                    {% if pfp starts with 'http' %}{% set pfp_url = pfp %}
+                                    {% elseif pfp starts with '/uploads/' %}{% set pfp_url = pfp %}
+                                    {% else %}{% set pfp_url = '/uploads/profiles/' ~ pfp|split('\\')|last|split('/')|last %}{% endif %}
+                                {% endif %}
+                                <div class="w-10 h-10 rounded-xl bg-gray-50 text-gray-600 flex items-center justify-center font-bold text-sm overflow-hidden shrink-0">
+                                    {% if pfp_url %}
+                                        <img src="{{ pfp_url }}" alt="" class="w-full h-full object-cover">
+                                    {% else %}
+                                        {{ sanction.first_name|first|upper }}{{ sanction.last_name|first|upper }}
+                                    {% endif %}
+                                </div>
+                                <div class="leading-tight">
+                                    <div class="font-bold text-on-surface">{{ sanction.first_name }} {{ sanction.last_name }}</div>
+                                    <div class="text-[10px] text-on-surface-variant">{{ sanction.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-5">
+                            <span class="px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider
+                                {{ sanction.type == 'ACCOUNT_BAN' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700' }}">
+                                {{ sanction.type|replace({'_': ' '}) }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-5 text-on-surface-variant text-xs max-w-xs truncate">
+                            {{ sanction.reason }}
+                        </td>
+                        <td class="px-4 py-5 text-on-surface-variant text-xs">
+                            {{ sanction.punished_at|date('d M Y, H:i') }}
+                        </td>
+                        <td class="px-4 py-5 text-on-surface-variant text-xs">
+                            {% if sanction.punished_until %}
+                                {{ sanction.punished_until|date('d M Y, H:i') }}
+                            {% else %}
+                                <span class="text-red-500 font-bold uppercase tracking-tighter text-[9px]">Permanent</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-8 py-5">
+                            <div class="flex justify-end">
+                                <button @click="revertSanction({{ sanction.sanction_id }}, '{{ sanction.type }}')"
+                                        class="px-4 py-2 rounded-xl bg-white border border-outline/30 text-[10px] font-bold text-on-surface-variant hover:text-green-600 hover:border-green-200 hover:bg-green-50 transition-all active:scale-95 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[16px]">undo</span>
+                                    Revert
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="px-8 py-20 text-center">
+                            <div class="flex flex-col items-center gap-3 text-gray-400">
+                                <span class="material-symbols-outlined text-5xl">verified_user</span>
+                                <div class="text-sm font-bold">No active sanctions found</div>
+                                <p class="text-xs">All users are currently operating within community guidelines.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
          CRUD TAB — User Management with input validation
          ════════════════════════════════════════════════════════════ -->
-    <div x-show="activeTab === 'crud'"    <div x-show="activeTab === 'community'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
+    <div x-show="activeTab === 'crud'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" class="space-y-6">
 
         <!-- Header row -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -639,14 +742,14 @@
                 <option value="">{{ 'dashboard.users_management.all_roles'|trans|default('All roles') }}</option>
                 <option value="ROLE_ADMIN">Admin</option>
                 <option value="ROLE_PSYCHOLOGUE">Psychologue</option>
-                <option value="ROLE_USER">User / Utilisateur</option>
+                <option value="ROLE_USER">{{ 'User'|trans }}</option>
             </select>
             <select x-model="crudStatusFilter"
                     class="px-4 py-3 rounded-2xl border border-outline/30 bg-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-amber-400 transition">
-                <option value="">All statuses / Tous les statuts</option>
-                <option value="ACTIVE">Active / Actif</option>
-                <option value="BLOCKED">Blocked / Bloqué</option>
-                <option value="PENDING">Pending / En attente</option>
+                <option value="">{{ 'All statuses'|trans }}</option>
+                <option value="ACTIVE">{{ 'Active'|trans }}</option>
+                <option value="BLOCKED">{{ 'Blocked'|trans }}</option>
+                <option value="PENDING">{{ 'Pending'|trans }}</option>
             </select>
         </div>
 
@@ -663,11 +766,11 @@
             <table class="w-full text-sm">
                 <thead>
                     <tr class="border-b border-outline/20 text-[10px] font-bold uppercase tracking-[0.12em] text-on-surface-variant">
-                        <th class="text-left px-8 py-5">User / Utilisateur</th>
+                        <th class="text-left px-8 py-5">{{ 'User'|trans }}</th>
                         <th class="text-left px-4 py-5 hidden md:table-cell">Email</th>
-                        <th class="text-left px-4 py-5 hidden lg:table-cell">Phone / Téléphone</th>
-                        <th class="text-left px-4 py-5">Role / Rôle</th>
-                        <th class="text-left px-4 py-5">Status / Statut</th>
+                        <th class="text-left px-4 py-5 hidden lg:table-cell">{{ 'Phone'|trans }}</th>
+                        <th class="text-left px-4 py-5">{{ 'Role'|trans }}</th>
+                        <th class="text-left px-4 py-5">{{ 'Status'|trans }}</th>
                         <th class="text-right px-8 py-5">Actions</th>
                     </tr>
                 </thead>
@@ -711,8 +814,8 @@
                                 {% else %} bg-slate-100 text-slate-600
                                 {% endif %}">
                                 {% if 'ROLE_ADMIN' in roleRaw %}Admin
-                                {% elseif 'ROLE_PSYCHOLOGUE' in roleRaw %}Psychologist / Psychologue
-                                {% else %}User / Utilisateur{% endif %}
+                                {% elseif 'ROLE_PSYCHOLOGUE' in roleRaw %}{{ 'Psychologist'|trans }}
+                                {% else %}{{ 'User'|trans }}{% endif %}
                             </span>
                         </td>
                         <td class="px-4 py-5">
@@ -726,7 +829,7 @@
                         <td class="px-8 py-5">
                             <div class="flex justify-end gap-2 opacity-70 group-hover:opacity-100 transition-opacity">
                                 <button @click="openEdit({{ user.id }})"
-                                        title="Edit / Modifier"
+                                        title="{{ 'Edit'|trans }}"
                                         class="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors active:scale-90">
                                     <span class="material-symbols-outlined text-[18px]">edit</span>
                                 </button>
@@ -754,7 +857,7 @@
             <div class="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg p-8 z-10"
                  @mousedown.stop>
                 <div class="flex items-center justify-between mb-8">
-                    <h4 class="text-xl font-extrabold font-headline" x-text="modal.editing ? 'Edit user / Modifier l\'utilisateur' : 'Create user / Créer un utilisateur'"></h4>
+                    <h4 class="text-xl font-extrabold font-headline" x-text="modal.editing ? '{{ 'Edit user'|trans|escape('js') }}' : '{{ 'Create user'|trans|escape('js') }}'"></h4>
                     <button @click="modal.open = false" class="p-2 rounded-xl hover:bg-gray-100 transition-colors">
                         <span class="material-symbols-outlined">close</span>
                     </button>
@@ -765,14 +868,14 @@
                     <!-- First & Last name -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">First Name / Prénom *</label>
+                            <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">{{ 'First Name'|trans }} *</label>
                             <input type="text" x-model="modal.form.firstName" id="crud_firstName" minlength="2" required
                                    :class="modal.errors.firstName ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-amber-400'"
                                    class="w-full px-4 py-3 rounded-xl border bg-gray-50 text-sm focus:outline-none focus:ring-2 transition" placeholder="Prénom">
                             <div x-show="modal.errors.firstName" class="text-[10px] text-red-500 mt-1 font-semibold" x-text="modal.errors.firstName"></div>
                         </div>
                         <div>
-                            <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Last Name / Nom *</label>
+                            <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">{{ 'Last Name'|trans }} *</label>
                             <input type="text" x-model="modal.form.lastName" id="crud_lastName" minlength="2" required
                                    :class="modal.errors.lastName ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-amber-400'"
                                    class="w-full px-4 py-3 rounded-xl border bg-gray-50 text-sm focus:outline-none focus:ring-2 transition" placeholder="Nom">
@@ -792,7 +895,7 @@
                     <!-- Password -->
                     <div>
                         <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">
-                            Password / Mot de passe <span x-show="modal.editing" class="font-normal normal-case text-gray-400">(leave blank to keep current / laisser vide pour ne pas changer)</span>
+                            {{ 'Password'|trans }} <span x-show="modal.editing" class="font-normal normal-case text-gray-400">({{ 'leave blank to keep current'|trans }})</span>
                             <span x-show="!modal.editing">*</span>
                         </label>
                         <div class="relative">
@@ -810,7 +913,7 @@
 
                     <!-- Phone -->
                     <div>
-                        <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Phone / Téléphone</label>
+                        <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">{{ 'Phone'|trans }}</label>
                         <input type="tel" x-model="modal.form.phone" id="crud_phone"
                                pattern="[+]?[0-9 \-().]{6,20}"
                                :class="modal.errors.phone ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-amber-400'"
@@ -821,24 +924,24 @@
                     <!-- Role & Status -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Role / Rôle *</label>
+                            <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">{{ 'Role'|trans }} *</label>
                             <select x-model="modal.form.role" id="crud_role" required
                                     :class="modal.errors.role ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-amber-400'"
                                     class="w-full px-4 py-3 rounded-xl border bg-gray-50 text-sm focus:outline-none focus:ring-2 transition">
-                                <option value="ROLE_USER">User / Utilisateur</option>
-                                <option value="ROLE_PSYCHOLOGUE">Psychologist / Psychologue</option>
+                                <option value="ROLE_USER">{{ 'User'|trans }}</option>
+                                <option value="ROLE_PSYCHOLOGUE">{{ 'Psychologist'|trans }}</option>
                                 <option value="ROLE_ADMIN">Admin</option>
                             </select>
                             <div x-show="modal.errors.role" class="text-[10px] text-red-500 mt-1 font-semibold" x-text="modal.errors.role"></div>
                         </div>
                         <div x-show="modal.editing">
-                            <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">Status / Statut *</label>
+                            <label class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant mb-1 block">{{ 'Status'|trans }} *</label>
                             <select x-model="modal.form.status" id="crud_status"
                                     :class="modal.errors.status ? 'border-red-400 ring-1 ring-red-300' : 'border-outline/30 focus:ring-amber-400'"
                                     class="w-full px-4 py-3 rounded-xl border bg-gray-50 text-sm focus:outline-none focus:ring-2 transition">
-                                <option value="ACTIVE">Active / Actif</option>
-                                <option value="BLOCKED">Blocked / Bloqué</option>
-                                <option value="PENDING">Pending / En attente</option>
+                                <option value="ACTIVE">{{ 'Active'|trans }}</option>
+                                <option value="BLOCKED">{{ 'Blocked'|trans }}</option>
+                                <option value="PENDING">{{ 'Pending'|trans }}</option>
                             </select>
                             <div x-show="modal.errors.status" class="text-[10px] text-red-500 mt-1 font-semibold" x-text="modal.errors.status"></div>
                         </div>
@@ -847,7 +950,7 @@
                     <!-- Submit -->
                     <div class="flex gap-3 pt-2">
                         <button type="button" @click="modal.open = false"
-                                class="flex-1 py-3.5 rounded-2xl border border-outline/40 text-sm font-bold text-on-surface-variant hover:bg-gray-50 transition-colors">Cancel / Annuler</button>
+                                class="flex-1 py-3.5 rounded-2xl border border-outline/40 text-sm font-bold text-on-surface-variant hover:bg-gray-50 transition-colors">{{ 'Cancel'|trans }}</button>
                         <button type="submit"
                                 :disabled="modal.loading"
                                 class="flex-2 px-8 py-3.5 rounded-2xl bg-amber-500 text-white text-sm font-bold shadow-lg shadow-amber-200 hover:bg-amber-600 active:scale-95 transition-all disabled:opacity-60 flex items-center gap-2">
@@ -895,6 +998,26 @@ function adminSystem() {
 
         // ── Ban dropdown — which report card is open ────────────────────
         banMenuOpen: null,
+
+        // ── Revert Sanction (Unban or Remove Chat Lock) ───────────────
+        async revertSanction(id, type) {
+            if (!confirm(`Revert this ${type.replace('_', ' ')}?`)) return;
+            try {
+                const res = await fetch(`/admin/sanctions/${id}/revert?type=${type}`, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    this.flashMsg('Sanction reverted successfully.');
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    this.flashMsg(data.error || 'Could not revert sanction.', 'error');
+                }
+            } catch (e) {
+                this.flashMsg('Network error.', 'error');
+            }
+        },
 
         // ── Existing actions ──────────────────────────────────────
         async blockUser(userId) {

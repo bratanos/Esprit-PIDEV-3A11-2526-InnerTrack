@@ -111,6 +111,28 @@ class AdminController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
+    #[Route('/sanctions/{id}/revert', name: 'sanction_revert', methods: ['POST'])]
+    public function revertSanction(int $id, Request $request): JsonResponse
+    {
+        $type = $request->query->get('type');
+
+        if ($type === 'ACCOUNT_BAN') {
+            $user = $this->em->getRepository(User::class)->find($id);
+            if ($user) {
+                $user->setStatus('ACTIVE');
+            }
+        } elseif ($type === 'CHAT_LOCK') {
+            $lock = $this->em->getRepository(ChatLock::class)->find($id);
+            if ($lock) {
+                $lock->setIsActive(false);
+            }
+        }
+
+        $this->em->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
     #[Route('/chat-lock/{id}/remove', name: 'chat_lock_remove', methods: ['POST'])]
     public function removeChatLock(ChatLock $lock): JsonResponse
     {
@@ -273,7 +295,7 @@ class AdminController extends AbstractController
             ]
         )->fetchAllAssociative();
 
-        // ── Build chat log string (newest-first, trimmed to 120 chars) ────
+
         $messages = array_reverse($messages); // show oldest→newest in prompt
         $chatLog = '';
         foreach ($messages as $msg) {
@@ -281,7 +303,7 @@ class AdminController extends AbstractController
             $chatLog .= "{$msg['first_name']}: {$text}\n";
         }
 
-        // ── Build Gemini prompt (compact) ─────────────────────────────────
+
         $reason  = $report->getReason();
         $details = mb_substr($report->getDetails() ?? 'None', 0, 200);
         $rName   = $reporter->getFirstName();
@@ -298,7 +320,7 @@ class AdminController extends AbstractController
 
         $prompt .= 'Reply ONLY with JSON: {"verdict":"VALID|INVALID|UNCERTAIN","confidence":"HIGH|MEDIUM|LOW","summary":"1-2 sentences","flagged_messages":[],"recommendation":"brief admin note"}';
 
-        // ── Call Gemini API (retry up to 3x on 429 rate limit) ───────────
+//Call Gemini API (retry up to 3x on 429 rate limit)
         $apiKey = $_ENV['GEMINI_API_KEY'] ?? '';
         $url    = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}";
 

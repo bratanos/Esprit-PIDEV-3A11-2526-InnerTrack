@@ -1,77 +1,136 @@
+2 hours ago: 2 hours ago
+Accept: Accept
+Active: Active
+Active Patients: Active Patients
+All statuses: All statuses
+Are you sure you want to delete: Are you sure you want to delete
+Blocked: Blocked
+Cancel: Cancel
+Clinical Psychologist: Clinical Psychologist
+Community Reports: Community Reports
+Completed your check-in for 7 days.: ''
+Create user: Create user
+Decline: Decline
+Delete: Delete
+Delete User: Delete User
+Dive into this week's curated exercise.: ''
+Dr. Rossi added the "Morning Reflection" module.: ''
+Edit: Edit
+Edit Profile: Edit Profile
+Edit user: Edit user
+First Name: First Name
+Global Patient Progress: Global Patient Progress
+Goal Reached: Goal Reached
+Last Name: Last Name
+Monthly Signups: Monthly Signups
+New Milestone!: New Milestone!
+No pending contact requests. You're all caught up!: ' You''Re All Caught Up!'
+No registration data yet: No registration data yet
+No specific message provided...: ''
+Password: Password
+Patient Name: Patient Name
+Pending: Pending
+Pending Contact Requests: Pending Contact Requests
+Pending Requests: Pending Requests
+Phone: Phone
+Post content: Post content
+Psychologist: Psychologist
+Recent Conversations: Recent Conversations
+Reported user: Reported user
+Role: Role
+Save User: Save User
+Secure drop: Secure drop
+Start Your Journey: Start Your Journey
+Started a new conversation: Started a new conversation
+Status: Status
+TODAY: TODAY
+Target: Target
+Therapy Plan Update: Therapy Plan Update
+This action cannot be undone.: ''
+Unread Notifs: Unread Notifs
+User: User
+View Activity History: View Activity History
+View all: View all
+Weekly Focus: Weekly Focus
+'Welcome back, ': 'Welcome back, '
+Yesterday: Yesterday
+You have no active conversations yet.: ''
+Your sanctuary for patient care and therapeutic management.: ''
+common:
+  active: Systems Active
+  cancel: Cancel
+  details: Details
+  privacy: Privacy
+  search: Search resources...
+  status: Global Status
+  support: Support
+  welcome: Welcome
+dashboard:
+  admin: Administrator
+  api_load: API Load
+  db_latency: DB Latency
+  messages_hour: msgs/hr
+  overview: Overview
+  patient: Patient
+  reports:
+    action: Action
+    ban: Ban User
+    clean_inbox: Clean Inbox
+    community_clean: Community Clean
+    date: Date
+    delete_post: Delete Post
+    dismiss: Dismiss
+    no_pending: No pending reports
+    reason: Reason
+    reported: Reported User
+    reporter: Reporter
+  security_score: Security Score
+  stats:
+    active: Active Accounts
+    blocked: Blocked Accounts
+    new_month: New this month
+    pending_reports: Pending Reports
+    pending_verif: Pending Verification
+    total_clients: Total Clients
+    total_therapists: Total Therapists
+    total_users: Total Users
+  system_health: System Health
+  tabs:
+    community: Community Reports
+    messages: Messaging Reports
+    users: Users Management
+  therapist: Therapist
+  therapist_dashboard:
+    no_appointments: No appointments today
+    revenue: Revenue
+    sessions: Sessions
+    today: Today's Appointments
+    total_patients: Total Patients
+  user_dashboard:
+    active_sessions: Active Sessions
+    activity: Activity
+    book_session: Book Session
+    find_therapist: Find Therapist
+    messages: Messages
+    next_appointment: Next Appointment
+    quick_actions: Quick Actions
+    view_history: View History
+  users:
+    actions: Actions
+    id: ID
+    joined: Joined
+    name: Name
+    role: Role
+    status: Status
+leave blank to keep current: leave blank to keep current
+map:
+  set_location: Set Clinic Location
+  setup_banner: Click anywhere on the map to set your clinic location.
 nav:
   dashboard: Dashboard
+  logout: Log Out
   map: Find Therapist
   messages: Messages
   notifications: Notifications
   profile: Profile
   settings: Settings
-  logout: Log Out
-common:
-  search: Search resources...
-  privacy: Privacy
-  support: Support
-  welcome: Welcome
-  status: Global Status
-  active: Systems Active
-  cancel: Cancel
-  details: Details
-dashboard:
-  therapist: Therapist
-  patient: Patient
-  admin: Administrator
-  overview: Overview
-  stats: 
-    total_users: Total Users
-    total_clients: Total Clients
-    total_therapists: Total Therapists
-    new_month: New this month
-    blocked: Blocked Accounts
-    active: Active Accounts
-    pending_verif: Pending Verification
-    pending_reports: Pending Reports
-  system_health: System Health
-  db_latency: DB Latency
-  api_load: API Load
-  messages_hour: msgs/hr
-  security_score: Security Score
-  tabs:
-    users: Users Management
-    messages: Messaging Reports
-    community: Community Reports
-  users:
-    id: ID
-    name: Name
-    role: Role
-    status: Status
-    joined: Joined
-    actions: Actions
-  reports:
-    reporter: Reporter
-    reported: Reported User
-    reason: Reason
-    date: Date
-    action: Action
-    no_pending: No pending reports
-    clean_inbox: Clean Inbox
-    community_clean: Community Clean
-    dismiss: Dismiss
-    ban: Ban User
-    delete_post: Delete Post
-  user_dashboard:
-    active_sessions: Active Sessions
-    messages: Messages
-    next_appointment: Next Appointment
-    quick_actions: Quick Actions
-    book_session: Book Session
-    find_therapist: Find Therapist
-    view_history: View History
-    activity: Activity
-  therapist_dashboard:
-    total_patients: Total Patients
-    sessions: Sessions
-    revenue: Revenue
-    today: Today's Appointments
-    no_appointments: No appointments today
-map:
-  set_location: Set Clinic Location
-  setup_banner: Click anywhere on the map to set your clinic location.

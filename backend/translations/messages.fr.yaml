@@ -1,77 +1,137 @@
+2 hours ago: Il y a 2h
+Accept: Accepter
+Active: Actif
+Active Patients: Patients Actifs
+All statuses: Tous les statuts
+Are you sure you want to delete: Êtes-vous sûr de vouloir supprimer
+Blocked: Bloqué
+Cancel: Annuler
+Clinical Psychologist: Psychologue Clinicien
+Community Reports: Signalements communautaires
+Completed your check-in for 7 days.: Suivi complété sur 7 jours.
+Create user: Créer un utilisateur
+Decline: Refuser
+Delete: Supprimer
+Delete User: Supprimer l'utilisateur
+Dive into this week's curated exercise.: Plongez dans cet exercice conçu pour vous.
+Dr. Rossi added the "Morning Reflection" module.: Dr. Rossi a ajouté le module "Réflexion".
+Edit: Modifier
+Edit Profile: Modifier
+Edit user: Modifier l'utilisateur
+First Name: Prénom
+Global Patient Progress: Progrès Global
+Goal Reached: Objectif Atteint
+Last Name: Nom
+Monthly Signups: Inscriptions mensuelles
+New Milestone!: Nouvelle étape !
+No pending contact requests. You're all caught up!: Aucune demande en attente.
+No registration data yet: Aucune inscription enregistrée
+No specific message provided...: Aucun message spécifique...
+Password: Mot de passe
+Patient Name: Nom
+Pending: En attente
+Pending Contact Requests: Demandes de contact
+Pending Requests: Demandes
+Phone: Téléphone
+Post content: Contenu
+Psychologist: Psychologue
+Recent Conversations: Conversations récentes
+Reported user: Cible
+Role: Rôle
+Save User: Enregistrer
+Secure drop: Dépôt sécurisé
+Start Your Journey: Commencer
+Started a new conversation: Nouvelle conversation
+Status: Statut
+TODAY: AUJOURD'HUI
+Target: Cible
+Therapy Plan Update: Mise à jour
+This action cannot be undone.: Cette action est irréversible.
+Unread Notifs: Non Lues
+User: Utilisateur
+View Activity History: Historique d'activité
+View all: Voir tout
+Weekly Focus: Focus de la semaine
+'Welcome back, ': 'Bienvenue, '
+Yesterday: Hier
+You have no active conversations yet.: Aucune conversation active.
+Your sanctuary for patient care and therapeutic management.: Votre espace de soins
+  et de suivi thérapeutique.
+common:
+  active: Systèmes Actifs
+  cancel: Annuler
+  details: Détails
+  privacy: Confidentialité
+  search: Rechercher des ressources...
+  status: État global
+  support: Support
+  welcome: Bienvenue
+dashboard:
+  admin: Administrateur
+  api_load: Charge API
+  db_latency: Latence BDD
+  messages_hour: msgs/h
+  overview: Vue d'ensemble
+  patient: Patient
+  reports:
+    action: Action
+    ban: Bloquer
+    clean_inbox: Canal de messagerie fluide
+    community_clean: Espace communautaire sûr
+    date: Date
+    delete_post: Supprimer la publication
+    dismiss: Passer
+    no_pending: Aucun signalement en attente
+    reason: Raison
+    reported: Utilisateur signalé
+    reporter: Signalé par
+  security_score: Score de Sécurité
+  stats:
+    active: Comptes Actifs
+    blocked: Comptes Bloqués
+    new_month: Nouveaux ce mois
+    pending_reports: Signalements en attente
+    pending_verif: En attente de vérification
+    total_clients: Clients
+    total_therapists: Thérapeutes
+    total_users: Utilisateurs Totaux
+  system_health: Santé du système
+  tabs:
+    community: Signalements (Communauté)
+    messages: Signalements (Messages)
+    users: Gestion des utilisateurs
+  therapist: Thérapeute
+  therapist_dashboard:
+    no_appointments: Aucun rendez-vous aujourd'hui
+    revenue: Revenus
+    sessions: Séances
+    today: Rendez-vous d'aujourd'hui
+    total_patients: Patients Totaux
+  user_dashboard:
+    active_sessions: Séances Actives
+    activity: Activité
+    book_session: Réserver une séance
+    find_therapist: Trouver un thérapeute
+    messages: Messages
+    next_appointment: Prochain Rendez-vous
+    quick_actions: Actions Rapides
+    view_history: Voir l'historique
+  users:
+    actions: Actions
+    id: ID
+    joined: Inscrit le
+    name: Nom
+    role: Rôle
+    status: Statut
+leave blank to keep current: laisser vide pour ne pas changer
+map:
+  set_location: Définir ma position de cabinet
+  setup_banner: Cliquez n'importe où sur la carte pour placer votre cabinet.
 nav:
   dashboard: Tableau de bord
+  logout: Déconnexion
   map: Trouver un thérapeute
   messages: Messages
   notifications: Notifications
   profile: Profil
   settings: Paramètres
-  logout: Déconnexion
-common:
-  search: Rechercher des ressources...
-  privacy: Confidentialité
-  support: Support
-  welcome: Bienvenue
-  status: État global
-  active: Systèmes Actifs
-  cancel: Annuler
-  details: Détails
-dashboard:
-  therapist: Thérapeute
-  patient: Patient
-  admin: Administrateur
-  overview: Vue d'ensemble
-  stats: 
-    total_users: Utilisateurs Totaux
-    total_clients: Clients
-    total_therapists: Thérapeutes
-    new_month: Nouveaux ce mois
-    blocked: Comptes Bloqués
-    active: Comptes Actifs
-    pending_verif: En attente de vérification
-    pending_reports: Signalements en attente
-  system_health: Santé du système
-  db_latency: Latence BDD
-  api_load: Charge API
-  messages_hour: msgs/h
-  security_score: Score de Sécurité
-  tabs:
-    users: Gestion des utilisateurs
-    messages: Signalements (Messages)
-    community: Signalements (Communauté)
-  users:
-    id: ID
-    name: Nom
-    role: Rôle
-    status: Statut
-    joined: Inscrit le
-    actions: Actions
-  reports:
-    reporter: Signalé par
-    reported: Utilisateur signalé
-    reason: Raison
-    date: Date
-    action: Action
-    no_pending: Aucun signalement en attente
-    clean_inbox: Canal de messagerie fluide
-    community_clean: Espace communautaire sûr
-    dismiss: Passer
-    ban: Bloquer
-    delete_post: Supprimer la publication
-  user_dashboard:
-    active_sessions: Séances Actives
-    messages: Messages
-    next_appointment: Prochain Rendez-vous
-    quick_actions: Actions Rapides
-    book_session: Réserver une séance
-    find_therapist: Trouver un thérapeute
-    view_history: Voir l'historique
-    activity: Activité
-  therapist_dashboard:
-    total_patients: Patients Totaux
-    sessions: Séances
-    revenue: Revenus
-    today: Rendez-vous d'aujourd'hui
-    no_appointments: Aucun rendez-vous aujourd'hui
-map:
-  set_location: Définir ma position de cabinet
-  setup_banner: Cliquez n'importe où sur la carte pour placer votre cabinet.

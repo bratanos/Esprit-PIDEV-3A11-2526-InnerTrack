@@ -6,8 +6,6 @@ use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategorieRepository;
-use App\Repository\LearningPathRepository;
-use App\Repository\PathArticleRepository;
 use App\Repository\TagRepository;
 use App\Service\ReadabilityService;
 use App\Service\OpenLibraryService;
@@ -38,7 +36,6 @@ final class ArticleController extends AbstractController
         Request $request,
         ArticleRepository $articleRepository,
         CategorieRepository $categorieRepository,
-        LearningPathRepository $pathRepository,
         TagRepository $tagRepository
     ): Response {
             $q     = trim($request->query->get('q', ''));
@@ -57,7 +54,6 @@ final class ArticleController extends AbstractController
             'pager'      => $pager,
             'articles'   => $pager->getCurrentPageResults(),
             'categories' => $categorieRepository->findAllOrderedByNom(),
-            'paths'      => $pathRepository->findAllWithCreator(),
             'tags'       => $tagRepository->findAllWithCount(),
             'activeTag'  => $tag,
         ]);
@@ -101,29 +97,11 @@ final class ArticleController extends AbstractController
     #[Route('/article/{id}', name: 'app_article_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(
         Article $article,
-        LearningPathRepository $pathRepository,
-        PathArticleRepository $paRepository,
         TagRepository $tagRepository,
         OpenLibraryService $openLibrary,
         FreeSoundService $freesound,
         AiInsightService $aiInsight
     ): Response {
-        $paths       = $pathRepository->findByArticle($article->getId());
-        $nextStep    = null;
-        $currentStep = null;
-        $totalSteps  = 0;
-        $currentPath = null;
-
-        if (!empty($paths)) {
-            $currentPath = $paths[0];
-            $entry = $paRepository->findEntry($currentPath->getId(), $article->getId());
-            if ($entry) {
-                $currentStep = $entry->getArticleOrder();
-                $totalSteps  = $paRepository->countSteps($currentPath->getId());
-                $nextStep    = $paRepository->findNext($currentPath->getId(), $currentStep);
-            }
-        }
-
         $relatedArticles = $tagRepository->findRelatedArticles($article, 3);
 
         $wikiSummary = null;
@@ -189,10 +167,6 @@ final class ArticleController extends AbstractController
         $aiAnalysis = $aiInsight->analyze($article);
         return $this->render('article/show.html.twig', [
             'article'         => $article,
-            'currentPath'     => $currentPath,
-            'currentStep'     => $currentStep,
-            'totalSteps'      => $totalSteps,
-            'nextStep'        => $nextStep,
             'relatedArticles' => $relatedArticles,
             'wikiSummary' => $wikiSummary,
             'bookRecommendations' => $bookRecommendations,
