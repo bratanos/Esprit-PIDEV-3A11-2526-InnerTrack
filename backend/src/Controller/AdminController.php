@@ -39,8 +39,9 @@ class AdminController extends AbstractController
         /** @var User $admin */
         $admin = $this->getUser();
 
-        $data = json_decode($request->getContent(), true);
-        $action = $data['action'] ?? null;
+        $data          = json_decode($request->getContent(), true);
+        $action        = $data['action']        ?? null;
+        $durationHours = $data['durationHours'] ?? null; // null = permanent ban
 
         if ($report->getStatus() === 'RESOLVED') {
             return new JsonResponse(['error' => 'Déjà résolu'], 400);
@@ -53,7 +54,20 @@ class AdminController extends AbstractController
         if ($action === 'BLOCK_USER') {
             $reportedUser = $report->getReported();
             if (!str_contains($reportedUser->getPrimaryRole(), 'ADMIN')) {
-                $reportedUser->setStatus('BLOCKED');
+                if ($durationHours) {
+                    // Temporary timeout — create a timed ChatLock
+                    $lock = new ChatLock();
+                    $lock->setUser($reportedUser);
+                    $lock->setReason('Report #' . $report->getId() . ': ' . $report->getReason());
+                    $lock->setLockedBy($admin->getId());
+                    $until = new \DateTime();
+                    $until->modify("+{$durationHours} hours");
+                    $lock->setLockedUntil($until);
+                    $this->em->persist($lock);
+                } else {
+                    // Permanent ban
+                    $reportedUser->setStatus('BLOCKED');
+                }
             }
         }
 
@@ -245,61 +259,52 @@ class AdminController extends AbstractController
         // ── Load conversation messages between the two users ──────────────
         $conn = $this->em->getConnection();
         $messages = $conn->executeQuery(
-            'SELECT m.content, m.sent_at, u.first_name, u.last_name
+            'SELECT m.content, u.first_name
              FROM message m
              JOIN conversation c ON m.conversation_id = c.id
              JOIN user u ON m.sender_id = u.id
              WHERE (c.client_id = ? AND c.therapist_id = ?)
                 OR (c.client_id = ? AND c.therapist_id = ?)
-             ORDER BY m.sent_at ASC
-             LIMIT 80',
+             ORDER BY m.sent_at DESC
+             LIMIT 20',
             [
                 $reporter->getId(), $reported->getId(),
                 $reported->getId(), $reporter->getId(),
             ]
         )->fetchAllAssociative();
 
-        // ── Build chat log string ─────────────────────────────────────────
+        // ── Build chat log string (newest-first, trimmed to 120 chars) ────
+        $messages = array_reverse($messages); // show oldest→newest in prompt
         $chatLog = '';
         foreach ($messages as $msg) {
-            $chatLog .= "[{$msg['sent_at']}] {$msg['first_name']} {$msg['last_name']}: {$msg['content']}\n";
+            $text     = mb_substr($msg['content'], 0, 120);
+            $chatLog .= "{$msg['first_name']}: {$text}\n";
         }
 
-        // ── Build Gemini prompt ───────────────────────────────────────────
-        $prompt  = "You are a professional content moderation AI for InnerTrack, ";
-        $prompt .= "a mental health support platform connecting patients with licensed therapists.\n\n";
-        $prompt .= "A user has submitted a report. Analyze the conversation history between the two ";
-        $prompt .= "users and determine whether the report is justified.\n\n";
-        $prompt .= "REPORT DETAILS:\n";
-        $prompt .= "- Reporter: {$reporter->getFirstName()} {$reporter->getLastName()}\n";
-        $prompt .= "- Reported user: {$reported->getFirstName()} {$reported->getLastName()}\n";
-        $prompt .= "- Reason: {$report->getReason()}\n";
-        $prompt .= "- Details: " . ($report->getDetails() ?? 'None provided') . "\n\n";
+        // ── Build Gemini prompt (compact) ─────────────────────────────────
+        $reason  = $report->getReason();
+        $details = mb_substr($report->getDetails() ?? 'None', 0, 200);
+        $rName   = $reporter->getFirstName();
+        $dName   = $reported->getFirstName();
+
+        $prompt  = "Moderation AI for a mental health chat platform.\n";
+        $prompt .= "Report — Reporter: {$rName} | Reported: {$dName} | Reason: {$reason} | Details: {$details}\n";
 
         if ($chatLog) {
-            $prompt .= "CONVERSATION HISTORY (" . count($messages) . " messages, oldest first):\n---\n";
-            $prompt .= $chatLog;
-            $prompt .= "---\n\n";
+            $prompt .= "Last " . count($messages) . " messages:\n" . $chatLog . "\n";
         } else {
-            $prompt .= "CONVERSATION HISTORY: No messages found between these two users.\n\n";
+            $prompt .= "No messages found.\n";
         }
 
-        $prompt .= "Respond ONLY with a valid JSON object — no markdown, no extra text:\n";
-        $prompt .= "{\n";
-        $prompt .= '  "verdict": "VALID" | "INVALID" | "UNCERTAIN",' . "\n";
-        $prompt .= '  "confidence": "HIGH" | "MEDIUM" | "LOW",' . "\n";
-        $prompt .= '  "summary": "2-3 sentence analysis explaining your verdict",' . "\n";
-        $prompt .= '  "flagged_messages": ["exact quote from chat"] or [],' . "\n";
-        $prompt .= '  "recommendation": "Short advisory note for the admin (no automatic action will be taken)"' . "\n";
-        $prompt .= "}";
+        $prompt .= 'Reply ONLY with JSON: {"verdict":"VALID|INVALID|UNCERTAIN","confidence":"HIGH|MEDIUM|LOW","summary":"1-2 sentences","flagged_messages":[],"recommendation":"brief admin note"}';
 
         // ── Call Gemini API (retry up to 3x on 429 rate limit) ───────────
         $apiKey = $_ENV['GEMINI_API_KEY'] ?? '';
-        $url    = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={$apiKey}";
+        $url    = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}";
 
         $payload = json_encode([
             'contents'         => [['parts' => [['text' => $prompt]]]],
-            'generationConfig' => ['temperature' => 0.1, 'maxOutputTokens' => 1024],
+            'generationConfig' => ['temperature' => 0.1, 'maxOutputTokens' => 512],
         ]);
 
         $response = null;
@@ -307,7 +312,7 @@ class AdminController extends AbstractController
 
         for ($attempt = 0; $attempt < 3; $attempt++) {
             if ($attempt > 0) {
-                sleep(4); // wait 4 s before each retry
+                sleep(10); // wait 10 s before each retry (free-tier RPM limit)
             }
             $ch = curl_init($url);
             curl_setopt_array($ch, [
@@ -325,11 +330,13 @@ class AdminController extends AbstractController
         }
 
         if ($httpCode === 429) {
-            return new JsonResponse(['error' => 'AI rate limit reached — please wait a moment and try again'], 429);
+            $errorDetails = json_decode($response, true)['error']['message'] ?? 'Rate limit exceeded';
+            return new JsonResponse(['error' => "AI limit reached: {$errorDetails}"], 429);
         }
 
         if (!$response || $httpCode !== 200) {
-            return new JsonResponse(['error' => 'AI service unavailable (HTTP ' . $httpCode . ')'], 503);
+            $errorDetails = json_decode($response, true)['error']['message'] ?? 'Unknown error';
+            return new JsonResponse(['error' => "AI service error (HTTP {$httpCode}): {$errorDetails}"], 503);
         }
 
         // ── Parse Gemini response ─────────────────────────────────────────
