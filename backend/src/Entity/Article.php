@@ -17,6 +17,7 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_Article', type: 'integer')]
+    /** @phpstan-ignore property.unusedType */
     private ?int $id = null;
 
     #[ORM\Column(name: 'titre', type: 'string', length: 255, unique: true)]
@@ -54,10 +55,10 @@ class Article
     #[Assert\NotNull(message: 'Please select a category.')]
     private ?Categorie $categorie = null;
 
-    // No Assert\Choice here — readability is set automatically by ReadabilityService
     #[ORM\Column(name: 'readability', type: 'string', length: 50, nullable: true)]
     private ?string $readability = null;
 
+    /** @var Collection<int, Tag> */
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'articles')]
     #[ORM\JoinTable(
         name: 'article_tag',
@@ -92,6 +93,7 @@ class Article
     public function getReadability(): ?string { return $this->readability; }
     public function setReadability(?string $readability): static { $this->readability = $readability; return $this; }
 
+    /** @return Collection<int, Tag> */
     public function getTags(): Collection { return $this->tags; }
 
     public function addTag(Tag $tag): static

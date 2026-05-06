@@ -96,6 +96,7 @@ min-h-screen flex flex-col pointer-events-auto
 				{{ _self.nav_link(path('app_messages'), 'nav.messages'|trans, 'chat_bubble', app.request.get('_route') == 'app_messages', unread_messages_count) }}
 				{{ _self.nav_link(path('testpsy_index'), 'Tests Psy', 'self_improvement', app.request.get('_route') starts with 'testpsy') }}
 				{{ _self.nav_link(path('app_event_index'), 'Événements', 'event', app.request.get('_route') starts with 'app_event') }}
+				{{ _self.nav_link(path('app_article_index'), 'Articles', 'article', app.request.get('_route') starts with 'app_article') }}
 			{% endif %}
 			{{ _self.nav_link(path('app_community_index'), 'community'|trans, 'forum', app.request.get('_route') == 'app_community_index') }}
 

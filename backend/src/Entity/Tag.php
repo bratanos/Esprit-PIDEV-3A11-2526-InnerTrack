@@ -14,11 +14,13 @@ class Tag
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_tag', type: 'integer')]
+    /** @phpstan-ignore property.unusedType */
     private ?int $id = null;
 
     #[ORM\Column(name: 'nom', type: 'string', length: 50, unique: true)]
     private ?string $nom = null;
 
+    /** @var Collection<int, Article> */
     #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'tags')]
     private Collection $articles;
 
@@ -32,6 +34,7 @@ class Tag
     public function getNom(): ?string { return $this->nom; }
     public function setNom(string $nom): static { $this->nom = $nom; return $this; }
 
+    /** @return Collection<int, Article> */
     public function getArticles(): Collection { return $this->articles; }
 
     public function __toString(): string { return $this->nom ?? ''; }
