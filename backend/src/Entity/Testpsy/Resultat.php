@@ -11,10 +11,7 @@ class Resultat
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_resultat', type: 'integer')]
-<<<<<<< HEAD
-=======
     /** @phpstan-ignore property.onlyRead */
->>>>>>> origin/feature/salma-TestSymphony+java
     private int $idResultat;
 
     #[ORM\Column(name: 'id_test', type: 'integer')]

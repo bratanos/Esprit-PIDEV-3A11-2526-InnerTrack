@@ -13,13 +13,7 @@ class TwilioService
         private readonly string $fromNumber,
     ) {}
 
-<<<<<<< HEAD
-    // ══════════════════════════════════════════
-    // MÉTHODE DE BASE — WhatsApp
-    // ══════════════════════════════════════════
-=======
     /** @return array<string, mixed> */
->>>>>>> origin/feature/salma-TestSymphony+java
     public function envoyerWhatsApp(string $numero, string $message): array
     {
         $url = "https://api.twilio.com/2010-04-01/Accounts/{$this->accountSid}/Messages.json";
@@ -42,13 +36,7 @@ class TwilioService
         return $data;
     }
 
-<<<<<<< HEAD
-    // ══════════════════════════════════════════
-    // ALERTE NOUVEAU TEST
-    // ══════════════════════════════════════════
-=======
     /** @return array<string, mixed> */
->>>>>>> origin/feature/salma-TestSymphony+java
     public function envoyerAlerteNouveauTest(string $numero, string $prenom, string $titreTest, string $typeTest): array
     {
         $message = sprintf(
@@ -64,13 +52,7 @@ class TwilioService
         return $this->envoyerWhatsApp($numero, $message);
     }
 
-<<<<<<< HEAD
-    // ══════════════════════════════════════════
-    // RÉSULTAT DE TEST
-    // ══════════════════════════════════════════
-=======
     /** @return array<string, mixed> */
->>>>>>> origin/feature/salma-TestSymphony+java
     public function envoyerResultatTest(
         string $numero,
         string $prenom,
@@ -95,13 +77,7 @@ class TwilioService
         return $this->envoyerWhatsApp($numero, $message);
     }
 
-<<<<<<< HEAD
-    // ══════════════════════════════════════════
-    // RAPPEL J+30
-    // ══════════════════════════════════════════
-=======
     /** @return array<string, mixed> */
->>>>>>> origin/feature/salma-TestSymphony+java
     public function envoyerRappel(string $numero, string $prenom, string $titreTest, string $dateTest): array
     {
         $message = sprintf(

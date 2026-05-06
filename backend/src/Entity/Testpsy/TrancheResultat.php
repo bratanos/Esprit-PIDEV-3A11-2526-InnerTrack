@@ -11,10 +11,7 @@ class TrancheResultat
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_tranche', type: 'integer')]
-<<<<<<< HEAD
-=======
     /** @phpstan-ignore property.onlyRead */
->>>>>>> origin/feature/salma-TestSymphony+java
     private int $idTranche;
 
     #[ORM\ManyToOne(targetEntity: TestPsychologique::class, inversedBy: 'tranches')]
