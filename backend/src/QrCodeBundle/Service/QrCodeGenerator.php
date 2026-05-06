@@ -4,16 +4,26 @@ namespace App\QrCodeBundle\Service;
 
 use App\Entity\Journal\EntreeJournal;
 use App\Entity\Journal\Habitude;
-use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\RoundBlockSizeMode;
 
 class QrCodeGenerator
 {
     public function generatePng(string $texte): string
     {
-        $qrCode = new QrCode($texte);
-        $writer = new PngWriter();
-        $result = $writer->write($qrCode);
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->data($texte)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
+            ->build();
+
         return $result->getString();
     }
 
