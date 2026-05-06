@@ -106,6 +106,7 @@ class ComposerStaticInit2156b084aed439304bc09f197da69223
         'c899bf3d7cf083b79d5e2b2575ed07d5' => __DIR__ . '/..' . '/lorenzo/pinky/src/pinky.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
+        '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         '4368e4d537f3da342a5a97079f340105' => __DIR__ . '/..' . '/twig/cssinliner-extra/Resources/functions.php',
@@ -243,11 +244,6 @@ class ComposerStaticInit2156b084aed439304bc09f197da69223
             'Lexik\\Bundle\\JWTAuthenticationBundle\\' => 37,
             'Lcobucci\\JWT\\' => 13,
         ),
-        'K' => 
-        array (
-            'Knp\\Snappy\\' => 11,
-            'Knp\\Bundle\\SnappyBundle\\' => 24,
-        ),
         'F' => 
         array (
             'FontLib\\' => 8,
@@ -297,9 +293,9 @@ class ComposerStaticInit2156b084aed439304bc09f197da69223
     public static $prefixDirsPsr4 = array (
         'phpDocumentor\\Reflection\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
+            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'ZipStream\\' => 
         array (
@@ -708,14 +704,6 @@ class ComposerStaticInit2156b084aed439304bc09f197da69223
         'Lcobucci\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/lcobucci/jwt/src',
-        ),
-        'Knp\\Snappy\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/knplabs/knp-snappy/src/Knp/Snappy',
-        ),
-        'Knp\\Bundle\\SnappyBundle\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/knplabs/knp-snappy-bundle/src',
         ),
         'FontLib\\' => 
         array (

@@ -393,8 +393,7 @@ class PredectionController extends AbstractController
         $f[0] = $scoreMax > 0 ? (float)$r->getScoreTotal() / $scoreMax : 0.5;
 
         $stmt = $this->connection->executeQuery(
-            "SELECT rep.points FROM reponse_utilisateur ru 
-             JOIN reponse rep ON ru.id_reponse = rep.id_reponse 
+            "SELECT ru.points FROM reponse_utilisateur ru 
              JOIN question q ON ru.id_question = q.id_question 
              WHERE ru.id_utilisateur = ? AND q.id_test = ? ORDER BY q.id_question",
             [$idU, $r->getIdTest()]

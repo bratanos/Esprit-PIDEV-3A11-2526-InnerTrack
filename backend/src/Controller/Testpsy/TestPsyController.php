@@ -269,6 +269,14 @@ class TestPsyController extends AbstractController
             $em->persist($historique);
             $em->flush();
 
+            // Sauvegarder les réponses individuelles pour l'IA
+            foreach ($reponses as $qId => $pts) {
+                $em->getConnection()->executeStatement(
+                    "INSERT INTO reponse_utilisateur (id_utilisateur, id_question, points, date_reponse) VALUES (?, ?, ?, NOW())",
+                    [$userId, $qId, $pts]
+                );
+            }
+
             return $this->redirectToRoute('testpsy_resultat', ['id' => $resultat->getIdResultat()]);
         }
 
