@@ -13,6 +13,10 @@ class TestPsychologique
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_test', type: 'integer')]
+<<<<<<< HEAD
+=======
+    /** @phpstan-ignore property.onlyRead */
+>>>>>>> origin/feature/salma-TestSymphony+java
     private int $idTest;
 
     #[ORM\Column(name: 'titre', type: 'string', length: 255)]
@@ -27,9 +31,17 @@ class TestPsychologique
     #[ORM\Column(name: 'nombre_questions', type: 'integer')]
     private int $nombreQuestions;
 
+<<<<<<< HEAD
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class)]
     private Collection $questions;
 
+=======
+    /** @var Collection<int, Question> */
+    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class)]
+    private Collection $questions;
+
+    /** @var Collection<int, TrancheResultat> */
+>>>>>>> origin/feature/salma-TestSymphony+java
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: TrancheResultat::class)]
     private Collection $tranches;
 
@@ -48,6 +60,14 @@ class TestPsychologique
     public function setDescription(?string $description): self { $this->description = $description; return $this; }
     public function getNombreQuestions(): int { return $this->nombreQuestions; }
     public function setNombreQuestions(int $n): self { $this->nombreQuestions = $n; return $this; }
+<<<<<<< HEAD
     public function getQuestions(): Collection { return $this->questions; }
+=======
+
+    /** @return Collection<int, Question> */
+    public function getQuestions(): Collection { return $this->questions; }
+
+    /** @return Collection<int, TrancheResultat> */
+>>>>>>> origin/feature/salma-TestSymphony+java
     public function getTranches(): Collection { return $this->tranches; }
 }

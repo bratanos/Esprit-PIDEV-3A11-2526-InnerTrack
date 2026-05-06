@@ -236,7 +236,7 @@ min-h-screen flex flex-col pointer-events-auto
           {{ active
              ? 'bg-primary text-white font-semibold shadow-md shadow-primary/20'
              : 'text-on-surface-variant hover:bg-gray-50 hover:text-primary' }}">
-	<span class="material-symbols-outlined text-xl">{{ icon }}</span>
+	<span class="material-symbols-outlined text-xl" data-icon="{{ icon }}">{{ icon }}</span>
 	<span class="text-sm flex-1">{{ text }}</span>
 	{% if badge_count > 0 %}
 		<span class="absolute right-3 top-3 w-4 h-4 bg-red-500 text-[10px] text-white flex items-center justify-center rounded-full animate-pulse border-2 border-white">
@@ -245,6 +245,4 @@ min-h-screen flex flex-col pointer-events-auto
 	{% endif %}
 </a>
 {% endmacro %}
-
-{% block body_end %}{% endblock %}
 {% endblock %}

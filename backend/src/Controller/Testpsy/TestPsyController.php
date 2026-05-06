@@ -24,6 +24,10 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 #[Route('/testpsy')]
 class TestPsyController extends AbstractController
 {
+<<<<<<< HEAD
+=======
+    /** @return array<int, array<string, mixed>> */
+>>>>>>> origin/feature/salma-TestSymphony+java
     private function getTypes(EntityManagerInterface $em): array
     {
         return $em->getConnection()
@@ -31,6 +35,10 @@ class TestPsyController extends AbstractController
             ->fetchAllAssociative();
     }
 
+<<<<<<< HEAD
+=======
+    /** @return array<string, mixed>|null */
+>>>>>>> origin/feature/salma-TestSymphony+java
     private function findTranche(EntityManagerInterface $em, int $idTest, int $score): ?array
     {
         $result = $em->getConnection()->executeQuery(
@@ -90,7 +98,11 @@ class TestPsyController extends AbstractController
 
             $bienEtreScore = 0;
             $bienEtreCount = 0;
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> origin/feature/salma-TestSymphony+java
             foreach ($resultatsMap as $idTest => $r) {
                 $testObj = $testsMapForScore[$idTest] ?? null;
                 if ($testObj) {
@@ -99,6 +111,7 @@ class TestPsyController extends AbstractController
 
                     $pct = $r->getPourcentage();
                     $isPositive = (
+<<<<<<< HEAD
                         str_contains($titre, 'estime') || 
                         str_contains($titre, 'resilience') || 
                         str_contains($titre, 'résilience') || 
@@ -107,6 +120,15 @@ class TestPsyController extends AbstractController
                     );
 
                     // Si test négatif (ex: anxiété), on inverse le score (100% de détresse = 0% de bien-être)
+=======
+                        str_contains($titre, 'estime') ||
+                        str_contains($titre, 'resilience') ||
+                        str_contains($titre, 'résilience') ||
+                        str_contains($titre, 'emotionn') ||
+                        str_contains($titre, 'émotionn')
+                    );
+
+>>>>>>> origin/feature/salma-TestSymphony+java
                     if (!$isPositive) {
                         $pct = max(0, 100 - $pct);
                     }
@@ -146,7 +168,11 @@ class TestPsyController extends AbstractController
     #[Route('/{id}/passer', name: 'testpsy_passer', methods: ['GET', 'POST'])]
     public function passer(int $id, Request $request, EntityManagerInterface $em): Response
     {
+<<<<<<< HEAD
         $test      = $em->getRepository(TestPsychologique::class)->find($id);
+=======
+        $test = $em->getRepository(TestPsychologique::class)->find($id);
+>>>>>>> origin/feature/salma-TestSymphony+java
         if (!$test) throw $this->createNotFoundException('Test introuvable.');
 
         $questions = $em->getRepository(Question::class)->findBy(['test' => $test]);
@@ -154,7 +180,10 @@ class TestPsyController extends AbstractController
         if ($request->isMethod('POST')) {
             $reponses = $request->request->all('reponses');
 
+<<<<<<< HEAD
             
+=======
+>>>>>>> origin/feature/salma-TestSymphony+java
             $errors = [];
             foreach ($questions as $q) {
                 if (!isset($reponses[$q->getIdQuestion()])) {
@@ -179,12 +208,19 @@ class TestPsyController extends AbstractController
             $isMBTI = stripos($test->getTitre(), 'mbti') !== false;
 
             if ($isMBTI) {
+<<<<<<< HEAD
                 // Tri par ID pour avoir Q1-5, Q6-10 etc...
                 $qArray = $questions;
                 if (is_array($qArray)) {
                     usort($qArray, fn($a, $b) => $a->getIdQuestion() <=> $b->getIdQuestion());
                 }
                 
+=======
+                // FIX: $questions is already array<int, Question> from findBy()
+                $qArray = $questions;
+                usort($qArray, fn(Question $a, Question $b) => $a->getIdQuestion() <=> $b->getIdQuestion());
+
+>>>>>>> origin/feature/salma-TestSymphony+java
                 $axisE = 0; $axisS = 0; $axisT = 0; $axisJ = 0;
                 $idx = 0;
                 foreach ($qArray as $q) {
@@ -195,13 +231,23 @@ class TestPsyController extends AbstractController
                     else $axisJ += $v;
                     $idx++;
                 }
+<<<<<<< HEAD
                 
                 $typeStr = '';
+=======
+
+                $typeStr  = '';
+>>>>>>> origin/feature/salma-TestSymphony+java
                 $typeStr .= ($axisE >= 13) ? 'E' : 'I';
                 $typeStr .= ($axisS >= 13) ? 'S' : 'N';
                 $typeStr .= ($axisT >= 13) ? 'T' : 'F';
                 $typeStr .= ($axisJ >= 13) ? 'J' : 'P';
+<<<<<<< HEAD
                 
+=======
+
+                /** @var array<string, string> $mbtiDescriptions */
+>>>>>>> origin/feature/salma-TestSymphony+java
                 $mbtiDescriptions = [
                     'INTJ' => 'Stratège, indépendant, orienté vers l\'avenir et analytique.',
                     'INTP' => 'Curieux, inventif, penseur abstrait, absorbé par les idées.',
@@ -218,6 +264,7 @@ class TestPsyController extends AbstractController
                     'ISTP' => 'Analytique, adaptable, un résolveur de problèmes pratique.',
                     'ISFP' => 'Doux, flexible, ancré dans le présent et valorise l\'harmonie.',
                     'ESTP' => 'Énergique, orienté vers l\'action, et aime relever des défis.',
+<<<<<<< HEAD
                     'ESFP' => 'Sociable, spontané, et aime interagir avec l\'environnement.'
                 ];
 
@@ -226,6 +273,15 @@ class TestPsyController extends AbstractController
                 $niveau = $typeStr; 
             } else {
                 // Chercher la tranche via SQL direct
+=======
+                    'ESFP' => 'Sociable, spontané, et aime interagir avec l\'environnement.',
+                ];
+
+                $libelle        = 'Type ' . $typeStr;
+                $interpretation = $mbtiDescriptions[$typeStr] ?? 'Personnalité unique.';
+                $niveau         = $typeStr;
+            } else {
+>>>>>>> origin/feature/salma-TestSymphony+java
                 $trancheMax = $em->getConnection()->executeQuery(
                     'SELECT MAX(score_max) FROM tranche_resultat WHERE id_test = :id',
                     ['id' => $id]
@@ -245,10 +301,20 @@ class TestPsyController extends AbstractController
             /** @var \App\Entity\User $user */
             $user = $this->getUser();
 
+<<<<<<< HEAD
             // Sauvegarder le résultat
             $resultat = new Resultat();
             $resultat->setIdTest($id)
                      ->setIdUtilisateur($user->getId())
+=======
+            // FIX: extract $userId once — guaranteed int, no int|null passed to setters
+            $userId = $user->getId() ?? throw new \LogicException('User has no ID');
+
+            // Sauvegarder le résultat
+            $resultat = new Resultat();
+            $resultat->setIdTest($id)
+                     ->setIdUtilisateur($userId)
+>>>>>>> origin/feature/salma-TestSymphony+java
                      ->setScoreTotal($score)
                      ->setScoreMaxPossible($scoreMax)
                      ->setPourcentage($pct)
@@ -261,7 +327,11 @@ class TestPsyController extends AbstractController
 
             // Sauvegarder dans l'historique
             $historique = new HistoriqueResultat();
+<<<<<<< HEAD
             $historique->setIdUser($user->getId())
+=======
+            $historique->setIdUser($userId)
+>>>>>>> origin/feature/salma-TestSymphony+java
                        ->setIdTest($id)
                        ->setScore($score)
                        ->setPourcentage($pct)
@@ -294,6 +364,7 @@ class TestPsyController extends AbstractController
         return $this->render('pages/testpsy/resultat.html.twig', ['resultat' => $resultat]);
     }
 
+<<<<<<< HEAD
 
 // ─────────────────────────────────────────────
 // EXPORT EXCEL 
@@ -384,6 +455,92 @@ public function exporterExcel(EntityManagerInterface $em): Response
 
     return $response;
 }
+=======
+    // ─────────────────────────────────────────────
+    // EXPORT EXCEL
+    // ─────────────────────────────────────────────
+    #[Route('/historique/excel', name: 'testpsy_historique_excel')]
+    public function exporterExcel(EntityManagerInterface $em): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user   = $this->getUser();
+        // FIX: use -> not ?-> because @var guarantees non-null User
+        $userId = $user->getId();
+
+        $historiques = $userId
+            ? $em->getRepository(HistoriqueResultat::class)->findBy(
+                ['idUser' => $userId],
+                ['datePassage' => 'DESC']
+              )
+            : [];
+
+        $tests = $em->getRepository(TestPsychologique::class)->findAll();
+        $testsMap = [];
+        foreach ($tests as $t) {
+            $testsMap[$t->getIdTest()] = $t->getTitre();
+        }
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Mon Historique');
+
+        $headerStyle = [
+            'font'      => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF'], 'size' => 12],
+            'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF4F46E5']],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+            'borders'   => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => 'FFE0E7FF']]],
+        ];
+
+        $rowStyle = [
+            'borders'   => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => 'FFE5E7EB']]],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+        ];
+
+        $headers = ['#', 'Test', 'Date', 'Score', 'Résultat (%)', 'Niveau'];
+        foreach ($headers as $i => $header) {
+            $col = chr(65 + $i);
+            $sheet->setCellValue($col . '1', $header);
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+        $sheet->getStyle('A1:F1')->applyFromArray($headerStyle);
+        $sheet->getRowDimension(1)->setRowHeight(25);
+
+        foreach ($historiques as $i => $h) {
+            $row = $i + 2;
+            $sheet->setCellValue('A' . $row, $i + 1);
+            $sheet->setCellValue('B' . $row, $testsMap[$h->getIdTest()] ?? 'Test #' . $h->getIdTest());
+            $sheet->setCellValue('C' . $row, $h->getDatePassage()?->format('d/m/Y H:i') ?? '—');
+            $sheet->setCellValue('D' . $row, $h->getScore() ?? '—');
+            $sheet->setCellValue('E' . $row, $h->getPourcentage() ? round($h->getPourcentage()) . '%' : '—');
+            $sheet->setCellValue('F' . $row, $h->getNiveau() ?? 'N/A');
+
+            if ($i % 2 === 0) {
+                $sheet->getStyle('A' . $row . ':F' . $row)->getFill()
+                    ->setFillType(Fill::FILL_SOLID)
+                    ->getStartColor()->setARGB('FFF5F3FF');
+            }
+            $sheet->getStyle('A' . $row . ':F' . $row)->applyFromArray($rowStyle);
+            $sheet->getRowDimension($row)->setRowHeight(20);
+        }
+
+        $sheet->getColumnDimension('B')->setWidth(40);
+        $sheet->getColumnDimension('C')->setWidth(20);
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($writer) {
+            $writer->save('php://output');
+        });
+
+        $filename = 'historique_innertrack_' . date('Y-m-d') . '.xlsx';
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        $response->headers->set('Cache-Control', 'max-age=0');
+
+        return $response;
+    }
+
+>>>>>>> origin/feature/salma-TestSymphony+java
     // ─────────────────────────────────────────────
     // HISTORIQUE
     // ─────────────────────────────────────────────
@@ -397,7 +554,11 @@ public function exporterExcel(EntityManagerInterface $em): Response
         $historiques = $userId
             ? $em->getRepository(HistoriqueResultat::class)->findBy(
                 ['idUser' => $userId],
+<<<<<<< HEAD
                 ['datePassage' => 'ASC'] // ASC pour les graphiques chronologiques
+=======
+                ['datePassage' => 'ASC']
+>>>>>>> origin/feature/salma-TestSymphony+java
               )
             : [];
 
@@ -408,9 +569,15 @@ public function exporterExcel(EntityManagerInterface $em): Response
         }
 
         $stats = [
+<<<<<<< HEAD
             'total' => count($historiques),
             'moyenne' => 0,
             'niveau_frequent' => 'N/A'
+=======
+            'total'           => count($historiques),
+            'moyenne'         => 0,
+            'niveau_frequent' => 'N/A',
+>>>>>>> origin/feature/salma-TestSymphony+java
         ];
 
         if ($stats['total'] > 0) {
@@ -431,10 +598,17 @@ public function exporterExcel(EntityManagerInterface $em): Response
         }
 
         return $this->render('pages/testpsy/historique.html.twig', [
+<<<<<<< HEAD
             'historiques' => array_reverse($historiques), // DESC pour la liste
             'historiques_asc' => $historiques, // ASC pour les graphiques
             'stats' => $stats,
             'tests_map' => $testsMap,
+=======
+            'historiques'     => array_reverse($historiques),
+            'historiques_asc' => $historiques,
+            'stats'           => $stats,
+            'tests_map'       => $testsMap,
+>>>>>>> origin/feature/salma-TestSymphony+java
         ]);
     }
 
@@ -450,7 +624,11 @@ public function exporterExcel(EntityManagerInterface $em): Response
             throw $this->createAccessDeniedException();
         }
 
+<<<<<<< HEAD
         $userId = $user->getId();
+=======
+        $userId    = $user->getId();
+>>>>>>> origin/feature/salma-TestSymphony+java
         $resultats = $em->getRepository(Resultat::class)->findBy(['idUtilisateur' => $userId]);
         $historiques = $em->getRepository(HistoriqueResultat::class)->findBy(['idUser' => $userId]);
 
@@ -496,18 +674,27 @@ public function exporterExcel(EntityManagerInterface $em): Response
 
         $stats = [
             'total_passages' => 0,
+<<<<<<< HEAD
             'populaire' => null
+=======
+            'populaire'      => null,
+>>>>>>> origin/feature/salma-TestSymphony+java
         ];
 
         foreach ($passages as $p) {
             $stats['total_passages'] += (int) $p['nb_passages'];
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/feature/salma-TestSymphony+java
         if (!empty($passages) && (int) $passages[0]['nb_passages'] > 0) {
             $stats['populaire'] = $passages[0]['titre'];
         }
 
         return $this->render('pages/testpsy/statistiques_globales.html.twig', [
+<<<<<<< HEAD
             'passages' => $passages,
             'moyennes' => $moyennes,
             'stats_globales' => $stats
@@ -516,12 +703,21 @@ public function exporterExcel(EntityManagerInterface $em): Response
 
 
 
+=======
+            'passages'      => $passages,
+            'moyennes'      => $moyennes,
+            'stats_globales' => $stats,
+        ]);
+    }
+
+>>>>>>> origin/feature/salma-TestSymphony+java
     // ─────────────────────────────────────────────
     // CREATE
     // ─────────────────────────────────────────────
     #[Route('/create', name: 'testpsy_create', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_PSYCHOLOGUE')]
     public function create(
+<<<<<<< HEAD
     Request                $request,
     EntityManagerInterface $em,
     BrevoMailer            $brevoMailer,
@@ -635,6 +831,121 @@ try {
         'old'    => $old,
     ]);
 }
+=======
+        Request                $request,
+        EntityManagerInterface $em,
+        BrevoMailer            $brevoMailer,
+        UserRepository         $userRepo,
+    ): Response {
+        $types  = $this->getTypes($em);
+        $errors = [];
+        $old    = [];
+
+        if ($request->isMethod('POST')) {
+            $titre       = trim($request->request->get('titre', ''));
+            $idType      = $request->request->get('id_type', '');
+            $description = trim($request->request->get('description', ''));
+
+            // FIX lines 542/544: cast each element to string before trim()
+            $questions = array_filter(
+                array_map(fn($q) => trim((string) $q), $request->request->all('questions')),
+                fn($q) => $q !== ''
+            );
+
+            if ($titre === '') {
+                $errors['titre'] = 'Le titre est obligatoire.';
+            } elseif (mb_strlen($titre) < 3) {
+                $errors['titre'] = 'Le titre doit contenir au moins 3 caractères.';
+            } elseif (mb_strlen($titre) > 255) {
+                $errors['titre'] = 'Le titre ne peut pas dépasser 255 caractères.';
+            }
+
+            if ($idType === '') {
+                $errors['id_type'] = 'Veuillez sélectionner un type de test.';
+            } else {
+                $validIds = array_column($types, 'id_type');
+                if (!in_array((int) $idType, array_map('intval', $validIds))) {
+                    $errors['id_type'] = 'Type de test invalide.';
+                }
+            }
+
+            if ($description !== '' && mb_strlen($description) > 2000) {
+                $errors['description'] = 'La description ne peut pas dépasser 2000 caractères.';
+            }
+
+            if (count($questions) === 0) {
+                $errors['questions'] = 'Ajoutez au moins une question.';
+            }
+
+            $old = [
+                'titre'       => $titre,
+                'id_type'     => $idType,
+                'description' => $description,
+                'questions'   => array_values($questions),
+            ];
+
+            if (empty($errors)) {
+                $test = new TestPsychologique();
+                $test->setTitre($titre)
+                     ->setIdType((int) $idType)
+                     ->setDescription($description ?: null)
+                     ->setNombreQuestions(0);
+
+                $em->persist($test);
+                $em->flush();
+
+                $count = 0;
+                foreach ($questions as $contenu) {
+                    $q = new Question();
+                    $q->setTest($test)->setContenu($contenu);
+                    $em->persist($q);
+                    $count++;
+                }
+
+                $test->setNombreQuestions($count);
+                $em->flush();
+
+                $typeLibelle = '';
+                foreach ($types as $t) {
+                    if ((int) $t['id_type'] === (int) $idType) {
+                        $typeLibelle = $t['libelle'];
+                        break;
+                    }
+                }
+
+                try {
+                    $users = $userRepo->findAll();
+                    foreach ($users as $u) {
+                        if (!$u->getEmail()) continue;
+                        $prenom = explode('@', $u->getEmail())[0];
+                        $html = $this->renderView('emails/nouveau_test.html.twig', [
+                            'titre_test' => $test->getTitre(),
+                            'type_test'  => $typeLibelle,
+                            'prenom'     => $prenom,
+                        ]);
+                        $brevoMailer->sendEmail(
+                            $u->getEmail(),
+                            $prenom,
+                            '🆕 Nouveau test disponible — ' . $test->getTitre(),
+                            $html,
+                        );
+                    }
+                } catch (\Throwable $e) {
+                    $this->addFlash('error', 'Erreur mail : ' . $e->getMessage());
+                }
+
+                $this->addFlash('success', 'Test créé avec succès ! Tous les utilisateurs ont été notifiés.');
+                return $this->redirectToRoute('testpsy_index');
+            }
+        }
+
+        return $this->render('pages/testpsy/create.html.twig', [
+            'types'  => $types,
+            'errors' => $errors,
+            'old'    => $old,
+        ]);
+    }
+>>>>>>> origin/feature/salma-TestSymphony+java
 
     // ─────────────────────────────────────────────
     // EDIT
@@ -643,7 +954,11 @@ try {
     #[IsGranted('ROLE_PSYCHOLOGUE')]
     public function edit(int $id, Request $request, EntityManagerInterface $em): Response
     {
+<<<<<<< HEAD
         $test   = $em->getRepository(TestPsychologique::class)->find($id);
+=======
+        $test = $em->getRepository(TestPsychologique::class)->find($id);
+>>>>>>> origin/feature/salma-TestSymphony+java
         if (!$test) throw $this->createNotFoundException('Test introuvable.');
 
         $types  = $this->getTypes($em);
@@ -653,8 +968,15 @@ try {
             $titre       = trim($request->request->get('titre', ''));
             $idType      = $request->request->get('id_type', '');
             $description = trim($request->request->get('description', ''));
+<<<<<<< HEAD
             $questions   = array_filter(
                 array_map('trim', $request->request->all('questions')),
+=======
+
+            // FIX lines 661/663: cast each element to string before trim()
+            $questions = array_filter(
+                array_map(fn($q) => trim((string) $q), $request->request->all('questions')),
+>>>>>>> origin/feature/salma-TestSymphony+java
                 fn($q) => $q !== ''
             );
 
@@ -751,7 +1073,12 @@ try {
         $question = $em->getRepository(Question::class)->find($id);
         if (!$question) throw $this->createNotFoundException('Question introuvable.');
 
+<<<<<<< HEAD
         $question->setContenu($request->request->get('contenu'));
+=======
+        // FIX line 756: cast to string so setContenu() receives string not mixed
+        $question->setContenu((string) $request->request->get('contenu', ''));
+>>>>>>> origin/feature/salma-TestSymphony+java
         $em->flush();
 
         return $this->redirectToRoute('testpsy_edit', ['id' => $question->getTest()->getIdTest()]);
@@ -788,6 +1115,11 @@ try {
 
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+<<<<<<< HEAD
+=======
+
+        // FIX line 312: use -> not ?-> because @var guarantees App\Entity\User (non-null)
+>>>>>>> origin/feature/salma-TestSymphony+java
         if ($resultat->getIdUtilisateur() !== $user->getId()) {
             throw $this->createAccessDeniedException();
         }

@@ -9,3 +9,4 @@ parameters:
     ignoreErrors:
         - identifier: property.unusedType
         - identifier: property.onlyWritten
+    treatPhpDocTypesAsCertain: false
