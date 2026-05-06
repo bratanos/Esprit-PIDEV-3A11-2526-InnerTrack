@@ -98,7 +98,7 @@ class ArticleManager
         }
 
         // Split on whitespace; filter empty tokens produced by multiple spaces.
-        $words = array_filter(preg_split('/\s+/', $content));
+        $words = array_filter(preg_split('/\s+/', $content) ?: []);
 
         if (count($words) === 0) {
             return 'unknown';

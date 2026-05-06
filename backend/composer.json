@@ -13,6 +13,7 @@
         "doctrine/orm": "^3.6",
         "dompdf/dompdf": "^3.1",
         "endroid/qr-code": "^6.0",
+        "knplabs/knp-snappy-bundle": "^1.10",
         "lexik/jwt-authentication-bundle": "^3.2",
         "nelmio/cors-bundle": "^2.6",
         "pagerfanta/doctrine-orm-adapter": "^4.8",

@@ -87,7 +87,8 @@ class LearningPathController extends AbstractController
 
         foreach ($articleIds as $order => $articleId) {
             $article = $articleRepo->find((int) $articleId);
-            if (!$article) continue;
+            if (!$article instanceof \App\Entity\Article) continue;
+
 
             $pa = new PathArticle();
             $pa->setLearningPath($path)
@@ -152,7 +153,7 @@ class LearningPathController extends AbstractController
 
         foreach ($articleIds as $order => $articleId) {
             $article = $articleRepo->find((int) $articleId);
-            if (!$article) continue;
+            if (!$article instanceof \App\Entity\Article) continue;
             $pa = new PathArticle();
             $pa->setLearningPath($path)->setArticle($article)->setArticleOrder($order + 1);
             $em->persist($pa);

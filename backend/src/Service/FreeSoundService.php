@@ -49,14 +49,18 @@ class FreeSoundService
         private HttpClientInterface $httpClient,
         private string $apiKey
     ) {}
-
+    /** @return array<string, mixed>|null */
     public function findAmbientSound(Article $article): ?array
     {
         // 1. Collect all tag names from the article
         $tagNames = [];
         foreach ($article->getTags() as $tag) {
-            $tagNames[] = mb_strtolower($tag->getNom());
+        $nom = $tag->getNom();
+        if ($nom !== null) 
+            {
+            $tagNames[] = mb_strtolower($nom);
         }
+    }
 
         // 2. If no tags, fallback to category or default
         if (empty($tagNames)) {
@@ -121,6 +125,7 @@ class FreeSoundService
         }
     }
 
+    /** @return array<string, mixed> */
     private function fallbackSound(): array
     {
         return [

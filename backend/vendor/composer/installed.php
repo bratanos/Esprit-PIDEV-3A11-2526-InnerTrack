@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '53d6c4ae4e11ad81af19495783c362a1719195f7',
+        'reference' => '49fbe692ae806fc9716927db85a0bb469a33d934',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '53d6c4ae4e11ad81af19495783c362a1719195f7',
+            'reference' => '49fbe692ae806fc9716927db85a0bb469a33d934',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -223,6 +223,24 @@
             'reference' => '21e888e8597440b2205e2e5c484b6c8e556bcd1a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../endroid/qr-code',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'knplabs/knp-snappy' => array(
+            'pretty_version' => 'v1.6.0',
+            'version' => '1.6.0.0',
+            'reference' => 'af73003db677563fa982b50c1aec4d1e2b2f30b2',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../knplabs/knp-snappy',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'knplabs/knp-snappy-bundle' => array(
+            'pretty_version' => 'v1.10.6',
+            'version' => '1.10.6.0',
+            'reference' => '9501e76b63158bc6c390065ede40963d5a94b065',
+            'type' => 'symfony-bundle',
+            'install_path' => __DIR__ . '/../knplabs/knp-snappy-bundle',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -574,8 +592,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '3.0.0',
-                1 => '1.0|2.0|3.0',
+                0 => '1.0|2.0|3.0',
+                1 => '3.0.0',
             ),
         ),
         'psr/simple-cache' => array(

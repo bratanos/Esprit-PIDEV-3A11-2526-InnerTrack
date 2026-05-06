@@ -17,7 +17,8 @@ class AiInsightService
      * Sends article content to the AI service for analysis
      * Returns emotions and key points extracted from the article, or null if the service is unavailable
      */
-    public function analyze(Article $article): ?array
+    /** @return array<string, mixed>|null */
+public function analyze(Article $article): ?array
     {
         $text = $article->getTitre() . '. ' . $article->getContenu();
 

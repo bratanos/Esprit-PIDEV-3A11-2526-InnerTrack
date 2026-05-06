@@ -30,35 +30,30 @@ class ReadabilityService
      * Utility to count the total number of words in the text
      */
     private function countWords(string $text): int
-    {
-        $words = preg_split('/\s+/', trim($text), -1, PREG_SPLIT_NO_EMPTY);
-        return $words ? count($words) : 0;
-    }
+{
+    $words = preg_split('/\s+/', trim($text), -1, PREG_SPLIT_NO_EMPTY);
+    return $words !== false ? count($words) : 0;
+}
 
-    /**
-     * Utility to count the number of sentences in the text
-     */
-    private function countSentences(string $text): int
-    {
-        $parts = preg_split('/[.!?]+\s*/', $text, -1, PREG_SPLIT_NO_EMPTY);
-        return $parts ? count($parts) : 1;
-    }
+private function countSentences(string $text): int
+{
+    $parts = preg_split('/[.!?]+\s*/', $text, -1, PREG_SPLIT_NO_EMPTY);
+    return $parts !== false ? count($parts) : 1;
+}
 
-    /**
-     * Utility to count syllables including accented French characters
-     * Used for accurate readability score calculation
-     */
-    private function countSyllables(string $text): int
-    {
-        $vowels = ['a','e','i','o','u','y','à','â','è','é','ê','ë','î','ï','ô','ù','û','ü','ÿ'];
-        $chars  = preg_split('//u', mb_strtolower($text), -1, PREG_SPLIT_NO_EMPTY);
-        $count  = 0;
-        $prev   = false;
-        foreach ($chars as $ch) {
-            $isVowel = in_array($ch, $vowels, true);
-            if ($isVowel && !$prev) $count++;
-            $prev = $isVowel;
-        }
-        return $count;
+private function countSyllables(string $text): int
+{
+    $vowels = ['a','e','i','o','u','y','à','â','è','é','ê','ë','î','ï','ô','ù','û','ü','ÿ'];
+    $chars  = preg_split('//u', mb_strtolower($text), -1, PREG_SPLIT_NO_EMPTY);
+    if ($chars === false) return 0;  // ✅ guard against false
+    $count  = 0;
+    $prev   = false;
+    foreach ($chars as $ch) {
+        $isVowel = in_array($ch, $vowels, true);
+        if ($isVowel && !$prev) $count++;
+        $prev = $isVowel;
     }
+    return $count;
+}
+   
 }

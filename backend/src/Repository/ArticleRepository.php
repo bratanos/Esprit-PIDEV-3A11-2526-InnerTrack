@@ -6,6 +6,9 @@ use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Article>
+ */
 class ArticleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -13,6 +16,7 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
+    /** @return Article[] */
     public function findAllWithCategory(): array
     {
         return $this->createQueryBuilder('a')
@@ -23,7 +27,8 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-     public function findByTagName(string $tagName): array
+    /** @return Article[] */
+    public function findByTagName(string $tagName): array
     {
         return $this->createQueryBuilder('a')
             ->join('a.tags', 't')
@@ -36,7 +41,7 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-
+    /** @return Article[] */
     public function search(string $q): array
     {
         return $this->createQueryBuilder('a')
@@ -51,6 +56,7 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /** @return Article[] */
     public function findByCategorieId(int $id): array
     {
         return $this->createQueryBuilder('a')
@@ -62,6 +68,7 @@ class ArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
     public function createQueryBuilderForIndex(string $q = '', ?string $catId = null, ?string $tag = null): \Doctrine\ORM\QueryBuilder
     {
         $qb = $this->createQueryBuilder('a')
@@ -72,7 +79,7 @@ class ArticleRepository extends ServiceEntityRepository
 
         if ($q !== '') {
             $qb->andWhere('LOWER(a.titre) LIKE LOWER(:q) OR LOWER(a.contenu) LIKE LOWER(:q)')
-            ->setParameter('q', '%' . $q . '%');
+               ->setParameter('q', '%' . $q . '%');
         }
         if ($catId) {
             $qb->andWhere('c.id = :catId')->setParameter('catId', (int) $catId);

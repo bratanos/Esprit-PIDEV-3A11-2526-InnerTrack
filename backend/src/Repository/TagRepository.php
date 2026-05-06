@@ -6,16 +6,10 @@ use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<Tag> */
 class TagRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Tag::class);
-    }
-
-    /**
-     * All tags with their article count, ordered by count DESC.
-     */
+    /** @return array<int, mixed> */
     public function findAllWithCount(): array
     {
         return $this->createQueryBuilder('t')
@@ -29,15 +23,14 @@ class TagRepository extends ServiceEntityRepository
 
     public function findByNom(string $nom): ?Tag
     {
-        return $this->findOneBy(['nom' => $nom]);
+        return $this->createQueryBuilder('t')
+            ->where('t.nom = :nom')
+            ->setParameter('nom', $nom)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
-    /**
-     * Articles that share at least one tag with the given article, excluding itself.
-     * Returns up to $limit results.
-     *
-     * @return \App\Entity\Article[]
-     */
+    /** @return \App\Entity\Article[] */
     public function findRelatedArticles(\App\Entity\Article $article, int $limit = 3): array
     {
         $tagIds = $article->getTags()->map(fn($t) => $t->getId())->toArray();
