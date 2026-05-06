@@ -48,7 +48,7 @@ class UserProfileCrudTest extends WebTestCase
         $entityManager->flush();
 
         // 2. Log in as this user
-        $client->loginUser($user);
+        $client->loginUser($user, 'web');
 
         // 3. Navigate to the profile page
         $crawler = $client->request('GET', '/profile');
@@ -66,7 +66,7 @@ class UserProfileCrudTest extends WebTestCase
         // 5. Assert Redirect (Symfony redirects back to profile on success)
         $this->assertResponseRedirects('/profile');
         $client->followRedirect();
-        $this->assertSelectorTextContains('.alert-success', 'Profil mis à jour avec succès');
+        $this->assertSelectorTextContains('.bg-green-100', 'Profil mis à jour avec succès');
 
         // 6. Verify Database (Final check of the CRUD operation)
         $updatedUser = $userRepository->findOneBy(['email' => $testEmail]);
@@ -74,7 +74,13 @@ class UserProfileCrudTest extends WebTestCase
         $this->assertEquals('UpdatedLast', $updatedUser->getLastName());
         $this->assertEquals('0123456789', $updatedUser->getPhoneNumber());
         
-        // Cleanup: Remove test user
+        // Cleanup: Remove test user and associated profiles
+        if ($updatedUser->getClientProfile()) {
+            $entityManager->remove($updatedUser->getClientProfile());
+        }
+        if ($updatedUser->getTherapistProfile()) {
+            $entityManager->remove($updatedUser->getTherapistProfile());
+        }
         $entityManager->remove($updatedUser);
         $entityManager->flush();
     }
