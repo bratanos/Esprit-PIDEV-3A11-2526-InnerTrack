@@ -89,9 +89,9 @@ min-h-screen flex flex-col pointer-events-auto
 				{{ _self.nav_link(path('app_dashboard'), 'Console Admin', 'admin_panel_settings', app.request.get('_route') == 'app_dashboard') }}
 			{% else %}
 				{{ _self.nav_link(path('app_dashboard'), 'nav.dashboard'|trans, 'dashboard', app.request.get('_route') == 'app_dashboard') }}
-				{{ _self.nav_link(path('entree_index'), 'Mon Journal', 'book_2', app.request.get('_route') starts with 'entree') }}
 				{{ _self.nav_link(path('habitude_index'), 'Mes Habitudes', 'fitness_center', app.request.get('_route') starts with 'habitude') }}
-				{{ _self.nav_link(path('bienetre_index'), 'Bien-être', 'spa', app.request.get('_route') starts with 'bienetre') }}
+				{{ _self.nav_link(path('entree_index'), 'Mon Journal', 'book_2', app.request.get('_route') starts with 'entree') }}
+				{{ _self.nav_link(path('bienetre_index'), 'Bien-être IA', 'self_improvement', app.request.get('_route') starts with 'bienetre') }}
 				{{ _self.nav_link(path('app_map'), 'nav.map'|trans, 'psychology', app.request.get('_route') == 'app_map') }}
 				{{ _self.nav_link(path('app_messages'), 'nav.messages'|trans, 'chat_bubble', app.request.get('_route') == 'app_messages', unread_messages_count) }}
 				{{ _self.nav_link(path('testpsy_index'), 'Tests Psy', 'self_improvement', app.request.get('_route') starts with 'testpsy') }}

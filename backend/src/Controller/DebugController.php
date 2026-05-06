@@ -18,8 +18,9 @@ class DebugController extends AbstractController
         }
 
         return $this->json([
-            'email' => $user->getUserIdentifier(),
-            'roles' => $user->getRoles(),
+            'email'              => $user->getUserIdentifier(),
+            'roles'              => $user->getRoles(),
+            'raw_roles_property' => $user->getRoles(),
         ]);
     }
 }

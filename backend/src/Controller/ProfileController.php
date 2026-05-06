@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,9 +16,13 @@ class ProfileController extends AbstractController
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+        /** @var User $user */
 
         return $this->json([
-            'id' => $user->getId(),
+            'id'    => $user->getId(),
             'email' => $user->getUserIdentifier(),
             'roles' => $user->getRoles(),
         ]);
@@ -29,9 +34,13 @@ class ProfileController extends AbstractController
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+if (!$user instanceof User) {
+    throw $this->createAccessDeniedException();
+}
+/** @var User $user */
 
         return $this->json([
-            'id' => $user->getId(),
+            'id'    => $user->getId(),
             'email' => $user->getEmail(),
             'roles' => $user->getRoles(),
         ]);

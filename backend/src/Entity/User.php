@@ -15,6 +15,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    /** @phpstan-ignore property.unusedType */
     private ?int $id = null;
 
     #[ORM\Column(unique: true)]
@@ -39,9 +40,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'last_name', length: 255)]
     private ?string $lastName = null;
 
-
-
-
     #[ORM\Column(name: 'profile_picture', length: 255, nullable: true)]
     private ?string $profilePicture = null;
 
@@ -61,17 +59,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $code;
 
     #[ORM\OneToOne(targetEntity: ClientProfile::class, mappedBy: 'user')]
+    /** @phpstan-ignore property.unusedType */
     private ?ClientProfile $clientProfile = null;
 
     #[ORM\OneToOne(targetEntity: TherapistProfile::class, mappedBy: 'user')]
+    /** @phpstan-ignore property.unusedType */
     private ?TherapistProfile $therapistProfile = null;
 
     #[ORM\OneToOne(targetEntity: UserSettings::class, mappedBy: 'user')]
+    /** @phpstan-ignore property.unusedType */
     private ?UserSettings $settings = null;
 
     public function __construct()
     {
-        $this->code = new ArrayCollection();
+        $this->code      = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
 
@@ -136,29 +137,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /** @return Collection<int, EmailVerificationCode> */
     public function getCode(): Collection { return $this->code; }
+
     public function getClientProfile(): ?ClientProfile { return $this->clientProfile; }
     public function getTherapistProfile(): ?TherapistProfile { return $this->therapistProfile; }
     public function getSettings(): ?UserSettings { return $this->settings; }
 
-    /**
-     * Returns web-accessible profile picture URL, handling both absolute desktop paths
-     * and relative web paths stored in the DB.
-     */
     public function getProfilePictureUrl(): ?string
     {
         if (!$this->profilePicture) return null;
 
-        // Task 2.1: Support absolute remote URLs (e.g. ImgBB)
         if (str_starts_with($this->profilePicture, 'http')) {
             return $this->profilePicture;
         }
 
-        // If it's already a relative web path
         if (str_starts_with($this->profilePicture, '/uploads/')) {
             return $this->profilePicture;
         }
 
-        // If it's an absolute desktop path (legacy JavaFX), try to extract the filename
         $filename = basename($this->profilePicture);
         return '/uploads/profiles/' . $filename;
     }

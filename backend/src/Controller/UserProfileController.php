@@ -7,12 +7,10 @@ use App\Entity\TherapistProfile;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 class UserProfileController extends AbstractController
 {
@@ -25,10 +23,9 @@ class UserProfileController extends AbstractController
     public function index(Request $request): Response
     {
         /** @var User $user */
-        $user = $this->getUser();
+        $user        = $this->getUser();
         $isTherapist = str_contains($user->getPrimaryRole(), 'PSYCHOLOGUE');
 
-        // Ensure profiles exist
         if ($isTherapist && !$user->getTherapistProfile()) {
             $profile = new TherapistProfile();
             $profile->setUser($user);
@@ -42,12 +39,11 @@ class UserProfileController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            $firstName = trim($request->request->get('firstName', ''));
-            $lastName  = trim($request->request->get('lastName', ''));
-            $phone     = trim($request->request->get('phoneNumber', ''));
-            $bio       = trim($request->request->get('bio', ''));
+            $firstName = trim((string) $request->request->get('firstName', ''));
+            $lastName  = trim((string) $request->request->get('lastName', ''));
+            $phone     = trim((string) $request->request->get('phoneNumber', ''));
+            $bio       = trim((string) $request->request->get('bio', ''));
 
-            // --- Server-side validation ---
             $errors = [];
 
             if (!$firstName || strlen($firstName) > 100) {
@@ -63,9 +59,12 @@ class UserProfileController extends AbstractController
                 $errors[] = 'La biographie ne peut pas dépasser 1000 caractères.';
             }
 
+            $specialization = '';
+            $licenseNumber  = '';
+
             if ($isTherapist) {
-                $specialization = trim($request->request->get('specialization', ''));
-                $licenseNumber  = trim($request->request->get('licenseNumber', ''));
+                $specialization = trim((string) $request->request->get('specialization', ''));
+                $licenseNumber  = trim((string) $request->request->get('licenseNumber', ''));
                 if (strlen($specialization) > 255) {
                     $errors[] = 'La spécialisation ne peut pas dépasser 255 caractères.';
                 }
@@ -80,7 +79,6 @@ class UserProfileController extends AbstractController
                 }
                 return $this->redirectToRoute('app_profile');
             }
-            // --- End validation ---
 
             $user->setFirstName($firstName);
             $user->setLastName($lastName);
@@ -88,9 +86,11 @@ class UserProfileController extends AbstractController
 
             if ($isTherapist) {
                 $profile = $user->getTherapistProfile();
-                $profile->setBio($bio);
-                $profile->setSpecialization($specialization);
-                $profile->setLicenseNumber($licenseNumber);
+                if ($profile !== null) {
+                    $profile->setBio($bio);
+                    $profile->setSpecialization($specialization);
+                    $profile->setLicenseNumber($licenseNumber);
+                }
             } elseif ($user->getClientProfile()) {
                 $user->getClientProfile()->setBio($bio);
             }
@@ -101,7 +101,7 @@ class UserProfileController extends AbstractController
         }
 
         return $this->render('pages/profile/view.html.twig', [
-            'user' => $user,
+            'user'        => $user,
             'isTherapist' => $isTherapist,
         ]);
     }
@@ -120,25 +120,24 @@ class UserProfileController extends AbstractController
                     throw new \Exception("Clé API ImgBB manquante dans la configuration.");
                 }
 
-                // Send as multipart/form-data (recommended for larger files)
                 $response = $this->httpClient->request('POST', 'https://api.imgbb.com/1/upload', [
                     'query' => ['key' => $apiKey],
-                    'body' => [
+                    'body'  => [
                         'image' => fopen($file->getPathname(), 'r'),
-                    ]
+                    ],
                 ]);
 
                 if ($response->getStatusCode() === 200) {
-                    $data = $response->toArray();
+                    $data     = $response->toArray();
                     $imageUrl = $data['data']['url'];
 
                     $user->setProfilePicture($imageUrl);
                     $this->em->flush();
-                    
+
                     $this->addFlash('success', 'Photo de profil mise à jour via ImgBB.');
                 } else {
                     $errorData = $response->toArray(false);
-                    $errorMsg = $errorData['error']['message'] ?? 'Erreur inconnue (Code ' . $response->getStatusCode() . ')';
+                    $errorMsg  = $errorData['error']['message'] ?? 'Erreur inconnue (Code ' . $response->getStatusCode() . ')';
                     $this->addFlash('error', 'Échec ImgBB : ' . $errorMsg);
                 }
             } catch (\Exception $e) {
@@ -154,10 +153,10 @@ class UserProfileController extends AbstractController
     {
         if ($request->isMethod('POST')) {
             /** @var User $user */
-            $user = $this->getUser();
-            $currentPassword = $request->request->get('currentPassword');
-            $newPassword = $request->request->get('newPassword');
-            $confirmPassword = $request->request->get('confirmPassword');
+            $user            = $this->getUser();
+            $currentPassword = (string) $request->request->get('currentPassword');
+            $newPassword     = (string) $request->request->get('newPassword');
+            $confirmPassword = (string) $request->request->get('confirmPassword');
 
             if (!$passwordHasher->isPasswordValid($user, $currentPassword)) {
                 $this->addFlash('error', 'Mot de passe actuel incorrect.');

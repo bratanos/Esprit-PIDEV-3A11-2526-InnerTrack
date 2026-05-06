@@ -91,24 +91,20 @@ class DashboardController extends AbstractController
     {
         $userId = $user->getId();
 
-        // Pending contact requests
         $pendingRequests = $this->em->getRepository(ContactRequest::class)
             ->findBy(['therapist' => $user, 'status' => 'PENDING'], ['createdAt' => 'DESC']);
 
-        // Active patients (from conversations)
         $activePatients = $this->em->createQuery(
             'SELECT c FROM App\Entity\Conversation c
              WHERE c.therapist = :uid AND c.status = :status
              ORDER BY c.createdAt DESC'
         )->setParameter('uid', $userId)->setParameter('status', 'ACTIVE')->getResult();
 
-        // Unread notifications
         $unreadNotifs = $this->em->createQuery(
             'SELECT COUNT(n) FROM App\Entity\Notification n WHERE n.user = :uid AND n.isRead = false'
         )->setParameter('uid', $userId)->getSingleScalarResult();
 
-        // Profile completeness check
-        $profile = $user->getTherapistProfile();
+        $profile        = $user->getTherapistProfile();
         $profileComplete = $profile && $profile->getSpecialization() && $profile->hasLocation();
 
         return $this->render('pages/dashboard/therapist.html.twig', [
@@ -138,7 +134,7 @@ class DashboardController extends AbstractController
                 (SELECT COUNT(*) FROM user WHERE status = 'ACTIVE')                                                                     AS activeCount,
                 (SELECT COUNT(*) FROM user WHERE status = 'PENDING')                                                                    AS pendingCount,
                 (SELECT COUNT(*) FROM report WHERE status = 'PENDING')                                                                  AS pendingReports
-        ")->fetchAssociative();
+        ")->fetchAssociative() ?: [];
 
         // ── Monthly registrations (last 6 months) for bar chart ───
         $monthly = $conn->executeQuery(
@@ -160,8 +156,8 @@ class DashboardController extends AbstractController
         // ── Real system metrics ────────────────────────────────────
 
         // Security Score: ratio of ACTIVE users to total (0–100 %)
-        $total         = max(1, (int) $stats['totalUsers']);
-        $securityScore = (int) round(((int) $stats['activeCount'] / $total) * 100);
+        $total         = max(1, (int) ($stats['totalUsers'] ?? 1));
+        $securityScore = (int) round(((int) ($stats['activeCount'] ?? 0) / $total) * 100);
 
         // Health Score: DB round-trip latency → mapped to 0–100 %
         //   <1 ms ≈ 100 %, 100 ms → 0 % (clamped)
@@ -244,18 +240,18 @@ class DashboardController extends AbstractController
         return $this->render('pages/dashboard/admin.html.twig', [
             'sanctions'        => $sanctions,
             // User analytics
-            'totalUsers'      => $stats['totalUsers'],
-            'totalClients'    => $stats['totalClients'],
-            'totalTherapists' => $stats['totalTherapists'],
-            'newThisMonth'    => $stats['newThisMonth'],
-            'blockedCount'    => $stats['blockedCount'],
-            'activeCount'     => $stats['activeCount'],
-            'pendingCount'    => $stats['pendingCount'],
+            'totalUsers'      => $stats['totalUsers']      ?? 0,
+            'totalClients'    => $stats['totalClients']    ?? 0,
+            'totalTherapists' => $stats['totalTherapists'] ?? 0,
+            'newThisMonth'    => $stats['newThisMonth']    ?? 0,
+            'blockedCount'    => $stats['blockedCount']    ?? 0,
+            'activeCount'     => $stats['activeCount']     ?? 0,
+            'pendingCount'    => $stats['pendingCount']    ?? 0,
             // Chart
             'monthly'         => $monthly,
             'monthlyMax'      => $monthlyMax,
             // Reports
-            'pendingReports'   => $stats['pendingReports'],
+            'pendingReports'   => $stats['pendingReports']   ?? 0,
             'users'            => $users,
             'messagingReports' => $messagingReports,
             'communityReports' => $communityReports,

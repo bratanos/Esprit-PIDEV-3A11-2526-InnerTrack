@@ -119,3 +119,33 @@
 html {
   font-family: var(--font-sans);
 }
+
+/* Sliders Journal — forcer le dégradé via JS */
+input[type=range].slider-energie,
+input[type=range].slider-stress,
+input[type=range].slider-sommeil,
+input[type=range].slider-humeur {
+    all: revert;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+}
+
+input[type=range].slider-energie::-webkit-slider-thumb,
+input[type=range].slider-stress::-webkit-slider-thumb,
+input[type=range].slider-sommeil::-webkit-slider-thumb,
+input[type=range].slider-humeur::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #ccc;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    cursor: pointer;
+}

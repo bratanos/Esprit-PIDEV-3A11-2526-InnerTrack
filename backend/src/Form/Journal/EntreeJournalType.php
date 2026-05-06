@@ -20,27 +20,25 @@ class EntreeJournalType extends AbstractType
                 'label'       => '😊 Humeur du jour',
                 'constraints' => [new Assert\Range(['min' => 1, 'max' => 10])],
                 'attr'        => [
-                    'class' => 'w-full accent-[#006876]',
-                    'min'   => 1,
-                    'max'   => 10,
-                    'step'  => 1,
-                    'class' => 'slider-humeur',
+                    'class'   => 'w-full accent-[#006876] slider-humeur',
+                    'min'     => 1,
+                    'max'     => 10,
+                    'step'    => 1,
                     'oninput' => 'updateHumeur(this)',
                 ],
             ])
-
             ->add('noteTextuelle', TextareaType::class, [
-                'label'    => '📝 Note du jour',
-                'required' => true,
+                'label'      => '📝 Note du jour',
+                'required'   => true,
                 'empty_data' => '',
                 'constraints' => [
                     new Assert\NotBlank(message: 'La note est obligatoire'),
                     new Assert\Length([
-                        'max' => 1000,
+                        'max'        => 1000,
                         'maxMessage' => 'La note ne peut pas dépasser 1000 caractères',
                     ]),
                 ],
-                'attr'     => [
+                'attr' => [
                     'class'       => 'w-full rounded-xl border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#006876]',
                     'rows'        => 5,
                     'placeholder' => 'Comment s\'est passée votre journée ?',

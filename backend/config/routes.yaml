@@ -3,3 +3,6 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+qrcode_bundle:
+    resource: '../src/QrCodeBundle/Controller/'
+    type: attribute

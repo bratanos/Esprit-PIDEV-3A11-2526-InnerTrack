@@ -13,6 +13,7 @@ class Conversation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    /** @phpstan-ignore property.unusedType */
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
@@ -36,7 +37,7 @@ class Conversation
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->messages = new ArrayCollection();
+        $this->messages  = new ArrayCollection();
     }
 
     /** @return Collection<int, Message> */

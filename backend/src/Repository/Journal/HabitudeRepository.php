@@ -6,6 +6,9 @@ use App\Entity\Journal\Habitude;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Habitude>
+ */
 class HabitudeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -13,6 +16,9 @@ class HabitudeRepository extends ServiceEntityRepository
         parent::__construct($registry, Habitude::class);
     }
 
+    /**
+     * @return Habitude[]
+     */
     public function findByUserId(int $userId): array
     {
         return $this->createQueryBuilder('h')
@@ -23,6 +29,9 @@ class HabitudeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Habitude[]
+     */
     public function search(string $keyword, int $userId): array
     {
         return $this->createQueryBuilder('h')
@@ -35,6 +44,9 @@ class HabitudeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getStatsByUserId(int $userId): array
     {
         return $this->createQueryBuilder('h')
@@ -50,60 +62,77 @@ class HabitudeRepository extends ServiceEntityRepository
             ->getSingleResult();
     }
 
+    /**
+     * @return Habitude[]
+     */
     public function findByUserIdSorted(int $userId, string $sortBy = 'dateCreation', string $order = 'DESC'): array
     {
         $allowed = ['dateCreation', 'niveauEnergie', 'niveauStress', 'qualiteSommeil', 'nomHabitude'];
         if (!in_array($sortBy, $allowed)) $sortBy = 'dateCreation';
         if (!in_array($order, ['ASC', 'DESC'])) $order = 'DESC';
-        
+
         return $this->createQueryBuilder('h')
-        ->where('h.user = :uid')
-        ->setParameter('uid', $userId)
-        ->orderBy('h.' . $sortBy, $order)
-        ->getQuery()
-        ->getResult();
-    }
-    public function searchAdvanced(int $userId, ?string $keyword, ?string $emotion, ?int $energieMin, ?int $energieMax, ?int $stressMax, ?string $date, string $sort = 'dateCreation', string $order = 'DESC'): array
-{
-    $allowed = ['dateCreation', 'niveauEnergie', 'niveauStress', 'qualiteSommeil', 'nomHabitude'];
-    if (!in_array($sort, $allowed)) $sort = 'dateCreation';
-    if (!in_array($order, ['ASC', 'DESC'])) $order = 'DESC';
-
-    $qb = $this->createQueryBuilder('h')
-        ->where('h.user = :uid')
-        ->setParameter('uid', $userId);
-
-    if (!empty($keyword)) {
-        $qb->andWhere('h.nomHabitude LIKE :kw OR h.noteTextuelle LIKE :kw')
-           ->setParameter('kw', '%' . $keyword . '%');
+            ->where('h.user = :uid')
+            ->setParameter('uid', $userId)
+            ->orderBy('h.' . $sortBy, $order)
+            ->getQuery()
+            ->getResult();
     }
 
-    if (!empty($emotion)) {
-        $qb->andWhere('h.emotionDominantes = :emotion')
-           ->setParameter('emotion', $emotion);
-    }
+    /**
+     * @return Habitude[]
+     */
+    public function searchAdvanced(
+        int     $userId,
+        ?string $keyword,
+        ?string $emotion,
+        ?int    $energieMin,
+        ?int    $energieMax,
+        ?int    $stressMax,
+        ?string $date,
+        string  $sort  = 'dateCreation',
+        string  $order = 'DESC'
+    ): array {
+        $allowed = ['dateCreation', 'niveauEnergie', 'niveauStress', 'qualiteSommeil', 'nomHabitude'];
+        if (!in_array($sort, $allowed)) $sort = 'dateCreation';
+        if (!in_array($order, ['ASC', 'DESC'])) $order = 'DESC';
 
-    if ($energieMin !== null) {
-        $qb->andWhere('h.niveauEnergie >= :energieMin')
-           ->setParameter('energieMin', $energieMin);
-    }
+        $qb = $this->createQueryBuilder('h')
+            ->where('h.user = :uid')
+            ->setParameter('uid', $userId);
 
-    if ($energieMax !== null) {
-        $qb->andWhere('h.niveauEnergie <= :energieMax')
-           ->setParameter('energieMax', $energieMax);
-    }
+        if (!empty($keyword)) {
+            $qb->andWhere('h.nomHabitude LIKE :kw OR h.noteTextuelle LIKE :kw')
+               ->setParameter('kw', '%' . $keyword . '%');
+        }
 
-    if ($stressMax !== null) {
-        $qb->andWhere('h.niveauStress <= :stressMax')
-           ->setParameter('stressMax', $stressMax);
-    }
+        if (!empty($emotion)) {
+            $qb->andWhere('h.emotionDominantes = :emotion')
+               ->setParameter('emotion', $emotion);
+        }
 
-    if (!empty($date)) {
-    $qb->andWhere('h.dateCreation = :date')
-       ->setParameter('date', new \DateTime($date), \Doctrine\DBAL\Types\Types::DATE_MUTABLE);
-}
-    return $qb->orderBy('h.' . $sort, $order)
-              ->getQuery()
-              ->getResult();
-}
+        if ($energieMin !== null) {
+            $qb->andWhere('h.niveauEnergie >= :energieMin')
+               ->setParameter('energieMin', $energieMin);
+        }
+
+        if ($energieMax !== null) {
+            $qb->andWhere('h.niveauEnergie <= :energieMax')
+               ->setParameter('energieMax', $energieMax);
+        }
+
+        if ($stressMax !== null) {
+            $qb->andWhere('h.niveauStress <= :stressMax')
+               ->setParameter('stressMax', $stressMax);
+        }
+
+        if (!empty($date)) {
+            $qb->andWhere('h.dateCreation = :date')
+               ->setParameter('date', new \DateTime($date), \Doctrine\DBAL\Types\Types::DATE_MUTABLE);
+        }
+
+        return $qb->orderBy('h.' . $sort, $order)
+            ->getQuery()
+            ->getResult();
+    }
 }

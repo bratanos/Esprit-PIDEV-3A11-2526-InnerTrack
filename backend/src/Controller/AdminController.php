@@ -97,7 +97,7 @@ class AdminController extends AbstractController
         $lock = new ChatLock();
         $lock->setUser($user);
         $lock->setReason($reason);
-        $lock->setLockedBy($admin->getId());
+        $lock->setLockedBy((int) $admin->getId());
 
         if ($durationHours) {
             $until = new \DateTime();
@@ -142,10 +142,7 @@ class AdminController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
-    // ─────────────────────────────────────────────
-    //  USER CRUD (temporary validation tab)
-    // ─────────────────────────────────────────────
-
+    //  USER CRUD 
     #[Route('/users/{id}', name: 'user_get', methods: ['GET'])]
     public function fetchUser(User $user): JsonResponse
     {
