@@ -11,9 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 class EntreeJournal
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(name: 'id_journal', type: 'integer')]
-    private ?int $idJournal = null;
+#[ORM\GeneratedValue]
+#[ORM\Column]
+/** @phpstan-ignore property.unusedType */
+private ?int $idJournal = null;
 
     #[ORM\Column(name: 'humeur', type: 'integer')]
     private int $humeur = 5;

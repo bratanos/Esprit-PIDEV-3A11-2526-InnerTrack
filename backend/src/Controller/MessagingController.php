@@ -26,9 +26,12 @@ class MessagingController extends AbstractController
     #[Route('/messages', name: 'app_messages', methods: ['GET'])]
     public function index(?int $id = null): Response
     {
-        /** @var User $user */
         $user = $this->getUser();
-        
+if (!$user instanceof User) {
+    throw $this->createAccessDeniedException();
+}
+/** @var User $user */
+
         $conversations = $this->em->createQuery(
             'SELECT c FROM App\Entity\Conversation c
              WHERE (c.client = :u OR c.therapist = :u) AND c.status = :status
@@ -37,7 +40,7 @@ class MessagingController extends AbstractController
 
         return $this->render('pages/messages/messages.html.twig', [
             'conversations' => $conversations,
-            'openId' => $id,
+            'openId'        => $id,
         ]);
     }
 
@@ -46,13 +49,13 @@ class MessagingController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        
+
         if ($conversation->getClient()->getId() !== $user->getId() && $conversation->getTherapist()->getId() !== $user->getId()) {
             return new JsonResponse(['error' => 'Non autorisé'], 403);
         }
 
         $lastId = $request->query->get('lastId');
-        
+
         $qb = $this->em->createQueryBuilder()
             ->select('m')
             ->from(Message::class, 'm')
@@ -70,12 +73,12 @@ class MessagingController extends AbstractController
         $data = [];
         foreach ($messages as $msg) {
             $data[] = [
-                'id' => $msg->getId(),
-                'content' => $msg->getContent(),
-                'senderId' => $msg->getSender()->getId(),
+                'id'         => $msg->getId(),
+                'content'    => $msg->getContent(),
+                'senderId'   => $msg->getSender()->getId(),
                 'senderName' => $msg->getSender()->getFullName(),
-                'sentAt' => $msg->getSentAt()->format('Y-m-d H:i:s'),
-                'isMe' => $msg->getSender()->getId() === $user->getId(),
+                'sentAt'     => $msg->getSentAt()->format('Y-m-d H:i:s'),
+                'isMe'       => $msg->getSender()->getId() === $user->getId(),
             ];
         }
 
@@ -87,16 +90,13 @@ class MessagingController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        
+
         if ($conversation->getClient()->getId() !== $user->getId() && $conversation->getTherapist()->getId() !== $user->getId()) {
             return new JsonResponse(['error' => 'Non autorisé'], 403);
         }
 
-        // Check if blocked
-        $clientId = $conversation->getClient()->getId();
-        $therapistId = $conversation->getTherapist()->getId();
         $isBlocked = $this->em->getRepository(BlockedUser::class)->findOneBy([
-            'client' => $conversation->getClient(),
+            'client'    => $conversation->getClient(),
             'therapist' => $conversation->getTherapist()
         ]) !== null;
 
@@ -104,7 +104,7 @@ class MessagingController extends AbstractController
             return new JsonResponse(['error' => 'Impossible d\'envoyer un message : bloque.'], 403);
         }
 
-        $data = json_decode($request->getContent(), true);
+        $data    = json_decode($request->getContent(), true);
         $content = trim($data['content'] ?? '');
 
         if (!$content) {
@@ -118,9 +118,8 @@ class MessagingController extends AbstractController
 
         $this->em->persist($msg);
 
-        // Notify other user
         $otherUser = $conversation->getOtherUser($user);
-        $notif = new Notification();
+        $notif     = new Notification();
         $notif->setUser($otherUser);
         $notif->setType('MESSAGE');
         $notif->setTitle('Nouveau message');
@@ -131,11 +130,11 @@ class MessagingController extends AbstractController
         $this->em->flush();
 
         return new JsonResponse([
-            'id' => $msg->getId(),
-            'content' => $msg->getContent(),
+            'id'       => $msg->getId(),
+            'content'  => $msg->getContent(),
             'senderId' => $user->getId(),
-            'sentAt' => $msg->getSentAt()->format('Y-m-d H:i:s'),
-            'isMe' => true
+            'sentAt'   => $msg->getSentAt()->format('Y-m-d H:i:s'),
+            'isMe'     => true,
         ]);
     }
 
@@ -144,7 +143,7 @@ class MessagingController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        
+
         $this->em->createQuery(
             'UPDATE App\Entity\Message m SET m.isRead = true
              WHERE m.conversation = :conv AND m.sender != :user AND m.isRead = false'
@@ -161,10 +160,10 @@ class MessagingController extends AbstractController
     #[Route('/api/report', name: 'api_report_user', methods: ['POST'])]
     public function reportUser(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data       = json_decode($request->getContent(), true);
         $reportedId = $data['reportedId'] ?? null;
-        $reason = $data['reason'] ?? 'OTHER';
-        $details = $data['details'] ?? null;
+        $reason     = $data['reason']     ?? 'OTHER';
+        $details    = $data['details']    ?? null;
 
         if (!$reportedId) {
             return new JsonResponse(['error' => 'ID manquant'], 400);
@@ -175,8 +174,14 @@ class MessagingController extends AbstractController
             return new JsonResponse(['error' => 'Utilisateur introuvable'], 404);
         }
 
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+        /** @var User $user */
+
         $report = new Report();
-        $report->setReporter($this->getUser());
+        $report->setReporter($reporter);
         $report->setReported($reported);
         $report->setReason($reason);
         $report->setDetails($details);
@@ -184,13 +189,12 @@ class MessagingController extends AbstractController
 
         $this->em->persist($report);
 
-        // Notify admins
         $admins = $this->em->createQuery("SELECT u FROM App\Entity\User u WHERE u.roles LIKE '%ROLE_ADMIN%'")->getResult();
         foreach ($admins as $admin) {
             $notif = new Notification();
             $notif->setUser($admin);
             $notif->setTitle('Nouveau signalement');
-            $notif->setBody($this->getUser()->getFullName() . ' a signalé un utilisateur.');
+            $notif->setBody($reporter->getFullName() . ' a signalé un utilisateur.');
             $this->em->persist($notif);
         }
 
@@ -204,8 +208,8 @@ class MessagingController extends AbstractController
     {
         /** @var User $me */
         $me = $this->getUser();
-        
-        $data = json_decode($request->getContent(), true);
+
+        $data        = json_decode($request->getContent(), true);
         $otherUserId = $data['userId'] ?? null;
 
         if (!$otherUserId) {
@@ -218,13 +222,12 @@ class MessagingController extends AbstractController
         }
 
         $isMeTherapist = str_contains($me->getPrimaryRole(), 'PSYCHOLOGUE');
-        $client = $isMeTherapist ? $otherUser : $me;
-        $therapist = $isMeTherapist ? $me : $otherUser;
+        $client        = $isMeTherapist ? $otherUser : $me;
+        $therapist     = $isMeTherapist ? $me : $otherUser;
 
-        // Ensure not already blocked
         $existing = $this->em->getRepository(BlockedUser::class)->findOneBy([
-            'client' => $client,
-            'therapist' => $therapist
+            'client'    => $client,
+            'therapist' => $therapist,
         ]);
 
         if (!$existing) {

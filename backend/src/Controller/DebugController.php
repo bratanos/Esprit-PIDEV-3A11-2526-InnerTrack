@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DebugController extends AbstractController
 {
     #[Route('/api/debug/me', methods: ['GET'])]
-    public function me()
+    public function me(): JsonResponse
     {
         $user = $this->getUser();
 
@@ -17,9 +18,9 @@ class DebugController extends AbstractController
         }
 
         return $this->json([
-            'email' => $user->getUserIdentifier(),
-            'roles' => $user->getRoles(),
-            'raw_roles_property' => method_exists($user, 'getRoles') ? $user->getRoles() : null,
+            'email'              => $user->getUserIdentifier(),
+            'roles'              => $user->getRoles(),
+            'raw_roles_property' => $user->getRoles(),
         ]);
     }
 }

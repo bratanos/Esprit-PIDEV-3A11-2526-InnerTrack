@@ -11,9 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 class Habitude
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(name: 'Id_Habit', type: 'integer')]
-    private ?int $idHabit = null;
+#[ORM\GeneratedValue]
+#[ORM\Column]
+/** @phpstan-ignore property.unusedType */
+private ?int $idJournal = null;
 
     #[ORM\Column(name: 'nom_habitude', type: 'string', length: 255)]
     private string $nomHabitude;

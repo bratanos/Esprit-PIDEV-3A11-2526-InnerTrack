@@ -31,16 +31,18 @@ class HabitudeController extends AbstractController
     #[Route('/', name: 'index')]
 public function index(Request $request): Response
 {
-    $user    = $this->security->getUser();
-    $keyword = $request->query->get('q', '');
-    $sortBy  = $request->query->get('sort', 'dateCreation');
-    $order   = $request->query->get('order', 'DESC');
+    /** @var \App\Entity\User $user */
+    $user = $this->security->getUser();
 
-    $habitudes = $keyword
-        ? $this->repo->search($keyword, $user->getId())
-        : $this->repo->findByUserIdSorted($user->getId(), $sortBy, $order);
+$keyword = (string) $request->query->get('q', '');
+$sortBy  = (string) $request->query->get('sort', 'dateCreation');
+$order   = (string) $request->query->get('order', 'DESC');
 
-    $stats = $this->repo->getStatsByUserId($user->getId());
+$userId = (int) $user->getId();
+$habitudes = $keyword
+    ? $this->repo->search($keyword, $userId)
+    : $this->repo->findByUserIdSorted($userId, $sortBy, $order);
+$stats = $this->repo->getStatsByUserId($userId);
 
     return $this->render('journal/habitude/index.html.twig', [
         'habitudes' => $habitudes,
@@ -60,7 +62,9 @@ public function index(Request $request): Response
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $habitude->setUser($this->security->getUser());
+            /** @var \App\Entity\User $user */
+            $user = $this->security->getUser();
+            $habitude->setUser($user);
             $this->em->persist($habitude);
             $this->em->flush();
             $this->addFlash('success', '✅ Habitude ajoutée !');
@@ -93,7 +97,7 @@ public function index(Request $request): Response
     #[Route('/supprimer/{id}', name: 'supprimer', methods: ['POST'])]
     public function supprimer(Habitude $habitude, Request $request): Response
     {
-        if ($this->isCsrfTokenValid('delete-habitude-' . $habitude->getIdHabit(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete-habitude-' . $habitude->getIdHabit(), (string) $request->request->get('_token'))) {
             $this->em->remove($habitude);
             $this->em->flush();
             $this->addFlash('success', '✅ Habitude supprimée !');
@@ -116,25 +120,25 @@ public function voir(int $id): Response
 #[Route('/qrcode/{id}', name: 'qrcode')]
 public function qrcode(int $id): Response
 {
-    $habitude = $this->repo->findOneBy(['idHabit' => $id]);
+    /** @var Habitude|null $habitude */
+$habitude = $this->repo->findOneBy(['idHabit' => $id]);
 
-    if (!$habitude) {
-        throw $this->createNotFoundException('Habitude non trouvée');
-    }
+if (!$habitude instanceof Habitude) {
+    throw $this->createNotFoundException('Habitude non trouvée');
+}
 
-    $texte = sprintf(
-        "Habitude: %s\nDate: %s\nEmotion: %s\nEnergie: %d/10\nStress: %d/10\nSommeil: %d/10\nNote: %s",
-        $habitude->getNomHabitude(),
-        $habitude->getDateCreation()->format('d/m/Y'),
-        $habitude->getEmotionDominantes(),
-        $habitude->getNiveauEnergie(),
-        $habitude->getNiveauStress(),
-        $habitude->getQualiteSommeil(),
-        $habitude->getNoteTextuelle() ?? ''
-    );
+$texte = sprintf(
+    "Habitude: %s\nDate: %s\nEmotion: %s\nEnergie: %d/10\nStress: %d/10\nSommeil: %d/10\nNote: %s",
+    $habitude->getNomHabitude(),
+    $habitude->getDateCreation()->format('d/m/Y'),
+    $habitude->getEmotionDominantes(),
+    $habitude->getNiveauEnergie(),
+    $habitude->getNiveauStress(),
+    $habitude->getQualiteSommeil(),
+    $habitude->getNoteTextuelle() ?? ''
+);
 
     $qrCode = new QrCode($texte);
-
     $writer = new PngWriter();
     $result = $writer->write($qrCode);
 
@@ -148,8 +152,9 @@ public function qrcode(int $id): Response
 #[Route('/export/pdf', name: 'export_pdf')]
 public function exportPdf(PdfExporter $pdfExporter): Response
 {
+    /** @var \App\Entity\User $user */
     $user = $this->security->getUser();
-    $habitudes = $this->repo->findByUserIdSorted($user->getId(), 'dateCreation', 'DESC');
+    $habitudes = $this->repo->findByUserIdSorted((int) $user->getId(), 'dateCreation', 'DESC');
 
     $tmpFile = tempnam(sys_get_temp_dir(), 'habitudes') . '.pdf';
     $pdfExporter->exportHabitudes($habitudes, $tmpFile);
@@ -160,18 +165,18 @@ public function exportPdf(PdfExporter $pdfExporter): Response
 #[Route('/search', name: 'search', methods: ['GET'])]
 public function search(Request $request): JsonResponse
 {
-    $user      = $this->security->getUser();
-    $keyword   = $request->query->get('q', '');
-    $emotion   = $request->query->get('emotion', '');
-    $energieMin = $request->query->get('energieMin') !== '' ? (int)$request->query->get('energieMin') : null;
-    $energieMax = $request->query->get('energieMax') !== '' ? (int)$request->query->get('energieMax') : null;
-    $stressMax  = $request->query->get('stressMax')  !== '' ? (int)$request->query->get('stressMax')  : null;
-    $date      = $request->query->get('date', '');
-    $sort      = $request->query->get('sort', 'dateCreation');
-    $order     = $request->query->get('order', 'DESC');
-
-    $habitudes = $this->repo->searchAdvanced(
-        $user->getId(), $keyword, $emotion, $energieMin, $energieMax, $stressMax, $date, $sort, $order
+    /** @var \App\Entity\User $user */
+    $user = $this->security->getUser();
+    $keyword    = (string) $request->query->get('q', '');
+    $emotion    = (string) $request->query->get('emotion', '');
+    $energieMin = $request->query->get('energieMin') !== '' ? (int) $request->query->get('energieMin') : null;
+    $energieMax = $request->query->get('energieMax') !== '' ? (int) $request->query->get('energieMax') : null;
+    $stressMax  = $request->query->get('stressMax')  !== '' ? (int) $request->query->get('stressMax')  : null;
+    $date       = (string) $request->query->get('date', '');
+    $sort       = (string) $request->query->get('sort', 'dateCreation');
+    $order      = (string) $request->query->get('order', 'DESC');
+    $habitudes  = $this->repo->searchAdvanced(
+        (int) $user->getId(), $keyword, $emotion, $energieMin, $energieMax, $stressMax, $date, $sort, $order
     );
 
     $data = array_map(fn($h) => [

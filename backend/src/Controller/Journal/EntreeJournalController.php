@@ -22,24 +22,30 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 class EntreeJournalController extends AbstractController
 {
     public function __construct(
-    private EntreeJournalRepository   $repo,
-    private EntityManagerInterface    $em,
-    private Security                  $security,
-    private CsrfTokenManagerInterface $csrfTokenManager
-) {}
+        private EntreeJournalRepository   $repo,
+        private EntityManagerInterface    $em,
+        private Security                  $security,
+        private CsrfTokenManagerInterface $csrfTokenManager
+    ) {}
 
     #[Route('/', name: 'index')]
     public function index(Request $request): Response
     {
-        $user    = $this->security->getUser();
-        $keyword = $request->query->get('q', '');
-        $date    = $request->query->get('date');
-        $humeur  = $request->query->get('humeur');
-        $sort    = $request->query->get('sort', 'dateSaisie'); 
-        $direction = $request->query->get('direction', 'DESC');  
+        $user = $this->security->getUser();
+
+        if (!$user instanceof \App\Entity\User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $userId    = (int) $user->getId();
+        $keyword   = (string) $request->query->get('q', '');
+        $date      = (string) $request->query->get('date', '');
+        $humeur    = $request->query->get('humeur') !== null ? (int) $request->query->get('humeur') : null;
+        $sort      = (string) $request->query->get('sort', 'dateSaisie');
+        $direction = (string) $request->query->get('direction', 'DESC');
 
         $entrees = $this->repo->searchAdvanced(
-            $user->getId(),
+            $userId,
             $keyword,
             $date,
             $humeur,
@@ -47,7 +53,7 @@ class EntreeJournalController extends AbstractController
             $direction
         );
 
-        $stats = $this->repo->getStatsByUserId($user->getId());
+        $stats = $this->repo->getStatsByUserId($userId);
 
         return $this->render('journal/entree/index.html.twig', [
             'entrees'          => $entrees,
@@ -55,8 +61,8 @@ class EntreeJournalController extends AbstractController
             'date'             => $date,
             'humeur'           => $humeur,
             'stats'            => $stats,
-            'currentSort'      => $sort,      
-            'currentDirection' => $direction, 
+            'currentSort'      => $sort,
+            'currentDirection' => $direction,
         ]);
     }
 
@@ -68,7 +74,13 @@ class EntreeJournalController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entree->setUser($this->security->getUser());
+            $user = $this->security->getUser();
+
+            if (!$user instanceof \App\Entity\User) {
+                throw $this->createAccessDeniedException();
+            }
+
+            $entree->setUser($user);
             $this->em->persist($entree);
             $this->em->flush();
             $this->addFlash('success', '✅ Entrée ajoutée !');
@@ -101,7 +113,10 @@ class EntreeJournalController extends AbstractController
     #[Route('/supprimer/{id}', name: 'supprimer', methods: ['POST'])]
     public function supprimer(EntreeJournal $entree, Request $request): Response
     {
-        if ($this->isCsrfTokenValid('delete-entree-' . $entree->getIdJournal(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid(
+            'delete-entree-' . $entree->getIdJournal(),
+            (string) $request->request->get('_token')
+        )) {
             $this->em->remove($entree);
             $this->em->flush();
             $this->addFlash('success', '✅ Entrée supprimée !');
@@ -117,82 +132,94 @@ class EntreeJournalController extends AbstractController
         ]);
     }
 
-#[Route('/qrcode/{id}', name: 'qrcode')]
-public function qrcode(int $id): Response
-{
-    $entree = $this->repo->findOneBy(['idJournal' => $id]);
+    #[Route('/qrcode/{id}', name: 'qrcode')]
+    public function qrcode(int $id): Response
+    {
+        /** @var EntreeJournal|null $entree */
+        $entree = $this->repo->findOneBy(['idJournal' => $id]);
 
-    if (!$entree) {
-        throw $this->createNotFoundException('Entrée non trouvée');
+        if (!$entree instanceof EntreeJournal) {
+            throw $this->createNotFoundException('Entrée non trouvée');
+        }
+
+        $texte = sprintf(
+            "Journal: %s\nHumeur: %d/10 - %s\nNote: %s",
+            $entree->getDateSaisie()->format('d/m/Y'),
+            $entree->getHumeur(),
+            $entree->getLabelHumeur(),
+            $entree->getNoteTextuelle() ?? ''
+        );
+
+        $qrCode = new QrCode($texte);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+
+        return new Response(
+            $result->getString(),
+            200,
+            ['Content-Type' => 'image/png']
+        );
     }
 
-    $texte = sprintf(
-        "Journal: %s\nHumeur: %d/10 - %s\nNote: %s",
-        $entree->getDateSaisie()->format('d/m/Y'),
-        $entree->getHumeur(),
-        $entree->getLabelHumeur(),
-        $entree->getNoteTextuelle() ?? ''
-    );
+    #[Route('/export/pdf', name: 'export_pdf')]
+    public function exportPdf(PdfExporter $pdfExporter): Response
+    {
+        $user = $this->security->getUser();
 
-    $qrCode = new QrCode($texte);
+        if (!$user instanceof \App\Entity\User) {
+            throw $this->createAccessDeniedException();
+        }
 
-    $writer = new PngWriter();
-    $result = $writer->write($qrCode);
+        $entrees = $this->repo->findByUserId((int) $user->getId());
 
-    return new Response(
-        $result->getString(),
-        200,
-        ['Content-Type' => 'image/png']
-    );
-}
+        $tmpFile = tempnam(sys_get_temp_dir(), 'journal') . '.pdf';
+        $pdfExporter->exportJournal($entrees, $tmpFile);
 
-#[Route('/export/pdf', name: 'export_pdf')]
-public function exportPdf(PdfExporter $pdfExporter): Response 
-{
-    $user = $this->getUser();
-    $entrees = $this->repo->findByUserId($user->getId());
+        return $this->file($tmpFile, 'MonJournal.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
+    }
 
-    $tmpFile = tempnam(sys_get_temp_dir(), 'journal') . '.pdf';
-    $pdfExporter->exportJournal($entrees, $tmpFile);
+    #[Route('/search', name: 'search', methods: ['GET'])]
+    public function search(Request $request): JsonResponse
+    {
+        $user = $this->security->getUser();
 
-    return $this->file($tmpFile, 'MonJournal.pdf', ResponseHeaderBag::DISPOSITION_INLINE);
-}
-#[Route('/search', name: 'search', methods: ['GET'])]
-public function search(Request $request): JsonResponse
-{
-    $user      = $this->security->getUser();
-    $keyword   = $request->query->get('q', '');
-    $date      = $request->query->get('date', '');
-    $humeurMin = $request->query->get('humeurMin') !== '' ? (int)$request->query->get('humeurMin') : null;
-    $humeurMax = $request->query->get('humeurMax') !== '' ? (int)$request->query->get('humeurMax') : null;
-    $sort      = $request->query->get('sort', 'dateSaisie');
-    $direction = $request->query->get('direction', 'DESC');
+        if (!$user instanceof \App\Entity\User) {
+            throw $this->createAccessDeniedException();
+        }
 
-    $entrees = $this->repo->searchAdvanced(
-        $user->getId(),
-        $keyword,
-        $date,
-        null,
-        $sort,
-        $direction,
-        $humeurMin,
-        $humeurMax
-    );
+        $userId    = (int) $user->getId();
+        $keyword   = (string) $request->query->get('q', '');
+        $date      = (string) $request->query->get('date', '');
+        $humeurMin = $request->query->get('humeurMin') !== '' ? (int) $request->query->get('humeurMin') : null;
+        $humeurMax = $request->query->get('humeurMax') !== '' ? (int) $request->query->get('humeurMax') : null;
+        $sort      = (string) $request->query->get('sort', 'dateSaisie');
+        $direction = (string) $request->query->get('direction', 'DESC');
 
-    $data = array_map(fn($e) => [
-        'id'            => $e->getIdJournal(),
-        'noteTextuelle' => $e->getNoteTextuelle() ?? 'Aucune note.',
-        'humeur'        => $e->getHumeur(),
-        'labelHumeur'   => $e->getLabelHumeur(),
-        'emojiHumeur'   => $e->getEmojiHumeur(),
-        'couleurHumeur' => $e->getCouleurHumeur(),
-        'dateSaisie'    => $e->getDateSaisie()->format('d/m/Y'),
-        'urlVoir'       => $this->generateUrl('entree_voir',      ['id' => $e->getIdJournal()]),
-        'urlModifier'   => $this->generateUrl('entree_modifier',  ['id' => $e->getIdJournal()]),
-        'urlSupprimer'  => $this->generateUrl('entree_supprimer', ['id' => $e->getIdJournal()]),
-        'csrfToken' => $this->csrfTokenManager->getToken('delete-entree-' . $e->getIdJournal())->getValue(),
-    ], $entrees);
+        $entrees = $this->repo->searchAdvanced(
+            $userId,
+            $keyword,
+            $date,
+            null,
+            $sort,
+            $direction,
+            $humeurMin,
+            $humeurMax
+        );
 
-    return new JsonResponse($data);
-}
+        $data = array_map(fn($e) => [
+            'id'            => $e->getIdJournal(),
+            'noteTextuelle' => $e->getNoteTextuelle() ?? 'Aucune note.',
+            'humeur'        => $e->getHumeur(),
+            'labelHumeur'   => $e->getLabelHumeur(),
+            'emojiHumeur'   => $e->getEmojiHumeur(),
+            'couleurHumeur' => $e->getCouleurHumeur(),
+            'dateSaisie'    => $e->getDateSaisie()->format('d/m/Y'),
+            'urlVoir'       => $this->generateUrl('entree_voir',      ['id' => $e->getIdJournal()]),
+            'urlModifier'   => $this->generateUrl('entree_modifier',  ['id' => $e->getIdJournal()]),
+            'urlSupprimer'  => $this->generateUrl('entree_supprimer', ['id' => $e->getIdJournal()]),
+            'csrfToken'     => $this->csrfTokenManager->getToken('delete-entree-' . $e->getIdJournal())->getValue(),
+        ], $entrees);
+
+        return new JsonResponse($data);
+    }
 }

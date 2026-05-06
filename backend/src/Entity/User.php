@@ -15,6 +15,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    /** @phpstan-ignore property.unusedType */
     private ?int $id = null;
 
     #[ORM\Column(unique: true)]
@@ -26,6 +27,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 20)]
     private string $status = 'PENDING';
 
+    /**
+     * @var string[]
+     */
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
@@ -57,17 +61,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $code;
 
     #[ORM\OneToOne(targetEntity: ClientProfile::class, mappedBy: 'user')]
+    /** @phpstan-ignore property.unusedType */
     private ?ClientProfile $clientProfile = null;
 
     #[ORM\OneToOne(targetEntity: TherapistProfile::class, mappedBy: 'user')]
+    /** @phpstan-ignore property.unusedType */
     private ?TherapistProfile $therapistProfile = null;
 
     #[ORM\OneToOne(targetEntity: UserSettings::class, mappedBy: 'user')]
+    /** @phpstan-ignore property.unusedType */
     private ?UserSettings $settings = null;
 
     public function __construct()
     {
-        $this->code = new ArrayCollection();
+        $this->code      = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
 
@@ -76,12 +83,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getEmail(): string { return $this->email; }
     public function setEmail(string $email): self { $this->email = $email; return $this; }
 
+    /**
+     * @return string[]
+     */
     public function getRoles(): array
     {
         return array_unique(array_merge(['ROLE_USER'], $this->roles));
     }
+
+    /**
+     * @param string[] $roles
+     */
     public function setRoles(array $roles): self { $this->roles = $roles; return $this; }
 
+    /**
+     * @return string[]
+     */
     public function getRawRoles(): array { return $this->roles; }
 
     public function getPrimaryRole(): string
@@ -126,30 +143,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPhoneNumber(): ?string { return $this->phoneNumber; }
     public function setPhoneNumber(?string $phoneNumber): self { $this->phoneNumber = $phoneNumber; return $this; }
 
+    /**
+     * @return Collection<int, EmailVerificationCode>
+     */
     public function getCode(): Collection { return $this->code; }
+
     public function getClientProfile(): ?ClientProfile { return $this->clientProfile; }
     public function getTherapistProfile(): ?TherapistProfile { return $this->therapistProfile; }
     public function getSettings(): ?UserSettings { return $this->settings; }
 
-    /**
-     * Returns web-accessible profile picture URL, handling both absolute desktop paths
-     * and relative web paths stored in the DB.
-     */
     public function getProfilePictureUrl(): ?string
     {
         if (!$this->profilePicture) return null;
 
-        // Task 2.1: Support absolute remote URLs (e.g. ImgBB)
         if (str_starts_with($this->profilePicture, 'http')) {
             return $this->profilePicture;
         }
 
-        // If it's already a relative web path
         if (str_starts_with($this->profilePicture, '/uploads/')) {
             return $this->profilePicture;
         }
 
-        // If it's an absolute desktop path (legacy JavaFX), try to extract the filename
         $filename = basename($this->profilePicture);
         return '/uploads/profiles/' . $filename;
     }

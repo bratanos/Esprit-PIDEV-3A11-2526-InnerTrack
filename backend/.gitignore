@@ -42,3 +42,7 @@ dist/
 .DS_Store
 Thumbs.db
 ".env" 
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

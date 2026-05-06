@@ -2,11 +2,16 @@
 
 namespace App\Service;
 
+use App\Entity\Journal\EntreeJournal;
+use App\Entity\Journal\Habitude;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
 class PdfExporter
 {
+    /**
+     * @param EntreeJournal[] $entrees
+     */
     public function exportJournal(array $entrees, string $filename): void
     {
         $options = new Options();
@@ -14,7 +19,7 @@ class PdfExporter
         $options->set('isRemoteEnabled', true);
         $dompdf = new Dompdf($options);
 
-        $total = count($entrees);
+        $total       = count($entrees);
         $avgHumeur   = $total > 0 ? round(array_sum(array_map(fn($e) => $e->getHumeur(), $entrees)) / $total, 1) : 0;
         $bestHumeur  = $total > 0 ? max(array_map(fn($e) => $e->getHumeur(), $entrees)) : 0;
         $worstHumeur = $total > 0 ? min(array_map(fn($e) => $e->getHumeur(), $entrees)) : 0;
@@ -113,7 +118,7 @@ class PdfExporter
             }
 
             $noteRaw = $e->getNoteTextuelle() ?? 'Aucune note.';
-            $note = nl2br(htmlspecialchars(mb_substr($noteRaw, 0, 120)));
+            $note    = nl2br(htmlspecialchars(mb_substr($noteRaw, 0, 120)));
             if (mb_strlen($noteRaw) > 120) {
                 $note .= '...';
             }
@@ -149,6 +154,9 @@ class PdfExporter
         file_put_contents($filename, $dompdf->output());
     }
 
+    /**
+     * @param Habitude[] $habitudes
+     */
     public function exportHabitudes(array $habitudes, string $filename): void
     {
         $options = new Options();
@@ -157,8 +165,8 @@ class PdfExporter
         $dompdf = new Dompdf($options);
 
         $total      = count($habitudes);
-        $avgEnergie = $total > 0 ? round(array_sum(array_map(fn($h) => $h->getNiveauEnergie(), $habitudes)) / $total, 1) : 0;
-        $avgStress  = $total > 0 ? round(array_sum(array_map(fn($h) => $h->getNiveauStress(),  $habitudes)) / $total, 1) : 0;
+        $avgEnergie = $total > 0 ? round(array_sum(array_map(fn($h) => $h->getNiveauEnergie(),  $habitudes)) / $total, 1) : 0;
+        $avgStress  = $total > 0 ? round(array_sum(array_map(fn($h) => $h->getNiveauStress(),   $habitudes)) / $total, 1) : 0;
         $avgSommeil = $total > 0 ? round(array_sum(array_map(fn($h) => $h->getQualiteSommeil(), $habitudes)) / $total, 1) : 0;
 
         $html = '<!DOCTYPE html>
@@ -243,8 +251,8 @@ class PdfExporter
     <tbody>';
 
         foreach ($habitudes as $h) {
-            $ce = $h->getNiveauEnergie() >= 7 ? '#48bb78' : ($h->getNiveauEnergie() >= 4 ? '#f6ad55' : '#ff4444');
-            $cs = $h->getNiveauStress()  >= 7 ? '#ff4444' : ($h->getNiveauStress()  >= 4 ? '#f6ad55' : '#63b3ed');
+            $ce = $h->getNiveauEnergie()  >= 7 ? '#48bb78' : ($h->getNiveauEnergie()  >= 4 ? '#f6ad55' : '#ff4444');
+            $cs = $h->getNiveauStress()   >= 7 ? '#ff4444' : ($h->getNiveauStress()   >= 4 ? '#f6ad55' : '#63b3ed');
             $co = $h->getQualiteSommeil() >= 7 ? '#b794f4' : ($h->getQualiteSommeil() >= 4 ? '#4299e1' : '#a0aec0');
 
             $noteRaw = $h->getNoteTextuelle() ?? '';
@@ -256,8 +264,8 @@ class PdfExporter
         <td><strong>' . htmlspecialchars($h->getNomHabitude()) . '</strong></td>
         <td class="date-text">' . $h->getDateCreation()->format('d/m/Y') . '</td>
         <td>' . htmlspecialchars($h->getEmotionDominantes()) . '</td>
-        <td><span class="badge" style="background-color:' . $ce . '22;color:' . $ce . '">' . $h->getNiveauEnergie() . '/10</span></td>
-        <td><span class="badge" style="background-color:' . $cs . '22;color:' . $cs . '">' . $h->getNiveauStress()  . '/10</span></td>
+        <td><span class="badge" style="background-color:' . $ce . '22;color:' . $ce . '">' . $h->getNiveauEnergie()  . '/10</span></td>
+        <td><span class="badge" style="background-color:' . $cs . '22;color:' . $cs . '">' . $h->getNiveauStress()   . '/10</span></td>
         <td><span class="badge" style="background-color:' . $co . '22;color:' . $co . '">' . $h->getQualiteSommeil() . '/10</span></td>
         <td class="note-text">' . ($note ?: '—') . '</td>
     </tr>';

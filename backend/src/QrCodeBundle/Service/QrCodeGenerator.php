@@ -2,6 +2,8 @@
 
 namespace App\QrCodeBundle\Service;
 
+use App\Entity\Journal\EntreeJournal;
+use App\Entity\Journal\Habitude;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
@@ -20,7 +22,7 @@ class QrCodeGenerator
         return 'data:image/png;base64,' . base64_encode($this->generatePng($texte));
     }
 
-    public function buildHabitudeText(object $habitude): string
+    public function buildHabitudeText(Habitude $habitude): string
     {
         return sprintf(
             "InnerTrack - Habitude\nNom: %s\nDate: %s\nEmotion: %s\nEnergie: %d/10\nStress: %d/10\nSommeil: %d/10\nNote: %s",
@@ -34,7 +36,7 @@ class QrCodeGenerator
         );
     }
 
-    public function buildJournalText(object $entree): string
+    public function buildJournalText(EntreeJournal $entree): string
     {
         return sprintf(
             "InnerTrack - Journal\nDate: %s\nHumeur: %d/10\nNote: %s",

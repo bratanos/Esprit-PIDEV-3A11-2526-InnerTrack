@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,22 +15,30 @@ class ProfileController extends AbstractController
     public function profile(): JsonResponse
     {
         $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+        /** @var User $user */
 
         return $this->json([
-            'id' => $user->getId(),
+            'id'    => $user->getId(),
             'email' => $user->getUserIdentifier(),
             'roles' => $user->getRoles(),
         ]);
     }
-    
+
     #[Route('/api/me', name: 'api_me', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function me(): JsonResponse
     {
         $user = $this->getUser();
+if (!$user instanceof User) {
+    throw $this->createAccessDeniedException();
+}
+/** @var User $user */
 
         return $this->json([
-            'id' => $user->getId(),
+            'id'    => $user->getId(),
             'email' => $user->getEmail(),
             'roles' => $user->getRoles(),
         ]);
