@@ -42,6 +42,7 @@ class UserProfileCrudTest extends WebTestCase
         $user->setFirstName('Original');
         $user->setLastName('Name');
         $user->setRoles(['ROLE_USER']);
+        $user->setIsVerified(true);
         
         $entityManager->persist($user);
         $entityManager->flush();
