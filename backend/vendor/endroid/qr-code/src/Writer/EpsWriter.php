@@ -11,9 +11,11 @@ use Endroid\QrCode\QrCodeInterface;
 use Endroid\QrCode\Writer\Result\EpsResult;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 
-final class EpsWriter implements WriterInterface
+final readonly class EpsWriter implements WriterInterface
 {
-    public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
+    public const DECIMAL_PRECISION = 10;
+
+    public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
     {
         $matrixFactory = new MatrixFactory();
         $matrix = $matrixFactory->create($qrCode);
@@ -32,11 +34,11 @@ final class EpsWriter implements WriterInterface
                 if (1 === $matrix->getBlockValue($matrix->getBlockCount() - 1 - $rowIndex, $columnIndex)) {
                     $x = $matrix->getMarginLeft() + $matrix->getBlockSize() * $columnIndex;
                     $y = $matrix->getMarginLeft() + $matrix->getBlockSize() * $rowIndex;
-                    $lines[] = $x.' '.$y.' '.$matrix->getBlockSize().' '.$matrix->getBlockSize().' F';
+                    $lines[] = number_format($x, self::DECIMAL_PRECISION, '.', '').' '.number_format($y, self::DECIMAL_PRECISION, '.', '').' '.number_format($matrix->getBlockSize(), self::DECIMAL_PRECISION, '.', '').' '.number_format($matrix->getBlockSize(), self::DECIMAL_PRECISION, '.', '').' F';
                 }
             }
         }
 
-        return new EpsResult($lines);
+        return new EpsResult($matrix, $lines);
     }
 }
