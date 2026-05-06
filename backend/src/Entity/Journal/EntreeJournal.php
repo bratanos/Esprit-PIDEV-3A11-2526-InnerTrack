@@ -15,7 +15,7 @@ class EntreeJournal
     #[ORM\Column(name: 'id_journal', type: 'integer')]
     private ?int $idJournal = null;
 
-    #[ORM\Column(name: 'humeur', type: 'integer')]
+    #[ORM\Column(name: 'humeur', type: 'integer')] 
     private int $humeur = 5;
 
     #[ORM\Column(name: 'note_textuelle', type: 'text', nullable: true)]
