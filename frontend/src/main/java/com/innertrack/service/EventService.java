@@ -67,9 +67,8 @@ public class EventService {
     public List<Event> recuperer() throws SQLException {
 
         String sql = """
-            SELECT e.*, t.id_type_event, t.libelle
+            SELECT e.*
             FROM event e
-            JOIN type_event t ON t.id_type_event = e.id_type_event
             ORDER BY e.date_event DESC
         """;
 
@@ -88,10 +87,16 @@ public class EventService {
                 e.setCapacite(rs.getInt("capacite"));
                 e.setStatut(rs.getBoolean("statut"));
 
-                TypeEvent te = new TypeEvent(
-                        rs.getInt("id_type_event"),
-                        rs.getString("libelle")
-                );
+                int idTypeEvent = rs.getInt("id_type_event");
+                String libelle = switch (idTypeEvent) {
+                    case 1 -> "Conférence";
+                    case 2 -> "Atelier";
+                    case 3 -> "Forum";
+                    case 4 -> "Webinaire";
+                    default -> "Inconnu";
+                };
+
+                TypeEvent te = new TypeEvent(idTypeEvent, libelle);
                 e.setTypeEvent(te);
 
                 events.add(e);

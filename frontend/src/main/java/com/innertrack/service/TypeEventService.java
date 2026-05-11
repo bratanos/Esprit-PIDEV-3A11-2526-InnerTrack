@@ -16,56 +16,33 @@ public class TypeEventService {
     }
 
     public void ajouter(TypeEvent t) throws SQLException {
-        String sql = "INSERT INTO type_event(libelle) VALUES (?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, t.getLibelle().trim());
-            ps.executeUpdate();
-        }
+        throw new UnsupportedOperationException("TypeEvent is a fixed Enum in the backend. Cannot add new types.");
     }
 
     public void modifier(TypeEvent t) throws SQLException {
-        String sql = "UPDATE type_event SET libelle=? WHERE id_type_event=?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, t.getLibelle().trim());
-            ps.setInt(2, t.getIdTypeEvent());
-            ps.executeUpdate();
-        }
+        throw new UnsupportedOperationException("TypeEvent is a fixed Enum in the backend. Cannot modify types.");
     }
 
     public void supprimer(int id) throws SQLException {
-        String sql = "DELETE FROM type_event WHERE id_type_event=?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        }
+        throw new UnsupportedOperationException("TypeEvent is a fixed Enum in the backend. Cannot delete types.");
     }
 
     public List<TypeEvent> recuperer() throws SQLException {
-        String sql = "SELECT id_type_event, libelle FROM type_event ORDER BY libelle";
         List<TypeEvent> list = new ArrayList<>();
-        try (Statement st = connection.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-
-            while (rs.next()) {
-                list.add(new TypeEvent(
-                        rs.getInt("id_type_event"),
-                        rs.getString("libelle")
-                ));
-            }
-        }
+        list.add(new TypeEvent(1, "Conférence"));
+        list.add(new TypeEvent(2, "Atelier"));
+        list.add(new TypeEvent(3, "Forum"));
+        list.add(new TypeEvent(4, "Webinaire"));
         return list;
     }
 
     public TypeEvent findById(int id) throws SQLException {
-        String sql = "SELECT id_type_event, libelle FROM type_event WHERE id_type_event=?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new TypeEvent(rs.getInt("id_type_event"), rs.getString("libelle"));
-                }
-            }
-        }
-        return null;
+        return switch (id) {
+            case 1 -> new TypeEvent(1, "Conférence");
+            case 2 -> new TypeEvent(2, "Atelier");
+            case 3 -> new TypeEvent(3, "Forum");
+            case 4 -> new TypeEvent(4, "Webinaire");
+            default -> null;
+        };
     }
 }
