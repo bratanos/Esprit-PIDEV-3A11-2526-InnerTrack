@@ -22,7 +22,10 @@ public class MainApp extends Application {
     public static String getEnv(String key) {
         if (dotenv == null) {
             try {
-                dotenv = Dotenv.configure()
+                // If running from root, the .env is inside frontend/. Otherwise, it's in current dir.
+                String dir = new java.io.File("./frontend/.env").exists() ? "./frontend" : "./";
+                dotenv = io.github.cdimascio.dotenv.Dotenv.configure()
+                        .directory(dir)
                         .ignoreIfMissing()
                         .load();
             } catch (Exception e) {
