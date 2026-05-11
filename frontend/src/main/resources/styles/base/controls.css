@@ -14,18 +14,18 @@
 .btn-primary,
 .button1,
 .button2 {
-    -fx-background-color: linear-gradient(to right, #a78bfa, #8b5cf6);
+    -fx-background-color: #0891B2; /* Tailwind Primary */
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-padding: 10 25;
     -fx-background-radius: 12;
-    -fx-effect: dropshadow(three-pass-box, rgba(139, 92, 246, 0.3), 10, 0, 0, 4);
+    -fx-effect: dropshadow(three-pass-box, rgba(8, 145, 178, 0.3), 10, 0, 0, 4);
 }
 
 .btn-primary:hover,
 .button1:hover,
 .button2:hover {
-    -fx-background-color: linear-gradient(to right, #8b5cf6, #7c3aed);
+    -fx-background-color: #06b6d4; /* Lighter Cyan */
     -fx-scale-x: 1.04;
     -fx-scale-y: 1.04;
 }
@@ -77,7 +77,7 @@
 /* Inputs */
 .text-field,
 .password-field {
-    -fx-background-color: derive(#f8fafc, 0%);
+    -fx-background-color: derive(#ffffff, 0%);
     -fx-text-fill: derive(#1e293b, 0%);
     -fx-border-color: derive(#e2e8f0, 0%);
     -fx-border-radius: 8;
@@ -87,9 +87,9 @@
 
 .text-field:focused,
 .password-field:focused {
-    -fx-border-color: derive(#8b5cf6, 0%);
+    -fx-border-color: #0891B2;
     -fx-background-color: derive(#ffffff, 0%);
-    -fx-effect: dropshadow(three-pass-box, rgba(124, 58, 237, 0.2), 5, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(8, 145, 178, 0.2), 5, 0, 0, 0);
 }
 
 .combo-box {
@@ -105,7 +105,7 @@
 }
 
 .combo-box:hover {
-    -fx-border-color: #8b5cf6;
+    -fx-border-color: #0891B2;
 }
 
 .date-picker {
@@ -115,7 +115,7 @@
 }
 
 .date-picker:hover {
-    -fx-border-color: #8b5cf6;
+    -fx-border-color: #0891B2;
 }
 
 /* Tables */

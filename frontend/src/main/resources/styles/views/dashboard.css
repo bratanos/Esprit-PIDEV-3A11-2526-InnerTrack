@@ -13,10 +13,10 @@
 
 /* Quote Card with Punchy Gradient */
 .dashboard-quote-card {
-    -fx-background-color: linear-gradient(to right, #8b5cf6, #0ea5e9);
+    -fx-background-color: linear-gradient(to right, #0891B2, #A78BFA);
     -fx-background-radius: 20;
     -fx-padding: 30;
-    -fx-effect: dropshadow(three-pass-box, rgba(139, 92, 246, 0.3), 20, 0, 0, 10);
+    -fx-effect: dropshadow(three-pass-box, rgba(8, 145, 178, 0.3), 20, 0, 0, 10);
 }
 
 .quote-header {
@@ -45,7 +45,7 @@
 .dashboard-view .stat-value {
     -fx-font-size: 32;
     -fx-font-weight: bold;
-    -fx-text-fill: #8b5cf6;
+    -fx-text-fill: #0891B2;
 }
 
 /* Punchy Alerts */
@@ -59,7 +59,7 @@
 
 /* Quick Action Styles */
 .action-card {
-    -fx-border-color: #8b5cf6;
+    -fx-border-color: #0891B2;
     -fx-border-width: 2;
     -fx-border-radius: 15;
 }

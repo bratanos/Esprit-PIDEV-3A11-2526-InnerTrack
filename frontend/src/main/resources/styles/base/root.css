@@ -1,4 +1,7 @@
 /* root.css - Base Resets */
 @import "tokens.css";
 
-/* No arbitrary classes allowed here. Only global reset properties. */
+/* Apply Tailwind web gradient background to all screens */
+.root {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ecfeff 0%, #faf5ff 50%, #ecfdf5 100%);
+}

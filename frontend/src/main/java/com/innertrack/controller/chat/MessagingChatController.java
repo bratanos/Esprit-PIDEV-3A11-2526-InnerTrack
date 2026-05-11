@@ -120,13 +120,23 @@ public class MessagingChatController {
 
         ContextMenu menu = new ContextMenu();
 
-        // Block — therapist only
-        if (iAmTherapist) {
+        // Determine exact clientId and therapistId based on role
+        int clientId = iAmTherapist ? otherUserId : currentUserId;
+        int therapistId = iAmTherapist ? currentUserId : otherUserId;
+
+        // Check current block status
+        boolean isBlocked = messagingDao.isBlocked(clientId, therapistId);
+
+        if (isBlocked) {
+            MenuItem unblockItem = new MenuItem("✅  Unblock " + otherName);
+            unblockItem.setOnAction(e -> handleUnblock(clientId, therapistId, otherName));
+            menu.getItems().add(unblockItem);
+        } else {
             MenuItem blockItem = new MenuItem("🚫  Block " + otherName);
-            blockItem.setOnAction(e -> handleBlock(otherUserId, otherName));
+            blockItem.setOnAction(e -> handleBlock(clientId, therapistId, otherName));
             menu.getItems().add(blockItem);
-            menu.getItems().add(new SeparatorMenuItem());
         }
+        menu.getItems().add(new SeparatorMenuItem());
 
         // Report — both sides
         MenuItem reportItem = new MenuItem("⚠  Report " + otherName);
@@ -136,7 +146,7 @@ public class MessagingChatController {
         menu.show(menuButton, Side.BOTTOM, 0, 4);
     }
 
-    private void handleBlock(int otherUserId, String otherName) {
+    private void handleBlock(int clientId, int therapistId, String otherName) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Block");
         confirm.setHeaderText("Block " + otherName + " ?");
@@ -147,14 +157,9 @@ public class MessagingChatController {
             if (bt != ButtonType.OK)
                 return;
 
-            // Use the new fine-grained blocking instead of account-wide suspension
-            int clientId = currentUserRole.contains("PSYCHOLOGUE") ? otherUserId : currentUserId;
-            int therapistId = currentUserRole.contains("PSYCHOLOGUE") ? currentUserId : otherUserId;
-
             boolean ok = messagingDao.updateBlockingStatus(clientId, therapistId, true);
 
             if (ok) {
-                // Optional: Notify admins that a block happened (without suspending)
                 notifyAdmins("User blocked",
                         SessionManager.getInstance().getCurrentUser().getFullName()
                                 + " has blocked messages from " + otherName + ".");
@@ -173,6 +178,27 @@ public class MessagingChatController {
                 }
             } else {
                 showAlert("Error", "Unable to block the user.");
+            }
+        });
+    }
+
+    private void handleUnblock(int clientId, int therapistId, String otherName) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Unblock");
+        confirm.setHeaderText("Unblock " + otherName + " ?");
+        confirm.setContentText("This user will be able to message you again.");
+        confirm.showAndWait().ifPresent(bt -> {
+            if (bt != ButtonType.OK)
+                return;
+
+            boolean ok = messagingDao.updateBlockingStatus(clientId, therapistId, false);
+
+            if (ok) {
+                showAlert("Unblocked", otherName + " has been unblocked.");
+                // Refresh views
+                loadConversationList();
+            } else {
+                showAlert("Error", "Unable to unblock the user.");
             }
         });
     }
