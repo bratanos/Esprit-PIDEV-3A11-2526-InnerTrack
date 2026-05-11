@@ -718,14 +718,21 @@ public class AdminDashboardController {
             javafx.scene.image.Image image;
             if (picPath.startsWith("http://") || picPath.startsWith("https://")) {
                 image = new javafx.scene.image.Image(picPath, true);
+                image.progressProperty().addListener((obs, o, n) -> {
+                    if (n.doubleValue() == 1.0 && !image.isError()) {
+                        profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                    }
+                });
+                if (image.getProgress() == 1.0 && !image.isError()) {
+                    profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                }
             } else {
                 java.io.File file = new java.io.File(picPath);
                 if (!file.exists()) return;
                 image = new javafx.scene.image.Image(file.toURI().toString());
-            }
-            if (!image.isError()) {
-                profileCircle.setFill(
-                        new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                if (!image.isError()) {
+                    profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                }
             }
         } catch (Exception e) {
             System.err.println("Error loading admin profile image: " + e.getMessage());

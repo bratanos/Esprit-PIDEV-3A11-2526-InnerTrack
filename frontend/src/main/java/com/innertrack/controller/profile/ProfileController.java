@@ -133,14 +133,22 @@ public class ProfileController {
                 if (picPath.startsWith("http://") || picPath.startsWith("https://")) {
                     // URL-based image (ImgBB or other hosted images)
                     image = new Image(picPath, true); // background loading
+                    image.progressProperty().addListener((obs, o, n) -> {
+                        if (n.doubleValue() == 1.0 && !image.isError()) {
+                            profileCircle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+                        }
+                    });
+                    if (image.getProgress() == 1.0 && !image.isError()) {
+                        profileCircle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+                    }
                 } else {
                     // Legacy local file path
                     File file = new File(picPath);
                     if (!file.exists()) return;
                     image = new Image(file.toURI().toString());
-                }
-                if (!image.isError()) {
-                    profileCircle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+                    if (!image.isError()) {
+                        profileCircle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("Error loading profile image: " + e.getMessage());
