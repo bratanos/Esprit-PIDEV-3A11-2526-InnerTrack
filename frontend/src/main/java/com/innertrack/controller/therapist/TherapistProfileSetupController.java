@@ -99,7 +99,7 @@ public class TherapistProfileSetupController {
         firstNameField.setText(safe(currentUser.getFirstName()));
         lastNameField.setText(safe(currentUser.getLastName()));
         emailField.setText(safe(currentUser.getEmail()));
-        updateProfileImage();
+        updateProfileImage(currentUser.getProfilePicture());
 
         // Pre-fill from profile table
         if (profile.getSpecialization() != null)
@@ -230,7 +230,7 @@ public class TherapistProfileSetupController {
                 // Save URL to user table (cross-platform, works with web backend too)
                 currentUser.setProfilePicture(imageUrl);
                 userDao.update(currentUser);
-                updateProfileImage();
+                updateProfileImage(currentUser.getProfilePicture());
                 showAlert("Succès", "Photo de profil mise à jour via ImgBB !");
             } catch (Exception e) {
                 e.printStackTrace();

@@ -77,7 +77,7 @@ public class ProfileController {
             phoneField.setText(currentUser.getPhoneNumber() != null ? currentUser.getPhoneNumber() : "");
         }
         emailField.setText(currentUser.getEmail());
-        updateProfileImage();
+        updateProfileImage(currentUser.getProfilePicture());
     }
 
     private void loadExtendedProfile() {
@@ -215,7 +215,7 @@ public class ProfileController {
                 // Save URL to user table (cross-platform, works with web backend too)
                 currentUser.setProfilePicture(imageUrl);
                 userDao.update(currentUser);
-                updateProfileImage();
+                updateProfileImage(currentUser.getProfilePicture());
                 showFeedback("Succès", "Photo de profil mise à jour via ImgBB !");
             } catch (Exception e) {
                 e.printStackTrace();
