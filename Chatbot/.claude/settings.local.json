@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/Scripts/pip show *)",
+      "Bash(.venv/Scripts/pip install *)",
+      "Bash(.venv/Scripts/python -c ' *)",
+      "Bash(.venv/Scripts/python -c \"from huggingface_hub import InferenceClient; print\\([m for m in dir\\(InferenceClient\\) if not m.startswith\\('_'\\)]\\)\")"
+    ]
+  }
+}
