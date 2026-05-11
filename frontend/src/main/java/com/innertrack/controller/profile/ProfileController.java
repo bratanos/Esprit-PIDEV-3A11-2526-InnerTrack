@@ -7,6 +7,7 @@ import com.innertrack.dao.UserDao;
 import com.innertrack.model.ClientProfile;
 import com.innertrack.model.TherapistProfile;
 import com.innertrack.model.User;
+import com.innertrack.service.ImgBBService;
 import com.innertrack.session.SessionManager;
 import com.innertrack.util.ViewManager;
 import javafx.fxml.FXML;
@@ -17,11 +18,6 @@ import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 
 public class ProfileController {
@@ -133,14 +129,18 @@ public class ProfileController {
         String picPath = currentUser.getProfilePicture();
         if (picPath != null && !picPath.isEmpty()) {
             try {
-                File file = new File(picPath);
-                if (file.exists()) {
-                    try (java.io.FileInputStream fis = new java.io.FileInputStream(file)) {
-                        Image image = new Image(fis);
-                        if (!image.isError()) {
-                            profileCircle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-                        }
-                    }
+                Image image;
+                if (picPath.startsWith("http://") || picPath.startsWith("https://")) {
+                    // URL-based image (ImgBB or other hosted images)
+                    image = new Image(picPath, true); // background loading
+                } else {
+                    // Legacy local file path
+                    File file = new File(picPath);
+                    if (!file.exists()) return;
+                    image = new Image(file.toURI().toString());
+                }
+                if (!image.isError()) {
+                    profileCircle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                 }
             } catch (Exception e) {
                 System.err.println("Error loading profile image: " + e.getMessage());
@@ -200,21 +200,17 @@ public class ProfileController {
 
         if (selectedFile != null) {
             try {
-                Path uploadPath = Paths.get("uploads/profiles").toAbsolutePath();
-                Files.createDirectories(uploadPath);
-                String fileName = currentUser.getId() + "_" + System.currentTimeMillis()
-                        + "_" + selectedFile.getName();
-                Path destPath = uploadPath.resolve(fileName);
-                Files.copy(selectedFile.toPath(), destPath, StandardCopyOption.REPLACE_EXISTING);
+                // Upload to ImgBB and get the hosted URL
+                String imageUrl = ImgBBService.getInstance().upload(selectedFile);
 
-                // Save path to user table — this is correct, picture is user-level data
-                currentUser.setProfilePicture(destPath.toString());
+                // Save URL to user table (cross-platform, works with web backend too)
+                currentUser.setProfilePicture(imageUrl);
                 userDao.update(currentUser);
                 updateProfileImage();
-                showFeedback("Succès", "Photo de profil mise à jour avec succès !");
-            } catch (IOException | SQLException e) {
+                showFeedback("Succès", "Photo de profil mise à jour via ImgBB !");
+            } catch (Exception e) {
                 e.printStackTrace();
-                showFeedback("Erreur", "Impossible de mettre à jour la photo.");
+                showFeedback("Erreur", "Impossible de mettre à jour la photo : " + e.getMessage());
             }
         }
     }
