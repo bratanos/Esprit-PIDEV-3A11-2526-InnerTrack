@@ -295,11 +295,63 @@ public class MessagingChatController {
         }, "unread-banner-thread").start();
     }
 
+    // ── Cache for profile pictures ────────────────────────────
+    private final java.util.Map<Integer, String> profilePicCache = new java.util.HashMap<>();
+
+    private String getProfilePic(int userId) {
+        if (profilePicCache.containsKey(userId)) {
+            return profilePicCache.get(userId);
+        }
+        try {
+            com.innertrack.model.User u = new com.innertrack.dao.UserDao().read(userId);
+            String pic = u != null ? u.getProfilePicture() : null;
+            profilePicCache.put(userId, pic);
+            return pic;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private javafx.scene.shape.Circle createAvatar(String picPath, double radius) {
+        javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(radius);
+        circle.setFill(javafx.scene.paint.Color.web("#e0e0e0")); // fallback
+        try {
+            javafx.scene.image.Image image;
+            if (picPath == null || picPath.isEmpty()) {
+                image = new javafx.scene.image.Image(getClass().getResource("/images/user.png").toExternalForm());
+                circle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+            } else if (picPath.startsWith("http://") || picPath.startsWith("https://")) {
+                image = new javafx.scene.image.Image(picPath, true);
+                image.progressProperty().addListener((obs, o, n) -> {
+                    if (n.doubleValue() == 1.0 && !image.isError()) {
+                        circle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                    }
+                });
+                if (image.getProgress() == 1.0 && !image.isError()) {
+                    circle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                }
+            } else {
+                java.io.File file = new java.io.File(picPath);
+                if (file.exists()) {
+                    image = new javafx.scene.image.Image(file.toURI().toString());
+                    if (!image.isError()) {
+                        circle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+        return circle;
+    }
+
     // ── Conversation list ─────────────────────────────────────
 
     private void loadConversationList() {
         new Thread(() -> {
             List<Conversation> convs = messagingDao.getConversationsForUser(currentUserId);
+            // Pre-fetch profiles
+            for (Conversation c : convs) {
+                getProfilePic(c.getClientId() == currentUserId ? c.getTherapistId() : c.getClientId());
+            }
             Platform.runLater(() -> {
                 conversationsList.getChildren().clear();
                 if (convs.isEmpty()) {
@@ -320,15 +372,13 @@ public class MessagingChatController {
         row.setPadding(new Insets(12, 16, 12, 16));
         row.setStyle("-fx-cursor: hand; -fx-background-radius: 8;");
 
+        int otherId = conv.getClientId() == currentUserId ? conv.getTherapistId() : conv.getClientId();
         String otherName = conv.getClientId() == currentUserId
                 ? conv.getTherapistName()
                 : conv.getClientName();
-        String initial = otherName != null && !otherName.isBlank()
-                ? String.valueOf(otherName.charAt(0)).toUpperCase()
-                : "?";
 
-        Label avatar = new Label(initial);
-        avatar.getStyleClass().add("chat-avatar");
+        String picPath = profilePicCache.get(otherId);
+        javafx.scene.shape.Circle avatarCircle = createAvatar(picPath, 20);
 
         VBox info = new VBox(2);
         Label nameL = new Label(otherName != null ? otherName : "Conversation");
@@ -339,7 +389,7 @@ public class MessagingChatController {
         dateL.getStyleClass().add("chat-conv-date");
 
         info.getChildren().addAll(nameL, dateL);
-        row.getChildren().addAll(avatar, info);
+        row.getChildren().addAll(avatarCircle, info);
         row.getStyleClass().add("chat-conv-row");
 
         row.setOnMouseClicked(e -> openConversation(conv, row));
@@ -374,8 +424,12 @@ public class MessagingChatController {
     private void refreshMessages() {
         if (selectedConversation == null)
             return;
-        List<Message> messages = messagingDao.getMessages(selectedConversation.getId());
-        Platform.runLater(() -> renderMessages(messages));
+        new Thread(() -> {
+            List<Message> messages = messagingDao.getMessages(selectedConversation.getId());
+            // Pre-fetch my own pic just in case
+            getProfilePic(currentUserId);
+            Platform.runLater(() -> renderMessages(messages));
+        }).start();
     }
 
     private void renderMessages(List<Message> messages) {
@@ -417,7 +471,11 @@ public class MessagingChatController {
 
             VBox bubbleCol = new VBox(2, bubble, timeLabel);
             bubbleCol.setMaxWidth(400);
-            HBox rowBox = new HBox();
+
+            String picPath = profilePicCache.get(msg.getSenderId());
+            javafx.scene.shape.Circle avatarCircle = createAvatar(picPath, 14);
+
+            HBox rowBox = new HBox(8);
             rowBox.setPadding(new Insets(2, 16, 2, 16));
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -425,9 +483,9 @@ public class MessagingChatController {
             if (isMe) {
                 bubbleCol.setAlignment(Pos.CENTER_RIGHT);
                 timeLabel.setAlignment(Pos.CENTER_RIGHT);
-                rowBox.getChildren().addAll(spacer, bubbleCol);
+                rowBox.getChildren().addAll(spacer, bubbleCol, avatarCircle);
             } else {
-                rowBox.getChildren().addAll(bubbleCol, spacer);
+                rowBox.getChildren().addAll(avatarCircle, bubbleCol, spacer);
             }
             messagesBox.getChildren().add(rowBox);
         }

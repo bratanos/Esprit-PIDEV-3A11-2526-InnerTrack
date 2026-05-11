@@ -712,12 +712,16 @@ public class AdminDashboardController {
     }
 
     private void updateProfileImage(String picPath) {
-        if (picPath == null || picPath.isEmpty())
-            return;
         try {
-            javafx.scene.image.Image image;
+            javafx.scene.image.Image defaultImage = new javafx.scene.image.Image(getClass().getResource("/images/user.png").toExternalForm());
+            profileCircle.setFill(new javafx.scene.paint.ImagePattern(defaultImage, 0, 0, 1, 1, true));
+
+            if (picPath == null || picPath.isEmpty()) {
+                return;
+            }
+
             if (picPath.startsWith("http://") || picPath.startsWith("https://")) {
-                image = new javafx.scene.image.Image(picPath, true);
+                javafx.scene.image.Image image = new javafx.scene.image.Image(picPath, true);
                 image.progressProperty().addListener((obs, o, n) -> {
                     if (n.doubleValue() == 1.0 && !image.isError()) {
                         profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
@@ -729,7 +733,7 @@ public class AdminDashboardController {
             } else {
                 java.io.File file = new java.io.File(picPath);
                 if (!file.exists()) return;
-                image = new javafx.scene.image.Image(file.toURI().toString());
+                javafx.scene.image.Image image = new javafx.scene.image.Image(file.toURI().toString());
                 if (!image.isError()) {
                     profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
                 }

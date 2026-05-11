@@ -177,6 +177,9 @@ public class TherapistMapController {
         });
     }
 
+    @FXML
+    private javafx.scene.shape.Circle profileCircle;
+
     // ──────────────────────────────────────────────
     // INFO CARD
     // ──────────────────────────────────────────────
@@ -187,6 +190,9 @@ public class TherapistMapController {
         addressLabel.setText("");
         bioLabel.setText("");
         contactButton.setDisable(true);
+        if (profileCircle != null) {
+            profileCircle.setFill(javafx.scene.paint.Color.web("#ecf0f1"));
+        }
     }
 
     private void showTherapist(TherapistProfile profile) {
@@ -216,6 +222,35 @@ public class TherapistMapController {
                     bioLabel.setText(profile.getBio() == null || profile.getBio().isBlank()
                             ? "Aucune bio renseignée."
                             : profile.getBio());
+
+                    if (user != null && profileCircle != null) {
+                        String picPath = user.getProfilePicture();
+                        try {
+                            javafx.scene.image.Image image;
+                            if (picPath == null || picPath.isEmpty()) {
+                                image = new javafx.scene.image.Image(getClass().getResource("/images/user.png").toExternalForm());
+                                profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                            } else if (picPath.startsWith("http://") || picPath.startsWith("https://")) {
+                                image = new javafx.scene.image.Image(picPath, true);
+                                image.progressProperty().addListener((obs, o, n) -> {
+                                    if (n.doubleValue() == 1.0 && !image.isError()) {
+                                        profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                                    }
+                                });
+                                if (image.getProgress() == 1.0 && !image.isError()) {
+                                    profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                                }
+                            } else {
+                                java.io.File file = new java.io.File(picPath);
+                                if (file.exists()) {
+                                    image = new javafx.scene.image.Image(file.toURI().toString());
+                                    if (!image.isError()) {
+                                        profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                                    }
+                                }
+                            }
+                        } catch (Exception ignored) {}
+                    }
                 });
             } catch (SQLException e) {
                 Platform.runLater(() -> {

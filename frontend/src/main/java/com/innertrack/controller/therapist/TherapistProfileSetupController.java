@@ -239,34 +239,35 @@ public class TherapistProfileSetupController {
         }
     }
 
-    private void updateProfileImage() {
-        String picPath = currentUser.getProfilePicture();
-        if (picPath != null && !picPath.isEmpty()) {
-            try {
-                Image image;
-                if (picPath.startsWith("http://") || picPath.startsWith("https://")) {
-                    // URL-based image (ImgBB or other hosted images)
-                    image = new Image(picPath, true); // background loading
-                    image.progressProperty().addListener((obs, o, n) -> {
-                        if (n.doubleValue() == 1.0 && !image.isError()) {
-                            profileCircle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-                        }
-                    });
-                    if (image.getProgress() == 1.0 && !image.isError()) {
-                        profileCircle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-                    }
-                } else {
-                    // Legacy local file path
-                    File file = new File(picPath);
-                    if (!file.exists()) return;
-                    image = new Image(file.toURI().toString());
-                    if (!image.isError()) {
-                        profileCircle.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-                    }
-                }
-            } catch (Exception e) {
-                System.err.println("Error loading profile image: " + e.getMessage());
+    private void updateProfileImage(String picPath) {
+        try {
+            javafx.scene.image.Image defaultImage = new javafx.scene.image.Image(getClass().getResource("/images/user.png").toExternalForm());
+            profileCircle.setFill(new javafx.scene.paint.ImagePattern(defaultImage, 0, 0, 1, 1, true));
+
+            if (picPath == null || picPath.isEmpty()) {
+                return;
             }
+
+            if (picPath.startsWith("http://") || picPath.startsWith("https://")) {
+                javafx.scene.image.Image image = new javafx.scene.image.Image(picPath, true);
+                image.progressProperty().addListener((obs, o, n) -> {
+                    if (n.doubleValue() == 1.0 && !image.isError()) {
+                        profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                    }
+                });
+                if (image.getProgress() == 1.0 && !image.isError()) {
+                    profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                }
+            } else {
+                java.io.File file = new java.io.File(picPath);
+                if (!file.exists()) return;
+                javafx.scene.image.Image image = new javafx.scene.image.Image(file.toURI().toString());
+                if (!image.isError()) {
+                    profileCircle.setFill(new javafx.scene.paint.ImagePattern(image, 0, 0, 1, 1, true));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading therapist profile image: " + e.getMessage());
         }
     }
 }
