@@ -11,38 +11,38 @@
 
     <!-- ============ EN-TETE ============ -->
     <top>
-        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="16">
+        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
             <padding><Insets top="20" right="30" bottom="20" left="30"/></padding>
-            <VBox spacing="3.2" HBox.hgrow="ALWAYS">
-                <Label text="📓 Add an Entry" styleClass="title" style="-fx-font-size: 19.2px;"/>
-                <Label text="Note your mood and thoughts of the day" styleClass="subtitle" style="-fx-font-size: 10.4px;"/>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="📓 Add an Entry" styleClass="title" style="-fx-font-size: 24px;"/>
+                <Label text="Note your mood and thoughts of the day" styleClass="subtitle" style="-fx-font-size: 13px;"/>
             </VBox>
         </HBox>
     </top>
 
     <!-- ============ CONTENU PRINCIPAL ============ -->
     <center>
-        <ScrollPane fitToWidth="true" styleClass="scroll-pane" style="-fx-padding: 16;">
-            <VBox spacing="12">
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane" style="-fx-padding: 20;">
+            <VBox spacing="15">
                 <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
 
                 <!-- Section Humeur -->
-                <VBox styleClass="section-box" spacing="12">
+                <VBox styleClass="section-box" spacing="15">
                     <padding><Insets top="20" right="25" bottom="20" left="25"/></padding>
-                    <Label text="😊  How are you feeling?" styleClass="section-title" style="-fx-font-size: 12.8px;"/>
+                    <Label text="😊  How are you feeling?" styleClass="section-title" style="-fx-font-size: 16px;"/>
                     <Separator/>
-                    <VBox spacing="6.4">
-                        <HBox alignment="CENTER_LEFT" spacing="8">
+                    <VBox spacing="8">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
                             <Label text="😊 Level of Mood" styleClass="field-label" HBox.hgrow="ALWAYS"/>
                             <Label fx:id="humeurValueLabel" text="🟢 5"
-                                   style="-fx-font-size: 14.4px; -fx-font-weight: bold;"/>
+                                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
                             <Label text="/ 10" styleClass="stat-label"/>
                         </HBox>
                         <Slider fx:id="humeurSlider" min="0" max="10" value="5"
                                 showTickLabels="true" showTickMarks="true"
                                 majorTickUnit="2" blockIncrement="1"/>
                         <Label fx:id="humeurIndicateurLabel" text=""
-                               style="-fx-font-size: 9.6px; -fx-font-weight: bold; -fx-background-radius: 12; -fx-padding: 2.4 9.6 2.4 9.6;"
+                               style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 12; -fx-padding: 3 12 3 12;"
                                visible="false"/>
                         <HBox>
                             <Label text="🔵 Sadness" styleClass="stat-label" HBox.hgrow="ALWAYS"/>
@@ -54,13 +54,13 @@
                 </VBox>
 
                 <!-- Section Journal -->
-                <VBox styleClass="section-box" spacing="12">
+                <VBox styleClass="section-box" spacing="15">
                     <padding><Insets top="20" right="25" bottom="20" left="25"/></padding>
-                    <Label text="📝  My Daily Journal" styleClass="section-title" style="-fx-font-size: 12.8px;"/>
+                    <Label text="📝  My Daily Journal" styleClass="section-title" style="-fx-font-size: 16px;"/>
                     <Separator/>
-                    <VBox spacing="4.8">
+                    <VBox spacing="6">
                         <Label text="Description of my day *" styleClass="field-label"/>
-                        <HBox spacing="8" alignment="TOP_LEFT">
+                        <HBox spacing="10" alignment="TOP_LEFT">
                             <TextArea fx:id="noteTextArea"
                                       promptText="How was your day? What are your feelings, your thoughts..."
                                       styleClass="custom-text-area"
@@ -68,16 +68,16 @@
                                       wrapText="true"
                                       HBox.hgrow="ALWAYS"/>
                             <Button fx:id="btnVoice" text="🎙" onAction="#startVoiceInput"
-                                    style="-fx-font-size: 12.8px; -fx-background-radius: 50%;"/>
+                                    style="-fx-font-size: 16px; -fx-background-radius: 50%;"/>
                         </HBox>
                         <Label fx:id="descErrorLabel" text="⚠ Description is required"
-                               style="-fx-text-fill: #e53e3e; -fx-font-size: 9.6px;" visible="false"/>
+                               style="-fx-text-fill: #e53e3e; -fx-font-size: 12px;" visible="false"/>
                     </VBox>
-                    <VBox spacing="4.8">
+                    <VBox spacing="6">
                         <Label text="Date *" styleClass="field-label"/>
-                        <DatePicker fx:id="datePicker" styleClass="custom-combo-box" maxWidth="200"/>
+                        <DatePicker fx:id="datePicker" styleClass="custom-combo-box" maxWidth="250"/>
                         <Label fx:id="dateErrorLabel" text="⚠ Date is required"
-                               style="-fx-text-fill: #e53e3e; -fx-font-size: 9.6px;" visible="false"/>
+                               style="-fx-text-fill: #e53e3e; -fx-font-size: 12px;" visible="false"/>
                     </VBox>
                 </VBox>
             </VBox>
@@ -86,7 +86,7 @@
 
     <!-- ============ PIED DE PAGE ============ -->
     <bottom>
-        <HBox styleClass="footer" alignment="CENTER_RIGHT" spacing="8">
+        <HBox styleClass="footer" alignment="CENTER_RIGHT" spacing="10">
             <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
             <Button text="← Back to Journal" styleClass="return-button"
                     onAction="#allerAuJournal" HBox.hgrow="ALWAYS"/>

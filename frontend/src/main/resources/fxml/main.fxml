@@ -5,29 +5,29 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      spacing="24" alignment="CENTER"
-      maxWidth="800">
+      spacing="30" alignment="CENTER"
+      maxWidth="1000">
 
-    <VBox spacing="8" alignment="CENTER">
-        <Label text="%main.welcome.title" styleClass="title" style="-fx-font-size: 25.6px;" />
-        <Label text="%main.welcome.subtitle" styleClass="subtitle" style="-fx-font-size: 14.4px;" />
+    <VBox spacing="10" alignment="CENTER">
+        <Label text="%main.welcome.title" styleClass="title" style="-fx-font-size: 32px;" />
+        <Label text="%main.welcome.subtitle" styleClass="subtitle" style="-fx-font-size: 18px;" />
     </VBox>
 
-    <HBox spacing="16" alignment="CENTER">
-        <VBox spacing="8" styleClass="card" style="-fx-padding: 16; -fx-pref-width: 224;" alignment="TOP_CENTER">
-            <Label text="%main.card1.title" styleClass="title" style="-fx-font-size: 14.4px;" />
+    <HBox spacing="20" alignment="CENTER">
+        <VBox spacing="10" styleClass="card" style="-fx-padding: 20; -fx-pref-width: 280;" alignment="TOP_CENTER">
+            <Label text="%main.card1.title" styleClass="title" style="-fx-font-size: 18px;" />
             <Label text="%main.card1.subtitle" wrapText="true" textAlignment="CENTER" styleClass="subtitle" />
             <Button text="%main.card1.btn" styleClass="btn, btn-primary" />
         </VBox>
 
-        <VBox spacing="8" styleClass="card" style="-fx-padding: 16; -fx-pref-width: 224;" alignment="TOP_CENTER">
-            <Label text="%main.card2.title" styleClass="title" style="-fx-font-size: 14.4px;" />
+        <VBox spacing="10" styleClass="card" style="-fx-padding: 20; -fx-pref-width: 280;" alignment="TOP_CENTER">
+            <Label text="%main.card2.title" styleClass="title" style="-fx-font-size: 18px;" />
             <Label text="%main.card2.subtitle" wrapText="true" textAlignment="CENTER" styleClass="subtitle" />
             <Button text="%main.card2.btn" styleClass="btn, btn-secondary" />
         </VBox>
         
-        <VBox spacing="8" styleClass="card" style="-fx-padding: 16; -fx-pref-width: 224;" alignment="TOP_CENTER">
-            <Label text="%main.card3.title" styleClass="title" style="-fx-font-size: 14.4px;" />
+        <VBox spacing="10" styleClass="card" style="-fx-padding: 20; -fx-pref-width: 280;" alignment="TOP_CENTER">
+            <Label text="%main.card3.title" styleClass="title" style="-fx-font-size: 18px;" />
             <Label text="%main.card3.subtitle" wrapText="true" textAlignment="CENTER" styleClass="subtitle" />
             <Button text="%main.card3.btn" styleClass="btn, btn-secondary" />
         </VBox>

@@ -5,16 +5,39 @@
 }
 
 /* Header */
+/*
 .community-header {
     -fx-background-color: white;
     -fx-border-color: #edeff1;
     -fx-border-width: 0 0 1 0;
 }
+ */
+
+.community-header {
+    -fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 100%);
+    -fx-background-radius: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0, 0, 2);
+}
 
 .community-title {
-    -fx-font-size: 16px;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: #1c1c1c;
+    -fx-text-fill: white;
+}
+
+.green-btn {
+    -fx-background-color: linear-gradient(to bottom, #48bb78, #38a169);
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 12px 25px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(72, 187, 120, 0.4), 10, 0, 0, 2);
+}
+
+.green-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #38a169, #2f855a);
+    -fx-scale-y: 1.03;
+    -fx-scale-x: 1.03;
 }
 
 /* Lock Banner */
@@ -26,7 +49,7 @@
 
 .lock-banner-text {
     -fx-text-fill: #d93025;
-    -fx-font-size: 10.4px;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
@@ -35,7 +58,7 @@
 .new-comment-bar {
     -fx-background-color: white;
     -fx-border-color: transparent transparent #edeff1 transparent;
-    -fx-padding: 9.6 16;
+    -fx-padding: 12 20;
 }
 
 .filter-bar .text-field,
@@ -44,9 +67,9 @@
     -fx-border-color: transparent;
     -fx-border-radius: 4;
     -fx-background-radius: 4;
-    -fx-padding: 6.4 9.6;
+    -fx-padding: 8 12;
     -fx-text-fill: #1c1c1c;
-    -fx-font-size: 11.2px;
+    -fx-font-size: 14px;
 }
 
 .filter-bar .text-field:focused,
@@ -60,7 +83,7 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 20;
-    -fx-padding: 4.8 12.8;
+    -fx-padding: 6 16;
     -fx-cursor: hand;
 }
 
@@ -74,7 +97,7 @@
     -fx-font-weight: bold;
     -fx-border-color: #0079d3;
     -fx-border-radius: 20;
-    -fx-padding: 4 12;
+    -fx-padding: 5 15;
     -fx-cursor: hand;
 }
 
@@ -85,7 +108,7 @@
 /* TreeView customizations */
 .comments-tree {
     -fx-background-color: transparent;
-    -fx-padding: 12.8 0;
+    -fx-padding: 16 0;
     -fx-control-inner-background: #dae0e6;
     -fx-control-inner-background-alt: #dae0e6;
     -fx-background-insets: 0;
@@ -97,7 +120,7 @@
 
 .comments-tree .tree-cell {
     -fx-background-color: transparent;
-    -fx-padding: 4.8 12.8;
+    -fx-padding: 6 16;
 }
 
 .comments-tree .tree-cell:selected,

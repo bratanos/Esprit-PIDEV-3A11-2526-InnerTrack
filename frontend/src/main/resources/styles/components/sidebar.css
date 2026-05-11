@@ -1,20 +1,20 @@
 /* sidebar.css - Premium Sidebar Styles */
 .sidebar {
     -fx-background-color: linear-gradient(to bottom, derive(#8b5cf6, -20%), derive(#8b5cf6, -40%));
-    -fx-padding: 24 12;
-    -fx-spacing: 12;
+    -fx-padding: 30 15;
+    -fx-spacing: 15;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 30, 0, 0, 0);
 }
 
 .sidebar .sidebar-logo {
-    -fx-padding: 0 0 24 0;
+    -fx-padding: 0 0 30 0;
     -fx-alignment: center;
 }
 
 .sidebar .profile-section {
-    -fx-padding: 8 0 24 0;
+    -fx-padding: 10 0 30 0;
     -fx-alignment: center;
-    -fx-spacing: 12;
+    -fx-spacing: 15;
 }
 
 .sidebar .profile-pic {
@@ -25,16 +25,16 @@
 
 .sidebar .profile-name {
     -fx-text-fill: white;
-    -fx-font-size: 12.8px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 
 .sidebar-button {
     -fx-background-color: transparent;
     -fx-text-fill: rgba(255, 255, 255, 0.8);
-    -fx-font-size: 12px;
+    -fx-font-size: 15px;
     -fx-alignment: center-left;
-    -fx-padding: 9.6 16;
+    -fx-padding: 12 20;
     -fx-background-radius: 12;
     -fx-cursor: hand;
     -fx-graphic-text-gap: 15;

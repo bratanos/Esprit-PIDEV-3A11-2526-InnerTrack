@@ -21,9 +21,15 @@ public class MainApp extends Application {
 
     public static String getEnv(String key) {
         if (dotenv == null) {
-            dotenv = Dotenv.load();
+            try {
+                dotenv = Dotenv.configure()
+                        .ignoreIfMissing()
+                        .load();
+            } catch (Exception e) {
+                System.err.println("Could not load .env file: " + e.getMessage());
+            }
         }
-        return dotenv.get(key);
+        return dotenv != null ? dotenv.get(key) : null;
     }
 
     public static Stage getPrimaryStage() {

@@ -2,6 +2,7 @@ package com.innertrack.controller.event;
 
 import com.innertrack.model.TypeEvent;
 import com.innertrack.service.TypeEventService;
+import com.innertrack.util.ViewManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,6 +53,8 @@ public class ModifierTypeEventController {
 
     @FXML
     void back(ActionEvent e) {
+        ViewManager.loadView("event/AfficherTypeEvent");
+        /*
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/event/AfficherTypeEvent.fxml"));
             Parent root = loader.load();
@@ -62,6 +65,8 @@ public class ModifierTypeEventController {
         } catch (Exception ex) {
             showError("Navigation error: " + ex.getMessage());
         }
+
+         */
     }
 
     private void showError(String msg) {

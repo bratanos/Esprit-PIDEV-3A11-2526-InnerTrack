@@ -11,9 +11,20 @@ import com.innertrack.app.MainApp;
  */
 public class SmsService {
 
+    // APRÈS
     private static final String ACCOUNT_SID = MainApp.getEnv("TWILIO_ACCOUNT_SID");
     private static final String AUTH_TOKEN = MainApp.getEnv("TWILIO_AUTH_TOKEN");
-    private static final String FROM_NUMBER = MainApp.getEnv("TWILIO_FROM_NUMBER"); // e.g., "+14155238886"
+    private static final String FROM_NUMBER = getFromNumber();
+
+    private static String getFromNumber() {
+        String val = MainApp.getEnv("TWILIO_FROM_NUMBER");
+        if (val == null || val.isEmpty()) {
+            System.out.println("⚠️ TWILIO_FROM_NUMBER non trouvé, utilisation valeur par défaut");
+            return "+14155238886"; // valeur par défaut sandbox Twilio
+        }
+        // Enlever le préfixe whatsapp: si présent (il sera rajouté dans envoyerWhatsApp)
+        return val.replace("whatsapp:", "");
+    }
 
     private static SmsService instance;
     private boolean initialized = false;
@@ -115,5 +126,46 @@ public class SmsService {
                 .create();
 
         System.out.println("✅ Meme WhatsApp envoyé — SID : " + msg.getSid());
+    }
+
+    public void envoyerResultatEtMemeWhatsApp(String numero, String prenomUser,
+                                              String titreTest, int score, int scoreMax, String niveau,
+                                              String interpretation, String memeUrl) throws Exception {
+
+        String cleanedNumber = numero.replaceAll("[^+\\d]", "");
+
+        // ✅ Message texte avec résultat
+        String message = String.format(
+                "🧠 *Psychology App*\n\nBonjour *%s* ! 🎉\n\n" +
+                        "📊 *Résultats — %s*\n" +
+                        "🎯 Score : *%d/%d* (%.0f%%)\n" +
+                        "📈 Niveau : *%s*\n\n" +
+                        "📋 %s\n\n" +
+                        "Consultez vos recommandations IA dans l'application ! 🤖",
+                prenomUser, titreTest, score, scoreMax,
+                (score * 100.0 / scoreMax), niveau,
+                interpretation != null ? interpretation : "");
+
+        // Envoyer le message texte
+        com.twilio.rest.api.v2010.account.Message msg1 =
+                com.twilio.rest.api.v2010.account.Message.creator(
+                        new com.twilio.type.PhoneNumber("whatsapp:" + cleanedNumber),
+                        new com.twilio.type.PhoneNumber("whatsapp:" + FROM_NUMBER),
+                        message).create();
+        System.out.println("✅ Résultat WhatsApp envoyé — SID : " + msg1.getSid());
+
+        // ✅ Envoyer le meme séparément si disponible
+        if (memeUrl != null && !memeUrl.isBlank()) {
+            String memeTxt = "😄 Et voici un petit meme pour détendre l'atmosphère !";
+            com.twilio.rest.api.v2010.account.Message msg2 =
+                    com.twilio.rest.api.v2010.account.Message.creator(
+                                    new com.twilio.type.PhoneNumber("whatsapp:" + cleanedNumber),
+                                    new com.twilio.type.PhoneNumber("whatsapp:" + FROM_NUMBER),
+                                    memeTxt)
+                            .setMediaUrl(java.util.Collections.singletonList(
+                                    java.net.URI.create(memeUrl)))
+                            .create();
+            System.out.println("✅ Meme WhatsApp envoyé — SID : " + msg2.getSid());
+        }
     }
 }

@@ -1,13 +1,13 @@
 /* typography.css - Global Text Styles */
 .title {
-    -fx-font-size: 19.2px;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: #2d3748;
 }
 
 .subtitle {
     -fx-text-fill: #718096;
-    -fx-font-size: 11.2px;
+    -fx-font-size: 14px;
 }
 
 .text-muted {
@@ -24,7 +24,7 @@
 
 .label {
     -fx-text-fill: #2d3748;
-    -fx-font-size: 11.2px;
+    -fx-font-size: 14px;
 }
 
 .text {
@@ -47,15 +47,15 @@
 .font-small .radio-button,
 .font-small .hyperlink,
 .font-small .tab-label {
-    -fx-font-size: 8.8px;
+    -fx-font-size: 11px;
 }
 
 .font-small .title {
-    -fx-font-size: 14.4px;
+    -fx-font-size: 18px;
 }
 
 .font-small .subtitle {
-    -fx-font-size: 8.8px;
+    -fx-font-size: 11px;
 }
 
 /* NORMAL (default — restores baseline) */
@@ -69,15 +69,15 @@
 .font-normal .radio-button,
 .font-normal .hyperlink,
 .font-normal .tab-label {
-    -fx-font-size: 11.2px;
+    -fx-font-size: 14px;
 }
 
 .font-normal .title {
-    -fx-font-size: 19.2px;
+    -fx-font-size: 24px;
 }
 
 .font-normal .subtitle {
-    -fx-font-size: 11.2px;
+    -fx-font-size: 14px;
 }
 
 /* LARGE */
@@ -91,13 +91,13 @@
 .font-large .radio-button,
 .font-large .hyperlink,
 .font-large .tab-label {
-    -fx-font-size: 14.4px;
+    -fx-font-size: 18px;
 }
 
 .font-large .title {
-    -fx-font-size: 24px;
+    -fx-font-size: 30px;
 }
 
 .font-large .subtitle {
-    -fx-font-size: 14.4px;
+    -fx-font-size: 18px;
 }

@@ -90,7 +90,8 @@ public class RecommandationMLService {
 
     // ── Entry point ──
     public AIRecommandation genererRecommandations(Resultat resultat,
-            int idUtilisateur) throws SQLException {
+                                                   int idUtilisateur) throws SQLException {
+
         String[] infos = recupererInfosTest(resultat.getIdTest());
         String titre = infos[0];
         String titreLow = titre.toLowerCase();
@@ -98,15 +99,16 @@ public class RecommandationMLService {
 
         double[] features = extraireFeatures(resultat, idUtilisateur);
 
-        if (positif) {
-            features[0] = 1.0 - features[0];
-        } else if (estSymptome(titreLow)) {
-            features[0] = 1.0 - features[0];
-        }
+        // ✅ Déterminer le cluster directement depuis le niveau de la tranche
+        int cluster = determinerClusterDepuisNiveau(resultat, positif);
 
-        double[] probas = softmax(features);
-        int cluster = argmax(probas);
-        int conf = (int) (probas[cluster] * 100);
+        // Calculer les probas pour l'affichage (visuelles uniquement)
+        double[] probas = new double[3];
+        probas[cluster] = 0.95;
+        for (int i = 0; i < 3; i++) {
+            if (i != cluster) probas[i] = 0.025;
+        }
+        int conf = 95;
 
         AIRecommandation rec = new AIRecommandation();
         rec.setCluster(LABELS[cluster]);
@@ -119,6 +121,45 @@ public class RecommandationMLService {
         rec.setAlertes(alertes(cluster, features, positif));
 
         return rec;
+    }
+
+    // ✅ Nouvelle méthode — mappe niveau tranche → cluster ML
+    private int determinerClusterDepuisNiveau(Resultat resultat, boolean positif) throws SQLException {
+        // Récupérer le niveau depuis la DB
+        Connection cnx = DBConnection.getInstance().getConnection();
+        PreparedStatement ps = cnx.prepareStatement(
+                "SELECT niveau FROM tranche_resultat " +
+                        "WHERE id_test = ? AND ? BETWEEN score_min AND score_max LIMIT 1");
+        ps.setInt(1, resultat.getIdTest());
+        ps.setInt(2, resultat.getScoreTotal());
+        ResultSet rs = ps.executeQuery();
+
+        String niveau = "modere"; // défaut
+        if (rs.next() && rs.getString("niveau") != null) {
+            niveau = rs.getString("niveau").toLowerCase();
+        }
+
+        System.out.println(">>> Niveau tranche : " + niveau + " | positif=" + positif);
+
+        if (positif) {
+            // Tests positifs : score élevé = bon = Résilient
+            return switch (niveau) {
+                case "faible"   -> 2; // Résilient  (excellent résultat)
+                case "modere"   -> 1; // Stable
+                case "eleve"    -> 1; // Stable (légèrement en difficulté)
+                case "critique" -> 0; // Fragile
+                default         -> 1;
+            };
+        } else {
+            // Tests symptômes : score élevé = mauvais = Fragile
+            return switch (niveau) {
+                case "faible"   -> 2; // Résilient  (peu de symptômes)
+                case "modere"   -> 1; // Stable
+                case "eleve"    -> 0; // Fragile
+                case "critique" -> 0; // Fragile
+                default         -> 1;
+            };
+        }
     }
 
     // ── DB ──

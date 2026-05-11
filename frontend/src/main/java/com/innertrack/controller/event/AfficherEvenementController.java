@@ -1,6 +1,7 @@
 package com.innertrack.controller.event;
 
 import com.innertrack.service.EventService;
+import com.innertrack.util.ViewNavigator;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -415,6 +416,11 @@ public class AfficherEvenementController {
             e.printStackTrace();
         }
 
+    }
+
+    @FXML
+    public void gotoDashboard() {
+        ViewNavigator.navigateToDashboard();
     }
 
     @FXML

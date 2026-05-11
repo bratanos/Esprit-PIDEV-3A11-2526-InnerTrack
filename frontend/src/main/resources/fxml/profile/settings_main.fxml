@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox spacing="24" styleClass="dashboard-container, settings-view"
+<VBox spacing="30" styleClass="dashboard-container, settings-view"
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.innertrack.controller.settings.SettingsController"
       stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css, @../../styles/base/typography.css, @../../styles/base/controls.css, @../../styles/views/settings.css"
@@ -16,7 +16,7 @@
     </padding>
 
     <!-- Header -->
-    <HBox spacing="16" alignment="CENTER_LEFT">
+    <HBox spacing="20" alignment="CENTER_LEFT">
         <Button onAction="#handleBack" styleClass="btn-back">
             <graphic>
                 <FontIcon iconLiteral="fas-arrow-left" iconSize="20" styleClass="icon-back" />

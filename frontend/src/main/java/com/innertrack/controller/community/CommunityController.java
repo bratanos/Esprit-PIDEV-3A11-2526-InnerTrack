@@ -1,5 +1,7 @@
 package com.innertrack.controller.community;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.innertrack.dao.*;
 import com.innertrack.model.*;
 import com.innertrack.session.SessionManager;
@@ -12,6 +14,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Popup;
 
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -199,7 +207,7 @@ public class CommunityController {
         if (text == null || text.isBlank())
             return;
 
-        String censored = censorText(text);
+        String censored = censorText(translateComment(text));
         int parentId = currentTopic.getId();
         int id = commentDao.addReply(new CommunityComment(currentUserId, censored, parentId));
         if (id > 0) {
@@ -244,8 +252,8 @@ public class CommunityController {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == postButtonType) {
-                CommunityComment topic = new CommunityComment(currentUserId, censorText(contentArea.getText()));
-                topic.setTitle(censorText(titleField.getText()));
+                CommunityComment topic = new CommunityComment(currentUserId, censorText(translateComment(contentArea.getText())));
+                topic.setTitle(censorText(translateComment(titleField.getText())));
                 return topic;
             }
             return null;
@@ -309,6 +317,7 @@ public class CommunityController {
     };
 
     private String censorText(String input) {
+        /*
         if (input == null || input.isEmpty())
             return input;
         String censored = input;
@@ -322,7 +331,28 @@ public class CommunityController {
             }
         }
 
-        if (found) {
+         */
+
+
+
+
+        String censored = input;
+        try {
+            censored = HttpClient.newHttpClient().send(
+                    HttpRequest.newBuilder()
+                            .uri(URI.create("https://www.purgomalum.com/service/plain?text=" + input.replace(" ", "+"))).build()
+                    , HttpResponse.BodyHandlers.ofString()).body();
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        //return "";
+
+
+
+
+
+        if (!censored.equals(input)) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
             alert.setHeaderText("Profanity Detected!");
@@ -330,6 +360,7 @@ public class CommunityController {
             alert.showAndWait();
         }
         return censored;
+
     }
 
     private String formatTimeAgo(LocalDateTime createdAt) {
@@ -518,7 +549,7 @@ public class CommunityController {
         replyField.setOnAction(ev -> {
             String replyText = replyField.getText();
             if (replyText != null && !replyText.isBlank()) {
-                String censored = censorText(replyText);
+                String censored = censorText(translateComment(replyText));
                 int id = commentDao.addReply(new CommunityComment(currentUserId, censored, item.getId()));
                 if (id > 0) {
                     CommunityComment reply = commentDao.read(id, currentUserId);
@@ -545,7 +576,7 @@ public class CommunityController {
                 dialog.setHeaderText(null);
                 dialog.showAndWait().ifPresent(newText -> {
                     if (!newText.isBlank()) {
-                        String censored = censorText(newText);
+                        String censored = censorText(translateComment(newText));
                         commentDao.updateContent(item.getId(), censored);
                         item.setContent(censored);
                         item.setModified(true);
@@ -727,5 +758,39 @@ public class CommunityController {
         HBox row = new HBox(8, lbl, val);
         row.setAlignment(Pos.CENTER_LEFT);
         return row;
+    }
+
+    public String translateComment(String text) {
+
+        try {
+            String encodedText = URLEncoder.encode(text, StandardCharsets.UTF_8);
+
+            String url = String.format(
+                    "https://api.mymemory.translated.net/get?q=%s&langpair=%s",
+                    encodedText,
+                    URLEncoder.encode("fr|en", StandardCharsets.UTF_8)
+            );
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response =
+                    client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
+            String translated = json.getAsJsonObject("responseData")
+                    .get("translatedText")
+                    .getAsString();
+
+            return translated;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return text;
     }
 }

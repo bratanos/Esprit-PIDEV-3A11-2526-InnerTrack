@@ -1,65 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane xmlns="http://javafx.com/javafx/21"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.innertrack.controller.event.AfficherEvenementController"
-           stylesheets="/styles/components/event-style.css">
+<StackPane stylesheets="@../../styles/views/event-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.innertrack.controller.event.AfficherEvenementController">
 
     <!-- Ton écran principal -->
-    <BorderPane fx:id="rootPane"
-                styleClass="main-container">
+    <BorderPane fx:id="rootPane" styleClass="main-container">
 
         <padding>
-            <Insets top="20" right="20" bottom="20" left="20"/>
+            <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
 
         <!-- TOP -->
         <top>
-            <VBox spacing="9.6" styleClass="page-header">
-                <HBox alignment="CENTER_LEFT" spacing="9.6">
-                    <Label text="📅" style="-fx-font-size: 27.2px;"/>
+            <VBox spacing="12" styleClass="page-header">
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label style="-fx-font-size: 34px;" text="📅" />
                     <VBox>
-                        <Label text="Gestion des Événements" styleClass="page-title"/>
-                        <Label text="Consultez, ajoutez, modifiez et supprimez vos événements" styleClass="page-subtitle"/>
+                        <Label styleClass="page-title" text="Gestion des Événements" />
+                        <Label styleClass="page-subtitle" text="Consultez, ajoutez, modifiez et supprimez vos événements" />
                     </VBox>
                 </HBox>
 
-                <HBox spacing="8" alignment="CENTER_LEFT" styleClass="weather-card"
-                      onMouseClicked="#openWeatherModal"
-                      style="-fx-cursor: hand;">
-                    <ImageView fx:id="weatherIcon" fitHeight="28.8" fitWidth="28.8" preserveRatio="true"/>
-                    <VBox spacing="1.6">
-                        <Label fx:id="weatherTitle" text="Météo" styleClass="weather-title"/>
-                        <Label fx:id="weatherDetails" text="—" styleClass="weather-details"/>
+                <HBox alignment="CENTER_LEFT" onMouseClicked="#openWeatherModal" spacing="10" style="-fx-cursor: hand;" styleClass="weather-card">
+                    <ImageView fx:id="weatherIcon" fitHeight="36" fitWidth="36" preserveRatio="true" />
+                    <VBox spacing="2">
+                        <Label fx:id="weatherTitle" styleClass="weather-title" text="Météo" />
+                        <Label fx:id="weatherDetails" styleClass="weather-details" text="—" />
                     </VBox>
                 </HBox>
+
+
 
                 <MenuBar styleClass="event-menubar">
                     <menus>
-                        <Menu mnemonicParsing="false" text="Navigation">
+                        <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem text="Retour au Dashboard" onAction="#backToDashboard"/>
+                                <MenuItem mnemonicParsing="false" text="New" />
+                                <MenuItem mnemonicParsing="false" text="Open…" />
+                                <Menu mnemonicParsing="false" text="Open Recent" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" text="Close" />
+                                <MenuItem mnemonicParsing="false" text="Save" />
+                                <MenuItem mnemonicParsing="false" text="Save As…" />
+                                <MenuItem mnemonicParsing="false" text="Revert" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" text="Preferences…" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" text="Quit" />
                             </items>
                         </Menu>
 
-                        <Menu fx:id="menuTypeEvent" mnemonicParsing="false" text="Types d'Événements">
+                        <Menu mnemonicParsing="false" text="TypeEvent">
                             <items>
-                                <MenuItem mnemonicParsing="false"
-                                          text="Gérer Types d'événements"
-                                          onAction="#handleTypeEvent" />
+                                <MenuItem mnemonicParsing="false" onAction="#handleTypeEvent" text="Gérer Types d'événements" />
                             </items>
                         </Menu>
 
-                        <Menu fx:id="menuInscription" mnemonicParsing="false" text="Inscriptions">
+                        <Menu mnemonicParsing="false" text="Inscription">
                             <items>
-                                <MenuItem mnemonicParsing="false"
-                                          text="Gérer Inscriptions"
-                                          onAction="#goToInscriptions" />
+                                <MenuItem mnemonicParsing="false" onAction="#goToInscriptions" text="Gérer Inscriptions" />
+                            </items>
+                        </Menu>
+
+                        <Menu mnemonicParsing="false" text="Edit">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Undo" />
+                                <MenuItem mnemonicParsing="false" text="Redo" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" text="Cut" />
+                                <MenuItem mnemonicParsing="false" text="Copy" />
+                                <MenuItem mnemonicParsing="false" text="Paste" />
+                                <MenuItem mnemonicParsing="false" text="Delete" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" text="Select All" />
+                                <MenuItem mnemonicParsing="false" text="Unselect All" />
+                            </items>
+                        </Menu>
+
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="About InnerTrack" />
                             </items>
                         </Menu>
                     </menus>
@@ -69,45 +106,35 @@
 
         <!-- CENTER -->
         <center>
-            <VBox spacing="11.2" styleClass="content-area">
+            <VBox spacing="14" styleClass="content-area">
 
-                <TableView fx:id="table_events" VBox.vgrow="ALWAYS" styleClass="event-table">
+                <TableView fx:id="table_events" styleClass="event-table" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="col_id" prefWidth="40" text="ID" visible="false" />
-                        <TableColumn fx:id="col_title" prefWidth="96" text="Titre" />
-                        <TableColumn fx:id="col_description" prefWidth="136" text="Description" />
-                        <TableColumn fx:id="col_date" prefWidth="72" text="Date" />
-                        <TableColumn fx:id="col_type" prefWidth="96" text="Type" />
-                        <TableColumn fx:id="col_capacity" prefWidth="72" text="Capacité" />
-                        <TableColumn fx:id="col_status" prefWidth="64" text="Status" />
-                        <TableColumn fx:id="dateCreationColumn" prefWidth="96" text="Date Création" />
-                        <TableColumn fx:id="col_participer" prefWidth="96" text="Action" />
+                        <TableColumn fx:id="col_id" prefWidth="50" text="ID" visible="false" />
+                        <TableColumn fx:id="col_title" prefWidth="120" text="Titre" />
+                        <TableColumn fx:id="col_description" prefWidth="170" text="Description" />
+                        <TableColumn fx:id="col_date" prefWidth="90" text="Date" />
+                        <TableColumn fx:id="col_type" prefWidth="120" text="Type" />
+                        <TableColumn fx:id="col_capacity" prefWidth="90" text="Capacité" />
+                        <TableColumn fx:id="col_status" prefWidth="80" text="Status" />
+                        <TableColumn fx:id="dateCreationColumn" prefWidth="120" text="Date Création" />
+                        <TableColumn fx:id="col_participer" prefWidth="120" text="Action" />
                     </columns>
                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
                 </TableView>
 
-                <HBox fx:id="adminActions" spacing="8" alignment="CENTER_LEFT">
-                    <Button text="➕ Ajouter Événement"
-                            onAction="#handleAjouterEvenement"
-                            styleClass="btn-primary"
-                            prefHeight="30.4"/>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+               <Button mnemonicParsing="false" onAction="#gotoDashboard" text="Dashboard" />
+                    <Button onAction="#handleAjouterEvenement" prefHeight="38" styleClass="btn-primary" text="➕ Ajouter Événement" />
 
-                    <Button text="✏️ Modifier"
-                            onAction="#handleModifierEvenement"
-                            styleClass="btn-secondary"
-                            prefHeight="30.4"/>
+                    <Button onAction="#handleModifierEvenement" prefHeight="38" styleClass="btn-secondary" text="✏️ Modifier" />
 
-                    <Button text="🗑️ Supprimer"
-                            onAction="#deleteSelected"
-                            styleClass="btn-danger"
-                            prefHeight="30.4"/>
+                    <Button onAction="#deleteSelected" prefHeight="38" styleClass="btn-danger" text="🗑️ Supprimer" />
                 </HBox>
 
-                <Label fx:id="error_label"
-                       visible="false"
-                       styleClass="event-error-label"/>
+                <Label fx:id="error_label" styleClass="event-error-label" visible="false" />
             </VBox>
         </center>
 
@@ -115,56 +142,32 @@
     </BorderPane>
 
     <!-- Overlay Chat (caché par défaut) -->
-    <VBox fx:id="chatOverlay"
-          visible="false" managed="false"
-          spacing="8"
-          prefWidth="240" maxWidth="240"
-          prefHeight="336" maxHeight="336"
-          styleClass="chat-overlay"
-          StackPane.alignment="BOTTOM_RIGHT">
+    <VBox fx:id="chatOverlay" managed="false" maxHeight="420" maxWidth="300" prefHeight="420" prefWidth="300" spacing="10" styleClass="chat-overlay" visible="false" StackPane.alignment="BOTTOM_RIGHT">
         <StackPane.margin>
             <!-- bottom=86 pour laisser la place à la bulle -->
-            <Insets top="0" right="18" bottom="1" left="0"/>
+            <Insets bottom="1" left="0" right="18" top="0" />
         </StackPane.margin>
 
-        <HBox alignment="CENTER_LEFT" spacing="6.4" styleClass="chat-overlay-header">
-            <Label text="🤖 Assistant" styleClass="chat-title"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button text="✕" onAction="#toggleChat" styleClass="chat-close-btn"/>
+        <HBox alignment="CENTER_LEFT" spacing="8" styleClass="chat-overlay-header">
+            <Label styleClass="chat-title" text="🤖 Assistant" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button onAction="#toggleChat" styleClass="chat-close-btn" text="✕" />
         </HBox>
 
-        <TextArea fx:id="chatArea"
-                  editable="false"
-                  wrapText="true"
-                  prefHeight="224" maxHeight="224"
-                  VBox.vgrow="NEVER"
-                  styleClass="chat-area"/>
+        <TextArea fx:id="chatArea" editable="false" maxHeight="280" prefHeight="280" styleClass="chat-area" wrapText="true" VBox.vgrow="NEVER" />
 
-        <HBox spacing="6.4" alignment="CENTER_LEFT">
-            <TextField fx:id="chatInput"
-                       promptText="Écrivez un message…"
-                       HBox.hgrow="ALWAYS"
-                       onAction="#sendChatMessage"
-                       styleClass="chat-input"/>
-            <Button text="Envoyer"
-                    onAction="#sendChatMessage"
-                    styleClass="btn-secondary"
-                    prefHeight="27.2"/>
+        <HBox alignment="CENTER_LEFT" spacing="8">
+            <TextField fx:id="chatInput" onAction="#sendChatMessage" promptText="Écrivez un message…" styleClass="chat-input" HBox.hgrow="ALWAYS" />
+            <Button onAction="#sendChatMessage" prefHeight="34" styleClass="btn-secondary" text="Envoyer" />
         </HBox>
 
-        <Label fx:id="chatStatus"
-               text="API: déconnectée"
-               styleClass="chat-status"/>
+        <Label fx:id="chatStatus" styleClass="chat-status" text="API: déconnectée" />
     </VBox>
 
     <!-- Bulle flottante -->
-    <Button fx:id="chatBubble"
-            text="💬"
-            onAction="#toggleChat"
-            styleClass="chat-bubble"
-            StackPane.alignment="BOTTOM_RIGHT">
+    <Button fx:id="chatBubble" onAction="#toggleChat" styleClass="chat-bubble" text="💬" StackPane.alignment="BOTTOM_RIGHT">
         <StackPane.margin>
-            <Insets top="0" right="18" bottom="18" left="0"/>
+            <Insets bottom="18" left="0" right="18" top="0" />
         </StackPane.margin>
     </Button>
 </StackPane>

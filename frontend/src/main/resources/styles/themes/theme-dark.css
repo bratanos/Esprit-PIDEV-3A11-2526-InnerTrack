@@ -352,12 +352,12 @@
 .dark-theme .chat-message-sender {
     -fx-font-weight: bold;
     -fx-text-fill: #94a3b8;
-    -fx-font-size: 8.8px;
+    -fx-font-size: 11px;
 }
 
 .dark-theme .chat-message-content {
     -fx-background-color: #2d3748;
-    -fx-padding: 6.4;
+    -fx-padding: 8;
     -fx-background-radius: 8;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 4, 0, 0, 1);
     -fx-text-fill: #ffffff !important;
@@ -373,7 +373,7 @@
 .dark-theme .btn-back {
     -fx-background-color: #252932;
     -fx-background-radius: 50;
-    -fx-padding: 6.4;
+    -fx-padding: 8;
     -fx-cursor: hand;
 }
 

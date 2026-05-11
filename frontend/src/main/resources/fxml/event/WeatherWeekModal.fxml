@@ -6,15 +6,16 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            stylesheets="/styles/components/event-style.css"
+            stylesheets="@../../styles/views/event-style.css"
             fx:controller="com.innertrack.controller.event.WeatherWeekModalController">
+
 
     <padding>
         <Insets top="14" right="14" bottom="14" left="14"/>
     </padding>
 
     <top>
-        <VBox spacing="3.2" styleClass="weather-modal-header">
+        <VBox spacing="4" styleClass="weather-modal-header">
             <Label text="Prévisions météo" styleClass="weather-modal-title"/>
             <Label fx:id="statusLabel" text="Chargement..." styleClass="weather-modal-status"/>
             <Label text="(OpenWeather Free = prévision ~5 jours)" styleClass="weather-modal-hint"/>
@@ -22,19 +23,19 @@
     </top>
 
     <center>
-        <VBox spacing="8" styleClass="weather-modal-body">
+        <VBox spacing="10" styleClass="weather-modal-body">
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
 
             <ProgressIndicator fx:id="loading" visible="false"/>
 
-            <TableView fx:id="weekTable" prefHeight="208" styleClass="weather-modal-table">
+            <TableView fx:id="weekTable" prefHeight="260" styleClass="weather-modal-table">
                 <columns>
-                    <TableColumn fx:id="cDate" text="Date" prefWidth="96"/>
-                    <TableColumn fx:id="cMin" text="Min (°C)" prefWidth="72"/>
-                    <TableColumn fx:id="cMax" text="Max (°C)" prefWidth="72"/>
-                    <TableColumn fx:id="cDesc" text="Description" prefWidth="192"/>
+                    <TableColumn fx:id="cDate" text="Date" prefWidth="120"/>
+                    <TableColumn fx:id="cMin" text="Min (°C)" prefWidth="90"/>
+                    <TableColumn fx:id="cMax" text="Max (°C)" prefWidth="90"/>
+                    <TableColumn fx:id="cDesc" text="Description" prefWidth="240"/>
                 </columns>
             </TableView>
         </VBox>

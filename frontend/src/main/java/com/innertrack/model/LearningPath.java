@@ -85,4 +85,8 @@ public class LearningPath {
     public void setArticles(List<Article> articles) {
         this.articles = articles;
     }
+    @Override
+    public String toString() {
+        return titre != null ? titre : "Sans titre";
+    }
 }

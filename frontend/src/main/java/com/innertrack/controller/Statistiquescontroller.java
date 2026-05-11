@@ -15,24 +15,14 @@ import java.net.URL;
 import java.sql.*;
 import java.util.*;
 
-/**
- * Statistics controller showing charts and KPIs for test results.
- * Can be opened as a standalone window via ouvrirFenetre().
- */
 public class Statistiquescontroller implements Initializable {
 
-    @FXML
-    private BarChart<String, Number> barChart;
-    @FXML
-    private PieChart pieChart;
-    @FXML
-    private LineChart<String, Number> lineChart;
-    @FXML
-    private Label totalPassesLabel;
-    @FXML
-    private Label scoreMoyenLabel;
-    @FXML
-    private Label testFavoriLabel;
+    @FXML private BarChart<String, Number> barChart;
+    @FXML private PieChart pieChart;
+    @FXML private LineChart<String, Number> lineChart;
+    @FXML private Label totalPassesLabel;
+    @FXML private Label scoreMoyenLabel;
+    @FXML private Label testFavoriLabel;
 
     private int idUtilisateur = 1;
     private boolean isTherapist = false;
@@ -44,25 +34,23 @@ public class Statistiquescontroller implements Initializable {
             if (user != null) {
                 idUtilisateur = user.getId();
                 isTherapist = user.getRoles().contains("ROLE_PSYCHOLOGUE");
+                System.out.println(">>> SESSION OK - user id: " + idUtilisateur);
+            } else {
+                System.out.println(">>> SESSION NULL dans initialize()");
             }
         } catch (Exception e) {
-            System.err.println("Pas de session active, mode debug");
+            System.err.println("Pas de session active: " + e.getMessage());
         }
-        chargerBarChart();
-        chargerPieChart();
-        chargerLineChart();
-        chargerKPIs();
     }
 
     public void setIdUtilisateur(int id) {
         this.idUtilisateur = id;
+        System.out.println(">>> setIdUtilisateur appelé avec id: " + id);
         chargerBarChart();
         chargerPieChart();
         chargerLineChart();
         chargerKPIs();
     }
-
-    // ── Static method to open as standalone window ──
 
     public static void ouvrirFenetre(int idUtilisateur) {
         try {
@@ -92,6 +80,9 @@ public class Statistiquescontroller implements Initializable {
         barChart.setTitle(isTherapist ? "All tests taken by category" : "Tests taken by category");
         barChart.setLegendVisible(false);
 
+        // ✅ Override AtlantaFX theme qui bloque les barres avec ClassCastException
+        barChart.setStyle(".chart-bar { -fx-background-color: #5B8DEF; }");
+
         try {
             Connection cnx = DBConnection.getInstance().getConnection();
             String sql;
@@ -99,21 +90,21 @@ public class Statistiquescontroller implements Initializable {
 
             if (isTherapist) {
                 sql = """
-                          SELECT tt.libelle, COUNT(r.id_resultat) as nb
-                          FROM type_test tt
-                          LEFT JOIN test_psychologique tp ON tt.id_type = tp.id_type
-                          LEFT JOIN resultat r ON tp.id_test = r.id_test
-                          GROUP BY tt.libelle ORDER BY nb DESC
-                        """;
+                      SELECT tt.libelle, COUNT(r.id_resultat) as nb
+                      FROM type_test tt
+                      LEFT JOIN test_psychologique tp ON tt.id_type = tp.id_type
+                      LEFT JOIN resultat r ON tp.id_test = r.id_test
+                      GROUP BY tt.libelle ORDER BY nb DESC
+                    """;
                 ps = cnx.prepareStatement(sql);
             } else {
                 sql = """
-                          SELECT tt.libelle, COUNT(r.id_resultat) as nb
-                          FROM type_test tt
-                          LEFT JOIN test_psychologique tp ON tt.id_type = tp.id_type
-                          LEFT JOIN resultat r ON tp.id_test = r.id_test AND r.id_utilisateur = ?
-                          GROUP BY tt.libelle ORDER BY nb DESC
-                        """;
+                      SELECT tt.libelle, COUNT(r.id_resultat) as nb
+                      FROM type_test tt
+                      LEFT JOIN test_psychologique tp ON tt.id_type = tp.id_type
+                      LEFT JOIN resultat r ON tp.id_test = r.id_test AND r.id_utilisateur = ?
+                      GROUP BY tt.libelle ORDER BY nb DESC
+                    """;
                 ps = cnx.prepareStatement(sql);
                 ps.setInt(1, idUtilisateur);
             }
@@ -122,17 +113,46 @@ public class Statistiquescontroller implements Initializable {
 
             XYChart.Series<String, Number> serie = new XYChart.Series<>();
             serie.setName("Passages");
+
             while (rs.next()) {
+                int nb = rs.getInt("nb");
+                if (nb == 0) continue;
                 String type = rs.getString("libelle");
                 String label = type.length() > 18 ? type.substring(0, 15) + "…" : type;
-                serie.getData().add(new XYChart.Data<>(label, rs.getInt("nb")));
+                serie.getData().add(new XYChart.Data<>(label, nb));
+                System.out.println(">>> BarChart data: " + label + " = " + nb);
             }
+
+            if (serie.getData().isEmpty()) {
+                System.out.println(">>> BarChart: aucune donnée pour user id=" + idUtilisateur);
+                barChart.setTitle("Tests taken by category — (aucune donnée)");
+                return;
+            }
+
             barChart.getData().add(serie);
 
-            serie.getData().forEach(d -> {
-                if (d.getNode() != null)
-                    d.getNode().setStyle("-fx-bar-fill: -it-primary;");
+            // Forcer l'axe Y avec des entiers
+            NumberAxis yAxis = (NumberAxis) barChart.getYAxis();
+            yAxis.setAutoRanging(false);
+            yAxis.setLowerBound(0);
+            double maxVal = serie.getData().stream()
+                    .mapToDouble(d -> d.getYValue().doubleValue())
+                    .max().orElse(5);
+            yAxis.setUpperBound(maxVal + 1);
+            yAxis.setTickUnit(1);
+
+            // ✅ Style hex direct — évite le conflit avec AtlantaFX
+            javafx.application.Platform.runLater(() -> {
+                serie.getData().forEach(d -> {
+                    if (d.getNode() != null) {
+                        d.getNode().setStyle(
+                                "-fx-bar-fill: #5B8DEF;" +
+                                        "-fx-background-color: #5B8DEF;"
+                        );
+                    }
+                });
             });
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -151,41 +171,45 @@ public class Statistiquescontroller implements Initializable {
 
             if (isTherapist) {
                 sql = """
-                            SELECT
-                                CASE
-                                    WHEN LOWER(resultat) LIKE '%critique%' THEN 'Critical 🔴'
-                                    WHEN LOWER(resultat) LIKE '%élevé%'   THEN 'High 🟠'
-                                    WHEN LOWER(resultat) LIKE '%modér%'   THEN 'Moderate 🟡'
-                                    WHEN LOWER(resultat) LIKE '%faible%'  THEN 'Low 🟢'
-                                    ELSE 'Other ⚪'
-                                END AS niveau_cat,
-                                COUNT(*) as nb
-                            FROM resultat
-                            GROUP BY niveau_cat ORDER BY nb DESC
-                        """;
+                        SELECT
+                            CASE
+                                WHEN LOWER(resultat) LIKE '%critique%' THEN 'Critical 🔴'
+                                WHEN LOWER(resultat) LIKE '%élevé%'   THEN 'High 🟠'
+                                WHEN LOWER(resultat) LIKE '%modér%'   THEN 'Moderate 🟡'
+                                WHEN LOWER(resultat) LIKE '%faible%'  THEN 'Low 🟢'
+                                ELSE 'Other ⚪'
+                            END AS niveau_cat,
+                            COUNT(*) as nb
+                        FROM resultat
+                        GROUP BY niveau_cat ORDER BY nb DESC
+                    """;
                 ps = cnx.prepareStatement(sql);
             } else {
                 sql = """
-                            SELECT
-                                CASE
-                                    WHEN LOWER(resultat) LIKE '%critique%' THEN 'Critical 🔴'
-                                    WHEN LOWER(resultat) LIKE '%élevé%'   THEN 'High 🟠'
-                                    WHEN LOWER(resultat) LIKE '%modér%'   THEN 'Moderate 🟡'
-                                    WHEN LOWER(resultat) LIKE '%faible%'  THEN 'Low 🟢'
-                                    ELSE 'Other ⚪'
-                                END AS niveau_cat,
-                                COUNT(*) as nb
-                            FROM resultat WHERE id_utilisateur = ?
-                            GROUP BY niveau_cat ORDER BY nb DESC
-                        """;
+                        SELECT
+                            CASE
+                                WHEN LOWER(resultat) LIKE '%critique%' THEN 'Critical 🔴'
+                                WHEN LOWER(resultat) LIKE '%élevé%'   THEN 'High 🟠'
+                                WHEN LOWER(resultat) LIKE '%modér%'   THEN 'Moderate 🟡'
+                                WHEN LOWER(resultat) LIKE '%faible%'  THEN 'Low 🟢'
+                                ELSE 'Other ⚪'
+                            END AS niveau_cat,
+                            COUNT(*) as nb
+                        FROM resultat WHERE id_utilisateur = ?
+                        GROUP BY niveau_cat ORDER BY nb DESC
+                    """;
                 ps = cnx.prepareStatement(sql);
                 ps.setInt(1, idUtilisateur);
             }
+
             ResultSet rs = ps.executeQuery();
 
             Map<String, String> couleurs = Map.of(
-                    "Critical 🔴", "#e53e3e", "High 🟠", "#ed8936",
-                    "Moderate 🟡", "#ecc94b", "Low 🟢", "#48bb78", "Other ⚪", "#a0aec0");
+                    "Critical 🔴", "#e53e3e",
+                    "High 🟠",     "#ed8936",
+                    "Moderate 🟡", "#ecc94b",
+                    "Low 🟢",      "#48bb78",
+                    "Other ⚪",    "#a0aec0");
 
             boolean hasData = false;
             while (rs.next()) {
@@ -202,11 +226,12 @@ public class Statistiquescontroller implements Initializable {
             javafx.application.Platform.runLater(() -> {
                 pieChart.getData().forEach(d -> {
                     String key = d.getName().split(" \\(")[0];
-                    String c = couleurs.getOrDefault(key, "-it-primary");
+                    String c = couleurs.getOrDefault(key, "#5B8DEF");
                     if (d.getNode() != null)
                         d.getNode().setStyle("-fx-pie-color: " + c + ";");
                 });
             });
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -226,24 +251,24 @@ public class Statistiquescontroller implements Initializable {
 
             if (isTherapist) {
                 sqlTests = """
-                            SELECT tp.id_test, tp.titre, COUNT(*) as nb
-                            FROM resultat r JOIN test_psychologique tp ON r.id_test = tp.id_test
-                            GROUP BY tp.id_test, tp.titre ORDER BY nb DESC LIMIT 4
-                        """;
+                        SELECT tp.id_test, tp.titre, COUNT(*) as nb
+                        FROM resultat r JOIN test_psychologique tp ON r.id_test = tp.id_test
+                        GROUP BY tp.id_test, tp.titre ORDER BY nb DESC LIMIT 4
+                    """;
                 psTests = cnx.prepareStatement(sqlTests);
             } else {
                 sqlTests = """
-                            SELECT tp.id_test, tp.titre, COUNT(*) as nb
-                            FROM resultat r JOIN test_psychologique tp ON r.id_test = tp.id_test
-                            WHERE r.id_utilisateur = ?
-                            GROUP BY tp.id_test, tp.titre ORDER BY nb DESC LIMIT 4
-                        """;
+                        SELECT tp.id_test, tp.titre, COUNT(*) as nb
+                        FROM resultat r JOIN test_psychologique tp ON r.id_test = tp.id_test
+                        WHERE r.id_utilisateur = ?
+                        GROUP BY tp.id_test, tp.titre ORDER BY nb DESC LIMIT 4
+                    """;
                 psTests = cnx.prepareStatement(sqlTests);
                 psTests.setInt(1, idUtilisateur);
             }
 
             ResultSet rsTests = psTests.executeQuery();
-            String[] couleurs = { "-it-primary", "#e53e3e", "#48bb78", "#ed8936" };
+            String[] couleurs = { "#5B8DEF", "#e53e3e", "#48bb78", "#ed8936" };
             int idx = 0;
 
             while (rsTests.next()) {
@@ -259,38 +284,43 @@ public class Statistiquescontroller implements Initializable {
 
                 if (isTherapist) {
                     sqlPts = """
-                                SELECT DATE_FORMAT(date_passage, '%d/%m') as dt, AVG(pourcentage) as pourcentage
-                                FROM resultat WHERE id_test = ?
-                                GROUP BY DATE_FORMAT(date_passage, '%d/%m')
-                                ORDER BY dt LIMIT 10
-                            """;
+                            SELECT DATE_FORMAT(date_passage, '%d/%m') as dt, AVG(pourcentage) as pourcentage
+                            FROM resultat WHERE id_test = ?
+                            GROUP BY DATE_FORMAT(date_passage, '%d/%m')
+                            ORDER BY dt LIMIT 10
+                        """;
                     psPts = cnx.prepareStatement(sqlPts);
                     psPts.setInt(1, idTest);
                 } else {
                     sqlPts = """
-                                SELECT DATE_FORMAT(date_passage, '%d/%m') as dt, pourcentage
-                                FROM resultat WHERE id_utilisateur = ? AND id_test = ?
-                                ORDER BY date_passage LIMIT 10
-                            """;
+                            SELECT DATE_FORMAT(date_passage, '%d/%m') as dt, pourcentage
+                            FROM resultat WHERE id_utilisateur = ? AND id_test = ?
+                            ORDER BY date_passage LIMIT 10
+                        """;
                     psPts = cnx.prepareStatement(sqlPts);
                     psPts.setInt(1, idUtilisateur);
                     psPts.setInt(2, idTest);
                 }
 
                 ResultSet rsPts = psPts.executeQuery();
-
                 while (rsPts.next()) {
-                    serie.getData().add(new XYChart.Data<>(rsPts.getString("dt"), rsPts.getDouble("pourcentage")));
+                    serie.getData().add(new XYChart.Data<>(
+                            rsPts.getString("dt"),
+                            rsPts.getDouble("pourcentage")));
                 }
                 lineChart.getData().add(serie);
 
                 final String c = couleurs[idx % couleurs.length];
                 javafx.application.Platform.runLater(() -> {
                     if (serie.getNode() != null)
-                        serie.getNode().setStyle("-fx-stroke: " + c + "; -fx-stroke-width: 2.5px;");
+                        serie.getNode().setStyle(
+                                "-fx-stroke: " + c + ";" +
+                                        "-fx-stroke-width: 2.5px;"
+                        );
                 });
                 idx++;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -301,17 +331,16 @@ public class Statistiquescontroller implements Initializable {
     private void chargerKPIs() {
         try {
             Connection cnx = DBConnection.getInstance().getConnection();
-
             PreparedStatement ps1, ps2, ps3;
 
             if (isTherapist) {
                 ps1 = cnx.prepareStatement("SELECT COUNT(DISTINCT id_utilisateur) FROM resultat");
                 ps2 = cnx.prepareStatement("SELECT AVG(pourcentage) FROM resultat");
                 ps3 = cnx.prepareStatement("""
-                            SELECT tp.titre, COUNT(DISTINCT r.id_utilisateur) as nb FROM resultat r
-                            JOIN test_psychologique tp ON r.id_test = tp.id_test
-                            GROUP BY tp.titre ORDER BY nb DESC LIMIT 1
-                        """);
+                        SELECT tp.titre, COUNT(DISTINCT r.id_utilisateur) as nb FROM resultat r
+                        JOIN test_psychologique tp ON r.id_test = tp.id_test
+                        GROUP BY tp.titre ORDER BY nb DESC LIMIT 1
+                    """);
             } else {
                 ps1 = cnx.prepareStatement("SELECT COUNT(*) FROM resultat WHERE id_utilisateur = ?");
                 ps1.setInt(1, idUtilisateur);
@@ -320,16 +349,17 @@ public class Statistiquescontroller implements Initializable {
                 ps2.setInt(1, idUtilisateur);
 
                 ps3 = cnx.prepareStatement("""
-                            SELECT tp.titre, COUNT(*) as nb FROM resultat r
-                            JOIN test_psychologique tp ON r.id_test = tp.id_test
-                            WHERE r.id_utilisateur = ? GROUP BY tp.titre ORDER BY nb DESC LIMIT 1
-                        """);
+                        SELECT tp.titre, COUNT(*) as nb FROM resultat r
+                        JOIN test_psychologique tp ON r.id_test = tp.id_test
+                        WHERE r.id_utilisateur = ? GROUP BY tp.titre ORDER BY nb DESC LIMIT 1
+                    """);
                 ps3.setInt(1, idUtilisateur);
             }
 
             ResultSet rs1 = ps1.executeQuery();
             if (rs1.next())
-                totalPassesLabel.setText(rs1.getInt(1) + (isTherapist ? " utilisateurs uniques" : " tests passés"));
+                totalPassesLabel.setText(rs1.getInt(1) +
+                        (isTherapist ? " utilisateurs uniques" : " tests passés"));
 
             ResultSet rs2 = ps2.executeQuery();
             if (rs2.next())
@@ -338,6 +368,7 @@ public class Statistiquescontroller implements Initializable {
             ResultSet rs3 = ps3.executeQuery();
             if (rs3.next())
                 testFavoriLabel.setText("Test favori : " + rs3.getString("titre"));
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -4,15 +4,15 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="16" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+<VBox spacing="20" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <padding>
         <Insets top="40" right="40" bottom="40" left="40" />
     </padding>
 
-    <Label text="InnerTrack v1.0" style="-fx-font-size: 19.2px; -fx-font-weight: bold;" />
+    <Label text="InnerTrack v1.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
     <Label text="Mental health tracking and management solution." styleClass="text-muted" />
     
-    <Separator maxWidth="240" />
+    <Separator maxWidth="300" />
     
     <Label text="Developed by the InnerTrack team" />
     <Label text="© 2026 All rights reserved." styleClass="text-muted" />

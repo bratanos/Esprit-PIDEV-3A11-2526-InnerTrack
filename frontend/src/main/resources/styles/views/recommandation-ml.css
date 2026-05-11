@@ -9,7 +9,7 @@
 
 .header-banner {
     -fx-background-color: linear-gradient(to right, #8b5cf6 0%, #7c3aed 100%);
-    -fx-padding: 24px;
+    -fx-padding: 30px;
     -fx-background-radius: 0 0 20px 20px;
     -fx-effect: dropshadow(gaussian, rgba(124, 58, 237, 0.3), 15, 0, 0, 5);
 }
@@ -17,7 +17,7 @@
 .cluster-badge {
     -fx-background-color: rgba(255, 255, 255, 0.2);
     -fx-text-fill: white;
-    -fx-padding: 4px 12px;
+    -fx-padding: 5px 15px;
     -fx-background-radius: 20px;
     -fx-font-weight: bold;
     -fx-border-color: rgba(255, 255, 255, 0.5);
@@ -27,7 +27,7 @@
 .rec-card {
     -fx-background-color: #ffffff;
     -fx-background-radius: 15px;
-    -fx-padding: 16px;
+    -fx-padding: 20px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
     -fx-border-color: #e2e8f0;
     -fx-border-width: 1px;
@@ -42,20 +42,20 @@
 .rec-section-title {
     -fx-text-fill: #1e293b;
     -fx-font-weight: bold;
-    -fx-font-size: 14.4px;
+    -fx-font-size: 18px;
 }
 
 .rec-item-box {
     -fx-background-color: #f8fafc;
     -fx-background-radius: 10px;
-    -fx-padding: 9.6px 12px;
+    -fx-padding: 12px 15px;
     -fx-border-color: #e2e8f0;
     -fx-border-width: 0 0 0 4px;
     -fx-border-radius: 0 10px 10px 0;
 }
 
 .rec-icon {
-    -fx-font-size: 19.2px;
+    -fx-font-size: 24px;
 }
 
 .rec-label {
@@ -71,7 +71,7 @@
     -fx-background-color: linear-gradient(to right, #8b5cf6, #7c3aed);
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 9.6px 28px;
+    -fx-padding: 12px 35px;
     -fx-background-radius: 10px;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 10, 0, 0, 3);

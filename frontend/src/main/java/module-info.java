@@ -16,6 +16,8 @@ module com.innertrack {
     requires org.apache.lucene.core;
     requires org.apache.lucene.queryparser;
 
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
     requires com.sothawo.mapjfx;
     requires io.redlink.geocoding.osm;
     requires io.redlink.geocoding.api;
@@ -35,6 +37,7 @@ module com.innertrack {
     requires org.kordamp.ikonli.fontawesome5;
     requires jdk.jsobject;
     requires itextpdf;
+    //requires com.innertrack;
 
     opens com.innertrack.model to com.google.gson, javafx.base;
     opens com.innertrack.dao to java.sql;

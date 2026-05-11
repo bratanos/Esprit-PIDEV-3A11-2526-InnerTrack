@@ -12,18 +12,18 @@
 
     <top>
         <VBox styleClass="page-header">
-            <HBox alignment="CENTER_LEFT" spacing="9.6">
-                <Label text="📁" style="-fx-font-size: 25.6px;"/>
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="📁" style="-fx-font-size: 32px;"/>
                 <VBox>
                     <Label text="Gestion des Catégories" styleClass="page-title"/>
                     <Label text="Organisez vos catégories d'articles" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <HBox spacing="8" alignment="CENTER_RIGHT" styleClass="sub-nav-bar">
+                <HBox spacing="10" alignment="CENTER_RIGHT" styleClass="sub-nav-bar">
                     <Button text="📰 Articles" onAction="#goToArticles" styleClass="nav-button"/>
                     <Button text="📁 Catégories" onAction="#loadData" styleClass="nav-button, active"/>
                     <Button text="📚 Parcours" onAction="#goToLearningPaths" styleClass="nav-button"/>
-                    <Separator orientation="VERTICAL" prefHeight="16"/>
+                    <Separator orientation="VERTICAL" prefHeight="20"/>
                     <Button text="🏠 Dashboard" onAction="#goToDashboard" styleClass="nav-button-alt"/>
                 </HBox>
             </HBox>
@@ -31,8 +31,8 @@
     </top>
 
     <center>
-        <HBox spacing="16" style="-fx-padding: 16;">
-            <VBox spacing="9.6" prefWidth="272" styleClass="sidebar">
+        <HBox spacing="20" style="-fx-padding: 20;">
+            <VBox spacing="12" prefWidth="340" styleClass="sidebar">
                 <TextField fx:id="searchField"
                            promptText="🔍 Rechercher une catégorie..."
                            styleClass="search-field"/>
@@ -42,29 +42,29 @@
                         onAction="#showAddForm"
                         styleClass="btn-primary"
                         prefWidth="Infinity"
-                        prefHeight="32"/>
+                        prefHeight="40"/>
 
                 <Separator/>
 
                 <ScrollPane fitToWidth="true"
                             VBox.vgrow="ALWAYS"
                             style="-fx-background: transparent; -fx-background-color: transparent;">
-                    <VBox fx:id="categoriesContainer" spacing="6.4"/>
+                    <VBox fx:id="categoriesContainer" spacing="8"/>
                 </ScrollPane>
             </VBox>
 
             <StackPane HBox.hgrow="ALWAYS">
                 <VBox fx:id="emptyState"
                       alignment="CENTER"
-                      spacing="12.8"
+                      spacing="16"
                       visible="true"
-                      style="-fx-padding: 48;
+                      style="-fx-padding: 60;
                              -fx-background-color: #ffffff;
                              -fx-background-radius: 12px;">
-                    <Label text="📋" style="-fx-font-size: 51.2px; -fx-opacity: 0.3;"/>
+                    <Label text="📋" style="-fx-font-size: 64px; -fx-opacity: 0.3;"/>
                     <Label text="Sélectionnez une catégorie" styleClass="empty-state-text"/>
                     <Label text="ou créez-en une nouvelle pour commencer"
-                           style="-fx-font-size: 10.4px; -fx-text-fill: #8a8886;"/>
+                           style="-fx-font-size: 13px; -fx-text-fill: #8a8886;"/>
                 </VBox>
 
                 <ScrollPane fx:id="detailScrollPane"
@@ -72,14 +72,14 @@
                             visible="false"
                             style="-fx-background: transparent; -fx-background-color: transparent;">
 
-                    <VBox fx:id="detailView" spacing="16" styleClass="detail-panel">
-                        <VBox spacing="4.8">
+                    <VBox fx:id="detailView" spacing="20" styleClass="detail-panel">
+                        <VBox spacing="6">
                             <Label fx:id="lblDetailTitle"
                                    text="Nom de la Catégorie"
                                    styleClass="detail-title"/>
                             <Label fx:id="lblDetailDescription"
                                    text="Description de la catégorie"
-                                   style="-fx-font-size: 11.2px; -fx-text-fill: #605e5c;"/>
+                                   style="-fx-font-size: 14px; -fx-text-fill: #605e5c;"/>
                         </VBox>
 
                         <Separator/>
@@ -101,24 +101,24 @@
                                    GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                             <TextArea fx:id="descField"
                                        promptText="Description (optionnelle)"
-                                       prefHeight="72"
+                                       prefHeight="90"
                                        wrapText="true"
                                        GridPane.rowIndex="3" GridPane.columnIndex="0"
                                        GridPane.columnSpan="2"/>
                         </GridPane>
 
-                        <HBox spacing="9.6" alignment="CENTER_LEFT">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
                             <Button fx:id="btnUpdate"
                                     text="✓ Enregistrer"
                                     onAction="#handleUpdate"
                                     styleClass="btn-primary"
-                                    prefWidth="112"/>
+                                    prefWidth="140"/>
 
                             <Button fx:id="btnDelete"
                                     text="🗑 Supprimer"
                                     onAction="#handleDelete"
                                     styleClass="btn-danger"
-                                    prefWidth="112"/>
+                                    prefWidth="140"/>
 
                             <Region HBox.hgrow="ALWAYS"/>
 
@@ -129,22 +129,22 @@
 
                         <Separator/>
 
-                        <VBox spacing="4.8"
-                              style="-fx-padding: 11.2;
+                        <VBox spacing="6"
+                              style="-fx-padding: 14;
                                      -fx-background-color: #f3f2f1;
                                      -fx-background-radius: 8px;">
                             <Label text="📊 Statistiques" styleClass="text-bold"/>
                             <Label fx:id="lblArticleCount"
                                    text="0 articles dans cette catégorie"
-                                   style="-fx-font-size: 10.4px; -fx-text-fill: #605e5c;"/>
+                                   style="-fx-font-size: 13px; -fx-text-fill: #605e5c;"/>
                         </VBox>
 
                         <Separator/>
 
-                        <VBox spacing="8">
+                        <VBox spacing="10">
                             <Label text="📰 Articles de cette catégorie"
-                                   style="-fx-font-weight: bold; -fx-font-size: 10.4px;"/>
-                            <VBox fx:id="articlesListBox" spacing="4.8"/>
+                                   style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                            <VBox fx:id="articlesListBox" spacing="6"/>
                         </VBox>
                     </VBox>
                 </ScrollPane>

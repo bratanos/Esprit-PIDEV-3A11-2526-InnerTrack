@@ -59,6 +59,18 @@ public class ArticleDao {
         return null;
     }
 
+    public int countByCategorie(int categorieId) {
+        String sql = "SELECT COUNT(*) FROM article WHERE id_categorie = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, categorieId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public List<Article> findAll() {
         List<Article> list = new ArrayList<>();
         String sql = "SELECT * FROM article ORDER BY datePublication DESC";
@@ -95,12 +107,18 @@ public class ArticleDao {
 
     public List<Article> findByCategorie(int categorieId) {
         List<Article> list = new ArrayList<>();
-        String sql = "SELECT * FROM article WHERE id_categorie = ? ORDER BY datePublication DESC";
+        String sql = "SELECT a.*, CONCAT(u.first_name, ' ', u.last_name) as auteur_nom " +
+                "FROM article a " +
+                "LEFT JOIN user u ON a.auteur_user_id = u.id " +
+                "WHERE a.id_categorie = ? ORDER BY a.datePublication DESC";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, categorieId);
             try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next())
-                    list.add(map(rs));
+                while (rs.next()) {
+                    Article a = map(rs);                // maps the article columns
+                    a.setAuteurName(rs.getString("auteur_nom")); // set the extra field
+                    list.add(a);
+                }
             }
         } catch (SQLException e) {
             System.err.println("ArticleDao.findByCategorie error: " + e.getMessage());

@@ -4,7 +4,6 @@ import com.innertrack.controller.auth.MainLayoutController;
 import com.innertrack.dao.AdminUserDao;
 import com.innertrack.dao.MessagingDao;
 import com.innertrack.dao.ReportDao;
-import com.innertrack.model.Evenement;
 import com.innertrack.model.Notification;
 import com.innertrack.model.Report;
 import com.innertrack.model.User;
@@ -23,7 +22,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.control.DatePicker; // Added DatePicker import
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,8 +44,6 @@ public class AdminDashboardController {
     @FXML
     private Button btnReports;
     @FXML
-    private Button btnEvenements;
-    @FXML
     private Label reportsBadge;
 
     // ── Panes ─────────────────────────────────────────────────
@@ -57,8 +53,6 @@ public class AdminDashboardController {
     private VBox usersPane;
     @FXML
     private VBox reportsPane;
-    @FXML
-    private VBox evenementsPane;
 
     // ── Analytics ─────────────────────────────────────────────
     @FXML
@@ -100,25 +94,11 @@ public class AdminDashboardController {
 
     // ── Reports ───────────────────────────────────────────────
     @FXML
+    private Label reportsEmptyLabel;
+    @FXML
     private Label reportsSummaryLabel;
     @FXML
     private VBox reportsListBox;
-
-    // ── Evenements ────────────────────────────────────────────
-    @FXML
-    private TextField evenementSearchField;
-    @FXML
-    private ComboBox<String> evenementStatutCombo;
-    @FXML
-    private TableView<Evenement> evenementsTable;
-    @FXML
-    private TableColumn<Evenement, String> colEvenementId, colEvenementTitre, colEvenementDate, colEvenementLieu, colEvenementStatut, colEvenementParticipants;
-    @FXML
-    private TableColumn<Evenement, Void> colEvenementActions;
-    @FXML
-    private Label evenementPageLabel;
-    @FXML
-    private Label evenementTotalLabel;
 
     // ── Active Locks ──────────────────────────────────────────
     @FXML
@@ -130,7 +110,6 @@ public class AdminDashboardController {
     private final ReportDao reportDao = new ReportDao();
     private final MessagingDao messagingDao = new MessagingDao();
     private final com.innertrack.dao.ChatLockDao chatLockDao = new com.innertrack.dao.ChatLockDao();
-    private final com.innertrack.dao.EvenementDao evenementDao = new com.innertrack.dao.EvenementDao();
     private final DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final DateTimeFormatter dfFull = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -155,7 +134,7 @@ public class AdminDashboardController {
     // ── Pane switching ────────────────────────────────────────
 
     private void setActiveBtn(Button active) {
-        for (Button b : List.of(btnDashboard, btnUsers, btnReports, btnEvenements)) {
+        for (Button b : List.of(btnDashboard, btnUsers, btnReports)) {
             b.getStyleClass().remove("sidebar-button-active");
         }
         active.getStyleClass().add("sidebar-button-active");
@@ -183,7 +162,6 @@ public class AdminDashboardController {
         dashPane.setVisible(false);
         usersPane.setVisible(false);
         reportsPane.setVisible(true);
-        evenementsPane.setVisible(false);
         setActiveBtn(btnReports);
         loadReports();
     }
@@ -191,16 +169,6 @@ public class AdminDashboardController {
     @FXML
     private void refreshReports() {
         loadReports();
-    }
-
-    @FXML
-    private void showEvenements() {
-        dashPane.setVisible(false);
-        usersPane.setVisible(false);
-        reportsPane.setVisible(false);
-        evenementsPane.setVisible(true);
-        setActiveBtn(btnEvenements);
-        loadEvenements();
     }
 
     // ── Analytics ─────────────────────────────────────────────
@@ -542,19 +510,12 @@ public class AdminDashboardController {
         roleFilterCombo.setItems(FXCollections.observableArrayList(
                 "", "ROLE_USER", "ROLE_PSYCHOLOGUE", "ROLE_ADMIN"));
         roleFilterCombo.setPromptText("Tous les rôles");
-
         statusFilterCombo.setItems(FXCollections.observableArrayList(
                 "", "ACTIVE", "PENDING", "BLOCKED"));
         statusFilterCombo.setPromptText("Tous les statuts");
-
-        // Evenements filters
-        evenementStatutCombo.setItems(FXCollections.observableArrayList(
-                "", "ACTIF", "ANNULE", "TERMINE"));
-        evenementStatutCombo.setPromptText("Tous les statuts");
     }
 
     private void setupTable() {
-        // Users table setup
         colId.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().getId())));
         colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getFullName()));
         colEmail.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getEmail()));
@@ -571,73 +532,6 @@ public class AdminDashboardController {
                     ? d.getValue().getCreatedAt().format(df)
                     : "—";
             return new SimpleStringProperty(date);
-        });
-
-        // Evenements table setup
-        colEvenementId.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().getId())));
-        colEvenementTitre.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getTitre()));
-        colEvenementDate.setCellValueFactory(d -> {
-            String date = d.getValue().getDateDebut() != null
-                    ? d.getValue().getDateDebut().format(df)
-                    : "—";
-            return new SimpleStringProperty(date);
-        });
-        colEvenementLieu.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getLieu()));
-        colEvenementStatut.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getStatut()));
-        colEvenementParticipants.setCellValueFactory(d -> {
-            Integer current = d.getValue().getNombreParticipants();
-            Integer max = d.getValue().getNombreMaxParticipants();
-            if (current != null && max != null) {
-                return new SimpleStringProperty(current + "/" + max);
-            } else if (max != null) {
-                return new SimpleStringProperty("0/" + max);
-            } else {
-                return new SimpleStringProperty("—");
-            }
-        });
-
-        colEvenementStatut.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(String statut, boolean empty) {
-                super.updateItem(statut, empty);
-                if (empty || statut == null) {
-                    setText(null);
-                    setStyle("");
-                    return;
-                }
-                setText(statut);
-                switch (statut) {
-                    case "ACTIF" -> setStyle("-fx-background-color: #48bb78; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 2 8;");
-                    case "ANNULE" -> setStyle("-fx-background-color: #f56565; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 2 8;");
-                    case "TERMINE" -> setStyle("-fx-background-color: #a0aec0; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 2 8;");
-                    default -> setStyle("-fx-background-color: #ed8936; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 2 8;");
-                }
-            }
-        });
-
-        colEvenementActions.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                    return;
-                }
-
-                Evenement evenement = getTableView().getItems().get(getIndex());
-                HBox actions = new HBox(5);
-
-                Button editBtn = new Button("Modifier");
-                editBtn.setStyle("-fx-background-color: #4299e1; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 4 8; -fx-font-size: 11px;");
-                editBtn.setOnAction(e -> editEvenement(evenement));
-
-                Button deleteBtn = new Button("Supprimer");
-                deleteBtn.setStyle("-fx-background-color: #f56565; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 4 8; -fx-font-size: 11px;");
-                deleteBtn.setOnAction(e -> deleteEvenement(evenement));
-
-                actions.getChildren().addAll(editBtn, deleteBtn);
-                setGraphic(actions);
-            }
         });
 
         colStatus.setCellFactory(col -> new TableCell<>() {

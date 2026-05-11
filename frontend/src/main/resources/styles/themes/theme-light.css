@@ -34,12 +34,12 @@
 .chat-message-sender {
     -fx-font-weight: bold;
     -fx-text-fill: #4a5568;
-    -fx-font-size: 8.8px;
+    -fx-font-size: 11px;
 }
 
 .chat-message-content {
     -fx-background-color: white;
-    -fx-padding: 6.4;
+    -fx-padding: 8;
     -fx-background-radius: 8;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 4, 0, 0, 1);
     -fx-text-fill: #2d3748;
@@ -55,7 +55,7 @@
 .btn-back {
     -fx-background-color: #f1f1f1;
     -fx-background-radius: 50;
-    -fx-padding: 6.4;
+    -fx-padding: 8;
     -fx-cursor: hand;
 }
 

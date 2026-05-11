@@ -1,12 +1,12 @@
 package com.innertrack.controller.journal;
 
 import com.innertrack.model.EntreeJournal;
-import com.innertrack.model.Habitude;
 import com.innertrack.service.JournalService;
 import com.innertrack.service.TTSService;
 import com.innertrack.session.SessionManager;
 import com.innertrack.util.PdfExporter;
 import com.innertrack.util.ViewManager;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,7 +14,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.application.Platform;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -29,29 +28,18 @@ import java.util.List;
 
 public class AffichageJournalController {
 
-    @FXML
-    private TableView<EntreeJournal> journalTable;
-    @FXML
-    private TableColumn<EntreeJournal, Integer> humeurColumn;
-    @FXML
-    private TableColumn<EntreeJournal, String> noteColumn;
-    @FXML
-    private TableColumn<EntreeJournal, Void> sonColumn;
-    @FXML
-    private TableColumn<EntreeJournal, LocalDate> dateColumn;
-    @FXML
-    private TableColumn<EntreeJournal, Void> voirColumn;
+    @FXML private TableView<EntreeJournal> journalTable;
+    @FXML private TableColumn<EntreeJournal, Integer> humeurColumn;
+    @FXML private TableColumn<EntreeJournal, String> noteColumn;
+    @FXML private TableColumn<EntreeJournal, Void> sonColumn;
+    @FXML private TableColumn<EntreeJournal, LocalDate> dateColumn;
+    @FXML private TableColumn<EntreeJournal, Void> voirColumn;
 
-    @FXML
-    private Label statusLabel;
-    @FXML
-    private Label totalEntreesLabel;
-    @FXML
-    private Label moyenneHumeurLabel;
-    @FXML
-    private TextField searchField;
-    @FXML
-    private Button clearButton;
+    @FXML private Label statusLabel;
+    @FXML private Label totalEntreesLabel;
+    @FXML private Label moyenneHumeurLabel;
+    @FXML private TextField searchField;
+    @FXML private Button clearButton;
 
     private JournalService journalService;
 
@@ -59,17 +47,23 @@ public class AffichageJournalController {
         return SessionManager.getInstance().getCurrentUser().getId();
     }
 
+    // ============================================================
+    // COULEURS & LABELS
+    // ============================================================
+
     private String getCouleurHumeur(int v) {
         return v >= 7 ? "#f6a623" : v >= 4 ? "#48bb78" : "#2b6cb0";
     }
-
     private String getEmojiHumeur(int v) {
-        return v >= 7 ? "\u2600\uFE0F" : v >= 4 ? "\uD83D\uDFE2" : "\uD83D\uDD35";
+        return v >= 7 ? "☀️" : v >= 4 ? "🟢" : "🔵";
     }
-
     private String getLabelHumeur(int v) {
         return v >= 7 ? "Joie" : v >= 4 ? "Stable" : "Triste";
     }
+
+    // ============================================================
+    // INITIALIZE
+    // ============================================================
 
     @FXML
     public void initialize() {
@@ -90,28 +84,19 @@ public class AffichageJournalController {
             @Override
             protected void updateItem(Integer valeur, boolean empty) {
                 super.updateItem(valeur, empty);
-                if (empty || valeur == null) {
-                    setGraphic(null);
-                    setText(null);
-                    setStyle("");
-                    return;
-                }
+                if (empty || valeur == null) { setGraphic(null); setText(null); setStyle(""); return; }
                 String couleur = getCouleurHumeur(valeur);
-                Label badge = new Label(getEmojiHumeur(valeur) + " " + valeur + " \u2013 " + getLabelHumeur(valeur));
+                Label badge = new Label(getEmojiHumeur(valeur) + " " + valeur + " – " + getLabelHumeur(valeur));
                 badge.setStyle("-fx-background-color: " + couleur + "22; -fx-text-fill: " + couleur +
                         "; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 20; -fx-padding: 3 10 3 10;");
                 badge.setAlignment(Pos.CENTER);
-                setGraphic(badge);
-                setText(null);
-                setAlignment(Pos.CENTER);
-                setStyle("");
+                setGraphic(badge); setText(null); setAlignment(Pos.CENTER); setStyle("");
             }
         });
 
         dateColumn.setCellFactory(column -> new TableCell<EntreeJournal, LocalDate>() {
-            private final java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter
-                    .ofPattern("dd/MM/yyyy");
-
+            private final java.time.format.DateTimeFormatter formatter =
+                    java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
             @Override
             protected void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
@@ -120,12 +105,11 @@ public class AffichageJournalController {
         });
 
         voirColumn.setCellFactory(param -> new TableCell<>() {
-            private final Button btn = new Button("\uD83D\uDC41 Voir");
+            private final Button btn = new Button("👁 Voir");
             {
                 btn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 5;");
                 btn.setOnAction(event -> showJournalDetails(getTableView().getItems().get(getIndex())));
             }
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -137,10 +121,7 @@ public class AffichageJournalController {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || getIndex() >= getTableView().getItems().size()) {
-                    setGraphic(null);
-                    return;
-                }
+                if (empty || getIndex() >= getTableView().getItems().size()) { setGraphic(null); return; }
                 EntreeJournal journal = getTableView().getItems().get(getIndex());
                 setGraphic(creerBoutonSon(journal.getNoteTextuelle()));
             }
@@ -148,6 +129,10 @@ public class AffichageJournalController {
 
         chargerJournaux();
     }
+
+    // ============================================================
+    // CHARGER
+    // ============================================================
 
     private void chargerJournaux() {
         try {
@@ -158,10 +143,9 @@ public class AffichageJournalController {
             if (total > 0) {
                 double moyenne = entrees.stream().mapToInt(EntreeJournal::getHumeur).average().orElse(0);
                 moyenneHumeurLabel.setText(String.format("%.1f", moyenne));
-                moyenneHumeurLabel
-                        .setStyle("-fx-text-fill: " + getCouleurHumeur((int) moyenne) + "; -fx-font-weight: bold;");
+                moyenneHumeurLabel.setStyle("-fx-text-fill: " + getCouleurHumeur((int) moyenne) + "; -fx-font-weight: bold;");
             } else {
-                moyenneHumeurLabel.setText("\u2014");
+                moyenneHumeurLabel.setText("—");
             }
             statusLabel.setText(total + " entry(s) loaded");
         } catch (SQLException e) {
@@ -169,32 +153,160 @@ public class AffichageJournalController {
         }
     }
 
-    @FXML
-    void ajouterNouveauJournal(ActionEvent event) {
-        ViewManager.loadView("journal/AjoutJournal");
+    // ============================================================
+    // VOIR DÉTAILS + QR CODE
+    // ============================================================
+
+    private void showJournalDetails(EntreeJournal j) {
+        javafx.stage.Stage popup = new javafx.stage.Stage();
+        popup.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+        popup.setResizable(false);
+        popup.initStyle(javafx.stage.StageStyle.UNDECORATED);
+
+        String couleur = getCouleurHumeur(j.getHumeur());
+        String emoji   = getEmojiHumeur(j.getHumeur());
+        String label   = getLabelHumeur(j.getHumeur());
+
+        // EN-TÊTE
+        VBox header = new VBox(6);
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setPadding(new Insets(22, 28, 18, 28));
+        header.setStyle("-fx-background-color: linear-gradient(to right, #5a3ea1, #7c5cbf);");
+        Label titreLabel = new Label("📓  Journal Entry");
+        titreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
+        Label dateLabel = new Label("📅  " + (j.getDateSaisie() != null
+                ? j.getDateSaisie().format(java.time.format.DateTimeFormatter.ofPattern("dd MMMM yyyy", java.util.Locale.FRENCH))
+                : "—"));
+        dateLabel.setStyle("-fx-text-fill: #d8ccf5; -fx-font-size: 12px;");
+        header.getChildren().addAll(titreLabel, dateLabel);
+
+        // CONTENU : humeur + QR
+        HBox contentRow = new HBox(20);
+        contentRow.setPadding(new Insets(16, 28, 8, 28));
+        contentRow.setAlignment(Pos.CENTER_LEFT);
+
+        // Colonne gauche : humeur
+        VBox leftCol = new VBox(10);
+        leftCol.setAlignment(Pos.TOP_LEFT);
+        HBox.setHgrow(leftCol, javafx.scene.layout.Priority.ALWAYS);
+
+        Label humeurTitre = new Label("Mood :");
+        humeurTitre.setStyle("-fx-font-size: 13px; -fx-text-fill: #4a5568; -fx-font-weight: bold;");
+
+        Label humeurBadge = new Label(emoji + "  " + j.getHumeur() + " / 10  —  " + label);
+        humeurBadge.setStyle("-fx-background-color: " + couleur + "22; -fx-text-fill: " + couleur +
+                "; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-padding: 5 14 5 14;");
+
+        ProgressBar progressBar = new ProgressBar(j.getHumeur() / 10.0);
+        progressBar.setPrefWidth(180);
+        progressBar.setPrefHeight(8);
+        progressBar.setStyle("-fx-accent: " + couleur + ";");
+
+        HBox progressRow = new HBox(8);
+        progressRow.setAlignment(Pos.CENTER_LEFT);
+        Label progressLabel = new Label("Level :");
+        progressLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #718096;");
+        progressRow.getChildren().addAll(progressLabel, progressBar);
+
+        leftCol.getChildren().addAll(humeurTitre, humeurBadge, progressRow);
+
+        // Colonne droite : QR code
+        VBox rightCol = new VBox(6);
+        rightCol.setAlignment(Pos.TOP_CENTER);
+        Label qrTitre = new Label("🔗 QR Code");
+        qrTitre.setStyle("-fx-font-size: 11px; -fx-text-fill: #718096; -fx-font-weight: bold;");
+        ImageView qrView = new ImageView();
+        qrView.setFitWidth(150); qrView.setFitHeight(150); qrView.setPreserveRatio(true);
+        Label qrLoading = new Label("⏳");
+        qrLoading.setStyle("-fx-font-size: 20px;");
+        rightCol.getChildren().addAll(qrTitre, qrLoading);
+
+        String qrText = "Date: " + j.getDateSaisie() + "\n" +
+                "Mood: " + j.getHumeur() + "/10 - " + label + "\n" +
+                "Note: " + (j.getNoteTextuelle() != null ? j.getNoteTextuelle() : "");
+
+        Thread qrThread = new Thread(() -> {
+            Image qr = generateQRCode(qrText);
+            Platform.runLater(() -> {
+                rightCol.getChildren().remove(qrLoading);
+                if (qr != null) { qrView.setImage(qr); rightCol.getChildren().add(qrView); }
+                else rightCol.getChildren().add(new Label("❌"));
+            });
+        });
+        qrThread.setDaemon(true);
+        qrThread.start();
+
+        contentRow.getChildren().addAll(leftCol, rightCol);
+
+        Separator sep = new Separator();
+        sep.setPadding(new Insets(0, 20, 0, 20));
+
+        // NOTE
+        VBox noteBox = new VBox(8);
+        noteBox.setPadding(new Insets(14, 28, 20, 28));
+        Label noteTitre = new Label("📝  Daily Note");
+        noteTitre.setStyle("-fx-font-size: 13px; -fx-text-fill: #4a5568; -fx-font-weight: bold;");
+        Label noteContenu = new Label(j.getNoteTextuelle() != null ? j.getNoteTextuelle() : "No note.");
+        noteContenu.setWrapText(true);
+        noteContenu.setMaxWidth(410);
+        noteContenu.setStyle("-fx-font-size: 13px; -fx-text-fill: #2d3748;" +
+                "-fx-background-color: #f7fafc; -fx-background-radius: 8; -fx-padding: 12 14 12 14;");
+        ScrollPane scrollNote = new ScrollPane(noteContenu);
+        scrollNote.setFitToWidth(true); scrollNote.setPrefHeight(150);
+        scrollNote.setStyle("-fx-background: #f7fafc; -fx-background-color: #f7fafc;" +
+                "-fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-border-width: 1;");
+        scrollNote.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollNote.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        noteBox.getChildren().addAll(noteTitre, scrollNote);
+
+        // FOOTER
+        Button btnFermer = new Button("✕  Close");
+        btnFermer.setStyle("-fx-background-color: #5a3ea1; -fx-text-fill: white;" +
+                "-fx-font-weight: bold; -fx-font-size: 13px;" +
+                "-fx-background-radius: 8; -fx-padding: 8 24 8 24; -fx-cursor: hand;");
+        btnFermer.setOnAction(e -> popup.close());
+        HBox footerBox = new HBox();
+        footerBox.setAlignment(Pos.CENTER_RIGHT);
+        footerBox.setPadding(new Insets(0, 28, 20, 28));
+        footerBox.getChildren().add(btnFermer);
+
+        VBox root = new VBox();
+        root.setStyle("-fx-background-color: white; -fx-background-radius: 12;");
+        root.getChildren().addAll(header, contentRow, sep, noteBox, footerBox);
+        javafx.scene.Scene scene = new javafx.scene.Scene(root, 500, 600);
+        scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        popup.setScene(scene);
+        popup.showAndWait();
     }
 
-    @FXML
-    void supprimerJournal(ActionEvent event) {
-        EntreeJournal selected = journalTable.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            showAlert(Alert.AlertType.WARNING, "Warning", "Please select an entry !");
-            return;
-        }
+    // ============================================================
+    // QR CODE — génération locale via ZXing
+    // ============================================================
+
+    private Image generateQRCode(String text) {
         try {
-            journalService.delete(selected.getIdJournal());
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Entry deleted !");
-            chargerJournaux();
-        } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
+            if (text.length() > 300) text = text.substring(0, 297) + "...";
+            com.google.zxing.common.BitMatrix matrix =
+                    new com.google.zxing.MultiFormatWriter()
+                            .encode(text, com.google.zxing.BarcodeFormat.QR_CODE, 120, 120);
+            java.awt.image.BufferedImage bufferedImage =
+                    com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(matrix);
+            return javafx.embed.swing.SwingFXUtils.toFXImage(bufferedImage, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
+
+    // ============================================================
+    // MODIFIER
+    // ============================================================
 
     @FXML
     void modifierJournal(ActionEvent event) {
         EntreeJournal selected = journalTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert(Alert.AlertType.WARNING, "Warning", "Please select an entry !");
+            showAlert(Alert.AlertType.WARNING, "Warning", "Please select an entry!");
             return;
         }
 
@@ -207,7 +319,7 @@ public class AffichageJournalController {
         header.setAlignment(Pos.CENTER_LEFT);
         header.setPadding(new Insets(22, 28, 18, 28));
         header.setStyle("-fx-background-color: linear-gradient(to right, #5a3ea1, #7c5cbf);");
-        Label titreLabel = new Label("\u270F\uFE0F  Edit Entry");
+        Label titreLabel = new Label("✏️  Edit Entry");
         titreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
         Label sousTitre = new Label("Edit your mood and your note");
         sousTitre.setStyle("-fx-text-fill: #d8ccf5; -fx-font-size: 12px;");
@@ -215,7 +327,7 @@ public class AffichageJournalController {
 
         VBox humeurSection = new VBox(10);
         humeurSection.setPadding(new Insets(18, 28, 10, 28));
-        Label humeurTitre = new Label("\uD83D\uDE0A  Level of Mood");
+        Label humeurTitre = new Label("😊  Level of Mood");
         humeurTitre.setStyle("-fx-font-size: 13px; -fx-text-fill: #4a5568; -fx-font-weight: bold;");
         Spinner<Integer> humeurSpinner = new Spinner<>(0, 10, selected.getHumeur());
         humeurSpinner.setEditable(true);
@@ -244,7 +356,7 @@ public class AffichageJournalController {
 
         VBox noteSection = new VBox(8);
         noteSection.setPadding(new Insets(14, 28, 20, 28));
-        Label noteTitre = new Label("\uD83D\uDCDD  Daily Note");
+        Label noteTitre = new Label("📝  Daily Note");
         noteTitre.setStyle("-fx-font-size: 13px; -fx-text-fill: #4a5568; -fx-font-weight: bold;");
         TextArea noteTextArea = new TextArea(selected.getNoteTextuelle());
         noteTextArea.setWrapText(true);
@@ -252,12 +364,10 @@ public class AffichageJournalController {
         noteTextArea.setPrefWidth(420);
         noteSection.getChildren().addAll(noteTitre, noteTextArea);
 
-        Button btnSave = new Button("\u2705  Save");
-        btnSave.setStyle(
-                "-fx-background-color: #5a3ea1; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-padding: 8 20 8 20; -fx-cursor: hand;");
-        Button btnCancel = new Button("\u2715  Cancel");
-        btnCancel.setStyle(
-                "-fx-background-color: #e2e8f0; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-padding: 8 20 8 20; -fx-cursor: hand;");
+        Button btnSave = new Button("✅  Save");
+        btnSave.setStyle("-fx-background-color: #5a3ea1; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-padding: 8 20 8 20; -fx-cursor: hand;");
+        Button btnCancel = new Button("✕  Cancel");
+        btnCancel.setStyle("-fx-background-color: #e2e8f0; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-padding: 8 20 8 20; -fx-cursor: hand;");
         btnCancel.setOnAction(e -> popup.close());
         btnSave.setOnAction(e -> {
             selected.setHumeur(humeurSpinner.getValue());
@@ -266,7 +376,7 @@ public class AffichageJournalController {
                 journalService.update(selected);
                 popup.close();
                 chargerJournaux();
-                statusLabel.setText("\u2705 Entry edited !");
+                statusLabel.setText("✅ Entry edited!");
             } catch (SQLException ex) {
                 showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
             }
@@ -280,86 +390,35 @@ public class AffichageJournalController {
         VBox root = new VBox();
         root.setStyle("-fx-background-color: white; -fx-background-radius: 12;");
         root.getChildren().addAll(header, humeurSection, sep, noteSection, footerBox);
-
         javafx.scene.Scene scene = new javafx.scene.Scene(root, 480, 420);
         scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
         popup.setScene(scene);
         popup.showAndWait();
     }
 
-    private void showJournalDetails(EntreeJournal j) {
-        javafx.stage.Stage popup = new javafx.stage.Stage();
-        popup.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-        popup.setResizable(false);
-        popup.initStyle(javafx.stage.StageStyle.UNDECORATED);
+    // ============================================================
+    // ACTIONS
+    // ============================================================
 
-        String couleur = getCouleurHumeur(j.getHumeur());
-        String emoji = getEmojiHumeur(j.getHumeur());
-        String label = getLabelHumeur(j.getHumeur());
-
-        VBox header = new VBox(6);
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.setPadding(new Insets(22, 28, 18, 28));
-        header.setStyle("-fx-background-color: linear-gradient(to right, #5a3ea1, #7c5cbf);");
-        Label titreLabel = new Label("\uD83D\uDCD3  Journal Entry");
-        titreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
-        Label dateLabel = new Label("\uD83D\uDCC5  " + (j.getDateSaisie() != null
-                ? j.getDateSaisie()
-                        .format(java.time.format.DateTimeFormatter.ofPattern("dd MMMM yyyy", java.util.Locale.FRENCH))
-                : "\u2014"));
-        dateLabel.setStyle("-fx-text-fill: #d8ccf5; -fx-font-size: 12px;");
-        header.getChildren().addAll(titreLabel, dateLabel);
-
-        VBox humeurBox = new VBox(10);
-        humeurBox.setPadding(new Insets(16, 28, 8, 28));
-        Label humeurTitre = new Label("Mood :");
-        humeurTitre.setStyle("-fx-font-size: 13px; -fx-text-fill: #4a5568; -fx-font-weight: bold;");
-        Label humeurBadge = new Label(emoji + "  " + j.getHumeur() + " / 10  \u2014  " + label);
-        humeurBadge.setStyle("-fx-background-color: " + couleur + "22; -fx-text-fill: " + couleur +
-                "; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20; -fx-padding: 5 14 5 14;");
-        humeurBox.getChildren().addAll(humeurTitre, humeurBadge);
-
-        Separator sep = new Separator();
-        sep.setPadding(new Insets(0, 20, 0, 20));
-
-        VBox noteBox = new VBox(8);
-        noteBox.setPadding(new Insets(14, 28, 20, 28));
-        Label noteTitre = new Label("\uD83D\uDCDD  Daily Note");
-        noteTitre.setStyle("-fx-font-size: 13px; -fx-text-fill: #4a5568; -fx-font-weight: bold;");
-        Label noteContenu = new Label(j.getNoteTextuelle() != null ? j.getNoteTextuelle() : "No note.");
-        noteContenu.setWrapText(true);
-        noteContenu.setMaxWidth(410);
-        noteContenu.setStyle(
-                "-fx-font-size: 13px; -fx-text-fill: #2d3748; -fx-background-color: #f7fafc; -fx-background-radius: 8; -fx-padding: 12 14 12 14;");
-        ScrollPane scrollNote = new ScrollPane(noteContenu);
-        scrollNote.setFitToWidth(true);
-        scrollNote.setPrefHeight(150);
-        scrollNote.setStyle(
-                "-fx-background: #f7fafc; -fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-border-width: 1;");
-        scrollNote.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        noteBox.getChildren().addAll(noteTitre, scrollNote);
-
-        Button btnFermer = new Button("\u2715  Close");
-        btnFermer.setStyle(
-                "-fx-background-color: #5a3ea1; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-padding: 8 24 8 24; -fx-cursor: hand;");
-        btnFermer.setOnAction(e -> popup.close());
-        HBox footerBox = new HBox();
-        footerBox.setAlignment(Pos.CENTER_RIGHT);
-        footerBox.setPadding(new Insets(0, 28, 20, 28));
-        footerBox.getChildren().add(btnFermer);
-
-        VBox root = new VBox();
-        root.setStyle("-fx-background-color: white; -fx-background-radius: 12;");
-        root.getChildren().addAll(header, humeurBox, sep, noteBox, footerBox);
-
-        javafx.scene.Scene scene = new javafx.scene.Scene(root, 500, 420);
-        scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
-        popup.setScene(scene);
-        popup.showAndWait();
+    @FXML
+    void ajouterNouveauJournal(ActionEvent event) {
+        ViewManager.loadView("journal/AjoutJournal");
     }
 
-    public void rafraichir() {
-        chargerJournaux();
+    @FXML
+    void supprimerJournal(ActionEvent event) {
+        EntreeJournal selected = journalTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert(Alert.AlertType.WARNING, "Warning", "Please select an entry!");
+            return;
+        }
+        try {
+            journalService.delete(selected.getIdJournal());
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Entry deleted!");
+            chargerJournaux();
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
+        }
     }
 
     @FXML
@@ -372,16 +431,18 @@ public class AffichageJournalController {
         ViewManager.loadView("user/dashboard");
     }
 
+    // ============================================================
+    // RECHERCHE
+    // ============================================================
+
     @FXML
     void rechercherJournal() {
         try {
             String keyword = searchField.getText();
             if (keyword == null || keyword.isEmpty()) {
-                journalTable
-                        .setItems(FXCollections.observableArrayList(journalService.findByUserId(getCurrentUserId())));
+                journalTable.setItems(FXCollections.observableArrayList(journalService.findByUserId(getCurrentUserId())));
             } else {
-                journalTable.setItems(
-                        FXCollections.observableArrayList(journalService.search(keyword, getCurrentUserId())));
+                journalTable.setItems(FXCollections.observableArrayList(journalService.search(keyword, getCurrentUserId())));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -393,6 +454,10 @@ public class AffichageJournalController {
         searchField.clear();
     }
 
+    // ============================================================
+    // EXPORT PDF
+    // ============================================================
+
     @FXML
     void exporterPDF() {
         try {
@@ -401,43 +466,46 @@ public class AffichageJournalController {
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
             fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.home") + "/Downloads"));
             fileChooser.setInitialFileName("My Journal.pdf");
-
             Stage stage = (Stage) journalTable.getScene().getWindow();
             File file = fileChooser.showSaveDialog(stage);
-            if (file == null)
-                return;
-
+            if (file == null) return;
             List<EntreeJournal> entrees = journalService.findByUserId(getCurrentUserId());
             PdfExporter.exportJournal(entrees, file.getAbsolutePath());
-            statusLabel.setText("\u2705 PDF saved !");
-
+            statusLabel.setText("✅ PDF saved!");
         } catch (Exception e) {
-            statusLabel.setText("\u274C Error exporting PDF");
+            statusLabel.setText("❌ Error exporting PDF");
             e.printStackTrace();
         }
     }
 
+    // ============================================================
+    // BOUTON TTS
+    // ============================================================
+
     private Button creerBoutonSon(String texte) {
-        Button btn = new Button("\uD83D\uDD0A");
-        btn.setStyle(
-                "-fx-background-color: #edf2f7; -fx-text-fill: #4a5568; -fx-font-size: 14px; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 4 8; -fx-cursor: hand; -fx-min-width: 32;");
+        Button btn = new Button("🔊");
+        btn.setStyle("-fx-background-color: #edf2f7; -fx-text-fill: #4a5568; -fx-font-size: 14px;" +
+                "-fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 4 8; -fx-cursor: hand; -fx-min-width: 32;");
         btn.setTooltip(new Tooltip("Read Out Loud"));
         TTSService tts = TTSService.getInstance();
         btn.setOnAction(e -> {
             if (tts.isEnCoursLecture()) {
                 tts.arreter();
-                btn.setText("\uD83D\uDD0A");
+                btn.setText("🔊");
             } else {
-                btn.setText("\u23F9\uFE0F");
+                btn.setText("⏹️");
                 tts.lire(texte);
                 int duree = Math.max(2000, texte != null ? texte.length() * 65 : 2000);
                 new javafx.animation.Timeline(
-                        new javafx.animation.KeyFrame(javafx.util.Duration.millis(duree), ev -> {
-                            btn.setText("\uD83D\uDD0A");
-                        })).play();
+                        new javafx.animation.KeyFrame(javafx.util.Duration.millis(duree), ev -> btn.setText("🔊"))
+                ).play();
             }
         });
         return btn;
+    }
+
+    public void rafraichir() {
+        chargerJournaux();
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

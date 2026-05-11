@@ -7,38 +7,38 @@
 .main-container {
     -fx-background-color: transparent;
     -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    -fx-font-size: 11.2px;
+    -fx-font-size: 14px;
 }
 
 /* Header block */
 .page-header {
     -fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 50%, #f093fb 100%);
-    -fx-padding: 12.8 12.8 11.2 12.8;
+    -fx-padding: 16 16 14 16;
     -fx-background-radius: 14px;
     -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.35), 14, 0, 0, 4);
 }
 
 .page-title {
-    -fx-font-size: 22.4px;
+    -fx-font-size: 28px;
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
 
 .page-subtitle {
-    -fx-font-size: 10.4px;
+    -fx-font-size: 13px;
     -fx-text-fill: rgba(255, 255, 255, 0.95);
 }
 
 /* Content */
 .content-area {
-    -fx-padding: 11.2 0 0 0;
+    -fx-padding: 14 0 0 0;
 }
 
 /* MenuBar inside header */
 .event-menubar {
     -fx-background-color: rgba(255, 255, 255, 0.18);
     -fx-background-radius: 10px;
-    -fx-padding: 3.2 6.4;
+    -fx-padding: 4 8;
 }
 
 .event-menubar .menu .label {
@@ -56,7 +56,7 @@
 .event-menubar .context-menu {
     -fx-background-color: white;
     -fx-background-radius: 10px;
-    -fx-padding: 4.8;
+    -fx-padding: 6;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.16), 14, 0, 0, 5);
 }
 
@@ -106,8 +106,8 @@
 .button {
     -fx-background-radius: 10px;
     -fx-cursor: hand;
-    -fx-padding: 8 14.4;
-    -fx-font-size: 10.4px;
+    -fx-padding: 10 18;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
@@ -172,18 +172,18 @@
     -fx-border-radius: 14px;
     -fx-border-color: #e0e7ff;
     -fx-border-width: 2px;
-    -fx-padding: 14.4;
+    -fx-padding: 18;
     -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.12), 14, 0, 0, 4);
 }
 
 .event-form-title {
-    -fx-font-size: 16px;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #4c51bf;
 }
 
 .event-field-label {
-    -fx-font-size: 10.4px;
+    -fx-font-size: 13px;
     -fx-font-weight: 700;
     -fx-text-fill: #5a67d8;
 }
@@ -195,8 +195,8 @@
     -fx-border-color: #cbd5e0;
     -fx-border-radius: 10px;
     -fx-border-width: 2px;
-    -fx-padding: 8 9.6;
-    -fx-font-size: 10.4px;
+    -fx-padding: 10 12;
+    -fx-font-size: 13px;
     -fx-text-fill: #2d3748;
 }
 
@@ -212,8 +212,8 @@
     -fx-border-color: #cbd5e0;
     -fx-border-radius: 10px;
     -fx-border-width: 2px;
-    -fx-padding: 8 9.6;
-    -fx-font-size: 10.4px;
+    -fx-padding: 10 12;
+    -fx-font-size: 13px;
     -fx-text-fill: #2d3748;
 }
 
@@ -229,7 +229,7 @@
 
 /* Checkboxes row */
 .event-status-box {
-    -fx-padding: 4.8 0 0 0;
+    -fx-padding: 6 0 0 0;
 }
 
 .event-checkbox {
@@ -243,32 +243,32 @@
 
 /* A vertical stack for the whole form */
 .event-form-stack {
-    -fx-spacing: 11.2px;
+    -fx-spacing: 14px;
     /* space between fields */
-    -fx-padding: 8px 0 0 0;
+    -fx-padding: 10px 0 0 0;
     /* optional top breathing space under title */
 }
 
 /* Each field group (label + input) */
 .event-field {
-    -fx-spacing: 4.8px;
+    -fx-spacing: 6px;
     /* space between label and control */
 }
 
 /* Actions row spacing */
 .event-actions {
-    -fx-padding: 4.8px 0 0 0;
+    -fx-padding: 6px 0 0 0;
 }
 
 /* Optional: make inputs consistent height */
 .event-input {
-    -fx-pref-height: 30.4px;
+    -fx-pref-height: 38px;
 }
 
 /* Optional: improve DatePicker / ComboBox arrow area alignment */
 .date-picker.event-input,
 .combo-box.event-input {
-    -fx-pref-height: 30.4px;
+    -fx-pref-height: 38px;
 }
 
 
@@ -282,23 +282,23 @@
     -fx-border-radius: 14px;
     -fx-border-color: #e0e7ff;
     -fx-border-width: 2px;
-    -fx-padding: 12.8 12.8 12.8 12.8;
+    -fx-padding: 16 16 16 16;
     -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.12), 14, 0, 0, 4);
 }
 
 .event-page-title {
-    -fx-font-size: 17.6px;
+    -fx-font-size: 22px;
     -fx-font-weight: bold;
     -fx-text-fill: #4c51bf;
 }
 
 .event-page-subtitle {
-    -fx-font-size: 10.4px;
+    -fx-font-size: 13px;
     -fx-text-fill: #5a67d8;
 }
 
 .event-content-area {
-    -fx-padding: 9.6 0 0 0;
+    -fx-padding: 12 0 0 0;
 }
 
 /* Ghost button (if not already defined in your file) */
@@ -329,7 +329,7 @@
     -fx-background-radius: 10px;
     -fx-font-weight: bold;
     -fx-cursor: hand;
-    -fx-padding: 8 14.4;
+    -fx-padding: 10 18;
 }
 
 .btn-ghost:hover {
@@ -356,7 +356,7 @@
 
 
 .weather-card {
-    -fx-padding: 8 9.6 8 9.6;
+    -fx-padding: 10 12 10 12;
     -fx-background-radius: 12;
     -fx-background-color: rgba(255, 255, 255, 0.06);
     -fx-border-radius: 12;
@@ -396,37 +396,37 @@
 
 /* spacing */
 .weather-modal-header {
-    -fx-padding: 9.6 9.6 8 9.6;
+    -fx-padding: 12 12 10 12;
 }
 
 .weather-modal-body {
-    -fx-padding: 9.6;
+    -fx-padding: 12;
 }
 
 .weather-modal-footer {
-    -fx-padding: 8 9.6 9.6 9.6;
+    -fx-padding: 10 12 12 12;
 }
 
 /* Typography */
 .weather-modal-title {
     -fx-text-fill: #e5e7eb;
-    -fx-font-size: 12.8px;
+    -fx-font-size: 16px;
     -fx-font-weight: 700;
 }
 
 .weather-modal-status {
     -fx-text-fill: #cbd5e1;
-    -fx-font-size: 9.6px;
+    -fx-font-size: 12px;
 }
 
 .weather-modal-hint {
     -fx-text-fill: rgba(203, 213, 225, 0.75);
-    -fx-font-size: 8.8px;
+    -fx-font-size: 11px;
 }
 
 /* ProgressIndicator */
 .weather-modal-root .progress-indicator {
-    -fx-padding: 4.8 0 4.8 0;
+    -fx-padding: 6 0 6 0;
 }
 
 .weather-modal-root .progress-indicator .indicator {
@@ -497,7 +497,7 @@
 
 
 .chat-panel {
-    -fx-padding: 9.6;
+    -fx-padding: 12;
     -fx-background-color: rgba(255, 255, 255, 0.03);
     -fx-background-radius: 14;
     -fx-border-color: rgba(255, 255, 255, 0.10);
@@ -505,7 +505,7 @@
 }
 
 .chat-title {
-    -fx-font-size: 11.2px;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
 
@@ -521,27 +521,27 @@
 
 .chat-status {
     -fx-opacity: 0.95;
-    -fx-font-size: 8.8px;
+    -fx-font-size: 11px;
     -fx-text-fill: white;
 }
 
 
 .chat-bubble {
     -fx-background-radius: 999;
-    -fx-min-width: 43.2px;
-    -fx-min-height: 43.2px;
-    -fx-max-width: 43.2px;
-    -fx-max-height: 43.2px;
-    -fx-font-size: 16px;
+    -fx-min-width: 54px;
+    -fx-min-height: 54px;
+    -fx-max-width: 54px;
+    -fx-max-height: 54px;
+    -fx-font-size: 20px;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 18, 0.2, 0, 6);
 }
 
 .chat-overlay {
     -fx-background-radius: 16;
-    -fx-padding: 9.6;
+    -fx-padding: 12;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 24, 0.25, 0, 8);
-    -fx-max-height: 416px;
+    -fx-max-height: 520px;
 
     /* place it bottom-right like a popup */
     -fx-translate-x: -18px;
@@ -549,7 +549,7 @@
 }
 
 .chat-overlay-header {
-    -fx-padding: 4.8 4.8 8 4.8;
+    -fx-padding: 6 6 10 6;
 }
 
 .chat-close-btn {
@@ -561,12 +561,12 @@
     -fx-background-radius: 999;
 
     /* smaller */
-    -fx-min-width: 33.6px;
-    -fx-min-height: 33.6px;
-    -fx-max-width: 33.6px;
-    -fx-max-height: 33.6px;
+    -fx-min-width: 42px;
+    -fx-min-height: 42px;
+    -fx-max-width: 42px;
+    -fx-max-height: 42px;
 
-    -fx-font-size: 12.8px;
+    -fx-font-size: 16px;
 
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 14, 0.2, 0, 4);
@@ -575,11 +575,11 @@
 .button.chat-bubble {
     -fx-background-radius: 999 !important;
 
-    -fx-min-width: 33.6px !important;
-    -fx-min-height: 33.6px !important;
-    -fx-max-width: 33.6px !important;
-    -fx-max-height: 33.6px !important;
+    -fx-min-width: 42px !important;
+    -fx-min-height: 42px !important;
+    -fx-max-width: 42px !important;
+    -fx-max-height: 42px !important;
 
-    -fx-font-size: 12.8px !important;
+    -fx-font-size: 16px !important;
     -fx-padding: 0 !important;
 }

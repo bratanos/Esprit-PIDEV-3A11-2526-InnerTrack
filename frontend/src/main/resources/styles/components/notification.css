@@ -6,7 +6,7 @@
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 10, 0, 0, 4);
-    -fx-padding: 12;
+    -fx-padding: 15;
 }
 
 .notification-dot {

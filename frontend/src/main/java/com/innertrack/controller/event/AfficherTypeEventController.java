@@ -2,6 +2,7 @@ package com.innertrack.controller.event;
 
 import com.innertrack.model.TypeEvent;
 import com.innertrack.service.TypeEventService;
+import com.innertrack.util.ViewManager;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -72,7 +73,11 @@ public class AfficherTypeEventController {
 
     @FXML
     void handleAjouter(ActionEvent event) {
-        openPage("/fxml/event/AjouterTypeEvent.fxml", "Ajouter TypeEvent");
+
+        AjouterTypeEventController controller = ViewManager.loadView("event/AjouterTypeEvent");
+        if (controller != null) {
+            //controller.setTypeEvent(selected);
+        }
     }
 
     @FXML
@@ -83,6 +88,13 @@ public class AfficherTypeEventController {
             return;
         }
 
+
+        ModifierTypeEventController controller = ViewManager.loadView("event/ModifierTypeEvent");
+        if (controller != null) {
+            controller.setTypeEvent(selected);
+        }
+
+        /*
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/event/ModifierTypeEvent.fxml"));
             Parent root = loader.load();
@@ -97,6 +109,8 @@ public class AfficherTypeEventController {
         } catch (Exception e) {
             showError("Erreur navigation: " + e.getMessage());
         }
+
+         */
     }
 
     private void openPage(String fxml, String title) {
@@ -119,6 +133,9 @@ public class AfficherTypeEventController {
 
     @FXML
     private void handleRetour(ActionEvent event) {
+        ViewManager.loadView("event/AfficherEvenement");
+
+        /*
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/event/AfficherEvenement.fxml"));
             Parent root = loader.load();
@@ -130,5 +147,7 @@ public class AfficherTypeEventController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+         */
     }
 }

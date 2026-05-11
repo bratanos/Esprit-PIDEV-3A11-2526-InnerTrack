@@ -14,131 +14,131 @@
 
     <!-- Top Bar -->
     <top>
-        <HBox spacing="12" alignment="CENTER_LEFT"
-              style="-fx-padding: 12 20; -fx-background-color: white;
+        <HBox spacing="15" alignment="CENTER_LEFT"
+              style="-fx-padding: 15 25; -fx-background-color: white;
                      -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2);">
             <Button onAction="#handleBack"
                     style="-fx-background-color: #f1f1f1; -fx-background-radius: 50;
-                           -fx-padding: 6.4; -fx-cursor: hand;">
+                           -fx-padding: 8; -fx-cursor: hand;">
                 <graphic>
                     <FontIcon iconLiteral="fas-arrow-left" iconSize="18" iconColor="#2c3e50"/>
                 </graphic>
             </Button>
-            <VBox spacing="1.6">
+            <VBox spacing="2">
                 <Label text="%psy.profile.title"
-                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                 <Label text="%psy.profile.subtitle"
-                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 10.4px;"/>
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="statusLabel" text=""
-                   style="-fx-text-fill: #16a085; -fx-font-size: 10.4px;"/>
+                   style="-fx-text-fill: #16a085; -fx-font-size: 13px;"/>
         </HBox>
     </top>
 
     <center>
         <ScrollPane fitToWidth="true"
                     style="-fx-background-color: #f4f7f6; -fx-background: #f4f7f6;">
-            <VBox spacing="19.2" style="-fx-padding: 32 64;">
+            <VBox spacing="24" style="-fx-padding: 40 80;">
 
                 <!-- Personal Info Card -->
-                <VBox spacing="12.8"
+                <VBox spacing="16"
                       style="-fx-background-color: white; -fx-background-radius: 12;
-                             -fx-padding: 19.2; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 3);">
-                    <HBox spacing="8" alignment="CENTER_LEFT">
+                             -fx-padding: 24; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 3);">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
                         <FontIcon iconLiteral="fas-user-md" iconSize="20" iconColor="#FF69B4"/>
                         <Label text="%psy.profile.proInfo"
-                               style="-fx-font-size: 12.8px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                     </HBox>
                     <Separator/>
 
-                    <HBox spacing="12" alignment="CENTER_LEFT">
-                        <Circle fx:id="profileCircle" radius="32" fill="#e0e0e0" />
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Circle fx:id="profileCircle" radius="40" fill="#e0e0e0" />
                         <Button text="%psy.profile.changePic" onAction="#handleChangePicture"
-                                style="-fx-background-color: #f1f1f1; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-padding: 6.4 12; -fx-cursor: hand;" />
+                                style="-fx-background-color: #f1f1f1; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-padding: 8 15; -fx-cursor: hand;" />
                     </HBox>
 
-                    <HBox spacing="16">
-                        <VBox spacing="4.8" HBox.hgrow="ALWAYS">
-                            <Label text="%psy.profile.firstName" style="-fx-text-fill: #7f8c8d; -fx-font-size: 9.6px;"/>
+                    <HBox spacing="20">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="%psy.profile.firstName" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
                             <TextField fx:id="firstNameField" promptText="%psy.profile.firstNamePrompt"/>
                         </VBox>
-                        <VBox spacing="4.8" HBox.hgrow="ALWAYS">
-                            <Label text="%psy.profile.lastName" style="-fx-text-fill: #7f8c8d; -fx-font-size: 9.6px;"/>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="%psy.profile.lastName" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
                             <TextField fx:id="lastNameField" promptText="%psy.profile.lastNamePrompt"/>
                         </VBox>
-                        <VBox spacing="4.8" HBox.hgrow="ALWAYS">
-                            <Label text="%psy.profile.email" style="-fx-text-fill: #7f8c8d; -fx-font-size: 9.6px;"/>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="%psy.profile.email" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
                             <TextField fx:id="emailField" editable="false" style="-fx-background-color: #f9f9f9; -fx-text-fill: #95a5a6;"/>
                         </VBox>
                     </HBox>
 
-                    <VBox spacing="4.8">
-                        <Label text="%psy.profile.specialization" style="-fx-text-fill: #7f8c8d; -fx-font-size: 9.6px;"/>
+                    <VBox spacing="6">
+                        <Label text="%psy.profile.specialization" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
                         <ComboBox fx:id="specializationCombo"
                                   promptText="%psy.profile.specializationPrompt"
                                   maxWidth="Infinity"/>
                     </VBox>
 
-                    <VBox spacing="4.8">
+                    <VBox spacing="6">
                         <Label text="%psy.profile.license"
-                               style="-fx-text-fill: #7f8c8d; -fx-font-size: 9.6px;"/>
+                               style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
                         <TextField fx:id="licenseField"
                                    promptText="%psy.profile.licensePrompt"/>
                     </VBox>
                 </VBox>
 
                 <!-- Bio Card -->
-                <VBox spacing="12.8"
+                <VBox spacing="16"
                       style="-fx-background-color: white; -fx-background-radius: 12;
-                             -fx-padding: 19.2; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 3);">
-                    <HBox spacing="8" alignment="CENTER_LEFT">
+                             -fx-padding: 24; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 3);">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
                         <FontIcon iconLiteral="fas-align-left" iconSize="20" iconColor="#FF69B4"/>
                         <Label text="%psy.profile.bio"
-                               style="-fx-font-size: 12.8px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                     </HBox>
                     <Separator/>
-                    <VBox spacing="4.8">
+                    <VBox spacing="6">
                         <Label text="%psy.profile.bioDesc"
-                               style="-fx-text-fill: #7f8c8d; -fx-font-size: 9.6px;" wrapText="true"/>
+                               style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;" wrapText="true"/>
                         <TextArea fx:id="bioArea"
                                   promptText="%psy.profile.bioPrompt"
                                   prefRowCount="6" wrapText="true"
-                                  style="-fx-font-size: 10.4px;"/>
+                                  style="-fx-font-size: 13px;"/>
                     </VBox>
                     <HBox alignment="CENTER_RIGHT">
                         <Label fx:id="bioCharCount" text="0 / 500"
-                               style="-fx-text-fill: #bdc3c7; -fx-font-size: 8.8px;"/>
+                               style="-fx-text-fill: #bdc3c7; -fx-font-size: 11px;"/>
                     </HBox>
                 </VBox>
 
                 <!-- Availability Card -->
-                <VBox spacing="12.8"
+                <VBox spacing="16"
                       style="-fx-background-color: white; -fx-background-radius: 12;
-                             -fx-padding: 19.2; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 3);">
-                    <HBox spacing="8" alignment="CENTER_LEFT">
+                             -fx-padding: 24; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 3);">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
                         <FontIcon iconLiteral="fas-clock" iconSize="20" iconColor="#FF69B4"/>
                         <Label text="%psy.profile.availability"
-                               style="-fx-font-size: 12.8px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                     </HBox>
                     <Separator/>
 
-                    <HBox spacing="16">
-                        <VBox spacing="4.8" HBox.hgrow="ALWAYS">
-                            <Label text="%psy.profile.phone" style="-fx-text-fill: #7f8c8d; -fx-font-size: 9.6px;"/>
+                    <HBox spacing="20">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="%psy.profile.phone" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
                             <TextField fx:id="phoneField" promptText="%psy.profile.phonePrompt"/>
                         </VBox>
-                        <VBox spacing="4.8" HBox.hgrow="ALWAYS">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
                             <Label text="%psy.profile.rate"
-                                   style="-fx-text-fill: #7f8c8d; -fx-font-size: 9.6px;"/>
+                                   style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
                             <TextField fx:id="rateField" promptText="%psy.profile.ratePrompt"/>
                         </VBox>
                     </HBox>
 
-                    <VBox spacing="6.4">
+                    <VBox spacing="8">
                         <Label text="%psy.profile.days"
-                               style="-fx-text-fill: #7f8c8d; -fx-font-size: 9.6px;"/>
-                        <HBox spacing="8" alignment="CENTER_LEFT">
+                               style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
                             <CheckBox fx:id="monCheck" text="%psy.profile.mon"/>
                             <CheckBox fx:id="tueCheck" text="%psy.profile.tue"/>
                             <CheckBox fx:id="wedCheck" text="%psy.profile.wed"/>
@@ -151,14 +151,14 @@
                 </VBox>
 
                 <!-- Save Button -->
-                <HBox alignment="CENTER_RIGHT" spacing="9.6">
+                <HBox alignment="CENTER_RIGHT" spacing="12">
                     <Button text="%psy.profile.cancelBtn" onAction="#handleBack"
                             style="-fx-background-color: #f1f1f1; -fx-text-fill: #2c3e50;
-                                   -fx-background-radius: 8; -fx-padding: 9.6 24; -fx-cursor: hand;"/>
+                                   -fx-background-radius: 8; -fx-padding: 12 30; -fx-cursor: hand;"/>
                     <Button text="%psy.profile.saveBtn" onAction="#handleSave"
                             style="-fx-background-color: #FF69B4; -fx-text-fill: white;
                                    -fx-font-weight: bold; -fx-background-radius: 8;
-                                   -fx-padding: 9.6 24; -fx-cursor: hand; -fx-font-size: 11.2px;"/>
+                                   -fx-padding: 12 30; -fx-cursor: hand; -fx-font-size: 14px;"/>
                 </HBox>
 
             </VBox>

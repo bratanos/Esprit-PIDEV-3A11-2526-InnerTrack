@@ -41,25 +41,24 @@ public class ViewManager {
             String path = null;
             URL location = null;
 
-            // List of common fxml subdirectories to search in if not found directly
-            String[] subdirs = { "", "auth/", "user/", "admin/", "psychologue/", "settings/" };
-
-            for (String subdir : subdirs) {
-                String testPath = "/fxml/" + subdir + fxmlName + ".fxml";
-                location = ViewManager.class.getResource(testPath);
-                if (location != null) {
-                    path = testPath;
-                    break;
+            // Prioritize auth/ folder for specific auth views
+            if (!fxmlName.contains("/")) {
+                java.util.List<String> authViews = java.util.Arrays.asList(
+                        "login", "register", "verify_otp", "forgot_password", "reset_password");
+                if (authViews.contains(fxmlName)) {
+                    path = "/fxml/auth/" + fxmlName + ".fxml";
+                    location = ViewManager.class.getResource(path);
                 }
             }
 
-            if (location == null && fxmlName.contains("/")) {
+            // Fallback to direct path
+            if (location == null) {
                 path = "/fxml/" + fxmlName + ".fxml";
                 location = ViewManager.class.getResource(path);
             }
 
             if (location == null) {
-                System.err.println("Error: FXML resource not found for fxmlName: " + fxmlName);
+                System.err.println("Error: FXML resource not found for path: " + path);
                 return null;
             }
 

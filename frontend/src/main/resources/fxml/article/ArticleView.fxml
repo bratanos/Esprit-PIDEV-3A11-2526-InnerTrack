@@ -12,18 +12,18 @@
 
     <top>
         <VBox styleClass="page-header">
-            <HBox alignment="CENTER_LEFT" spacing="9.6">
-                <Label text="📰" style="-fx-font-size: 25.6px;"/>
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="📰" style="-fx-font-size: 32px;"/>
                 <VBox>
                     <Label text="Gestion des Articles" styleClass="page-title"/>
                     <Label text="Créez, modifiez et consultez vos articles" styleClass="page-subtitle"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <HBox spacing="8" alignment="CENTER_RIGHT" styleClass="sub-nav-bar">
+                <HBox spacing="10" alignment="CENTER_RIGHT" styleClass="sub-nav-bar">
                     <Button text="📰 Articles" onAction="#handleRefresh" styleClass="nav-button, active"/>
                     <Button text="📁 Catégories" onAction="#goToCategories" styleClass="nav-button"/>
                     <Button text="📚 Parcours" onAction="#goToLearningPaths" styleClass="nav-button"/>
-                    <Separator orientation="VERTICAL" prefHeight="16"/>
+                    <Separator orientation="VERTICAL" prefHeight="20"/>
                     <Button text="🏠 Dashboard" onAction="#goToDashboard" styleClass="nav-button-alt"/>
                 </HBox>
             </HBox>
@@ -31,10 +31,10 @@
     </top>
 
     <center>
-        <HBox spacing="16" style="-fx-padding: 16;">
+        <HBox spacing="20" style="-fx-padding: 20;">
 
-            <VBox fx:id="sidebarVBox" spacing="9.6" prefWidth="384" styleClass="sidebar">
-                <HBox spacing="8" alignment="CENTER_LEFT">
+            <VBox fx:id="sidebarVBox" spacing="12" prefWidth="480" styleClass="sidebar">
+                <HBox spacing="10" alignment="CENTER_LEFT">
                     <TextField fx:id="tfSearch"
                                promptText="🔍 Rechercher par titre, auteur, catégorie..."
                                styleClass="search-field"
@@ -42,7 +42,7 @@
                     <Button text="🔃 Actualiser"
                             onAction="#handleRefresh"
                             styleClass="btn-success"
-                            prefHeight="32"/>
+                            prefHeight="40"/>
                 </HBox>
 
                 <Button fx:id="btnNew"
@@ -50,7 +50,7 @@
                         onAction="#handleNewArticle"
                         styleClass="btn-primary"
                         prefWidth="Infinity"
-                        prefHeight="32"/>
+                        prefHeight="40"/>
 
                 <Separator styleClass="separator"/>
 
@@ -58,10 +58,10 @@
                            VBox.vgrow="ALWAYS"
                            styleClass="table-view">
                     <columns>
-                        <TableColumn fx:id="colTitre"     text="Titre"     prefWidth="128"/>
-                        <TableColumn fx:id="colAuteur"    text="Auteur"    prefWidth="88"/>
-                        <TableColumn fx:id="colCategorie" text="Catégorie" prefWidth="88"/>
-                        <TableColumn fx:id="colDate"      text="Date"      prefWidth="80"/>
+                        <TableColumn fx:id="colTitre"     text="Titre"     prefWidth="160"/>
+                        <TableColumn fx:id="colAuteur"    text="Auteur"    prefWidth="110"/>
+                        <TableColumn fx:id="colCategorie" text="Catégorie" prefWidth="110"/>
+                        <TableColumn fx:id="colDate"      text="Date"      prefWidth="100"/>
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
@@ -72,15 +72,15 @@
             <StackPane HBox.hgrow="ALWAYS">
                 <VBox fx:id="emptyState"
                       alignment="CENTER"
-                      spacing="12.8"
+                      spacing="16"
                       visible="true"
-                      style="-fx-padding: 48;
+                      style="-fx-padding: 60;
                              -fx-background-color: #ffffff;
                              -fx-background-radius: 12px;">
-                    <Label text="📰" style="-fx-font-size: 51.2px; -fx-opacity: 0.3;"/>
+                    <Label text="📰" style="-fx-font-size: 64px; -fx-opacity: 0.3;"/>
                     <Label text="Sélectionnez un article" styleClass="empty-state-text"/>
                     <Label text="ou créez-en un nouveau pour commencer"
-                           style="-fx-font-size: 10.4px; -fx-text-fill: #8a8886;"/>
+                           style="-fx-font-size: 13px; -fx-text-fill: #8a8886;"/>
                 </VBox>
 
                 <ScrollPane fx:id="detailScrollPane"
@@ -88,41 +88,44 @@
                             visible="false"
                             style="-fx-background: transparent; -fx-background-color: transparent;">
 
-                    <VBox fx:id="detailView" spacing="12" styleClass="detail-panel">
-                        <VBox spacing="4.8">
+                    <VBox fx:id="detailView" spacing="15" styleClass="detail-panel">
+                        <VBox spacing="6">
                             <Label fx:id="lblDetailTitle"
                                    text="Titre de l'article"
                                    styleClass="detail-title"/>
                             <Label fx:id="lblDetailMeta"
                                    text="Auteur · Catégorie · Date"
-                                   style="-fx-font-size: 10.4px; -fx-text-fill: #605e5c;"/>
+                                   style="-fx-font-size: 13px; -fx-text-fill: #605e5c;"/>
                         </VBox>
 
-                        <HBox spacing="6.4" alignment="CENTER_LEFT"
+                        <HBox spacing="8" alignment="CENTER_LEFT"
                                style="-fx-background-color: #f0f4ff;
                                       -fx-background-radius: 8px;
-                                      -fx-padding: 6.4 9.6;">
+                                      -fx-padding: 8 12;">
                             <Label text="📖 Niveau de lecture :" styleClass="field-label"/>
                             <Label fx:id="lblReadability"
-                                   style="-fx-font-weight: bold; -fx-text-fill: #4c51bf; -fx-font-size: 10.4px;"/>
+                                   style="-fx-font-weight: bold; -fx-text-fill: #4c51bf; -fx-font-size: 13px;"/>
+                            <Label text="🧠 Sentiment :" styleClass="field-label"/>
+                            <Label fx:id="lblSentiment"
+                                   style="-fx-font-weight: bold; -fx-text-fill: #4c51bf; -fx-font-size: 13px;"/>
                         </HBox>
 
                         <Separator styleClass="separator"/>
-                        <VBox spacing="4.8">
-                            <HBox spacing="8" alignment="CENTER_LEFT">
+                        <VBox spacing="6">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
                                 <Label text="📚 Livres recommandés" styleClass="section-subtitle"/>
                                 <Button text="↻" onAction="#refreshBooks" styleClass="btn-icon-small"/>
                             </HBox>
-                            <ListView fx:id="booksListView" prefHeight="96"/>
+                            <ListView fx:id="booksListView" prefHeight="120"/>
                         </VBox>
 
-                        <VBox spacing="4.8">
-                            <HBox spacing="8" alignment="CENTER_LEFT">
+                        <VBox spacing="6">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
                                 <Label text="🎵 Sons associés" styleClass="section-subtitle"/>
                                 <Button text="↻" onAction="#refreshSounds" styleClass="btn-icon-small"/>
                             </HBox>
-                            <ListView fx:id="soundsListView" prefHeight="96"/>
-                            <HBox spacing="8" alignment="CENTER_RIGHT">
+                            <ListView fx:id="soundsListView" prefHeight="120"/>
+                            <HBox spacing="10" alignment="CENTER_RIGHT">
                                 <Button fx:id="playSoundButton" text="▶ Jouer le son" styleClass="btn-info"/>
                                 <Button fx:id="stopSoundButton" text="⏹ Arrêter" styleClass="btn-secondary"/>
                             </HBox>
@@ -138,15 +141,15 @@
                                    promptText="Ex: Dr Sophie Martin"
                                    styleClass="text-field"/>
 
-                        <HBox spacing="9.6">
-                            <VBox spacing="4.8" HBox.hgrow="ALWAYS">
+                        <HBox spacing="12">
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
                                 <Label text="Date de publication :" styleClass="detail-label"/>
                                 <DatePicker fx:id="dpDatePublication"
                                             promptText="Sélectionner une date"
                                             maxWidth="Infinity"
                                             styleClass="date-picker"/>
                             </VBox>
-                            <VBox spacing="4.8" HBox.hgrow="ALWAYS">
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
                                 <Label text="Catégorie :" styleClass="detail-label"/>
                                 <ComboBox fx:id="cbCategorie"
                                           promptText="Choisir une catégorie"
@@ -159,27 +162,27 @@
                         <TextArea fx:id="taContenu"
                                   promptText="Écrivez le contenu de votre article ici..."
                                   wrapText="true"
-                                  prefHeight="144"
+                                  prefHeight="180"
                                   styleClass="text-area"/>
 
                         <Separator styleClass="separator"/>
 
-                        <HBox spacing="9.6" alignment="CENTER_LEFT">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
                             <Button fx:id="btnAdd"
                                     text="➕ Ajouter"
                                     onAction="#handleAdd"
                                     styleClass="btn-primary"
-                                    prefWidth="104"/>
+                                    prefWidth="130"/>
                             <Button fx:id="btnUpdate"
                                     text="✓ Enregistrer"
                                     onAction="#handleUpdate"
                                     styleClass="btn-secondary"
-                                    prefWidth="104"/>
+                                    prefWidth="130"/>
                             <Button fx:id="btnDelete"
                                     text="🗑️ Supprimer"
                                     onAction="#handleDelete"
                                     styleClass="btn-danger"
-                                    prefWidth="104"/>
+                                    prefWidth="130"/>
                             <Region HBox.hgrow="ALWAYS"/>
                             <Button fx:id="btnClear"
                                     text="Annuler"
@@ -187,37 +190,37 @@
                                     styleClass="btn-ghost"/>
                         </HBox>
 
-                        <VBox spacing="6.4" styleClass="preview-box">
+                        <VBox spacing="8" styleClass="preview-box">
                             <Label text="📖 Aperçu du contenu" styleClass="section-subtitle"/>
                             <TextArea fx:id="taPreview"
                                       editable="false"
                                       wrapText="true"
-                                      prefHeight="96"
+                                      prefHeight="120"
                                       styleClass="preview-area"/>
                         </VBox>
 
                         <Separator styleClass="separator"/>
 
-                        <VBox spacing="6.4"
+                        <VBox spacing="8"
                               style="-fx-background-color: #f8f9ff;
                                      -fx-background-radius: 10px;
-                                     -fx-padding: 9.6;
+                                     -fx-padding: 12;
                                      -fx-border-color: #e0e7ff;
                                      -fx-border-width: 1px;
                                      -fx-border-radius: 10px;">
                             <Label text="🔗 Articles similaires" styleClass="section-subtitle"/>
-                            <VBox fx:id="similarArticlesBox" spacing="3.2"/>
+                            <VBox fx:id="similarArticlesBox" spacing="4"/>
                         </VBox>
 
-                        <VBox spacing="4.8">
+                        <VBox spacing="6">
                             <Label text="Parcours associés" styleClass="section-subtitle"/>
                             <FlowPane fx:id="articlePathsBox" hgap="6" vgap="6" prefWrapLength="400"/>
                         </VBox>
 
-                        <VBox spacing="6.4"
+                        <VBox spacing="8"
                               style="-fx-background-color: #f8f9ff;
                                      -fx-background-radius: 10px;
-                                     -fx-padding: 9.6;
+                                     -fx-padding: 12;
                                      -fx-border-color: #e0e7ff;
                                      -fx-border-width: 1px;
                                      -fx-border-radius: 10px;">

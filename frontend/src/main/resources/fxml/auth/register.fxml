@@ -8,62 +8,62 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.innertrack.controller.auth.RegisterController"
-      spacing="20" alignment="TOP_CENTER"
-      maxWidth="360" stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css, @../../styles/base/typography.css, @../../styles/base/controls.css, @../../styles/themes/theme-light.css, @../../styles/views/auth.css"
+      spacing="25" alignment="TOP_CENTER"
+      maxWidth="450" stylesheets="@../../styles/base/tokens.css, @../../styles/base/root.css, @../../styles/base/typography.css, @../../styles/base/controls.css, @../../styles/themes/theme-light.css, @../../styles/views/auth.css"
       styleClass="auth-view">
 
-    <ImageView fitHeight="48" preserveRatio="true">
+    <ImageView fitHeight="60" preserveRatio="true">
         <image>
             <Image url="@../../Images/innertracklogo1.png" />
         </image>
     </ImageView>
 
-    <VBox spacing="4" alignment="CENTER">
+    <VBox spacing="5" alignment="CENTER">
         <Label text="%auth.register.title" styleClass="title" />
         <Label text="%auth.register.subtitle" styleClass="subtitle" />
     </VBox>
 
     <GridPane vgap="18" hgap="10" alignment="CENTER">
         <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" minWidth="240" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="300" />
         </columnConstraints>
 
-        <VBox spacing="4" GridPane.rowIndex="0">
+        <VBox spacing="5" GridPane.rowIndex="0">
             <Label text="%auth.firstName" styleClass="subtitle" />
             <TextField fx:id="firstNameField" promptText="Jean" />
         </VBox>
 
-        <VBox spacing="4" GridPane.rowIndex="1">
+        <VBox spacing="5" GridPane.rowIndex="1">
             <Label text="%auth.lastName" styleClass="subtitle" />
             <TextField fx:id="lastNameField" promptText="Dupont" />
         </VBox>
 
-        <VBox spacing="4" GridPane.rowIndex="2">
+        <VBox spacing="5" GridPane.rowIndex="2">
             <Label text="%auth.email" styleClass="subtitle" />
             <TextField fx:id="emailField" promptText="exemple@email.com" />
         </VBox>
 
-        <VBox spacing="4" GridPane.rowIndex="3">
+        <VBox spacing="5" GridPane.rowIndex="3">
             <Label text="%auth.password" styleClass="subtitle" />
             <PasswordField fx:id="passwordField" promptText="••••••••" />
         </VBox>
 
-        <VBox spacing="4" GridPane.rowIndex="4">
+        <VBox spacing="5" GridPane.rowIndex="4">
             <Label text="%auth.confirmPassword" styleClass="subtitle" />
             <PasswordField fx:id="confirmPasswordField" promptText="••••••••" />
         </VBox>
 
-        <VBox spacing="4" GridPane.rowIndex="5">
+        <VBox spacing="5" GridPane.rowIndex="5">
             <Label text="%auth.role" styleClass="subtitle" />
             <ComboBox fx:id="roleComboBox" promptText="%auth.rolePrompt" maxWidth="Infinity" />
         </VBox>
     </GridPane>
 
-    <VBox spacing="12" alignment="CENTER">
-        <Button fx:id="registerButton" text="%auth.registerButton" onAction="#handleRegister" 
+    <VBox spacing="15" alignment="CENTER">
+        <Button fx:id="registerButton" text="%auth.registerButton" onAction="#handleRegister"
                 maxWidth="Infinity" styleClass="btn, btn-primary" />
-        
-        <HBox spacing="4" alignment="CENTER">
+
+        <HBox spacing="5" alignment="CENTER">
             <Label text="%auth.alreadyMember" styleClass="subtitle" />
             <Hyperlink text="%auth.login.title" onAction="#goToLogin" styleClass="text-link" />
         </HBox>

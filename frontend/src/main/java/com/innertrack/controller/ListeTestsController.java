@@ -69,6 +69,7 @@ public class ListeTestsController implements Initializable {
     private List<Question> questionsActuelles;
     private int nbReponsesEnregistrees = 0;
     private Resultat resultat;
+    private String dernierMemeUrl = null;
 
     private final String[] TYPES_TESTS = {
             "Test de Personnalité", "Test Cognitif", "Test d'Anxiété",
@@ -473,7 +474,6 @@ public class ListeTestsController implements Initializable {
     }
 
     // ── Result display ──
-
     private void afficherResultatBelle(Resultat resultat, int nbReponses, int nbQuestions) {
         this.resultat = resultat;
         Stage resultStage = new Stage();
@@ -519,7 +519,7 @@ public class ListeTestsController implements Initializable {
         progressText.setStyle("-fx-text-fill: #718096; -fx-font-size: 12px;");
         progressBox.getChildren().addAll(progressTitle, bar, progressText);
 
-        // Result interpretation box
+        // Interpretation
         VBox interpretBox = new VBox(10);
         interpretBox.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;");
         Label interpretTitle = new Label("📋 Interprétation");
@@ -537,13 +537,64 @@ public class ListeTestsController implements Initializable {
         interpretText.setStyle("-fx-text-fill: #4a5568; -fx-font-size: 13px;");
         interpretBox.getChildren().addAll(interpretTitleRow, interpretText);
 
-        // ML Recommendations button
+        // ✅ Bouton résultat WhatsApp
+        String titreTest = testSelectionne != null ? testSelectionne.getTitre() : "Test";
+        Button btnWhatsAppResultat = new Button("📊 Envoyer résultat sur WhatsApp");
+        btnWhatsAppResultat.setStyle("""
+            -fx-background-color: #25D366; -fx-text-fill: white; -fx-font-weight: bold;
+            -fx-padding: 12 20; -fx-background-radius: 10; -fx-cursor: hand; -fx-font-size: 13px;
+            """);
+        btnWhatsAppResultat.setOnAction(e -> {
+            try {
+                com.innertrack.model.User user = SessionManager.getInstance().getCurrentUser();
+                String phone = user != null ? user.getPhoneNumber() : null;
+                String prenom = user != null ? user.getFirstName() : "Utilisateur";
+
+                if (phone == null || phone.isBlank()) {
+                    TextInputDialog dialog = new TextInputDialog();
+                    dialog.setTitle("WhatsApp");
+                    dialog.setHeaderText("Entrez votre numéro :");
+                    dialog.setContentText("Numéro (+216...) :");
+                    dialog.showAndWait().ifPresent(p -> {
+                        try {
+                            SmsService.getInstance().envoyerResultatTestWhatsApp(
+                                    p.replaceAll("[^0-9+]", ""), prenom, titreTest,
+                                    resultat.getScoreTotal(), resultat.getScoreMaxPossible(),
+                                    resultat.getResultat());
+                            btnWhatsAppResultat.setText("✅ Résultat envoyé !");
+                            btnWhatsAppResultat.setDisable(true);
+                            btnWhatsAppResultat.setStyle("""
+                                -fx-background-color: #128C7E; -fx-text-fill: white; -fx-font-weight: bold;
+                                -fx-padding: 12 20; -fx-background-radius: 10; -fx-font-size: 13px;
+                                """);
+                        } catch (Exception ex) {
+                            new Alert(Alert.AlertType.ERROR, "Erreur : " + ex.getMessage()).showAndWait();
+                        }
+                    });
+                } else {
+                    SmsService.getInstance().envoyerResultatTestWhatsApp(
+                            phone.replaceAll("[^0-9+]", ""), prenom, titreTest,
+                            resultat.getScoreTotal(), resultat.getScoreMaxPossible(),
+                            resultat.getResultat());
+                    btnWhatsAppResultat.setText("✅ Résultat envoyé !");
+                    btnWhatsAppResultat.setDisable(true);
+                    btnWhatsAppResultat.setStyle("""
+                        -fx-background-color: #128C7E; -fx-text-fill: white; -fx-font-weight: bold;
+                        -fx-padding: 12 20; -fx-background-radius: 10; -fx-font-size: 13px;
+                        """);
+                }
+            } catch (Exception ex) {
+                new Alert(Alert.AlertType.ERROR, "Échec : " + ex.getMessage()).showAndWait();
+            }
+        });
+
+        // ML button
         int idUtilisateurFinal = getCurrentUserId();
         Button btnML = new Button("🧠 Voir mes recommandations IA");
         btnML.setStyle("""
-                -fx-background-color: #667eea; -fx-text-fill: white; -fx-font-weight: bold;
-                -fx-padding: 12 30; -fx-background-radius: 10; -fx-cursor: hand; -fx-font-size: 13px;
-                """);
+            -fx-background-color: #667eea; -fx-text-fill: white; -fx-font-weight: bold;
+            -fx-padding: 12 30; -fx-background-radius: 10; -fx-cursor: hand; -fx-font-size: 13px;
+            """);
         btnML.setOnAction(e -> {
             try {
                 RecommandationMLService mlService = new RecommandationMLService();
@@ -555,28 +606,30 @@ public class ListeTestsController implements Initializable {
             }
         });
 
-        // Retry Button
+        // Retry button
         Button btnRetry = new Button("🔄 Réessayer le test");
         btnRetry.setStyle("""
-                -fx-background-color: transparent; -fx-text-fill: #f6ad55; -fx-font-weight: bold;
-                -fx-padding: 11 29; -fx-background-radius: 10; -fx-cursor: hand; -fx-font-size: 13px;
-                -fx-border-color: #f6ad55; -fx-border-width: 2px; -fx-border-radius: 10;
-                """);
+            -fx-background-color: transparent; -fx-text-fill: #f6ad55; -fx-font-weight: bold;
+            -fx-padding: 11 29; -fx-background-radius: 10; -fx-cursor: hand; -fx-font-size: 13px;
+            -fx-border-color: #f6ad55; -fx-border-width: 2px; -fx-border-radius: 10;
+            """);
         btnRetry.setOnAction(e -> {
             resultStage.close();
             retryTest();
         });
 
+        // Fermer button
         Button btnFermer = new Button("✓ Fermer");
         btnFermer.setStyle("-fx-background-color: " + couleur + "; -fx-text-fill: white; "
                 + "-fx-font-weight: bold; -fx-padding: 12 40; -fx-background-radius: 10; -fx-cursor: hand;");
         btnFermer.setOnAction(e -> resultStage.close());
 
-        HBox btnBox = new HBox(15, btnML, btnRetry, btnFermer);
+        // ✅ btnBox avec bouton résultat WhatsApp inclus
+        HBox btnBox = new HBox(15, btnML, btnRetry, btnWhatsAppResultat, btnFermer);
         btnBox.setAlignment(Pos.CENTER);
         btnBox.setPadding(new Insets(20, 0, 10, 0));
 
-        // Random Meme section
+        // Meme section
         com.innertrack.service.MemeService memeService = new com.innertrack.service.MemeService();
         String memeUrl = memeService.getRandomMemeUrl();
         VBox memeBox = new VBox(10);
@@ -585,6 +638,7 @@ public class ListeTestsController implements Initializable {
         Label memeTitle = new Label("😂 Pour détendre l'atmosphère :");
         memeTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #4a5568;");
         memeBox.getChildren().add(memeTitle);
+
         if (memeUrl != null) {
             try {
                 javafx.scene.image.ImageView memeView = new javafx.scene.image.ImageView(
@@ -593,18 +647,20 @@ public class ListeTestsController implements Initializable {
                 memeView.setPreserveRatio(true);
                 memeBox.getChildren().add(memeView);
 
+                // ✅ Bouton meme WhatsApp — sous l'image
                 Button btnWhatsAppMeme = new Button("📱 Partager ce meme sur WhatsApp");
                 btnWhatsAppMeme.setStyle("""
-                        -fx-background-color: #25D366; -fx-text-fill: white; -fx-font-weight: bold;
-                        -fx-padding: 8 15; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 11px;
-                        """);
+                    -fx-background-color: #25D366; -fx-text-fill: white; -fx-font-weight: bold;
+                    -fx-padding: 8 15; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 11px;
+                    """);
                 btnWhatsAppMeme.setOnAction(e -> envoyerMemeWhatsAppAction(memeUrl));
                 memeBox.getChildren().add(btnWhatsAppMeme);
+
             } catch (Exception ignored) {
             }
         }
 
-        // Random Quote
+        // Quote
         com.innertrack.service.CitationService citationService = new com.innertrack.service.CitationService();
         String quote = citationService.getCitationDuJour();
         Label quoteLabel = new Label(quote);

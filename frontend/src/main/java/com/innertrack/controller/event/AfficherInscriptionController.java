@@ -2,6 +2,7 @@ package com.innertrack.controller.event;
 
 import com.innertrack.model.Inscription;
 import com.innertrack.service.InscriptionService;
+import com.innertrack.util.ViewManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -133,6 +134,8 @@ public class AfficherInscriptionController {
     }
 
     public void goBackToEvents(ActionEvent actionEvent) {
+        ViewManager.loadView("event/AfficherEvenement");
+        /*
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/event/AfficherEvenement.fxml"));
             Parent root = loader.load();
@@ -148,5 +151,7 @@ public class AfficherInscriptionController {
             }
             e.printStackTrace();
         }
+
+         */
     }
 }
