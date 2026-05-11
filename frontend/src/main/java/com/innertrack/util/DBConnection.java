@@ -9,18 +9,23 @@ public class DBConnection {
     private static DBConnection instance;
     private Connection connection;
 
-    private static final String URL = "jdbc:mysql://localhost:3306/testDB";
-    private static final String USER = "root";
-    private static final String PASSWORD = "";
-
     private DBConnection() {
         connect();
     }
 
     private void connect() {
         try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Connected to database testDB");
+            // Load from .env, fallback to default local configuration
+            String envUrl = com.innertrack.app.MainApp.getEnv("DB_URL");
+            String envUser = com.innertrack.app.MainApp.getEnv("DB_USER");
+            String envPassword = com.innertrack.app.MainApp.getEnv("DB_PASSWORD");
+
+            String dbUrl = (envUrl != null && !envUrl.isBlank()) ? envUrl : "jdbc:mysql://localhost:3306/testDB";
+            String dbUser = (envUser != null && !envUser.isBlank()) ? envUser : "root";
+            String dbPassword = envPassword != null ? envPassword : "";
+
+            connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            System.out.println("Connected to database at " + dbUrl);
         } catch (SQLException e) {
             System.err.println("❌ DB Connection failed: " + e.getMessage());
         }
