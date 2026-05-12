@@ -5,10 +5,11 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     libpng-dev \
     libzip-dev \
+    libonig-dev \
     zip \
     unzip \
     git \
-    && docker-php-ext-install intl gd opcache pdo_mysql zip
+    && docker-php-ext-install intl gd opcache pdo_mysql zip mbstring bcmath
 
 # Configure Apache
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
@@ -23,8 +24,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install dependencies without running scripts (scripts require DB connection)
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Set permissions
 RUN chown -R www-data:www-data var/
