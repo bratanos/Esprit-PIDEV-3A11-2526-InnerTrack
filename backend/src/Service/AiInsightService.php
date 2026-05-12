@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Article;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class AiInsightService
@@ -10,7 +11,7 @@ class AiInsightService
     // Endpoint URL for the Python AI microservice that analyzes text
     public function __construct(
         private HttpClientInterface $client,
-        #[Autowire(env: 'ARTICLE_AI_URL')] private string $apiUrl
+        #[Autowire(env: 'default::ARTICLE_AI_URL')] private string $apiUrl = 'http://127.0.0.1:5001'
     ) {}
 
     /**

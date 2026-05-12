@@ -9,32 +9,39 @@ class OpenAiClientService
 {
     public function __construct(
         private HttpClientInterface $httpClient,
-        #[Autowire(env: 'OPENAI_API_KEY')]  private string $apiKey,
-        #[Autowire(env: 'OPENAI_BASE_URL')] private string $baseUrl,
-        #[Autowire(env: 'OPENAI_MODEL')]    private string $model,
-        #[Autowire(env: 'REFERER_URL')]     private string $refererUrl,
+        #[Autowire(env: 'default::OPENAI_API_KEY')]  private string $apiKey = '',
+        #[Autowire(env: 'default::OPENAI_BASE_URL')] private string $baseUrl = 'https://api.openai.com/v1',
+        #[Autowire(env: 'default::OPENAI_MODEL')]    private string $model = 'gpt-3.5-turbo',
+        #[Autowire(env: 'default::REFERER_URL')]     private string $refererUrl = '',
     ) {}
 
     public function chat(string $prompt, int $maxTokens = 1000, float $temperature = 0.7): string
     {
-        $response = $this->httpClient->request('POST', rtrim($this->baseUrl, '/') . '/chat/completions', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type'  => 'application/json',
-                'HTTP-Referer'  => $this->refererUrl,
-                'X-Title'       => 'InnerTrack AI Copilot',
-            ],
-            'json' => [
-                'model'       => $this->model,
-                'messages'    => [['role' => 'user', 'content' => $prompt]],
-                'max_tokens'  => $maxTokens,
-                'temperature' => $temperature,
-            ],
-        ]);
+        if (empty($this->apiKey)) {
+            return '{"error": "AI configuration missing. Please set OPENAI_API_KEY."}';
+        }
 
-        $data = $response->toArray();
+        try {
+            $response = $this->httpClient->request('POST', rtrim($this->baseUrl, '/') . '/chat/completions', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->apiKey,
+                    'Content-Type'  => 'application/json',
+                    'HTTP-Referer'  => $this->refererUrl,
+                    'X-Title'       => 'InnerTrack AI Copilot',
+                ],
+                'json' => [
+                    'model'       => $this->model,
+                    'messages'    => [['role' => 'user', 'content' => $prompt]],
+                    'max_tokens'  => $maxTokens,
+                    'temperature' => $temperature,
+                ],
+            ]);
 
-        return $data['choices'][0]['message']['content'] ?? '';
+            $data = $response->toArray();
+            return $data['choices'][0]['message']['content'] ?? '';
+        } catch (\Throwable $e) {
+            return '{"error": "' . $e->getMessage() . '"}';
+        }
     }
 
     /**

@@ -20,6 +20,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 #[IsGranted('ROLE_PSYCHOLOGUE')]
 class EventController extends AbstractController
 {
+    public function __construct(
+        private readonly \Symfony\Contracts\HttpClient\HttpClientInterface $client,
+        #[\Symfony\Component\DependencyInjection\Attribute\Autowire(env: 'default::CHATBOT_AI_URL')] private string $chatbotAiUrl = 'http://127.0.0.1:8001'
+    ) {}
+
     // ------------------------------------------------------------------ LIST
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(EventRepository $repo, \App\Repository\InscriptionRepository $inscRepo): Response
@@ -89,6 +94,7 @@ class EventController extends AbstractController
             'event'  => $event,
             'errors' => $errors,
             'types'  => TypeEvent::cases(),
+            'chatbot_ai_url' => $this->chatbotAiUrl,
         ]);
     }
 
@@ -272,7 +278,13 @@ class EventController extends AbstractController
                         $base64 = preg_replace('/^data:image\/\w+;base64,/', '', $generatedImageUrl);
                         $content = base64_decode($base64);
                     } else {
-                        $content = file_get_contents($generatedImageUrl);
+                        // Use HttpClient instead of file_get_contents for better reliability on Render
+                        try {
+                            $imageResponse = $this->client->request('GET', $generatedImageUrl, ['timeout' => 5]);
+                            $content = ($imageResponse->getStatusCode() === 200) ? $imageResponse->getContent() : false;
+                        } catch (\Exception $e) {
+                            $content = false;
+                        }
                     }
 
                     if ($content !== false && strlen($content) > 0) {

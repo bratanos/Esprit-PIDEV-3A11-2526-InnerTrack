@@ -25,9 +25,9 @@
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
     {% for card in [
         {label:'Total',        value:stats.total,                       emoji:'📋', color:'#006876'},
-        {label:'Énergie moy.', value:stats.avgEnergie|number_format(1), emoji:'⚡', color:'#48bb78'},
-        {label:'Stress moy.',  value:stats.avgStress|number_format(1),  emoji:'😰', color:'#f6ad55'},
-        {label:'Sommeil moy.', value:stats.avgSommeil|number_format(1), emoji:'😴', color:'#b794f4'},
+        {label:'Énergie moy.', value:(stats.avgEnergie ?? 0)|number_format(1), emoji:'⚡', color:'#48bb78'},
+        {label:'Stress moy.',  value:(stats.avgStress ?? 0)|number_format(1),  emoji:'😰', color:'#f6ad55'},
+        {label:'Sommeil moy.', value:(stats.avgSommeil ?? 0)|number_format(1), emoji:'😴', color:'#b794f4'},
     ] %}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
         <div class="text-2xl mb-1">{{ card.emoji }}</div>

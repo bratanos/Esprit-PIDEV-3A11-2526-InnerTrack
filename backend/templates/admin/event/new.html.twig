@@ -325,7 +325,7 @@ async function autoGenerateImage(description) {
         </div>`;
 
     try {
-        const response = await fetch('http://127.0.0.1:8001/generate_event_image', {
+        const response = await fetch('{{ chatbot_ai_url }}' + '/generate_event_image', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ description: description.trim(), session_id: 'img-' + Date.now() }),
