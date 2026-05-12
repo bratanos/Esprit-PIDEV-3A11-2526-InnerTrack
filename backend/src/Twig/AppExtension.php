@@ -19,34 +19,44 @@ class AppExtension extends AbstractExtension implements GlobalsInterface
 
     public function getGlobals(): array
     {
-        /** @var User|null $user */
-        $user = $this->security->getUser();
+        try {
+            /** @var User|null $user */
+            $user = $this->security->getUser();
 
-        if (!$user) {
+            if (!$user) {
+                return [
+                    'unread_notifications_count' => 0,
+                    'unread_messages_count' => 0,
+                ];
+            }
+
+            $userId = $user->getId();
+
+            // Unread Notifications
+            $unreadNotifs = $this->em->createQuery(
+                'SELECT COUNT(n) FROM App\Entity\Notification n 
+                 WHERE n.user = :uid AND n.isRead = false'
+            )->setParameter('uid', $userId)->getSingleScalarResult();
+
+            // Unread Messages (using DQL for consistency and safety)
+            $unreadMessages = $this->em->createQuery(
+                'SELECT COUNT(m) FROM App\Entity\Message m
+                 JOIN m.conversation c
+                 WHERE (c.client = :uid OR c.therapist = :uid) 
+                 AND m.sender != :uid 
+                 AND m.isRead = false'
+            )->setParameter('uid', $userId)->getSingleScalarResult();
+
+            return [
+                'unread_notifications_count' => (int) $unreadNotifs,
+                'unread_messages_count' => (int) $unreadMessages,
+            ];
+        } catch (\Exception $e) {
+            // Fallback to 0 if database is not ready or query fails
             return [
                 'unread_notifications_count' => 0,
                 'unread_messages_count' => 0,
             ];
         }
-
-        $userId = $user->getId();
-
-        // Unread Notifications
-        $unreadNotifs = $this->em->createQuery(
-            'SELECT COUNT(n) FROM App\Entity\Notification n WHERE n.user = :uid AND n.isRead = false'
-        )->setParameter('uid', $userId)->getSingleScalarResult();
-
-        // Unread Messages
-        $unreadMessages = (int) $this->em->getConnection()->executeQuery(
-            'SELECT COUNT(*) FROM message m
-             JOIN conversation c ON m.conversation_id = c.id
-             WHERE (c.client_id = ? OR c.therapist_id = ?) AND m.sender_id != ? AND m.is_read = 0',
-            [$userId, $userId, $userId]
-        )->fetchOne();
-
-        return [
-            'unread_notifications_count' => (int) $unreadNotifs,
-            'unread_messages_count' => $unreadMessages,
-        ];
     }
 }
