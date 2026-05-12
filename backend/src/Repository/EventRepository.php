@@ -85,7 +85,7 @@ class EventRepository extends ServiceEntityRepository
             SELECT DATE_FORMAT(date_creation, '%b %Y') AS month, COUNT(*) AS count
             FROM event
             WHERE date_creation >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-            GROUP BY YEAR(date_creation), MONTH(date_creation)
+            GROUP BY YEAR(date_creation), MONTH(date_creation), month
             ORDER BY YEAR(date_creation), MONTH(date_creation)
         ")->fetchAllAssociative();
     }

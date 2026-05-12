@@ -637,7 +637,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
         try {
-            const response = await fetch('http://127.0.0.1:8001/interact', {
+            const response = await fetch('{{ chatbot_ai_url }}' + '/interact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

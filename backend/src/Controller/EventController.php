@@ -40,10 +40,13 @@ class EventController extends AbstractController
             4 => '#f97316', // Webinaire → orange
         ];
         foreach ($events as $event) {
+            $date = $event->getDate();
+            if (!$date) continue; // Skip events without a date to prevent crash
+
             $calendarEvents[] = [
                 'id'    => $event->getId(),
                 'title' => $event->getTitre(),
-                'start' => $event->getDate()->format('Y-m-d'),
+                'start' => $date->format('Y-m-d'),
                 'url'   => $this->generateUrl('admin_event_show', ['id' => $event->getId()]),
                 'color' => $typeColors[$event->getType()?->value] ?? '#94a3b8',
                 'extendedProps' => [
@@ -69,6 +72,7 @@ class EventController extends AbstractController
             'events'         => $events,
             'calendarEvents' => json_encode($calendarEvents),
             'stats'          => $stats,
+            'chatbot_ai_url' => $this->chatbotAiUrl,
         ]);
     }
 

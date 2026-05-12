@@ -70,11 +70,11 @@ class InscriptionRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $results = $conn->executeQuery("
-            SELECT e.titre, e.capacite,
+            SELECT e.titre, e.capacite, e.date_event,
                    SUM(CASE WHEN i.statut = 'CONFIRMÉ' THEN 1 ELSE 0 END) AS confirmed
             FROM event e
             LEFT JOIN inscription i ON i.id_evenement = e.id_event
-            GROUP BY e.id_event, e.titre, e.capacite
+            GROUP BY e.id_event, e.titre, e.capacite, e.date_event
             ORDER BY e.date_event DESC
         ")->fetchAllAssociative();
 
