@@ -1,0 +1,12 @@
+
+OPENAI_MODEL=openai/gpt-4.1
+
+REFERER_URL=http://localhost:8000
+
+SYSTEM_PROMPT="You are a helpful assistant. Always respond with short, concise answers."
+MAX_TURNS=20
+MAX_TOKENS=500
+TEMPERATURE=0.4
+
+
+uvicorn agent:app --reload --port 8001  
