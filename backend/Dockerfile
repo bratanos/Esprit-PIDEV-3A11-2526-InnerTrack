@@ -26,10 +26,16 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 
-# Install dependencies with extra flags to bypass environment checks
+# Install dependencies
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_MEMORY_LIMIT=-1
 RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-reqs
+
+# Create dummy .env
+RUN echo "APP_ENV=prod" > .env
+
+# Set environment to production
+ENV APP_ENV=prod
 
 # Set permissions
 RUN chown -R www-data:www-data var/
