@@ -9,7 +9,7 @@ doctrine:
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
         options:
-            1002: "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))"
+            1002: "SET sql_mode=''"
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
