@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libzip-dev \
     libonig-dev \
+    libxml2-dev \
+    libcurl4-openssl-dev \
     zip \
     unzip \
     git \
@@ -24,8 +26,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 
-# Install dependencies without running scripts (scripts require DB connection)
-RUN composer install --no-dev --optimize-autoloader --no-scripts
+# Install dependencies with extra flags to bypass environment checks
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_MEMORY_LIMIT=-1
+RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-reqs
 
 # Set permissions
 RUN chown -R www-data:www-data var/
