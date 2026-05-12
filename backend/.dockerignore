@@ -1,0 +1,8 @@
+vendor/
+var/cache/
+var/log/
+.env
+.env.local
+.git/
+Dockerfile
+.dockerignore
