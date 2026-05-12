@@ -8,10 +8,10 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class AiInsightService
 {
     // Endpoint URL for the Python AI microservice that analyzes text
-    private const API_URL = 'http://127.0.0.1:5001';
-
-    // HTTP client utility for making requests to the AI service
-    public function __construct(private HttpClientInterface $client) {}
+    public function __construct(
+        private HttpClientInterface $client,
+        #[Autowire(env: 'ARTICLE_AI_URL')] private string $apiUrl
+    ) {}
 
     /**
      * Sends article content to the AI service for analysis
@@ -23,7 +23,7 @@ public function analyze(Article $article): ?array
         $text = $article->getTitre() . '. ' . $article->getContenu();
 
         try {
-            $response = $this->client->request('POST', self::API_URL . '/analyze', [
+            $response = $this->client->request('POST', $this->apiUrl . '/analyze', [
                 'json'    => ['text' => $text],
                 'timeout' => 10,
             ]);
@@ -45,7 +45,7 @@ public function analyze(Article $article): ?array
     public function isAvailable(): bool
     {
         try {
-            $r = $this->client->request('GET', self::API_URL . '/health', ['timeout' => 1]);
+            $r = $this->client->request('GET', $this->apiUrl . '/health', ['timeout' => 1]);
             return $r->getStatusCode() === 200;
         } catch (\Throwable) {
             return false;
