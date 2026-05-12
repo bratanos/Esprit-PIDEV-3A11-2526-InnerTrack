@@ -40,9 +40,9 @@ class EventController extends AbstractController
                 'title' => $event->getTitre(),
                 'start' => $event->getDate()->format('Y-m-d'),
                 'url'   => $this->generateUrl('admin_event_show', ['id' => $event->getId()]),
-                'color' => $typeColors[$event->getType()->value],
+                'color' => $typeColors[$event->getType()?->value] ?? '#94a3b8',
                 'extendedProps' => [
-                    'type'     => $event->getType()->label(),
+                    'type'     => $event->getType()?->label() ?? 'Non défini',
                     'capacite' => $event->getCapacite(),
                     'statut'   => $event->isStatut(),
                 ],

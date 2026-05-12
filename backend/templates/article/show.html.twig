@@ -301,7 +301,7 @@
 </div>
 
     {# ══ AI INSIGHTS (blue instead of purple) ══ #}
-    {% if aiAnalysis %}
+    {% if aiAnalysis is not null %}
         <div style="background:white;border-radius:20px;
                     border:1.5px solid rgba(96,165,250,0.2);
                     overflow:hidden;margin-bottom:16px;

@@ -13,7 +13,6 @@ use App\Service\ReadabilityService;
 use App\Service\OpenLibraryService;
 use App\Service\FreeSoundService;
 use App\Service\AiInsightService;
-use Knp\Snappy\Pdf;
 use Twig\Environment;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -329,22 +328,25 @@ final class ArticleController extends AbstractController
     }
 
     #[Route('/article/{id}/pdf', name: 'app_article_pdf', methods: ['GET'], requirements: ['id' => '\d+'])]
-    public function exportPdf(Article $article, Pdf $pdf, Environment $twig): Response
+    public function exportPdf(Article $article, Environment $twig): Response
     {
-        $html     = $twig->render('article/pdf.html.twig', ['article' => $article]);
-        $filename = sprintf('article-%s.pdf', $article->getId());
+        $html = $twig->render('article/pdf.html.twig', ['article' => $article]);
+        
+        $options = new \Dompdf\Options();
+        $options->set('defaultFont', 'DejaVu Sans');
+        $options->set('isRemoteEnabled', true);
+        
+        $dompdf = new \Dompdf\Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
 
         return new Response(
-            $pdf->getOutputFromHtml($html, [
-                'footer-html'    => $twig->render('article/pdf_footer.html.twig', ['article' => $article]),
-                'header-html'    => $twig->render('article/pdf_header.html.twig'),
-                'footer-spacing' => 5,
-                'header-spacing' => 5,
-            ]),
+            $dompdf->output(),
             200,
             [
                 'Content-Type'        => 'application/pdf',
-                'Content-Disposition' => sprintf('attachment; filename="%s"', $filename),
+                'Content-Disposition' => sprintf('attachment; filename="article-%s.pdf"', $article->getId()),
             ]
         );
     }

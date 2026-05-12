@@ -34,7 +34,10 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platfo
 
 # Create dummy .env and set permissions
 RUN echo "APP_ENV=prod" > .env
-RUN mkdir -p var/cache var/log var/sessions && chown -R www-data:www-data var/ && chmod -R 777 var/
+# Create necessary directories and set permissions
+RUN mkdir -p var/cache var/log var/sessions public/uploads/events public/uploads/articles public/uploads/users \
+    && chown -R www-data:www-data var/ public/uploads/ \
+    && chmod -R 777 var/ public/uploads/
 
 # Verify that the public folder exists (this will show up in your Render logs)
 RUN ls -la /var/www/html/public
