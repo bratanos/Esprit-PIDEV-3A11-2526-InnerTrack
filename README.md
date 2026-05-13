@@ -1,67 +1,93 @@
-# javafx-symfony-test
+# InnerTrack - Mental Health & Wellbeing Platform
+
+InnerTrack is a comprehensive mental health management platform consisting of a **Symfony Web Backend** (with an Administrative Dashboard) and a **JavaFX Desktop Client**. The platform provides tools for journaling, article management, psychological testing, and event coordination, all enhanced by AI-driven insights.
 
 ---
 
-# CSS Styling & Collaboration Guide
+## 🏛️ Project Architecture
 
-This guide explains our project's styling architecture and how the team can contribute while keeping the UI consistent and bug-free.
+### 1. Backend (Symfony Web App)
+Located in the `/backend` directory.
+- **Framework**: Symfony 6.4 (PHP 8.1+)
+- **Database**: MySQL / MariaDB
+- **Key Modules**:
+  - **Journaling**: Habit tracking and daily entries with mood analysis.
+  - **Articles**: Educational content with AI-generated insights and category/tag management.
+  - **Events**: Coordination for workshops, conferences, and forums with automated waitlists.
+  - **Moderation**: Admin tools for managing reports, chat locks, and user bans.
+  - **API**: JWT-secured endpoints for the JavaFX desktop client.
 
-## 🏗️ CSS Architecture
-Our styling is organized into four main layers in `frontend/src/main/resources/css`:
+### 2. Desktop Client (JavaFX App)
+Located in the `/frontend` directory.
+- **Framework**: JavaFX 17+ (Maven)
+- **Architecture**: MVC with a central `ViewManager` and `SessionManager`.
+- **Key Features**: 
+  - Role-based dashboards (Patient, Therapist, Admin).
+  - Real-time interaction with the Symfony database via JDBC.
+  - Premium UI using modern CSS tokens and HSL color variables.
 
-1. **`variables.css` (The Global Tokens)**
-   - Contains colors, spacing, and border rules.
-   - **Usage**: Always use these variables (e.g., `-fx-text-fill: -color-primary;`) instead of hardcoding hex codes.
-   - **Rule**: Avoid changing existing values unless you want to update the entire application's theme.
-
-2. **`base.css` (Global Resets)**
-   - Applies default looks to standard JavaFX controls (`button`, `text-field`, etc.).
-   - **Rule**: Only edit this if you want to change how *every* button in the app looks.
-
-3. **`utility.css` (Reusable Helpers)**
-   - Short classes for margins (`.mt-1`), padding (`.p-2`), or text alignment.
-   - **Usage**: Add these classes to elements in Scene Builder or FXML for quick layout adjustments.
-
-4. **`components/` (Page-Specific Styles)**
-   - Where 90% of your work should happen.
-   - Example: `login.css`, `dashboard.css`.
-
----
-
-## 🛡️ How to NOT "Break" the App
-To prevent your changes from affecting other people's pages, follow these rules:
-
-### 1. Scope your styles
-In your FXML, give your root container a unique class (e.g., `.dashboard-container`). In your CSS file, nest all your styles under that class.
-
-**Bad (Global)**:
-```css
-.button { -fx-background-color: red; } /* Breaks EVERY button in the app */
-```
-
-**Good (Scoped)**:
-```css
-.dashboard-container .button { -fx-background-color: red; } /* Only affects buttons inside the dashboard */
-```
-
-### 2. Don't touch `base.css` unless necessary
-If you need a specific button to look different, give it a custom class (e.g., `.btn-delete`) instead of editing the generic `.button` class in `base.css`.
-
-### 3. Use Variables
-Instead of: `color: #ff0000;`
-Use: `-fx-text-fill: -color-danger;`
-This ensures that if we update our theme later, your page updates automatically.
+### 3. AI Microservices (Python)
+- **Article AI (Flask)**: Generates readability scores and content insights for articles.
+- **Chatbot & Image Gen (FastAPI)**: Provides an interactive AI agent and generates event posters using StabilityAI.
 
 ---
 
-## 🛠️ Typical Workflow
-1. Create a new CSS file for your page in `resources/css/components/yourscreen.css`.
-2. Add `@import "../variables.css";` at the top.
-3. Add a unique class to your FXML root element.
-4. Write your styles inside that unique class scope.
-5. In your Java controller or FXML, load the stylesheet.
+## 🚀 Getting Started
+
+### Backend Setup (Symfony)
+1. **Navigate to backend**: `cd backend`
+2. **Install dependencies**: `composer install` & `npm install`
+3. **Configure Environment**: Copy `.env` to `.env.local` and set your `DATABASE_URL`.
+4. **Database Initialization**:
+   ```bash
+   php bin/console doctrine:database:create
+   php bin/console doctrine:migrations:migrate
+   ```
+5. **Seed Data**: (Optional) Run the custom seeding command:
+   ```bash
+   php bin/console app:seed-data
+   ```
+6. **Start Server**: `symfony server:start`
+
+### Frontend Setup (JavaFX)
+1. **Navigate to frontend**: `cd frontend`
+2. **Configure Environment**: Update `src/main/resources/config/config.properties` (or `.env` if used) with your local database credentials and backend API URL.
+3. **Build & Run**:
+   ```bash
+   mvn clean javafx:run
+   ```
+
+### AI Services Setup
+1. **Navigate to AI directories**: `cd backend/python_ai` or `cd Chatbot`
+2. **Install requirements**: `pip install -r requirements.txt`
+3. **Run services**: 
+   - Article AI: `python app.py` (Port 5001)
+   - Chatbot: `uvicorn agent:app --port 8001`
 
 ---
 
-## ❓ Questions?
-If you're unsure if a change is "global" or "local", check `base.css`. If it's in there, it's global!
+## 🛠️ Key Functionalities
+
+### Administrative Moderation
+The admin dashboard (`/admin`) allows for:
+- **Sanctions Management**: View and revert temporary chat locks or permanent user bans.
+- **Report Review**: Analyze reported content with AI-assisted summaries to speed up moderation.
+
+### AI Integration
+- **Article Insights**: When creating an article, the AI analyzes the text to provide a readability score.
+- **Event Posters**: Generate professional posters for events based on their title and description directly from the dashboard.
+
+### Collaborative Development
+- **JavaFX Styling**: Styles are scoped to prevent global breakage. Use `variables.css` for theme colors.
+- **Branch Strategy**: The `main` branch contains the latest stable merged state (`mergedlocal`).
+
+---
+
+## 🔒 Security
+- **Web**: Uses Symfony Security with `ROLE_ADMIN`, `ROLE_PSYCHOLOGUE`, and `ROLE_USER`.
+- **Desktop**: Authentication handled via the `WebAuthController` which communicates with Symfony's security system.
+
+---
+
+## 📄 License
+This project is proprietary and intended for the InnerTrack development team.
