@@ -4,7 +4,7 @@ security:
         ROLE_PSYCHOLOGUE: ROLE_USER
 
     password_hashers:
-        App\Entity\User: 'auto'
+        App\Entity\User: 'bcrypt'
 
     providers:
         app_user_provider:
